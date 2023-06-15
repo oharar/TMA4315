@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Problem 4: Exam December 2017 from UiO, Problem 2.
+<https://www.uio.no/studier/emner/matnat/math/STK3100/h17/stk3100-4100_2017_2eng.pdf>
+
+We assume that the random variable $\Lambda$ is gamma distributed with pdf
+
+$$f(\lambda; \nu, \mu) = \frac{(\nu/\mu)^\nu}{\Gamma(\nu)} \lambda^{\nu-1} e^{-\lambda/\mu}; \ \lambda > 0$$
+
+and further that given $\Lambda = \lambda$, the random variable $Y$ is Poisson distributed with parameter $\lambda$. Thus the conditional pmf of $Y$ given $\Lambda = \lambda$ takes the form
+
+$$\text{P}(Y = y | \lambda)= \frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2, \dots.$$
+
+a) Show that the marginal pmf of $Y$ is given by
+$$p(y; \mu, \nu) = \frac{\Gamma(y+\nu)}{\Gamma(\nu)\Gamma(y+1)} \left(\frac{\mu}{\mu+\nu}\right)^y \left(\frac{\nu}{\mu+\nu}\right)^\nu; \ y = 0, 1, 2, \dots$$
+This is the negative binomial distribution.
+
+We then assume that the parameter $\nu$ is fixed, and consider the random variable $Y^* = Y/\nu$. Note that
+
+$$\text{P}(Y^* = y^*) = \text{P}(Y = ky^*) \ \text{for} \ y^* = 0, \frac{1}{k}, \frac{2}{k}, \dots$$
+
+so $Y^*$ has pmf
+
+$$p^*(y^*; \mu, \nu) = \frac{\Gamma(\nu y^* + \nu)}{\Gamma(\nu)\Gamma(\nu y^* + 1)} \left(\frac{\mu}{\mu+\nu}\right)^{\nu y^*} \left(\frac{\nu}{\mu+\nu}\right)^\nu; \ y^* = 0, \frac{1}{k}, \frac{2}{k}, \dots$$
+
+b) Show that the pmf of $Y^*$ is an exponential family with $\theta = \log\left(\frac{\mu}{\mu + \nu}\right)$, $b(\theta) = -\log(1 - e^{\theta})$ and $\phi = 1/\nu$. METTE: Dette er ikke det samme som i modulsidene, skal jeg endre?
+
+c) Use the expressions for $b(\theta)$ and $\phi$ to determine $\text{E}(Y^*)$ and $\text{Var}(Y^*)$. Show that $\text{E}(Y) = \mu$ and find $\text{Var}(Y)$.

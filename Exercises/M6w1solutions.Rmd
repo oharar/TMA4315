@@ -1,0 +1,290 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 6: CATHEGORICAL REGRESSION, solution IL week 1"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Problem 1:
+
+## a)
+
+### 1)
+
+The response is ordinal, multinomial. The proportional odds model assumes a latent continuous variable that measures the CGI.
+
+$$\log \left( \frac{\pi_0}{\pi_1 + \pi_2} \right) = \theta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$$
+$$\log \left( \frac{\pi_0 + \pi_1}{\pi_2} \right) = \theta_1 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$$
+
+### 2)
+
+Since the inverse of the logit-functiuon is the logitstic function (sometimes called the expit function), we have:
+
+$$\pi_0 = \frac{e^{\theta_0 + \pmb{x}^T \pmb{\beta}}}{1 + e^{\theta_0 + \pmb{x}^T \pmb{\beta}}}$$
+
+$$\pi_0 + \pi_1 = \frac{e^{\theta_1 + \pmb{x}^T \pmb{\beta}}}{1 + e^{\theta_1 + \pmb{x}^T \pmb{\beta}}}$$
+
+$$\implies \pi_1 = \frac{e^{\beta_{01} + \pmb{x}^T \pmb{\beta}}}{1 + e^{\beta_{01} + \pmb{x}^T \pmb{\beta}}} - \pi_0$$
+
+$$\pi_2 = 1 - \pi_0 - \pi_1$$
+
+
+
+## b)
+
+### 1)
+
+$$\frac{\text{Prob}(\text{CGI} \leq 0 | \mathbf{x})}{\text{Prob}(\text{CGI} > 0 | \mathbf{x})} = \frac{\pi_0}{\pi_1 + \pi_2} = e^{\theta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3}$$
+
+$$\frac{\text{Prob}(\text{CGI} \leq 1 | \mathbf{x})}{\text{Prob}(\text{CGI} > 1 | \mathbf{x})} = \frac{\pi_0 + \pi_1}{\pi_2} = e^{\theta_1 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3}$$
+
+We can see that if $x_3$ increases with 1 (and $x_1$ and $x_2$ are unchanged), we will have $+ \beta_3$ in the exponent, which means that the cumulative odds ratio is multiplied by $e^{\beta_3}$.
+
+
+### 2)
+
+Interpretation: If $e^{\beta} < 1$ (i.e. $\beta_3 < 0$), increasing the initial CGI will give a reduction in the odds of being in state 0 or 1 after the treatment (and increase the odds if $\beta_3 > 0$).
+
+### 3)
+
+From $\text{Prob}(\text{CGI} \leq 0 | \mathbf{x})/\text{Prob}(\text{CGI} > 0 | \mathbf{x})$ we see that increasing $x_1$ and $x_2$ will in the same way lead to multilpying with $e^{\beta_1}$ and $e^{\beta_2}$, respectively. If $e^{\beta_1} < 1$, going from treatment every second week ($x_1 = 0$) to every third week ($x_1 = 1$) gives a reduction in the odds for the "good" states 0 and 1. If $e^{\beta_2} < 0$, males will have lower odds of having states 0 and 1.
+
+Note that we want as low state (i.e., $y$) as possible.
+
+
+## c)
+
+### 1)
+
+Saturated model: Each row in the table has its own $\pmb{\pi}$-vector $[\pi_{i0}, \pi_{i1}, \pi_{i2}]$. The model will thus have $12 \cdot 2 = 24$ free parameters since we have $\pi_{i0} + \pi_{i1} + \pi_{i2} = 1$.
+
+### 2)
+
+The deviance is given by
+
+$$D = -2(l(\text{candidate model}) - l(\text{saturated model})).$$
+
+From the module pages:
+
+$$D = 2 \sum_{i=1}^{12} \sum_{j=0}^2 y_{ij} \log\left(\frac{y_{ij}}{\hat{y}_{ij}}\right)$$
+where $\hat{y}_{ij} = n_i \hat{\pi_{ij}}$, and $\pmb{y}_i = [y_{i0}, y_{i1}, y_{i2}]$ is the response for the $i$th line in the table. $\hat{\pi}_{ij}$ is the estimated probability $\pi_{ij}$ for the candidate model.
+
+### 3)
+
+Degrees of freedom for the deviance = number of free parameters in the saturated model minus number of free parameters in the candidate model = $24 - 5 = 19$.
+
+
+## d) 
+
+### 1)
+
+`cbind(y0, y1, y2) ~ x1 + x2*x3` means that we have a model with the covariates `x1`, `x2`, `x3` and `x2x3` (`x2` times `x3`).
+
+### 2)
+
+`x1*x2 + x1*x3` has the linear predictor (all $x$'s are vectors here)
+
+$$\theta_j + \beta_1 x1 + \beta_2 x2 + \beta_3 x3 + \beta_4 x1x2 + \beta_5 x2x3$$
+
+Note that this is what we put om the right side of $\log \left( \frac{\pi_0}{\pi_1 + \pi_2} \right)$ and $\log \left( \frac{\pi_0 + \pi_1}{\pi_2} \right)$ from a). This model has 7 parameters ($\beta_{1:5}$ and two intercept parameters), i.e. 24-7=17 degrees of freedom for the deviance.
+
+### 3)
+
+The number of parameters and degrees of freedom in each of the four models (`x2 + x3`, `x1 + x2 + x3`, `x1*x2 + x3` and `x1*x2 + x1*x3`) are listed below:
+
+```{r, echo = FALSE}
+
+tab1 <- data.frame(model = c("x2 + x3", "x1 + x2 + x3", "x1*x2 + x3", "x1*x2 + x1*x3"),
+           no = c(4, 5, 6, 7),
+           df = c(20, 19, 18, 17))
+
+kable(tab1)
+
+```
+
+We are testing $H_0$: `x2 + x3` vs the three other models:
+
+* vs `x1 + x2 + x3`: $\Delta D = 10.64 - 10.56 = 0.08$
+* vs `x1*x2 + x3`: $\Delta D = 10.64 - 8.52 = 2.12$
+* vs `x1*x2 + x2*x3`: $\Delta D = 10.64 - 8.33 = 2.23$
+
+The deviance is assumed to be $\chi^2$-distributed, so the critical value at a 95 % significance level is 3.841 for 1 df, and even larger for more df (see below), which means that we choose the model `x2 + x3`. This means that `x1` does not have anything to say in the model, i.e., the interval of treatment does not matter.
+
+```{r}
+
+# critical value at 95 % significance level for chi squared distribution for various degrees of freedom
+qchisq(0.95, 1:4)
+
+```
+
+
+
+## e)
+
+### 1)
+
+```{r, echo = FALSE}
+
+library(VGAM)
+
+data2 <- data.frame(
+  x1 = rep(c(0, 1), each = 6),
+  x2 = rep(rep(c("F", "M"), each = 3), times = 2),
+  x3 = c(2, 3, 4, 3, 4, 5, 2, 3, 4, 2, 3, 4),
+  y0 = c(1, 3, 0, 4, 0, 0, 1, 2, 1, 3, 0, 0),
+  y1 = c(0, 1, 1, 4, 2, 0, 0, 1, 2, 1, 5, 3),
+  y2 = c(0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0)
+)
+
+# fitting all the models:
+
+formulas <- list(
+  cbind(y0, y1, y2) ~ x3,
+  cbind(y0, y1, y2) ~ x1 + x3,
+  cbind(y0, y1, y2) ~ x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x3,
+  cbind(y0, y1, y2) ~ x2 * x3,
+  cbind(y0, y1, y2) ~ x1 + x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x3 + x2,
+  cbind(y0, y1, y2) ~ x1 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x3 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 * x3
+)
+
+# fitting all the models:
+
+allmodels <- sapply(formulas, function(x) vglm(x, data = data2, family = cumulative(parallel = TRUE)))
+
+
+```
+
+Estimates:
+```{r}
+
+exp(coefficients(allmodels[[6]])[3:5])
+
+```
+
+### 2)
+
+Approximate (because we assume normality of the $\beta$'s, it is just an approximate confidence interval) confidence interval, we choose 96 % significance level:
+
+$$\hat{\beta}_1 \pm 1.96 \cdot \sqrt{\text{SD}(\hat{\beta}_1)}$$
+
+```{r}
+
+exp(coefficients(allmodels[[6]])[3] + qnorm(0.975)*sqrt(vcov(allmodels[[6]])[3,3])*c(-1,1))
+
+```
+
+This confidence interval contains 1, so we cannot reject $H_0$: $e^{\beta_1} = 1$ (i.e., $\beta_1 = 0$). This means that the interval of treatment does not matter for the final CGI levels. This is the same conclusion as the one from d).
+
+### 3)
+
+Final CGI equal to 0 for
+
+* injections every second week $\implies \ x_1 = 0$,
+* female $\implies \ x_2 = 0$
+* initial CGI = 5 $\implies \ x_3 = 5$
+
+From a):
+
+$$\hat{\pi}_0 = \frac{e^{\hat{\theta}_0 + 0 \hat{\beta}_1 + 0\hat{\beta}_2 + 5\hat{\beta}_3}}{1 + e^{\hat{\theta}_0 + 0 \hat{\beta}_1 + 0\hat{\beta}_2 + 5\hat{\beta}_3}} = \frac{e^{\hat{\theta}_0 + 5\hat{\beta}_3}}{1 + e^{\hat{\theta}_0 + 5\hat{\beta}_3}}$$
+
+Numbers:
+
+```{r}
+
+pi0hat <- exp(sum(coefficients(allmodels[[6]])*c(1, 0, 0, 0, 5)))/(1+exp(sum(coefficients(allmodels[[6]])*c(1, 0, 0, 0, 5)))); pi0hat
+
+```
+
+Standard deviations are found by Taylor expanding $\hat{\pi}_0$ around $\theta_0, \beta_3$ (see e.g. <https://en.wikipedia.org/wiki/Taylor_series#Taylor_series_in_several_variables>). Let 
+
+$$f(x, y) = \frac{e^{x + 5y}}{1 + e^{x + 5y}}$$
+
+Then 
+$$ \frac{\partial f}{\partial x} = \frac{e^{x + 5y}}{(1 + e^{x + 5y})^2} = f(1-f) \text{  and  } 
+\frac{\partial f}{\partial x} = \frac{5e^{x + 5y}}{(1 + e^{x + 5y})^2} = 5f(1-f)$$
+
+Thus $\hat{\pi}_0 = \pi_0 + \pi_0(1 - \pi_0)(\hat{\theta}_0 - \theta_0) + 5\pi_0(1 - \pi_0)(\hat{\beta}_3 - \beta_3)$ such that the variance is
+
+$$\text{Var}(\hat{\pi}_0) = \pi_0^2 (1-\pi_0)^2 \left[ \text{Var}(\hat{\theta}_0) + 25 \text{Var}(\hat{\beta}_3) + 10 \text{Cov}(\hat{\theta}_0, \hat{\beta}_3) \right]$$
+
+We find the estimate by using $\hat{\pi}_0$ for $\pi_0$, and by finding the variances and covariances in the `R`-print. Then we will get:
+
+```{r, results = "asis"}
+
+pi0hat * (1-pi0hat) * sqrt(vcov(allmodels[[6]])[1,1] + 25 * vcov(allmodels[[6]])[5,5] + 10 * vcov(allmodels[[6]])[1,5])
+
+```
+
+
+
+# Problem 2: More alligators (nominal model)
+
+
+
+```{r, tidy = FALSE}
+
+library(VGAM)
+data2 = "http://www.stat.ufl.edu/~aa/glm/data/Alligators2.dat"
+ali2 = read.table(data2, header = T)
+ali2
+colnames(ali2)
+fit = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(size) + factor(gender), 
+    family = multinomial, data = ali2)
+
+# 6 possible models to investigate: only lake, only gender, only size, lake + gender, lake + size, size + gender
+fit.lake = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake), family = multinomial, data = ali2)
+fit.size = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(size), family = multinomial, data = ali2)
+fit.gender = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(gender), family = multinomial, data = ali2)
+fit.lake.size = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(size), family = multinomial, data = ali2)
+fit.lake.gender = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(gender), family = multinomial, data = ali2)
+fit.gender.size = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(size) + factor(gender), family = multinomial, data = ali2)
+
+all = list(fit = fit, 
+           fit.lake = fit.lake, 
+           fit.size = fit.size, 
+           fit.gender = fit.gender, 
+           fit.lake.size = fit.lake.size, 
+           fit.lake.gender = fit.lake.gender, 
+           fit.gender.size = fit.gender.size)
+sapply(all, AIC)
+
+which.min(sapply(all, AIC))
+
+# what is best? toggle to match your choice
+best = fit.lake.size
+summary(best)
+pchisq(deviance(best), df.residual(best), lower.tail = FALSE)
+confint(best)
+
+```
+
+
+
+
+
+
+
+

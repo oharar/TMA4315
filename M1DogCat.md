@@ -1,0 +1,63 @@
+Module 1: get to know each other game
+========================================================
+
+1) Question
+
+2) Place on axis
+
+3) Choose 1-2 persons
+
+4) Name-study programme- why placed on axis
+
+
+Cat or dog person?
+========================================================
+
+* Mainly cat-person: over at door (1)
+* Mainly dog-person: at window (10)
+
+Inbetween - axis!
+
+Camel case or snake case?
+========================================================
+
+* Mainly camel case: over at door (1)
+
+writing compound words such that each word in the middle of the phrase begins with a capital letter, with no intervening spaces or punctuation. "iPhone", "eBay", "FedEx", "DreamWorks", and "HarperCollins".
+
+* Mainly snake case: at window (10)
+
+writing compound words where the elements are separated with one underscore character (_) and no spaces, with each element's initial letter usually lowercased within the compound and the first letter either upper- or lowercase<U+2014>as in "foo_bar" and "Hello_world". 
+
+I want to show you a new data set. Do you prefer graphical display or summary?
+========================================================
+
+* Mainly graphical display: over at door (1)
+
+* Mainly summary: at window (10)
+
+Write a vector in your notes: boldface or arrow above
+========================================================
+
+* Mainly boldface: over at door (1)
+
+* Mainly arrow above: at window (10)
+
+As with ordinary letters - in the middle. (5)
+
+Transpose a vector: T or hyphen (fnutt)
+========================================================
+
+* Mainly T: over at door (1)
+
+* Mainly hyphen: at window (10)
+
+Other: in the middle.
+
+I serve light refreshments: cake/vafler or fruits?
+========================================================
+
+* Mainly cake/vafler: over at door (1)
+
+* Mainly fruits: at window (10)
+

@@ -1,0 +1,73 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+subtitle: "R test-question for the exam"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+  #   keep_tex: yes
+#  beamer_presentation:
+#    keep_tex: yes
+#    fig_caption: false
+#    latex_engine: xelatex
+---
+
+One of the built in datasets in R is called `InsectSprays` and is accessed by writing `InsectSprays`.The data set consists of 72 observations of two variables from different agricultural fields. The variables are:
+
+* `count` of insects remaining after the field was treated with some treatment,
+* `spray` the treatment (A-F) that the field was subject to
+
+Fit a generalized linear model with canonical link to the data. Use `count` as the response and the factor `spray` as a covariate. Do not include an intercept term in the model. You may also need to perform additional commands (in addition to fitting the model) on your fitted GLM-object.
+
+Based on your data analysis answer the following questions:
+
+a) Which type of GLM did you fit? Binary, Poisson, Gamma, Normal, other (specify)
+
+b) Which link function did you use? Identity, log, exp, logit, inverse, other (specify)
+
+c) What is the estimated regression coefficient for effect of `spray` of category A: 2.67415
+
+d) What is the estimated variance of the regression coefficient for the effect of `spray` of category C: 0.04
+
+e) Perform a deviance test and report the p-value. 0.006054201
+
+f) What is the conclusion from the deviance test: "The model is good" or "the model is not good"? Not good.
+
+g) Give the estimated covariance between the estimated effect of `spray` B and `spray` F: 0.00 (orthogonal design)
+
+h) Perform an test with $H_0$ stating that the regression coefficient of for spray B is equal to the regression coefficient for spray F, vs. the two-sided alternative. Report the p-value from this test. 
+
+```{r}
+fit2=glm(count~spray-1,family="poisson",data=InsectSprays)
+summary(fit2)
+1-pchisq(fit2$deviance,fit2$df.residual)
+vcov(fit2)
+C=matrix(c(0,1,0,0,0,-1),ncol=6)
+Cbeta=C%*%fit2$coefficients
+covCbeta=C%*%vcov(fit2)%*%t(C)
+covCbeta
+testobs=t(Cbeta)%*%solve(covCbeta)%*%(Cbeta)
+testobs
+1-pchisq(testobs,1)
+# alternatively since orth sprays
+testobs2=(fit2$coefficients[2]-fit2$coefficients[6])/sqrt(summary(fit2)$coefficients[2,2]^2+summary(fit2)$coefficients[6,2]^2)
+testobs2^2
+1-pchisq(testobs2^2,1)
+# could also use LRT, but a bit mess to recode
+```
+
+```{r,echo=FALSE,eval=FALSE}
+# looked at original article and there was also a block factor presen
+block=factor(rep(rep(1:6,each=2),6))
+cbind(block,InsectSprays$spray,InsectSprays$count)
+fit1=glm(count~spray*block,family="poisson",data=InsectSprays)
+anova(fit1,fit2)
+```
+
+

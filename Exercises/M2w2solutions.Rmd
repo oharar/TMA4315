@@ -1,0 +1,268 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 2: MULTIPLE LINEAR REGRESSION, solution IL week 1"
+output: #3rd letter intentation hierarchy
+  # html_document:
+  #   toc: true
+  #   toc_float: true
+  #   toc_depth: 2
+  pdf_document:
+   toc: true
+   toc_depth: 2
+ # beamer_presentation:
+#    keep_tex: yes
+#    fig_caption: false
+#    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R packages
+
+```{r, eval=FALSE}
+install.packages(c("formatR","gamlss.data","leaps"))
+```
+
+# Problem 1: Theory
+
+## 1.
+
+Fix covariates X. \*Collect $Y$, create CI using $\hat{\beta}$ and $\hat{\sigma}$\*, repeat from \* to \* many times. 95 % of the times the CI contains the true $\beta$. Collect $Y$ means simulate it with the true $\beta$ as parameter(s). The following R-code illustrates this:
+
+```{r}
+
+# CI for beta_j
+
+true_beta <- c(3.14, 10, 0.8) # choosing true betas
+true_sd <- 10 # choosing true sd
+set.seed(345); X <- matrix(c(rep(1, 100), runif(100, 2, 5), sample(1:100, 100, replace = TRUE)), 
+            nrow = 100, ncol = 3) # fixing X. set.seed() is used to produce same X every time this code is used
+
+# simulating and fitting models many times
+ci_int <- ci_x1 <- ci_x2 <- 0; nsim <- 1000
+for (i in 1:nsim){
+  y <- rnorm(n = 100, mean = X%*%true_beta, sd = rep(true_sd, 100))
+  mod <- lm(y ~ x1 + x2, data = data.frame(y = y, x1 = X[,2], x2 = X[,3]))
+  ci <- confint(mod)
+  ci_int[i] <- ifelse(true_beta[1] >= ci[1,1] && true_beta[1] <= ci[1,2], 1, 0)
+  ci_x1[i] <- ifelse(true_beta[2] >= ci[2,1] && true_beta[2] <= ci[2,2], 1, 0)
+  ci_x2[i] <- ifelse(true_beta[3] >= ci[3,1] && true_beta[3] <= ci[3,2], 1, 0)
+}
+
+c(mean(ci_int), mean(ci_x1), mean(ci_x2))
+
+```
+
+## 2.
+
+No solution.
+
+## 3.
+
+No solution.
+
+## 4.
+
+They use two different tests: `summary` tests if a given cofficient can be 0 while the others are present, `anova` tests if the coefficient reduces the SSE enough to be allowed in the model sequentially.
+
+## 5. 
+
+SSE(small) $\geq$ SSE(large) since SSE will be smaller with more covariates explaining variation (and for a covariate that is completly unrelated to the data it might not be a large change, but the SSE will not increase). $R^2$ directly related to SSE: $R^2 = 1$ - SSE/SST, and SST does not change when the  model changes.
+
+## 6.
+
+The deviance of model $A$ is given by:
+
+$-2 (\ln L(A) - \ln L(\text{saturated model}))$
+
+This is the same as the likelihood ratio test statistic of the saturated model and model A (model A is the smaller model).
+
+The _saturated model_ is a model where the deviance (per def) is 0. We have so many covariates that the $\hat{Y}$ are all correct, and we have no degrees of freedom left.
+
+The deviance can never be negative (the log-likelihood is always larger for a better model fit, i.e., for a model with more covariates), so the deviance can not become smaller than 0. The saturated model has a deviance of 0.
+
+
+# Problem 2: Dummy vs. effect coding in MLR (continued)
+
+## 1.
+
+No solution, see module pages and solution from last week.
+
+## 2.
+
+```{r}
+
+income <- c(300, 350, 370, 360, 400, 370, 420, 390, 400, 430, 420, 410, 
+    300, 320, 310, 305, 350, 370, 340, 355, 370, 380, 360, 365)
+gender <- c(rep("Male", 12), rep("Female", 12))
+place <- rep(c(rep("A", 4), rep("B", 4), rep("C", 4)), 2)
+data <- data.frame(income, gender = factor(gender, levels = c("Female", 
+    "Male")), place = factor(place, levels = c("A", "B", "C")))
+
+model <- lm(income ~ place - 1, data = data, x = TRUE)
+model$x
+summary(model)
+anova(model)
+
+```
+
+Dummy coding is used.
+
+You include either place A, B or C by calculating $\beta_A x_A + \beta_B x_B + \beta_C x_C$ where just one of $x_A$, $x_B$ and $x_C$ is 1, and the two others 0. See that the income is lowest at location A, and highest at location C.
+
+$H_0$ is that the model does not contain the covariate `place`, i.e., the model is just `y ~ 0` as we have no intercept. This is very, very unlikely and we keep the covariate.
+
+## 3.
+
+```{r}
+
+model1 <- lm(income ~ place, data = data, x = TRUE, contrasts = list(place = "contr.treatment"))
+head(model1$x)
+summary(model1)
+model2 <- lm(income ~ place, data = data, x = TRUE, contrasts = list(place = "contr.sum"))
+head(model2$x)
+summary(model2)
+
+```
+
+`model1` is dummy, `model2` is effect. 
+
+model1: `intercept` is the income at place A, `intercept` plus `placeB` is the income at place B, and `intercept` plus `placeC` is the income at place C.
+
+model2: `intercept` plus `place1` is the income at place A, `intercept` plus `place2` is the income at place B, and `intercept` minus `place1` minus `place2` is the income at place C.
+
+This we can see from the design matrix $X$ printed using `model1$x`. The design matrices for the two models differ, and thus the interpretation of the parameters also differ.
+
+## 4.
+
+```{r}
+
+# have no covariates, so dummy or effect coding does not matter
+model0 <- lm(income ~ 1, data = data)
+
+anova(model0, model1)
+anova(model0, model2)
+
+```
+
+The results are the same, since we test for the whole variable at once and not only one of the levels (which is done in summary). Conclusion is to keep the covariate.
+
+
+## 5.
+
+```{r}
+
+model3 <- lm(income ~ place + gender, data = data, x = TRUE, contrasts = list(place = "contr.treatment", gender = "contr.treatment"))
+summary(model3)
+anova(model3)
+model4 <- lm(income ~ place + gender, data = data, x = TRUE, contrasts = list(place = "contr.sum", gender = "contr.sum"))
+summary(model4)
+anova(model4)
+
+```
+
+In `model3` dummy coding is used, and in `model4` effect coding is used.
+
+`model3`: same as for `model1`, but now also adding `genderMale` if the person of interest is male (and nothing if the person is female).
+
+`model4`: same as for `model2`, but now adding `gender1` if the person of interest is female, and subtracting `gender1` if the person is male.
+
+The anova tables are equal for the two models since we test for the change when the whole covariate (not only the level) is included/excluded.
+
+
+## 6.
+
+```{r}
+
+model5 <- lm(income ~ place + gender + place:gender) # or lm(income ~ place*gender)
+summary(model5)
+anova(model5)
+
+```
+
+Both summary and anova says the interaction is not significant (which is what we suspected last week).
+
+
+# Problem 3: Compulsory exercise 1
+
+No solution.
+
+
+# Problem 4: Munich Rent index (optional)
+
+```{r}
+library(gamlss.data)
+library(dplyr)
+data("rent99")
+```
+
+
+## 1.
+
+```{r}
+
+formula <- rent ~ area + location + bath + kitchen + cheating
+rent1 <- lm(formula, data = rent99)#, contrasts = list(location = "contr.sum"))
+
+rent99 <- rent99 %>% mutate(yearc.cat = cut(yearc, breaks = c(-Inf, seq(1920,2000,10)), labels = 10*1:9))
+
+formula <- rent ~ area + location + bath + kitchen + cheating + yearc.cat
+rent2 <- lm(formula, data = rent99)#, contrasts = list(location = "contr.sum"))
+
+rent99 <- rent99 %>% mutate(yearc.cat2 = cut(yearc, breaks = c(-Inf, seq(1920,2000,20)), labels = c(20,40,60,80,00)))
+
+formula <- rent ~ area + location + bath + kitchen + cheating + yearc.cat2
+rent3 <- lm(formula, data = rent99)#, contrasts = list(location = "contr.sum"))
+
+```
+
+## 2.
+
+```{r}
+
+library(MASS)
+library(leaps)
+res1 <- regsubsets(model.matrix(rent3)[,-1], y = rent99$rent)
+summary(res1)$bic
+
+```
+
+## 3.
+
+```{r}
+
+res2 <- stepAIC(rent3)
+step(res2)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

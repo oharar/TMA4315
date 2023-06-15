@@ -1,0 +1,351 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 7: Linear mixed effects models, solution IL week 1"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+library(ggplot2)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+
+# Exercise 1
+
+## a)
+
+This is a random intercept model. Such models are useful if you want to model correlations between variables from the same group (clustered data) or the same invidual (longitudinal data).
+
+## b)
+
+We have 
+
+$$\mathbf{Y}_i = \mathbf{X}_i \pmb{\beta} + \mathbf{1}\gamma_{0i} + \pmb{\varepsilon}_i, \ \pmb{\varepsilon}_i \sim N(0, \sigma^2\mathbf{I}) $$
+
+which gives
+
+$$ \mathbf{Y}_i \sim N(\mathbf{X}_i\pmb{\beta}, \tau_0^2 \mathbf{11}^T + \sigma^2 \mathbf{I}) $$
+
+where $\mathbf{1}$ is a column vector of ones. 
+
+Advantage of having the marginal distribution: Then we also have an explicit expression for the likelihood
+
+$$L(\pmb{\beta}, \tau_0^2, \sigma^2) = \prod_{i = 1}^N f(y_i; \pmb{\beta}, \tau_0^2, \sigma^2) $$
+
+which we need to find MLE and REML estimates.
+
+## c)
+
+```{r, echo = FALSE}
+
+library(lme4)
+
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/fishdata.dat"
+fish <- read.table(filepath, header = TRUE)
+
+fit1 <- lmer(log(weight) ~ log(length) + log(haulsize) + (1 | haul), data = fish)
+
+#summary(fit1)
+
+```
+
+We have the following parameter estimates:
+
+```{r, echo = FALSE}
+
+df <- data.frame(Parameter = c("$\\beta_0$", "$\\beta_1$", "$\\beta_2$", "$\\sigma_b$", "$\\sigma$"),
+                 Estimate = c(fixef(fit1), sqrt(summary(fit1)$varcor$haul[1]), sigma(fit1)))
+
+library(knitr)
+kable(df, digits = 4)
+
+```
+
+The correlation between two weight-variables from the same catch (haul) is found from inserting parameter estimates into 
+$$\text{Corr}(Y_{ij},Y_{il})=\frac{\tau_0^2}{\tau_0^2+\sigma^2} \text{ for }j\neq l$$
+
+```{r}
+vc <- VarCorr(fit1)
+print(vc)
+df <- as.data.frame(vc)
+numerator <- df[4][[1]][1]
+denominator <- sum(df[4][[1]])
+cat("numerator:", numerator, "\n")
+cat("denominator:", denominator, "\n")
+ICC <- numerator/denominator
+ICC
+```
+
+Then, $$\widehat{\frac{\tau_0^2}{\tau_0^2 + \sigma^2}} = \frac{{`r numerator`}}{{`r denominator`}}={`r ICC`}$$
+
+## d)
+
+$\pmb{\hat{\beta}}$ is approximately Gaussian (normal), and then
+
+$$\log(\hat{\theta}) = \hat{\mu} = \hat{\beta}_0 + \hat{\beta}_1 \log(66) + \hat{\beta}_2 \log(0.46)$$
+
+is also Gaussian with variance
+
+$$Var(\hat{\mu}) = Var(\hat{\beta}_0) + \log(66)^2Var(\hat{\beta}_1) + \log(0.46)^2Var(\hat{\beta}_2) + \\ 2\cdot \log(66)Cov(\hat{\beta}_0, \hat{\beta}_1) + 2\cdot \log(0.46)Cov(\hat{\beta}_0, \hat{\beta}_2) + 2\log(66)\log(0.46)Cov(\hat{\beta}_1, \hat{\beta}_2)) = 0.00706^2$$
+
+Then we get a 95 % confidence interval for $\mu$:
+
+$$\hat{\mu} = 0 \pm 1.96 \cdot \sqrt{Var(\hat{\mu})} = [7.849683, 7.877365] $$
+
+We take the exponential of this interval to get a confidence interval for $\theta$: $[2564.922, 2636.914]$
+
+```{r}
+
+# it is much simpler to just use vcov(fit1), but here we write down everything so we can compare with the printout
+vbeta0 <- summary(fit1)$coefficients[1,2]^2
+vbeta1 <- summary(fit1)$coefficients[2,2]^2
+vbeta2 <- summary(fit1)$coefficients[3,2]^2
+# cov2cor gives correlations from a covariance matrix
+cbeta01 <- sqrt(vbeta0)*sqrt(vbeta1)*cov2cor(vcov(fit1))[1,2]
+cbeta02 <- sqrt(vbeta0)*sqrt(vbeta2)*cov2cor(vcov(fit1))[1,3]
+cbeta12 <- sqrt(vbeta1)*sqrt(vbeta2)*cov2cor(vcov(fit1))[2,3]
+
+variance <- vbeta0 + log(66)^2*vbeta1 + log(0.46)^2*vbeta2 + 2*log(66)*cbeta01 + 2*log(0.46)*cbeta02 + 2*log(66)*log(0.46)*cbeta12
+SD <- sqrt(variance)
+
+# OR
+
+SD2 <- as.numeric(sqrt(c(1, log(66), log(0.46)) %*% vcov(fit1) %*% c(1, log(66), log(0.46))))
+
+cat(SD, SD2)
+
+critval <- qnorm(0.975)
+
+CI <- c(-critval*SD, critval*SD) + c(fixef(fit1)%*%c(1, log(66), log(0.46)))
+cat(CI)
+cat(exp(CI))
+
+```
+
+## e)
+
+1. Start with a model as close to the saturated as possible (all covariates and as many interactions as possible)
+2. Find the optimal structure on all random effects (use REML)
+3. Find the optimal structure on all fixed effects (use ML)
+4. Present the final model with REML estimates
+
+
+## f)
+
+From the plots we see that it is reasonable to say that the random intercepts follow a normal distribution with mean 0 and standard deviation around 0.05 (estimated value is 0.05505):
+
+```{r}
+ggplot(data = data.frame(x = ranef(fit1)$haul[[1]]), aes(x = x)) + geom_density() + theme_minimal() + 
+  labs(x = "x", y = "y", title = "Density") +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = attr(VarCorr(fit1)$haul, "stddev")), col = "red")
+```
+
+
+
+# Exercise 2
+
+## a)
+
+On a vector form for responses $\textbf{Y}_i^T = (Y_{i1}, Y_{i2}, Y_{i3})^T$:
+
+$$
+\begin{pmatrix} Y_{i1} \\ Y_{i2} \\ Y_{i3} \end{pmatrix} 
+= 
+\begin{pmatrix} 
+  1 & \texttt{age}_{i1} & \texttt{cyear}_i & \texttt{sex}_i \\
+  1 & \texttt{age}_{i2} & \texttt{cyear}_i & \texttt{sex}_i \\
+  1 & \texttt{age}_{i3} & \texttt{cyear}_i & \texttt{sex}_i \\
+\end{pmatrix}
+\begin{pmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \\ \beta_4 \end{pmatrix}
++
+\begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} \mathbf{\gamma}_{0i}
++
+\begin{pmatrix} \varepsilon_{i1} \\ \varepsilon_{i2} \\ \varepsilon_{i3} \end{pmatrix}
+$$
+
+Which has the form of a linear mixed model $\mathbf{Y}_i = X_i\beta + U_i\mathbf{\gamma}_{0i} + \varepsilon_i$, where the columns of the $n_i \times p$-matrix $U_i$ is a subset of the columns of the $n_i \times p$-matrix $X_i$. Here, $\pmb{\gamma}_{0i}$ and $\varepsilon_i$ are independent, and
+
+$$\pmb{\gamma}_{0i} \sim N_{q+1}(0, Q) \text{ and } \varepsilon_i = \begin{pmatrix} \varepsilon_{i1} \\ \varepsilon_{i2} \\ \varepsilon_{i3} \end{pmatrix} \sim N_{n_i}(0, \Sigma_i), \ i = 1, \dots, N $$
+
+In our case, $N = 42$, $n_i = 3$, $p = 4$, $q = 0$ (since we only have random intercept), and $\Sigma_i = \sigma^2 I_3$ where $I_3$ is the $3 \times 3$ identity matrix. Here $\beta_0, \dots, \beta_4$ describe the fixed effects and $\textbf{b}_i$ the random effects.
+
+Assumptions: $\pmb{\gamma}_{0i}$ and $\varepsilon_{i}$ must be independent, and we need a linear relationshop between $y$ and $x$. In general, we need things to be like the model says (e.g. Gaussian errors).
+
+## b)
+
+```{r}
+
+library(faraway)
+library(lme4)
+
+data(psid, package = "faraway")
+psid$cyear <- psid$year - 78
+psid2 <- subset(psid, cyear %in% c(-10, 0, 10))
+psid2 <- psid2[psid2$person %in% names(which(table(psid2$person) >= 3)),]
+psid2$lincm <- log(psid2$income)
+
+fit2 <- lmer(lincm ~ age + cyear + educ + sex + (1 | person), data = psid2)
+
+summary(fit2)
+
+critval <- qnorm(0.025, lower.tail = FALSE)
+interval <- summary(fit2)$coefficients[3,1] + critval * summary(fit2)$coefficients[3,2]*c(-1, 1)
+
+```
+
+
+From the output we see that the coefficient of `cyear`, $\beta_3$ is estimated to be $\hat{\beta}_3 = 0.08416257$ with estimated standard error 0.008188946. Hence, an approximate interval has limits $0.08416257 \pm 1.96 \times 0.008188946$, so the interval is $(0.06811253, 0.10021261)$. The interval does not contain zero, so a test for constant nominal income would be rejected.
+
+
+(e) comes after d))
+
+
+## c)
+
+The question involves the fixed effects. One way to do it is to fit two models:
+
+* one full model containing all the fixed effects, and
+* one nested model where the two effects `age` and `educ` are omitted, 
+
+and obtain the maximal value of the likelihood at the two models, call them $L_{max, full}$ and $L_{max, nested}$. The likelihood ratio test consists of comparing 
+
+$$-2 \log(L_{max, nested}/L_{max, full}) =-2(l_{max, nested}-l_{max, full})$$
+
+to a $\chi^2$-distribution where the degrees of freedom are the difference of the number of parameters in the two models, i.e., the number of restrictions which is **two** in this case.
+
+It is important that the ordinary maximum likelihood estimates are used. The restricted maximum likelihood method (REML) consists of basing the estimates on a linear transformation of the data. These transformations are different for the full and the nested model and involve unequal reductions of the data. Therefore it does not make sense to compare the REML likelihoods since they are based on different data.
+
+An alternative is to use the Wald test. The approximate distribution of the estimators of the coefficients have covariance matrix 
+
+$$\Sigma_{\hat{\beta}} = \left( \sum_{i = 1}^N (X_i^T \Sigma_i(\hat{\theta})^{-1}X_i) \right)^{-1}$$
+
+where $\Sigma_i(\theta)$ is the covariance matrix of $\mathbf{Y}_i$ and $\theta$ are the parameters that describe this covariance. The Wald statistic for the null hypothesis
+
+$$H_0 : C\beta = d$$
+
+with $C$ a $r \times s$-matrix ($s$ is the number of parameters in the hypothesis), is 
+
+$$(C\hat{\beta}-d)^T(C\hat{\Sigma}_{\hat{\beta}}C^T)^{-1}(C\hat{\beta}-d)$$
+
+and is approximately $\chi^2$-distributed with $s$ degrees of freedom under $H_0$. In our case, $s = 2$, $C = I_2$, and $d = (0,0)^T$.
+
+```{r}
+
+# lrt:
+
+fit_full <- lmer(lincm ~ age + cyear + educ + sex + (1 | person), data = psid2)
+fit_nest <- lmer(lincm ~ cyear + sex + (1 | person), data = psid2)
+
+# un-restricted (regular) likelihood
+lrt <- -2*(c(logLik(fit_nest)) - c(logLik(fit_full))); lrt
+pchisq(lrt, 2, lower.tail = FALSE) # reject H0
+
+
+# wald:
+
+C <- diag(2)
+beta <- as.vector(summary(fit2)$coefficients[c(2,4),1])
+sigma <- as.matrix(vcov(fit2)[c(2,4), c(2,4)])
+d <- matrix(c(0,0), ncol = 1)
+
+# since d is a zero-vector and C is a diagonal matrix we can ignore them in the calculations
+# wald <- t(C%*%beta-d)%*%solve(C%*%sigma%*%t(C))%*%(C%*%beta-d); wald
+wald <- t(beta)%*%solve(sigma)%*%beta; wald
+
+pchisq(wald, 2, lower.tail = FALSE) # small p-value, reject H0
+
+```
+
+Note that you do not need any new information to find the Wald statistic, as you have all you need from the `summary`. To calculate this was not expected on the exam.
+
+```{r}
+
+beta # both under "Fixed effects" in the summary
+sigma # the squared roots of the diagonal is under "Fixed effects" in the summary (standard deviations)
+sqrt(diag(sigma))
+
+# the covariances are trickier, but can be found by using that 
+# the correlation between age and educ is -0.201, found under
+# "Correlation of Fixed Effects", and then multiplying with the standard deviations
+-0.201*0.015207*0.027582
+
+```
+
+
+
+## d)
+
+The estimates of $\pmb{\gamma}_{0i}$ are based on the conditional expectations E$(\pmb{\gamma}_{0i} | \mathbf{Y}_1, \dots, \mathbf{Y}_N) =$ E$(\pmb{\gamma}_{0i} | \mathbf{Y}_i)$ since $\mathbf{Y}_1, \dots, \mathbf{Y}_N$ are independent and $\pmb{\gamma}_{0i}$ only depends on $\mathbf{Y}_i$. Thd simultaneuous distribution of $\pmb{\gamma}_{0i}$ and $\mathbf{Y}_i$ is a $(q + n_i)$-dimensional multinormal with expectation and covariance matrix
+
+$$\begin{pmatrix} 0 \\ X_i\beta \end{pmatrix} \text{ and } \begin{pmatrix} Q & QZ_i^T \\ Z_iQ & Z_iQZ_i^T + \Sigma_i \end{pmatrix} $$
+
+It then follows from the properties if the multinomial distribution that
+
+$$E(\pmb{\gamma}_{0i} | \mathbf{Y}_i) = 0 + QU_i^T(U_iQU_i^T + \Sigma_i)^{-1}(\mathbf{Y}_i - X_i\beta) $$
+
+Hence $\pmb{\gamma}_{0i}$ is estimated by
+
+$$\hat{Q}Z_i^T(U_i\hat{Q}U_i^T + \hat{\Sigma}_i)^{-1}(\mathbf{Y}_i - X_i\hat{\beta}) $$
+
+where all estimates are the REML estimates.
+
+```{r}
+
+U_i <- matrix(c(1,1,1), ncol = 1)
+Q <- c(summary(fit2)$varcor$person) # q = 1, so this is not a matrix (a 1x1-matrix)
+beta <- as.matrix(fixef(fit2))
+sigma_i <- sigma(fit2)^2*diag(3)
+
+# choosing i = 2
+i <- 2
+Y_i <- as.matrix(subset(psid2, person == i)$lincm)
+X_i <- as.matrix(data.frame(int = c(1,1,1), 
+                            subset(psid2, person == i)[,c(1, 7, 2)], 
+                            sex = ifelse (psid2$sex[psid2$person == i][1] == "M", c(1,1,1), c(0,0,0))))
+
+
+Q%*%t(U_i)%*%solve(U_i%*%Q%*%t(U_i) + sigma_i)%*%(Y_i - X_i%*%beta)
+# can check and see if the estimate coincides with the estimate from lmer
+ranef(fit2)$person[which(row.names(ranef(fit2)$person) == i),] # and it does
+
+```
+
+
+Need $Y_i$ and $X_i$, everything else can be found (with some calculations) from the summary. 
+
+
+
+## e)
+
+The elements in the covariance matrix are
+
+$$ \text{Cov}(Y_{ij}, Y_{kl}) = \begin{cases} \tau_0^2 + \sigma^2 = \text{Var}(Y_{ij}) & \text{ for } i=k, j=l \\ \tau_0^2 & \text{ for } i=k, j \neq l \\ 0 & \text{ for } i \neq k, j \neq l \end{cases} $$
+
+
+From d) it follows that $\hat{\Sigma}_{\mathbf{Y}_i} = U_i\hat{Q}U_i^T + \hat{\Sigma}_i$. In this case $Z_i = (1,1,1)^T$ and $\hat{\Sigma}_i = \hat{\sigma}^2 I_3$. From the output we have that $\hat{Q} = \hat{\tau}_0^2 =$ `r Q` $\approx 0.0018$ and $\hat{\sigma} =$ `r sigma_i[1,1]` $\approx 0.563$. Thus we get
+
+$$\hat{\Sigma}_{\mathbf{Y}_i} = \hat{\tau}_0^2 \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix} + \hat{\sigma}^2 \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$$
+
+$$ = \begin{pmatrix} 0.0018+0.563 & 0.0018 & 0.0018 \\ 0.0018 & 0.0018+0.563 & 0.0018 \\ 0.0018 & 0.0018 & 0.0018+0.563 \end{pmatrix} $$
+
+$$ = \begin{pmatrix} 0.5648 & 0.0018 & 0.0018 \\ 0.0018 & 0.5648 & 0.0018 \\ 0.0018 & 0.0018 & 0.5648 \end{pmatrix} $$
+
+(diagonal elements all equal to $\hat{\sigma}^2 + \hat{\tau}_0^2$ and off-diagonal elements all equal to $\hat{\tau}_0^2$).
+
+
+

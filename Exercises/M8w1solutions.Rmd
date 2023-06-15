@@ -1,0 +1,103 @@
+--- 
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 8: Generalized linear mixed models: Solutions IL week 1" 
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(echo = TRUE, tidy = TRUE, message = FALSE, warning = FALSE) 
+```
+
+# Exercise 1
+
+### a)
+
+The class of exponential distributions is given by
+
+$$ f(y) = \exp\left(\frac{y\theta - b(\theta)}{\phi} w + c(y, \phi, w)\right) $$
+
+The binomial distribution is
+
+$$ f(y) = \binom{n}{y} {\pi^y (1-\pi)^{n-y}} = \exp(y \log\pi + (n-y) \log(1-\pi) + \log\binom{n}{y} ) $$
+
+$$ = \exp(y \log(\pi/(1-\pi)) + n\log(1-\pi) + \log\binom{n}{y}) $$
+
+so we have that $\theta = \log \left( \frac{\pi}{1-\pi}\right)$, $b(\theta) = n\log(1+\exp(\theta))$, $\phi = w = 1$ and $c(y, \phi, w) = \log\binom{n}{y}$.
+
+The canonical link means that we model the linear predictor $\eta = x^T\beta$ through the link function $g(\cdot)$ which is equal to $\theta$. Thus $\eta = \theta$ when we have canonical link. This simplifies (some of) the mathematics involved (e.g., the score and information matrices are easier to calculate).
+
+The canonical link for the binomial distribution is $g(\pi) = \theta = \log \left( \frac{\pi}{1-\pi}\right)$.
+
+
+### b)
+
+This is a generalized linear model with binary response. No random terms involved yet! $x_{2,i}$ is just equal for several $j$´s and we simplify the notation by removing $j$.
+
+AIC is defined as
+
+$$AIC = -2 \log(L(\hat{\theta})) + 2p$$
+
+where $L$ is the likelihood evaluated with the estimates of the unknown parameters $\theta$, and $p$ is the number of parameters in the model, which means that increased complexity of the model is penalized (increased complexity does in this case mean more marameters), as we want a low AIC value. 
+
+We can use AIC to compare non-nested models where likelihood ratio and Wald tests are not applicable.
+
+In our case we would choose the probit link function, which has the lowest AIC. Since we use the same number of parameters in each model, we do in this case compare likelihoods ($p+1$ equal in all three models) and choose the model with the highest likelihood value.
+
+
+### c1)
+
+This is a generalized linear mixed model (GLMM) with binary response. $\gamma_{0i}$ is a random intercept.
+
+
+### c2)
+
+That the model is fitted by maximum likelihood means that biased variance estimators occur (remember: ML creates unbiased coefficient estimators, REML gives unbiased variance estimators). With GLMMs we cannot (with a few exceptions) calculate the variances with formulas with optimization, we need to approximate the distributions (with Laplace) and REML is thus not necessary anyway.
+
+Laplace approximation is used to get an approximation of the likelihood. In this case the likelihood is difficult to calculate due to the random effect, which leads to the likelihood being an integral. If we write the integrand as $\exp(g_i(\pmb{\gamma}_i))$ and then to a second order Taylor expansion of $g_i(\cdot)$, we will get the Laplace approximation. This will be much simpler to calculate and can be optimated to find estimates.
+
+
+### d)
+
+We have that $-2(-1486.45 - (-1245.6)) = 481.7$. The model with the random effect has one parameter more than the one without.
+
+But we must take into account that $\tau_0^2 = 0$ (which is $H_0$) is at the edge of the parameter space (variances are not negative, but can be very large). We use a mixture of $\chi_0^2$ and $\chi_1^2$-distributions to calculate the $p$-value. This corresponds to calculating the p-value under $\chi_1^2$ and then dividing by 2. 
+
+$P(\chi_1^2 > 481.7) = 0$, and $0/2 = 0$, so we reject the null-hypothesis.
+
+
+### e) 
+
+`log(haulsize)` has a mean/sd-value which in both models is less than 1.8, which indicates that haulsize is not important. But we do not use the whole dataset that Havforskingsinstituttet has, so then the conclusion might change. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

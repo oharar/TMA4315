@@ -1,0 +1,311 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 3: BINARY REGRESSION, solution IL week 2"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+ds <- read.table("http://data.princeton.edu/wws509/datasets/cuse.dat", header = TRUE)
+head(ds)
+
+```
+
+# Problem 1: The null model - no covariates
+
+## a)
+
+Explain `fit0`:
+```{r}
+fit0 <- glm(cbind(using, notUsing) ~ 1, data = ds, family = "binomial")
+fit0 # see that residual deviance is the null deviance
+# estimating the probability p using the data can be done directly, using the MLE estimate
+```
+
+## b)
+
+Estimated coefficient and proportion using contraception:
+Log-likelihood
+$$l(\beta)=\beta_0 N_1 - \log(1+\exp(\beta_0))N$$
+and derivative thereof (score function)
+$$ s(\beta_0)=\frac{\partial l}{\partial \beta} = N_1-N\frac{\exp(\beta_0)}{1+\exp(\beta_0)}$$
+and to find the MLE we set $s(\hat{\beta}_0)=0$, and get
+
+$$ \frac{\exp(\hat{\beta}_0)}{1+\exp(\hat{\beta}_0)}=\frac{N_1}{N}$$
+Observe that this also means that 
+$$\hat{\pi}=\frac{N_1}{N}$$
+and further that
+$$ \hat{\beta}_0=\text{logit}(\frac{N_1}{N})$$
+
+```{r}
+N <- sum(ds$using + ds$notUsing)
+N1 <- sum(ds$using)
+N2 <- N - N1
+qlogis(N1/N) # this is the beta0hat
+fit0$coefficients
+```
+
+
+## c)
+
+Estimated variance of $\hat{\beta}_0$:
+$\text{Cov}(\hat{\beta}_0)=F^{-1}(\hat{\beta}_0)$, and since is a scalar we might call it $\text{Var}(\hat{\beta}_0)$.
+
+$$F(\beta_0) = \sum_{j=1}^G x_jx_j^T n_j \pi_j(1-\pi_j)=\sum_{j=1}^G n_j \pi(1-\pi)=N\pi(1-\pi)$$
+The inverse is then:
+$$F^{-1}(\beta_0)=\frac{1}{N\pi (1-\pi)}$$
+and inserted $\hat{\pi}=\frac{N_1}{N}$ to give 
+$$\text{Var}(\hat{\beta}_0)=F^{-1}(\hat{\beta}_0)=\frac{1}{N \hat{\pi} (1-\hat{\pi})}=\frac{1}{N \frac{N_1}{N}\frac{N_2}{N}}=\frac{N}{N_1N_2}=\frac{1}{N_1}+\frac{1}{N_2}$$
+
+
+## d)
+
+```{r}
+
+#Fisher-matrix:
+1/N1+1/N2
+# (1x1-matrix)
+
+vcov(fit0) # same as we calculated
+
+# beta0 is normal with mean fit0$coefficients and variance vcov(fit0)
+
+```
+
+## e and f)
+
+```{r}
+
+critval <- qnorm(0.025,lower.tail=FALSE)
+ci <- c(fit0$coefficients - critval*sqrt(vcov(fit0)), fit0$coefficients + critval*sqrt(vcov(fit0)))
+
+confint.default(fit0) # assumes asymptotic gaussian distribution
+confint(fit0)
+
+plogis(ci)
+# does the same
+fit0$family$linkinv(ci)
+
+```
+
+# Problem 2: We then study the effect of the covariate "wantsMore"
+
+## a)
+
+```{r}
+fit1 <- glm(cbind(using, notUsing) ~ wantsMore, data = ds, family = binomial)
+summary(fit1) # Note that null-deviance is as fit0, but residual deviance is smaller
+exp(fit1$coefficients[2])
+```
+
+Parameter interpretation: if you want more kids, you are less probable to use contraceptives (this makes sense). And, when you change from not wanting more kids to wanting more kids the odds for contraceptive will be multiplied by $\exp(\hat{\beta_1})$ `r exp(fit1$coefficients[2])`. Remember, when $\beta<0$ we have a decrease in the odds.
+
+## b)
+
+$H_0$: $\beta_1 = 0$, $H_1$: $\beta_1 \neq 0$
+
+Wald test: $W = (\hat{\beta_1}/(\text{SD}(\hat{\beta_1})))^2$
+
+
+```{r}
+
+summary(fit1)
+
+# covariance matrix
+summary(fit1)$cov.scaled
+vcov(fit1)
+
+# if you want to calculate the Fisher info directly from the formula -- but not needed! Can be found by using vcov(fit1)
+new_ds <- xtabs(formula = cbind(using, notUsing) ~ wantsMore, data = ds)
+fisherlist_1 <- list(x = cbind(c(1,1), c(0,1)),
+                     n = cbind(new_ds[,1] + new_ds[,2]),
+                     pi = fit1$family$linkinv(cbind(c(1,1), c(0,1))%*%fit1$coefficients))
+
+gr1 <- with(fisherlist_1, x[1,]%*%t(x[1,])*n[1,]*pi[1,]*(1-pi[1,]))
+gr2 <- with(fisherlist_1, x[2,]%*%t(x[2,])*n[2,]*pi[2,]*(1-pi[2,]))
+
+fisher_1 <- gr1 + gr2
+
+covmat_1 <- solve(fisher_1)
+covmat_1
+
+beta_1 <- fit1$coefficients[2]
+sd_1 <- sqrt(covmat_1[2,2])
+wald_1 <- (beta_1/sd_1)^2
+wald_1 # the squared z-statistic from the summary table
+pchisq(wald_1, 1, lower.tail = FALSE)
+
+# likelihood ratio test
+
+diff_dev <- fit0$deviance - fit1$deviance
+diff_df <- 15-14
+diff_dev
+pchisq(diff_dev, diff_df, lower.tail = FALSE)
+
+```
+
+
+## c)
+
+$LRT = -2(l(SMALL) - l(BIG))$
+
+```{r}
+
+loglik <- function(par, args) {
+    y <- args$y
+    x <- args$x
+    n <- args$n
+    res <- sum(y * x %*% par - n * log(1 + exp(x %*% par)))
+    return(res)
+}
+
+args0 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds))))
+args1 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds)), as.numeric(ds$wantsMore)-1))
+
+betas0 <- fit0$coefficients
+betas1 <- fit1$coefficients
+
+ll0 <- loglik(betas0, args0)
+# or
+loglik(matrix(c(betas0,0),ncol=1),args1)
+#and
+ll1 <- loglik(betas1, args1)
+
+lrtest_1 <- -2*(ll0-ll1)
+lrtest_1
+diff_df <- 15-14 # 1 parameter in the first model, 2 in the second, and 16 observations in both
+pchisq(lrtest_1, diff_df, lower.tail = FALSE)
+
+```
+
+## d)
+
+The deviance is given by $-2(l(model) - l(saturated))$. The difference in the deviances for two models A and B is then $-2(l_A - l_S) - (-2(l_B - l_S)) = -2l_A + 2l_S + 2l_B - 2l_S = 2l_B - 2l_A = -2(l_A - l_B)$. In our case, fit0 is model A and fit1 is model B.
+
+```{r}
+fit0$deviance-fit1$deviance
+```
+
+
+## e)
+
+They differ, but give the same conclusion as the critical value is 3.841. Both are assumed to be $\chi^2$-distributed with 1 df.
+
+
+# Problem 3: Now two covariates - deviance and model comparison
+
+## a)
+
+No solution given (explain the content of each model, before seeing diagnostics).
+
+## b)
+
+See the module pages on deviance for definition. Degrees of freedom (df) is the difference between number of observations (or groups) and the number of parameters $\beta$ in your model. Deviance is used for assessing model fit, and model choice.
+
+## c)
+
+You can compare all *nested* models, i.e., models where one is a submodel of the other, using the likelihood-ratio test. They have to be nested, since you test whether a model with fewer parameters (null-hypothesis) is better than others. The smaller model will always have larger (or equal) deviance than the larger model.
+
+```{r, tidy = FALSE}
+ds$Y <- cbind(ds$using, ds$notUsing)
+models <- list(
+  null     = glm(Y ~ 1, family = binomial, data = ds),
+  age      = glm(Y ~ age, family = binomial, data = ds),
+  desire   = glm(Y ~ wantsMore, family = binomial, data = ds),
+  additive = glm(Y ~ age + wantsMore, family = binomial, data = ds),
+  interact = glm(Y ~ age*wantsMore, family = binomial, data = ds)
+)
+models
+lapply(models,summary)
+df <- data.frame(deviance = round(unlist(lapply(models, deviance)), 2),
+                 df = unlist(lapply(models, df.residual)),
+                 aic = round(unlist(lapply(models, AIC))))
+
+# comparing the model with age + wantsMore (small model) and age + wantsMore + age:wantsMore (large model)
+# can use deviances instead of log-likelihood, then we have the formula dev(small)-dev(large). we do not multiply with (-2) now
+# we test whether the test statistic is chisq with df = difference in number of parameters. This is the same as the difference in degrees of freedom
+
+dev_small <- df$deviance[4]
+dev_large <- df$deviance[5]
+
+df_small <- df$df[4]
+df_large <- df$df[5]
+
+lrt <- dev_small - dev_large
+df_lrt <- df_small - df_large # 3
+qchisq(0.95, df_lrt) # critical value at 5 %
+lrt # much larger than critical value
+pchisq(lrt, df_lrt, lower.tail = FALSE) # better with interaction
+
+```
+
+## d)
+
+We want low AIC, so again we choose the interaction-model.
+
+# Problem 4: Plotting
+
+## a)
+
+```{r}
+fit3add <- glm(cbind(using,notUsing) ~ age + education + wantsMore, data = ds, family = binomial)
+summary(fit3add)
+```
+
+Rodriges: "Additive: The deviance of 29.92 on 10 d.f. tells us that this model does not fit the data, so the assumption that logit differences by one variable are the same across categories of the other two is suspect."
+
+The saturated model is a model where we have all possible interactions:
+
+```{r}
+summary(glm(cbind(using,notUsing) ~ age*education*wantsMore, data = ds, family = binomial))
+```
+
+We have no degrees of freedom here! So we have 0 deviance, but no predictive power.
+
+
+## b)
+
+```{r}
+library(ggplot2)
+plotdf <- data.frame(dres = fit3add$residuals, fitted = fit3add$fitted.values, age = ds$age)
+ggplot(plotdf, aes(x = fitted, y = dres)) + geom_point() + labs(x = "Fitted values", y = "Deviance residuals")
+```
+
+Not any particular trend.
+
+
+## c)
+
+```{r, echo=-1}
+library(ggplot2)
+# Same code as in the module pages
+frac=ds$using/(ds$using+ds$notUsing)
+logitdf=data.frame(lfitted=qlogis(fit3add$fitted),lfrac=qlogis(frac),age=ds$age,wantsMore=ds$wantsMore,education=ds$education)
+ggplot(logitdf,aes(x=age))+geom_point(aes(y=lfrac,colour="saturated"))+geom_point(aes(y=lfitted,colour="fitted"))+facet_wrap(facets=~wantsMore*education) + labs(x = "age", y = "")
+```
+
+
+
+
+
+
+
+
+

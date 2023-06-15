@@ -1,0 +1,226 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 2: MULTIPLE LINEAR REGRESSION, solution IL week 1"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+# #  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+ # beamer_presentation:
+#    keep_tex: yes
+#    fig_caption: false
+#    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),results="hold",tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R packages
+
+```{r, eval=FALSE}
+install.packages(c("formatR","gamlss.data","ggfortify","GGally"))
+```
+
+# Theoretical questions
+
+## Problem 1
+
+### 1. 
+From the module page:
+Independent pairs $(Y_i, {\bf x}_i)$ for $i=1,\ldots,n$.
+
+1. Random component: $Y_i \sim N$ with $\text{E}(Y_i)=\mu_i$ and $\text{Var}(Y_i)=\sigma^2$.
+2. Systematic component: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
+3. Link function: linking the random and systematic component (linear predictor): Identity link and response function. $\mu_i=\eta_i$.
+
+
+### 2.
+
+Likelihood:
+$L(\beta) = \prod_{i=1}^n f(y_i; \beta) = \left(\frac{1}{2\pi}\right)^{n/2} \left(\frac{1}{\sigma^2}\right)^{n/2} \exp\left(- \frac{1}{2\sigma^2} (\bf{y} - \bf{X}\beta)^T(\bf{y} - \bf{X}\beta)\right)$ 
+
+Log-likelihood:
+$l(\beta) = \ln L(\beta) =  -\frac{n}{2}\ln(2\pi) -\frac{n}{2}\ln(\sigma^2) - \frac{1}{2\sigma^2} (\bf{y} - \bf{X}\beta)^T(\bf{y} - \bf{X}\beta)$
+
+Score vector:
+$s(\beta) = \frac{\partial l}{\partial \beta} = \frac{1}{\sigma^2} (\bf{X}^T\bf{Y} - \bf{X}^T\bf{X} \beta) = \frac{1}{\sigma^2} \sum_{i=1}^n (x_i y_i - x_i x_i^T \beta)$
+
+The set of equations we use to find the parameter estimates is the score vector set equal to zero. If we have no closed form solution we can use numerical optimization to find the solution.
+
+### 3.
+
+Use the rules on the module pages to calculate this
+
+Observed Fisher: $H(\beta) = -\frac{\partial^2 l(\beta)}{\partial \beta \partial \beta^T} = \dots = \frac{1}{\sigma^2} \bf{X}^T \bf{X}$
+
+Expected Fisher (note that there are no random variables in the observed Fisher information matrix!): $F(\beta) = E\left(-\frac{\partial^2 l(\beta)}{\partial \beta \partial \beta^T}\right) = \frac{1}{\sigma^2} \bf{X}^T \bf{X}$
+
+So for MLR they are equal! But this is not the case for all GLMs.
+
+Both are square matrices of dimension $k + 1 = p$ (number of covariates + 1 for intercept), i.e., $p \times p$. These tell something about the amount of information a random variable $Y$ has about an unknown parameter (here $\beta$). In MLR, we use the Fisher information (which is the negative Hessian) to calculate the variance of the parameter estimates! Later, this does not hold exact, but asymptotically.
+
+
+### 4.
+
+$\hat{\beta}$ is a linear combination of normal distributed RVs $\implies$ $\hat{\beta}$ is normal istelf. We know that $\bf{Y} \sim \text{N}(\bf{X}\beta, \sigma^2 \bf{I})$.
+
+$\text{E}(\hat{\beta}) = \text{E}((\bf{X}^T \bf{X})^{-1} \bf{X}^T \bf{Y}) = (\bf{X}^T \bf{X})^{-1} \bf{X}^T \text{E}(\bf{Y}) = (\bf{X}^T \bf{X})^{-1} \bf{X}^T \bf{X}\beta = \beta$
+
+$\text{Var}(\hat{\beta}) = \text{Var}((\bf{X}^T \bf{X})^{-1} \bf{X}^T \bf{Y}) = (\bf{X}^T \bf{X})^{-1} \bf{X}^T \text{Var}(\bf{Y}) = ((\bf{X}^T \bf{X})^{-1} \bf{X}^T)^T = \sigma^2 (\bf{X}^T \bf{X})^{-1} \bf{X}^T \bf{X} ((\bf{X}^T \bf{X})^{-1})^T = \sigma^2 ((\bf{X}^T \bf{X})^T)^{-1} = \sigma^2(\bf{X}^T \bf{X})^{-1}$
+
+This means that the $j$th element of $\hat{\beta}$, $\hat{\beta}_j$, has a normal distribution with mean $\beta_j$ and variance given by the inverse Fisher information!
+
+
+### 5.
+
+The error of an observation is the difference between the observed value and the true (unobservable) value (true value of $\varepsilon$ in MLR). The residual of an observation if the difference between the observed value and the predicted value (estimated $\hat{\varepsilon}$ in MLR).
+
+Raw residuals: $\hat{\varepsilon} = Y - \hat{Y}$. These have different variance, and may be correlated, as the variance-covariance matrix here is not $\sigma^2\bf{I}$, but $\sigma^2(I-H)$ which is not a diagonal matrix. We solve this by standardizing the residuals so they have the same variance (but they are still correlated), by using the estimated variance $\hat{\sigma^2}$ together with the square root of the diagonal elements of $(I-H)$. We can also use studentized residuals where we omit observation $i$ when calculating the estimated variance $\hat{\sigma^2}$ used to scale residual $i$.
+
+
+### 6.
+
+The intercept is thus the mean, and the slope is the standard deviation.
+
+
+# Interpretation and understanding
+
+## Problem 2: Munich Rent Index data
+
+### 1.
+
+```{r}
+
+library(gamlss.data)
+library(ggfortify)
+?rent99
+
+mod1 <- lm(rent ~ area + location + bath + kitchen + cheating, data = rent99)
+mod2 <- lm(rentsqm ~ area + location + bath + kitchen + cheating, data = rent99)
+autoplot(mod1, label.size = 2)
+autoplot(mod2, label.size = 2)
+
+```
+
+
+### 2.
+
+Discuss the meaning of each covariate estimate.
+
+The intercept means that if we have an apartment of 0 square meter (which does not make sense!), at location 1, without bath, kitchen and central heating, the rent is -21 Euro per month, or 7 euro per square meter per month.
+
+
+### 3.
+
+```{r}
+
+summary(mod1)
+summary(mod2)
+
+```
+
+
+## Problem 3: Simple vs. multiple regression
+
+### 1.
+
+Then the matrix $\bf{X}^T\bf{X}$ becomes a diagonal matrix, and the $\hat{\beta}$s are independent when the data are assumed Gaussian. We can choose covariates so we get orthogonal columns.
+
+
+### 2.
+
+Without an intercept (centered data). The estimate of $\beta_1$ in the simple regression model and in the MLR (where we also have $\beta_2$ etc.) will not change, as a new covariate is measured ortogonal (uncorrelated) to the old and thus will not affect the estimate of $\beta_1$.
+
+
+### 3.
+
+Multicollinearity leads to a matrix $\bf{X}^T\bf{X}$ that is far from diagonal, which means that the $\hat{\beta}$ estimates are highly dependent. This makes the interpretation of the model difficult.
+
+
+## Problem 4: Dummy vs. effect coding in MLR
+
+```{r}
+income <- c(300, 350, 370, 360, 400, 370, 420, 390,
+            400,430,420, 410, 300, 320, 310, 305,
+            350, 370, 340, 355,370, 380, 360, 365)
+gender <- c(rep("Male", 12),rep("Female",12))
+place <- rep(c(rep("A",4),rep("B",4),rep("C",4)),2)
+data <- data.frame(income, gender = factor(gender,levels = c("Female","Male")),
+                   place = factor(place,levels = c("A","B","C")))
+```
+
+
+### 1.
+
+```{r}
+GGally::ggpairs(data)
+```
+
+
+### 2.
+
+```{r}
+interaction.plot(x.factor = data$gender, trace.factor = data$place, response = data$income, type = "l")
+```
+
+Show that men have higher income than women, and that there is a difference in location. Does not seem necessary with an interaction.
+
+
+### 3.
+
+```{r}
+plot.design(income ~ place + gender, data = data)
+```
+
+The average income as a function of place and gender, and the average income overall.
+
+
+### 4.
+
+```{r}
+mod3 <- lm(income ~ place + gender, data = data)
+mod3
+```
+
+See that this matches the `plot.interaction` plot above, where Female and place A is the intercept alone.
+
+
+### 5.
+
+```{r}
+mod4 <- lm(income ~ place + gender, data = data, contrasts = list(place = "contr.sum", gender = "contr.sum"))
+mod4
+model.matrix(mod4)
+mean(income)
+```
+
+Now the intercept is the average of the income. Look at the `plot.design` plot above and see that the estimates follow the lines there.
+
+
+## Problem 5. Interactions
+
+No solution.
+
+
+## Problem 6: Simulations in R
+
+No solution.
+
+
+
+
+
+
+
+
+
+
+

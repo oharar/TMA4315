@@ -1,0 +1,300 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+subtitle: "Module 9: SUMMING UP"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU"
+date: "22.11.2018 [PL]"
+output: #3rd letter intentation hierarchy
+   html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+   pdf_document:
+    toc: true
+    toc_depth: 2
+    keep_tex: yes
+   beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
+showsol<-FALSE
+```
+
+(Latest changes: 22.11 second version).
+
+# Overview
+
+## Topics
+
+* course content and learning outcome
+* reading list
+* course topic and modules
+    + core concepts: exponential family, models: LM/GLM/mvGLM/LMM/GLMM, likelihood, maximum likelihood, score vector, Fisher information, Fisher scoring, Wald/LRT(/score) tests, deviance, AIC 
+    + incoming questions: overview of models (including categorical regression), exponential family and canonical link (why?), likelihood-score-Fisher information, which tests for what, model assessment (deviance and residuals)
+* exam and exam preparation 
+* suggestions for statistics-related courses in year 4 and 5
+* questionnaire
+
+---
+
+## Classnotes:
+
+* [Notes from overview](https://www.math.ntnu.no/emner/TMA4315/2018h/M9PL.pdf)
+* [Overview sheet (made before class)](https://www.math.ntnu.no/emner/TMA4315/2018h/Summingup2018.pdf)
+* [Basic 5 (made before class)](https://www.math.ntnu.no/emner/TMA4315/2018h/Basic5.pdf)
+* [Notes from the print-out for interpreting LM/GLM/VGLM/LMM/GLMM (made before class)](https://www.math.ntnu.no/emner/TMA4315/2018h/9FinalRpart.pdf)
+* [Notes from "problem types on the written exam" (made before class)](https://www.math.ntnu.no/emner/TMA4315/2018h/GLMexam2018.pdf)
+
+# About the course
+
+## Content
+
+Univariate exponential family. Multiple linear regression. Logistic regression. Poisson regression. General formulation for generalised linear models with canonical link. Likelihood-based inference with score function and expected Fisher information. Deviance. AIC. Wald and likelihood-ratio test. Linear mixed effects models with random components of general structure. Random intercept and random slope. Generalised linear mixed effects models. 
+Strong emphasis on programming in R. 
+Possible extensions: quasi-likelihood, over-dispersion, models for multinomial data, analysis of contingency tables, quantile regression. 
+
+H2018: Lectured multinomial data (categorical regression), but did still not cover so much over-dispersion, and _did not cover_ quasi-likelihood, contingency tables and quantile regression (of the possible extensions).
+
+---
+
+## Learning outcome
+
+###Knowledge
+The student can assess whether a generalised linear model can be used in a given situation and can further carry out and evaluate such a statistical analysis. The student has substantial theoretical knowledge of generalised linear models and associated inference and evaluation methods. This includes regression models for normal data, logistic regression for binary data and Poisson regression. 
+The student has theoretical knowledge about linear mixed models and generalised linear mixed effects models, both concerning model assumptions, inference and evaluation of the models. Main emphasis is on normal, binomial and Poisson models with random intercept and random slope. 
+
+###Skills
+The student can assess whether a generalised linear model or a generalised linear mixed model can be used in a given situation, and can further carry out and evaluate such a statistical analysis.
+
+---
+
+## Final reading list
+
+Fahrmeir, Kneib, Lang and Marx (2013): Regression, Springer: eBook (free for NTNU students).
+<https://link.springer.com/book/10.1007%2F978-3-642-34333-9>
+
+* Chapter 2: 2.1, 2.2, 2.3, 2.4, 2.10
+* Chapter 3 (also on reading list for TMA4267)
+* Chapter 5: 5.1, 5.2, 5.3, 5.4, 5.8.2
+* Chapter 6: but not p 344-345 nominal models and latent utility models, not 6.3.2 Sequential model, and  not category specific varables on page 344-345.
+* Chapter 7: 7.1, 7.2, 7.3, 7.5, 7.7, 7.8.2. 
+\footnotesize [In greater detail: pages 349-354 (not "Alternative view on the random intercept model"), 356-365 (not 7.1.5 "Stochastic Covariates""), 368-377 (not "Bayesian Covariance Matrix""), 379-380 (not "Testing Random Effects or Variance Parameters"", only last part on page 383), 383 (middle), 389-394, 401-409. Note: Bayesian solutions not on the reading list.] \normalsize
+* Appendix B.1, B.2, B.3 (not B.3.4 and B.3.5), B.4
+
+---
+
+In addition to the Fahrmeir et al book, on the reading list is also:
+
+* All the 9 module pages (but module 1 and 9 does not have theory that is not in 2-8).
+* The three compulsory exercises.
+
+---
+
+## The modules
+
+1. [Introduction (exponential family, Rstudio, ggplot and R Markdown)](https://www.math.ntnu.no/emner/TMA4315/2018h/1Intro.html)
+
+2. [Multiple linear regression (emphasis on likelihood)](https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html)
+
+3. [Binary regression (independent responses, binary individual and grouped response)](https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html)
+
+4. [Count and continuous positive reponse data (independent responses, Poisson- and gamma regression)](https://www.math.ntnu.no/emner/TMA4315/2018h/4PoissonGamma.html)
+
+5. [Generalized linear models: common core](https://www.math.ntnu.no/emner/TMA4315/2018h/5GLM.html)
+
+6. [Categorical regression (multinomial distribution, multivariate GLM, nominal and ordinal models)](https://www.math.ntnu.no/emner/TMA4315/2018h/6Categorical.html) 
+
+7. [Linear mixed models (normal response, clustered data or repeated measurements)](https://www.math.ntnu.no/emner/TMA4315/2018h/7LMM.html) 
+
+8. [Generalized mixed effects models (non-normal response, clustered data or repeated measurements)](https://www.math.ntnu.no/emner/TMA4315/2018h/8GLMM.html) 
+
+9. Summing-up (this module)
+
+
+# Core of the course: regression
+
+**Main question:** what it the effect of covariate(s) $x$ on the response(s) $y$?
+
+## Examples
+
+* [M2] Munich rent index
+* [M3] Mortality of beetles, infant respiratory disease, contraceptive use.
+* [M4] Female crabs with satellites, smoking and lung cancer, time to blood coagulation, precipitation in Trondheim, treatment of breast cancer.
+* [M6] Alligator food, mental health.
+* [M7+8] Richness of species at beaches, sleep deprivation, trawl fishing.
+
+---
+
+## The five ingredients
+
+1. **Model specification**: an equation linking (conditional) mean of the response to and the explanatory variables, and a probability distribution for the response. We only consider responses from exponential family.
+     a. multiple linear regression model (normal response)
+     b. univariate generalized linear model (normal, binomial, Poisson, gamma)
+     c. multivariate generalied linear model (multinomical: nominal and ordinal)
+     d. linear mixed effect models (normal response, correlated within clusters)
+     e. generalized linear mixed models (binomial, Poisson)
+
+---
+
+2. **Likelihood** - used to estimate parameters (ML and a bit on REML): score function, Fisher information, Fisher scoring (IRWLS).
+
+3. **Asymptotic distribution** of maximum likelihood estimators (multivariate normal) and tests (chisquared).
+
+4. **Inference**: interpretation of results, plotting results, confidence intervals, hypothesis tests (Wald,LRT,score).
+
+5. Checking the **adequacy of the model** (deviance, also residuals, qqplots - but very little focus in our course _outside the normal model_), **choose between models** (nested=LRT or AIC, not nested=AIC), 
+
+
+# Understanding and comparing R print-outs
+
+The print-outs below are from LM `lm`, GLM `glm`, mvGLM `vglm`, LMM `lmer` and GLMM `glmer`.
+
+_For H2018: at the exam venue the `vglm`, `lmer` and `glmer` functions are not available (not installed), this means that you do not need to be able to run analyses with these, but you still need to be able to interpret output!_
+
+---
+
+Below we have fit a model to a data set, and then printed the `summary` of the model. For each of the print-outs you need to know (be able to identify and explain) every entry. In particular identify and explain:
+
+* which model: model requirements
+* how is the model fitted (versions of maximum likelihood)
+* parameter estimates for $\beta$
+* inference about the $\beta$: how to find CI and test hypotheses (which hypothesis is reported test statistic, and possibly $p$-value for)
+* model fit (deviance, AIC, R-squared, F)
+
+In addition, further inference can be made using `anova(fit1,fit2)`, `confint`, `residuals`, `fitted`, `AIC`, `ranef` and other functions we have worked with in the PL, IL and on the compulsory exercises.
+
+---
+
+## MLR - multiple linear regression 
+```{r,results="hold"}
+library(gamlss.data)
+fitLM=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
+summary(fitLM)
+fitGLM=glm(rent~area+location+bath+kitchen+cheating,data=rent99)
+summary(fitGLM)
+```
+
+---
+
+## GLM - Binomial regression with logit-link
+```{r,results="hold"}
+library(investr)
+fitgrouped=glm(cbind(y, n-y) ~ ldose, family = "binomial", data = investr::beetle) 
+summary(fitgrouped)
+```
+
+---
+
+## GLM - Poisson regression with log-link
+```{r,results="hold"}
+crab=read.table("https://www.math.ntnu.no/emner/TMA4315/2018h/crab.txt")
+colnames(crab)=c("Obs","C","S","W","Wt","Sa")
+crab=crab[,-1] #remove column with Obs
+crab$C=as.factor(crab$C)
+model3=glm(Sa~W+C,family=poisson(link=log),data=crab,contrasts=list(C="contr.sum"))
+summary(model3)
+```
+
+---
+
+## Categorical regression, nominal model
+
+```{r}
+# data from Agresti (2015), section 6, with use of the VGAM packages
+data="http://www.stat.ufl.edu/~aa/glm/data/Alligators.dat"
+ali = read.table(data, header = T)
+attach(ali)
+y.data=cbind(y2,y3,y4,y5,y1)
+x.data=model.matrix(~size+factor(lake),data=ali)
+library(VGAM)
+# We fit a multinomial logit model with fish (y1) as the reference category:
+fit.main=vglm(cbind(y2,y3,y4,y5,y1)~size+factor(lake),
+         family=multinomial, data=ali)
+summary(fit.main)
+pchisq(deviance(fit.main),df.residual(fit.main),lower.tail=FALSE)
+```
+
+---
+
+## Categorical regresion, ordinal model
+
+```{r}
+# Read mental health data from the web:
+library(knitr)
+data="http://www.stat.ufl.edu/~aa/glm/data/Mental.dat"
+mental = read.table(data, header = T)
+library(VGAM)
+# We fit a cumulative logit model with main effects of "ses" and "life":
+fit.imp=vglm(impair~life+ses,family=cumulative(parallel=T),data=mental)
+# parallell=T gives proportional odds structure - only intercepts differ
+summary(fit.imp)
+```
+
+---
+
+## LMM - random intercept and slope
+```{r,results="hold"}
+library(lme4)
+fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+summary(fm1)
+```
+
+--- 
+
+## GLMM - random intercept and slope Poisson
+```{r,results="hold"}
+library("AED")
+data(RIKZ)
+library(lme4)
+fitRI=glmer(Richness~NAP +(1+NAP|Beach),data=RIKZ,family=poisson(link=log))
+summary(fitRI)
+
+```
+
+
+# Exam and exam preparation
+
+We take look at the information posted at Blackboard, and the relevant exams are found on the bottom of each module page.
+
+Dates for supervision are also found on Bb.
+
+# After TMA4315
+
+What is next in the spring semester?
+
+**For the 4th year student**
+
+* [TMA4250 Spatial statistics](https://www.math.ntnu.no/emner/TMA4250)
+* [TMA4268 Statistical learning](https://www.math.ntnu.no/emner/TMA4268)
+* [TMA4275 Survival analysis](https://www.math.ntnu.no/emner/TMA4275/)
+* [TMA4300 Computational statistics](https://www.math.ntnu.no/emner/TMA4300/)
+* [KLMED8005 Analysis of repeated measurements](https://www.ntnu.no/studier/emner/KLMED8008/)
+* [SMED8002 Epidemiology 2](https://www.ntnu.no/studier/emner/SMED8002/)
+* [TDT4300 Datavarehus og datagruvedrift](https://www.ntnu.no/studier/emner/TDT4300/)
+* [TDT4173 Machine learning and case-based reasoning](https://www.ntnu.no/studier/emner/TDT4173/) (Big overlap with TMA4268)
+* [NEVR3004 Neural networks (in the brain)](https://www.ntnu.no/studier/emner/NEVR3004/)
+
+---
+
+**For the 5th year student**
+
+<!-- * [Computational statistics 2](http://www.ntnu.no/studier/emner/MA8702/) Phd course -->
+* [MA8701 General statistical models](https://wiki.math.ntnu.no/ma8701/2019v) Phd course with selected topics relevant for statistical learning and inference. 
+
+Also, for the autumn of 2019 the Deep learning course at IDI which up to now was 3.75STP is planned to be an ordinary 7.5STP course.
+
+# Course evaluation in TMA4315 
+
+Please answer the course evaluation (anonymous):
+<https://kvass.svt.ntnu.no/TakeSurvey.aspx?SurveyID=tma4315h2018>
+
+---
+
+From my heart -- I thank all the students for their active participation at the lectures and for being so positive! I really hope this course has given you skills that you will need and use in your future academic life! I look forward to meeting you as `statisticians` in the future! Good luck on your future endeavours!
+
+-Mette
+
+

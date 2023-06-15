@@ -1,0 +1,44 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+subtitle: "R test-question for the exam"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+#    toc_float: true
+#    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+  #   keep_tex: yes
+#  beamer_presentation:
+#    keep_tex: yes
+#    fig_caption: false
+#    latex_engine: xelatex
+---
+
+One of the built in datasets in R is called `InsectSprays` and is accessed by writing `InsectSprays`.The data set consists of 72 observations of two variables from different agricultural fields. The variables are:
+
+* `count` of insects remaining after the field was treated with some treatment,
+* `spray` the treatment (A-F) that the field was subject to
+
+Fit a generalized linear model with canonical link to the data. Use `count` as the response and the factor `spray` as a covariate. Do not include an intercept term in the model. You may also need to perform additional commands (in addition to fitting the model) on your fitted GLM-object.
+
+Based on your data analysis answer the following questions:
+
+a) Which type of GLM did you fit? Multiple choice: Binary, Poisson, Normal,Gamma, Other.
+
+b) Which link function did you use? Multiple choice: Identity, log, exp, logit, inverse, negative inverse, other.
+
+c) What is the estimated regression coefficient for effect of `spray` of category A? Numerical answer.
+
+d) What is the estimated variance of the regression coefficient for the effect of `spray` of category C? Numerical answer.
+
+e) Perform a deviance test and report the p-value. Numerical answer
+
+f) Is the conclusion from the deviance test that our model is good? True/false.
+
+g) Give the estimated covariance between the estimated effect of `spray` B and `spray` F. Numerical value.
+
+h) Perform an test with $H_0$ stating that the regression coefficient of for spray B is equal to the regression coefficient for spray F, vs. the two-sided alternative. Report the p-value from this test. Numerical value.

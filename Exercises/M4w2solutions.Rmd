@@ -1,0 +1,381 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 4: POISSON REGRESSION, solution IL week 2"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# Problem 1: Exam 2007 (Problem 1, a bit modified) - Smoking and lung cancer
+
+```{r}
+smoking <- read.table(file = "https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt")
+head(smoking)
+nrow(smoking)
+model1 <- glm(dead ~ age + smoke, family = "poisson", data = smoking, offset = log(pop)) # note that the population is the offset here
+summary(model1)
+```
+
+
+## a)
+An offset is somewthing we include in the model to model the rate of something happening, rather than the occurrence. This is useful when we have samples where the group sizes differ. It is rather similar to our grouped version of the binomial. The offset is not a quantity to be estimated, we know the offset for each (aggregated) observation.
+
+Estimated number of deaths per person over 6 years for 53-year old non-smoker: $\hat{\lambda} = \exp(\hat{\beta_0} + \hat{\beta}_{50-54} + \hat{\beta}_{no})$, values below. 
+
+```{r}
+names(model1$coefficients)
+beta_0 <- coef(model1)[1]
+beta_53 <- coef(model1)[3]
+beta_no <- coef(model1)[12]
+
+cat("Estimated number of cases of lung cancer:", as.numeric(exp(beta_0 + beta_53 + beta_no)))
+
+```
+
+Number of df: no. of observations minus no. of estimated parameters. With 12 estimated parameters and 36 observations this gives 24 df.
+
+Goodness of fit: The $\chi^2$ critical value with 24 df is:
+
+```{r}
+qchisq(0.05, 24, lower.tail = FALSE)
+```
+
+The residual deviance is lower, thus the model fits the data well. $p$-value is
+```{r}
+1-pchisq(model1$deviance,model1$df.residual)
+```
+
+
+## b)
+
+<!--$$\lambda(a,s) = \exp(\beta_0 + \beta_{45-49}x_{45-49} + \beta_{50-54}x_{50-54} + \dots + \beta_{80+}x_{80+} + \\ \beta_{cigaretteOnly}x_{cigaretteOnly} + \beta_{cigarettePlus}x_{cigarettePlus} + \beta_{no}x_{no}) $$-->
+
+First - simple notation: Let $\lambda(a,s_1) = \exp(\log(\text{pop}) + \beta_0 + \beta_a + \beta_{s_1})$ and $\lambda(a,s_2) = \exp(\log(\text{pop}) + \beta_0 + \beta_a + \beta_{s_2})$, the the ratio is
+
+$$ r(a,s_1,s_2)=\frac{\exp(\log(\text{pop}) + \beta_0+\beta_a+\beta_{s_1})}{\exp(\log(\text{pop}) + \beta_0+\beta_a+\beta_{s_2})}=\frac{\exp(\beta_{s_1})}{\exp(\beta_{s_2})}$$
+
+and does not vary as a function of $a$. Remark: for our choice the $\beta_{s_1}$ is the reference category in the dummy variable coding, so here replaced by $0$.
+
+Alternative notation (more close to original lf):
+$$\log \lambda(a,s) = \log(\text{pop}) + \beta_0 + \sum_{i = 2}^9 \beta_{i, age} I(a = i) + \sum_{i = 2}^4 \beta_{i, smoke} I(s = i) $$
+where $I(a = i)$ is one if the age is at level number $i$ (where `40-44` is 1, `45-49` is 2 and so on) and 0 else, and $I(s = i)$ is one if the smoke level is at level $i$ (`cigarPipeOnly` is 1, `cigaretteOnly` is 2, `cigarettePipe` is 3 and `no` is 4). Note that the sums starts at $i=2$, this is because the first age level (`40-44`) and the first smokelevel (`cigarPipeOnly`) are included in the intercept (which means that persons between 40 and 44 that smokes only cigar and/or pipe will have $\exp(beta_0)$ estimated number of deaths due to lung cancer per person). The logatithm of $r$ is (when the age and offset terms cancels):
+
+$$\log r(a,s_1.s_2) = \log \lambda (a, s_1) - \log \lambda (a, s_2) = \sum_{i = 2}^4\beta_{i, smoke}[I(s_1 = i) - I(s_2 = i)] = \log r(s_1, s_2) $$
+
+As we can see; independent of $a$ (note that the intercept cancels as well). If we had included an interaction term between the age and smoking status then the ratio would have been dependent on the age.
+
+
+For $s_1 =$ `cigarPipeOnly` and $s_2 =$ `cigaretteOnly`:
+
+$$ r(a, s_1 = 1, s_2 = 2) = \exp(0-1\cdot\beta_{2, smoke}) \approx \exp(-0.36915) = 0.6913217$$
+
+```{r}
+exp(-coef(model1)[10])
+```
+
+90 % CI: $r(s_1, s_2) \pm z_{0.05} SD(r(s_1,s_2))$. We find it on log-scale, and transform it (as we need the assumption that the $\beta$'s are normal, which is not true for the exponentials!)
+
+Estimate: $\beta_{2, smoke} = 0.36915 = -\log r(s_1,s_2)$, with standard deviation $0.03791$. So we get the interval (using that $z_{0.05} = 1.645$) $[0.6495248, 0.7358038]$ for $r(s_1, s_2)$ ($[-0.4315143, -0.3067918]$ on log-scale).
+
+```{r}
+
+#the minus is there because we want the estimate for r and not the coefficient
+estimate <- -coef(model1)[10] 
+sd_estimate <- sqrt(vcov(model1)[10,10])
+critval <- qnorm(0.05, lower.tail = FALSE)
+
+lower <- estimate - critval*sd_estimate
+upper <- estimate + critval*sd_estimate
+
+cat("log-scale:\nValue: ", estimate, "\nInterval: [", lower, ", ", upper, "]", sep = "")
+
+cat("Real scale:\nValue: ", exp(estimate), "\nInterval: [", exp(lower), ", ", exp(upper), "]", sep = "")
+
+```
+
+If the ratio between the means equal 1, we can not distinguish between the two situations. As 1 is **not** in the interval, the difference between only cigarettes and only cigar/pipe is significant (can also see that the interval on log-scale does not contain 0).
+
+
+## c)
+```{r}
+model2 <- glm(dead ~ smoke, family = "poisson", data = smoking, offset = log(pop))
+model3 <- glm(dead ~ ageLevel + smoke, family = "poisson", data = smoking, offset = log(pop))
+
+summary(model2)
+summary(model3)
+```
+
+First, test the goodness of fit for each model as compared to the saturated model using the deviance.
+
+At the exam the students would need to find critical values for the $\chi^2$ distribution, and for the two models these are
+
+```{r, results = "hold"}
+qchisq(0.05, 32, lower.tail = FALSE)
+qchisq(0.05, 31, lower.tail = FALSE)
+1-pchisq(model2$deviance,model2$df.residual)
+1-pchisq(model3$deviance,model3$df.residual)
+```
+Neighter `model2` or `model3` are good, reject the null hypothesis that the model is good.
+Thus only `model1` is a good model (not reject the null). 
+
+We may use the deviance to compare models that are nested within each other, so we could compare `model2` and `model3`, and also `model2` and `model1`. We do this with the likelihood ratio test.
+
+```{r, results = "hold"}
+# model2 nested within model1
+model2$deviance-model1$deviance
+model2$df.residual-model1$df.residual
+1-pchisq(model2$deviance-model1$deviance,model2$df.residual-model1$df.residual)
+# H0 is to prefer the small model and H1 to prefer the large model, here we reject H0
+```
+
+```{r, results = "hold"}
+# model2 nested within model3
+model2$deviance-model3$deviance
+model2$df.residual-model3$df.residual
+1-pchisq(model2$deviance-model3$deviance, model2$df.residual-model3$df.residual)
+# H0 is to prefer the small model and H1 to prefer the large model, here we reject H0
+```
+The conclusion is to prefer `model1` to `model2`, and to prefer `model3` to `model2`. But, we can not compare `model1` to `model3` since theses are not nested. Overall - we should stay with `model1` that was the only passing the goodness of fit test.
+
+
+```{r, tidy = FALSE}
+
+library(ggplot2); library(reshape2)
+
+model3 <- glm(dead ~ ageLevel + smoke, family = "poisson", data = smoking, offset = log(pop))
+
+age <- 1:9
+beta_0 <- coef(model3)[1]
+beta_1 <- coef(model3)[2]
+cigO <- coef(model3)[3]
+cigP <- coef(model3)[4]
+no <- coef(model3)[5]
+
+model3_frame <- data.frame(age = age,
+                           cigarPipeOnly = beta_0 + age*beta_1,
+                           cigaretteOnly = beta_0 + age*beta_1 + cigO,
+                           cigarettePlus = beta_0 + age*beta_1 + cigP,
+                           no = beta_0 + age*beta_1 + no)
+
+model3_df <- melt(model3_frame, id.vars = "age", variable.name = "smoking", value.name = "lambda")
+
+gg1 <- ggplot(model3_df, aes(x = age, y = lambda, col = smoking)) + geom_line() +
+  labs(x = "Age", y = expression(log(lambda))) + 
+  scale_x_discrete(limits = 1:9, labels = as.character(unique(smoking$age))) +
+  theme(axis.text.x = element_text(angle = 45))
+  
+gg2 <- ggplot(model3_df, aes(x = age, y = exp(lambda), col = smoking)) + geom_line() +
+  labs(x = "Age", y = expression(lambda)) +
+  scale_x_discrete(limits = 1:9, labels = as.character(unique(smoking$age))) +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggpubr::ggarrange(gg1, gg2, common.legend = TRUE)
+
+
+# smokeno not significant
+model3_frame2 <- data.frame(age = age,
+                           cigarPipeOnly = beta_0 + age*beta_1,
+                           cigaretteOnly = beta_0 + age*beta_1 + cigO,
+                           cigarettePlus = beta_0 + age*beta_1 + cigP,
+                           no = beta_0 + age*beta_1 + no*0)
+
+model3_df2 <- melt(model3_frame2, id.vars = "age", variable.name = "smoking", value.name = "lambda")
+
+gg3 <- ggplot(model3_df2, aes(x = age, y = lambda, col = smoking)) + geom_line() +
+  labs(x = "Age", y = expression(log(lambda))) +
+  scale_x_discrete(limits = 1:9, labels = as.character(unique(smoking$age))) +
+  theme(axis.text.x = element_text(angle = 45))
+
+gg4 <- ggplot(model3_df2, aes(x = age, y = exp(lambda), col = smoking)) + geom_line() +
+  labs(x = "Age", y = expression(lambda)) +
+  scale_x_discrete(limits = 1:9, labels = as.character(unique(smoking$age))) +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggpubr::ggarrange(gg3, gg4, common.legend = TRUE)
+
+```
+
+We see from the first (and second) plot that the line for `smokeno` and `cigarPipeOnly` are very close to each other, so it is no surprise that `smokeno` is not significant.
+
+
+# Problem 2: TMA4315 Exam 2012, Problem 3: Precipitation in Trondheim, amount
+
+### a)
+
+Member of exponential family if 
+
+$$ f(y) = \exp\left(\frac{y\theta - b(\theta)}{\phi} w + c(y, \phi, w)\right). $$
+
+$Gamma(\nu, \mu)$ can be written as
+
+$$ f_Y(y) = \exp\left( \frac{\frac{-1}{\mu}y + \log\left(-\frac{-1}{\mu}\right)}{\frac{1}{\nu}} + \nu \log(\nu) + (\nu-1)\log(y) - \log(\Gamma(\nu)) \right) $$
+
+See classnotes for details:  [derivation from Module 1](https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf)
+
+which means that
+
+$$ \theta = \frac{-1}{\mu}, \ \ \phi = \frac{1}{\nu}, \ \ w = 1, \text{ and } b(\theta) = - \log\left(-\frac{-1}{\mu}\right) = - \log(-\theta). $$
+
+Thus the Gamma distribution with unknown $\mu$ and known $\nu$ is an exponential family.
+
+The expected value: E$(Y) = b'(\theta) = \frac{1}{-\theta} = \mu$.
+
+The variance: Var$(Y) = b''(\theta) \frac{\phi}{w} = \frac{1}{\theta^2} \frac{\phi}{w} = \mu^2 \frac{1}{\nu} = \frac{\mu^2}{\nu}$.
+
+See classnotes in Module 5 for proof for these general formulas- link to be added.
+
+Canonical link: Given by $\theta = -1/\mu$. But we usually use log-link, which means that the expected and observed Fisher information will differ.
+
+
+### b)
+
+A saturated model is a model with as many parameters as possible. In most cases one parameter per observation.
+
+The log-likelihood for one observation:
+
+$$l_i(\mu_i) = \log(f_Y(y)) = \frac{\frac{-1}{\mu_i}y_i + \log\left(-\frac{-1}{\mu_i}\right)}{\frac{1}{\nu}} + \nu \log(\nu) + (\nu-1)\log(y_i) - \log(\Gamma(\nu))$$
+
+which has the derivative
+
+$$l_i' = \nu \frac{d}{d\mu_i} \left( \frac{-1}{\mu_i}y_i + \log\left(\frac{1}{\mu_i}\right) \right) = \nu \left( \frac{y_i}{\mu_i^2} - \frac{1}{\mu_i} \right) = \frac{\nu}{\mu_i} \left( \frac{y_i}{\mu_i} - 1 \right). $$
+
+This leads to the MLE $\hat{\mu_i} = y_i$.
+
+The deviance based on all $N$ observations for a model is
+
+$$ D = 2(l_{saturated} - l_{model}) = 2\sum_{i=1}^N(l(\mu_i = y_i)-l(\mu_i = \hat{\mu_i})) \\
+= 2\sum_{i=1}^N\left(\nu\left(\frac{-y_i}{y_i} - \log(y_i)\right) - \nu\left( \frac{-y_i}{\hat{\mu_i}}-\log(\hat{\mu_i}) \right)\right) 
+= -2\sum_{i=1}^N\nu\left( \frac{\hat{\mu_i}-y_i}{\hat{\mu_i}} + \log\left(\frac{y_i}{\hat{\mu_i}}\right) \right) $$
+
+
+### c)
+
+It is reasonable to use a Gamma distribution for amount of precipitation given precipitation. From a) and b) we have learned that the Gamma distribution is a member of the exponential family, and hence it can be used as response for a GLM. Gamma distributions require a positive expected value, and hence a log-link (or an other monotone differential function that ensures positive $\mu$) should be used. Note that the log-link is not the canoical link! The linear component $\eta_i = \beta_0 + \beta_1 x_i$ is one alternative. As log-link is used, we get E$(Y_i) = \exp(\eta_i)$. Alternatively, $\eta_i = \beta_0 + \beta_1\log(x_i)$ is another possible choice.
+
+
+# Problem 3: Taken from UiO, STK3100, 2015, problem 2
+
+### a)
+
+```{r}
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2017h/breastcancer.txt"
+brc <- read.table(filepath, header = TRUE,
+                  colClasses = c(rep("numeric", 2), rep("factor", 4)))
+summary(glm(formula = cbind(surv, nsurv) ~ fapp + fcountry, family = binomial, data = brc))
+
+```
+
+Within the same hospital, $e^{\hat{\beta_1}} = 1.67$ represents the predicted proportional increase of the odds of survival of having a benign tumor (level 2) with respect to having a malignant tumor. (Yes, survival should increase from malignant to benign.)
+
+The predicted odds for survival within country $j$ with benign tumor is
+
+$$\frac{\hat{\pi}_{bj}}{1-\hat{\pi}_{bj}} = \begin{cases} e^{\hat{\beta_0} + \hat{\beta_1}} \text{ if } j = 1 \\ e^{\hat{\beta_0} + \hat{\beta_1} + \hat{\beta_2}} \text{ if } j = 2 \\ e^{\hat{\beta_0} + \hat{\beta_1} + \hat{\beta_3}} \text{ if } j = 3 \end{cases}$$
+
+The predicted odds for survival within country $j$ with malign tumor is
+
+$$\frac{\hat{\pi}_{mj}}{1-\hat{\pi}_{mj}} = \begin{cases} e^{\hat{\beta_0}} \text{ if } j = 1 \\ e^{\hat{\beta_0} + \hat{\beta_2}} \text{ if } j = 2 \\ e^{\hat{\beta_0} + \hat{\beta_3}} \text{ if } j = 3 \end{cases}$$
+
+Thus, the odds ratio is $\frac{\hat{\pi}_{bj}}{1-\hat{\pi}_{bj}}/\frac{\hat{\pi}_{mj}}{1-\hat{\pi}_{mj}} = e^{\hat{\beta_1}}$ for all three countries $j = 1, 2, 3$, or the log odds ratio = $\hat{\beta_1}$.
+
+The categorical covariates gives $2\cdot2\cdot3\cdot3 = 36$ possible outcomes. This gives 35 df for the null model (1 df to the intercept). We have only 34 df in the null model. This is because one of the combinations of covariates has no observations, no survivors and no non-survivors (there are no observations for `fapp = 2, finlf = 2, fage = 1, fcountry = 2`, which corresponds to benign tumor, moderate or severe inflammatory reaction, under 50 years old, and from the US).
+
+### b)
+
+```{r}
+
+formula <- list(cbind(surv, nsurv) ~ fapp + fage + fcountry,
+                cbind(surv, nsurv) ~ fapp + fage + finfl + fcountry,
+                cbind(surv, nsurv) ~ fapp + finfl + fage * fcountry,
+                cbind(surv, nsurv) ~ fapp * finfl + fage * fcountry,
+                cbind(surv, nsurv) ~ fapp * finfl + fapp * fage + fage * fcountry,
+                cbind(surv, nsurv) ~ fapp * finfl * fage * fcountry)
+
+models <- lapply(formula, glm, data = brc, family = binomial)
+
+anova(models[[1]], models[[2]], models[[3]], models[[4]], models[[5]], models[[6]])
+
+```
+
+Use the formula that is factor A has $a$ levels, and factor $B$ has $b$ levels, A*B means intercept + ($a-1$) main effect parameters of A, + ($b-1$) main effect parameters of B and ($a-1$)($b-1$) interactions ( = $1+(a-1)+(b-1) + (a-1)(b-1)$). Hence, remembering that the intercept and the main effects of a factor can only be counted once in a model specification. $n = 35$, the intercept, `fapp` and `finfl` takes 1 df each (when included linearly), and `fage` and `fcountry` takes 2 df each.
+
+i) model 2 has $p = 1+(1+1+2+2) = 7$ parameters (intercept, $2\times$(2 lvl factorcovariate), $2\times$(3 lvl factorcovariate)), so $n-p = 35-7 = 28$
+ii) model 3 has $p = 1+(1+1+2+2)+(4) = 11$ parameters. $p_{mod3}-p_{mod2} = 11 - 7 = 4$
+iii) Residual deviance: $D_{mod4} - D_{mod4} = 25.674 - 25.504 = 0.17$
+iv) model 5 has $1+(1+1+2+2)+(1+2+4)=14$ parameters, model 6 has $1+(1+1+2+2)+(1+2+2+2+2+4)+(2+2+4+4)+(4)-1 = 35$ (minus 1 since we are missing an observation) parameters (this is the saturated model), so we get $p_{mod6}-p_{mod5} = 35-14 = 21$
+
+When we are missing an observation, the saturated model (model 6) will have 35, and not 36, estimated coefficients. Thus one combination in the saturated model will not be estimated.
+
+
+### c)
+
+See module pages for more on the Wald statistic.
+
+We need the estimate for the coefficients we want to test: $\hat{\beta_2} + \hat{\beta_3} + 1 = -0.6589 -0.4945 + 1 = -0.1534$
+
+And the variance (standard deviation): Var($\hat{\beta_2} + \hat{\beta_3} + 1$) = Var($\hat{\beta_2}$) + Var($\hat{\beta_3}$) + 2Cov($\hat{\beta_2}, \hat{\beta_3}$) = 0.040 + 0.043 + 2 $\cdot$ 0.021 = 0.125 so the standard error of $\hat{\beta_2} + \hat{\beta_3} + 1$ is $\sqrt{0.125} \approx 0.354$. The Wald statistic is then
+
+$$\left(\frac{-0.1534}{0.354}\right)^2 \approx (-0.433)^2 \approx 0.187$$
+
+which has a p-value $P(X \geq 0.187) \approx 0.665$ for $X \sim \chi_1^2$, so we do not reject the null hypothesis.
+
+<!--
+which has a p-value $2P(Z \leq -0.433) \approx 0.665$ for $Z \sim$ N(0,1), so we do not reject the null hypothesis. METTE: Men vi skal da ha wald, det er chisq (har lagt til detaljer for den testen, så hvis vi skal ha chisq kan denne linja fjernes)?
+-->
+
+### d)
+
+* `fcountry2` corresponds to a dummy variable, 
+* `dum2`, which is equal to 1 when the level of country is 2, i.e., hospital is in US, and 0 for all combinations.  
+* `fcountry3` corresponds to a dummy variable, 
+* `dum3`, which is equal to 1 when the level of country is 3, i.e., hospital is in UK, and 0 for all combinations.  
+
+The model from part a) corresponds to a model
+
+$$H_1\text{-model}: \beta_0 + \beta_1 \texttt{fapp} + \beta_2 \texttt{dum2} + \beta_3 \texttt{dum3}$$
+
+Using that $\beta_2 + \beta_3 = 1$, the model under $H_0$ becomes
+
+$$\beta_0 + \beta_1 \texttt{fapp} + \beta_2 \texttt{dum2} + (-1-\beta_2) \texttt{dum3} = \beta_0 + \beta_1 \texttt{fapp} + \beta_2 (\texttt{dum2-dum3}) - \texttt{dum3} $$
+
+This can be fitted by specifying a model of the form 
+
+$$H_0\text{-model}: \text{offset(−{\tt dum3}) +} \beta_1 \text{fapp} + \beta_2 (\text{\tt{dum2-dum3}})$$
+
+Here `dum2-dum3` is a variable which is 0 for treatments which takes place in Japan, 1 for treatments in US and -1 for treatments in UK. The test now consists of comparing the two deviances [of this model and the model from a) - marked with $H_1$ and $H_0$-model above], and using a $\chi^2$-distribution as reference. 
+
+```{r}
+
+# Doing the test
+# dum2 is 1 when you are in US (country = 2)
+# dum3 is 1 when you are in UK (country = 3)
+# so dum2 - dum3 is 0 when you are in Japan, 1 in US and -1 in UK
+brc$dum2 <- as.numeric(brc$fcountry == 2)
+brc$dum3 <- as.numeric(brc$fcountry == 3)
+
+model1 <- glm(formula = cbind(surv, nsurv) ~ fapp + fcountry, family = binomial, data = brc)
+model2 <- glm(cbind(surv, nsurv) ~ fapp + I(dum2-dum3), offset = -dum3, data = brc, family = binomial)
+summary(model2)
+anova(model2, model1)
+
+```
+
+The difference in deviances is $0.18967$, which with 1 degree of freedom is $\chi^2$-distributed with a p-value of about 0.66. Thus we keep the null hypothesis.
+
+Remark: compare to the finding with Wald! Same asymptotic distribution.
+
+Remark: this looks so much easier to do with Wald than with LRT!

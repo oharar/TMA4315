@@ -1,0 +1,84 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 4: POISSON REGRESSION, solution IL week 1"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<https://www.uio.no/studier/emner/matnat/math/STK3100/h17/stk3100-4100_2017_2eng.pdf>
+
+# Problems
+
+## Problem 1
+
+Assume that the random variable $Y$ is Poisson distribiuted with probability mass function (pmf)
+
+$$\text{P}(Y = y | \lambda)= \frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2, \dots.$$
+
+a) Show that the distribution of $Y$ is an exponential family, that is, show that the pmf can be written on the form 
+$$\exp\left\{\frac{y \theta - b(\theta)}{\phi}w + c(y, \phi, w)\right\},$$
+and determine $\theta$, $\phi$, $w$, $b(\theta)$ and $c(y, \phi, w)$.
+
+We then assyme that $Y_1, Y_2, \dots, Y_n$ are independent with the pmf from a), and let $\mu_i = \text{E}(Y_i)$, $i = 1, \dots, n$.
+
+b) Explain what we mean by a generalized linear model (GLM) for $Y_1, Y_2, \dots, Y_n$ with link function $g(\cdot)$, and determine the canonical link function.
+
+c) Derive an expression for the log-likelihood function $L(\mathbf{\mu}; \mathbf{y})$, where $\mathbf{y} = (y_1, \dots, y_n)^T$ is the observed value of $\mathbf{Y} = (Y_1, Y_2, \dots, Y_n)^T$ and $\mathbf{\mu} = (\mu_1, \dots, \mu_n)^T$.
+
+d) Explain what we mean by a saturated model and determine the maximum of $L(\mathbf{\mu}; \mathbf{y})$ for the saturated model.
+
+e) Explain what we mean by the deviance $D(\mathbf{y}; \mathbf{\hat{\mu}})$ of a Poisson GLM, find an expression for the deviance, and discuss how it may be used.
+
+
+## Problem 2
+
+We assume that the random variable $\Lambda$ is gamma distributed with pdf
+
+$$f(\lambda; \nu, \mu) = \frac{(\nu/\mu)^\nu}{\Gamma(\nu)} \lambda^{\nu-1} e^{-\lambda/\mu}; \ \lambda > 0$$
+
+and further that given $\Lambda = \lambda$, the random variable $Y$ is Poisson distributed with parameter $\lambda$. Thus the conditional pmf of $Y$ given $\Lambda = \lambda$ takes the form
+
+$$\text{P}(Y = y | \lambda)= \frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2, \dots.$$
+
+a) Show that the marginal pmf of $Y$ is given by
+$$p(y; \mu, \nu) = \frac{\Gamma(y+\nu)}{\Gamma(\nu)\Gamma(y+1)} \left(\frac{\mu}{\mu+\nu}\right)^y \left(\frac{\nu}{\mu+\nu}\right)^\nu; \ y = 0, 1, 2, \dots$$
+This is the negative binomial distribution.
+
+We then assume that the parameter $\nu$ is fixed, and consider the random variable $Y^* = Y/\nu$. Note that
+
+$$\text{P}(Y^* = y^*) = \text{P}(Y = ky^*) \ \text{for} \ y^* = 0, \frac{1}{k}, \frac{2}{k}, \dots$$
+
+so $Y^*$ has pmf
+
+$$p^*(y^*; \mu, \nu) = \frac{\Gamma(\nu y^* + \nu)}{\Gamma(\nu)\Gamma(\nu y^* + 1)} \left(\frac{\mu}{\mu+\nu}\right)^{\nu y^*} \left(\frac{\nu}{\mu+\nu}\right)^\nu; \ y^* = 0, \frac{1}{k}, \frac{2}{k}, \dots$$
+
+b) Show that the pmf of $Y^*$ is an exponential family with $\theta = \log\left(\frac{\mu}{\mu + \nu}\right)$, $b(\theta) = -\log(1 - e^{\theta})$ and $\phi = 1/\nu$. METTE: Dette er ikke det samme som i modulsidene, skal jeg endre?
+
+c) Use the expressions for $b(\theta)$ and $\phi$ to determine $\text{E}(Y^*)$ and $\text{Var}(Y^*)$. Show that $\text{E}(Y) = \mu$ and find $\text{Var}(Y)$.
+
+
+
+# Solutions
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,232 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 2: MULTIPLE LINEAR REGRESSION, solution IL week 2"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R packages
+
+```{r, eval=FALSE}
+install.packages(c("formatR","gamlss.data","leaps"))
+```
+
+# Problem 1: Model assumptions
+
+## a) 
+
+We assume:
+
+1. Binary (or binomial) data $Y$
+2. Independent observations
+3. ?
+
+## b)
+
+We use logit link function ($\text{logit}(x) = \ln(x/(1-x))$), and expit response function ($\text{expit}(x) = \exp(x)/(1+\exp(x)$).
+
+## c)
+
+Logit model:
+Logistic regression:
+
+???
+
+
+# Problem 2: Log-likelihood
+
+## a)
+
+The log-likelihood is the natural logarithm of the likelihood. We say that the likelihood of a parameter value (or vector of parameter values) given the outcomes is equal to joint distribution for those outcomes given the parameter value(s) (for discrete variables the joint distribution is a probability, but for continuous varibles it is a joint density). When the observations are independent the log-likelihood is given as $l(\beta) = \ln(\prod_{j = 1}^n f(y_j))$.
+
+## b)
+
+$\text{logit}(\pi_i) = \mathbf{x_i}^T\mathbf{\beta}$ and thus $\pi_i = (1 + e^{-\mathbf{x_i}^T\mathbf{\beta}})^{-1}$ and $1-\pi_i = (1 + e^{\mathbf{x_i}^T\mathbf{\beta}})^{-1}$, so $l(\mathbf{\beta)}$ can be written as $$ l(\mathbf{\beta}) = \sum_{j = 1}^G [\ln \binom{n_j}{y_j} + y_j\mathbf{x}_j^T\beta - n_j\ln(1+\exp(\mathbf{x}_j^T\beta))].$$
+
+## c)
+
+Likelihood for individual data:
+
+$$l(\mathbf{\beta}) = \sum_{j=1}^n \left( y_j \ln\left(\frac{\pi_j}{1-\pi_j}\right) + \ln(1-\pi_j) \right) = \sum_{j=1}^n \left( y_j \ln(\pi_j) + (1-y_j)\ln(1-\pi_j) \right)$$
+
+## d)
+
+Using the identities from 2b), we get 
+
+$$l(\mathbf{\beta}) = \sum_{j=1}^n \left( y_j \mathbf{x_i}^T\mathbf{\beta} - \ln(1 + e^{\mathbf{x_i}^T\mathbf{\beta}}) \right)$$
+
+## e)
+
+If $n_j = 1$, $y_j \leq 1$ and the binomial coefficient is equal to one. $\ln(1) = 0$ and it disappears. But, as the log-likelihood is used to find the regression parameters, we differentiate with respect to $\beta$ and the normalization constant disappears. When we use an optimization algorithm it is also superfluous, as it will not change when $\beta$ changes. The binomial coefficient can become very large (and in the calculation of it, the factorials that are included will be VERY large), so it is wise to always remove it from computational calculations. Also see `lchoose` if you absolutely need to calculate the logarithm of the normalization constant (on log scale).
+
+## f)
+
+Since we have two covariates ($\beta_0$ and $\beta_1$) we get a 3d-plot.
+
+```{r}
+
+require(investr)
+library(ggplot2)
+library(viridis)
+
+# from aggregated to individual data (because these data were aggregated)
+ldose <- rep(beetle$ldose, beetle$n)
+y <- NULL
+for (i in 1:8) y = c(y, rep(0, beetle$n[i] - beetle$y[i]), rep(1, beetle$y[i]))
+beetleds = data.frame(killed = y, ldose = ldose)
+
+loglik <- function(par, args){
+  y <- args$y; x <- args$x; n <- args$n
+  res <- sum(y*x%*%par - n*log(1 + exp(x%*%par)))
+  return(res)
+}
+
+loglik(c(1,1), args = list(y = beetleds$killed, 
+                           x = cbind(rep(1, nrow(beetleds)), beetleds$ldose), 
+                           n = rep(1, nrow(beetleds))))
+
+loglikmat <- matrix(NA, nrow = 100, ncol = 100)
+loglikframe <- data.frame()
+beta_0 <- seq(-90,-30, length.out = 100)
+beta_1 <- seq(20, 50, length.out = 100)
+
+for (i in 1:length(beta_0)){
+  for (j in 1:length(beta_1)){
+    
+    loglikmat[i,j] <- loglik(c(beta_0[i], beta_1[j]), args = list(y = beetleds$killed, 
+                                                                  x = cbind(rep(1, nrow(beetleds)), beetleds$ldose), 
+                                                                  n = rep(1, nrow(beetleds))))
+    
+    loglikframe <- rbind(loglikframe, c(beta_0[i], beta_1[j], loglikmat[i,j]))
+  
+  }
+}
+names(loglikframe) <- c("beta_0", "beta_1", "loglik")
+head(loglikframe)
+
+ggplot(data = loglikframe, mapping = aes(x = beta_0, y = beta_1, z = loglik)) + geom_raster(aes(fill = exp(0.0001*loglik))) +
+  geom_point(data = loglikframe[which.max(loglikframe$loglik),], mapping = aes(x = beta_0, y = beta_1), 
+             size = 5, col = "red", shape = 21, stroke = 2) + scale_shape(solid = FALSE) +
+  scale_fill_viridis() + geom_contour(col = "black")
+
+```
+
+# Problem 3: Score function
+
+## a)
+
+The score function is a $p\times 1$ vector of the partial derivatives of the log-likelihood with respect to each regression coefficient. 
+
+## b)
+
+Use the definition:
+
+$$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = \sum_{i=1}^n \frac{\partial l_i(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}$$
+
+## c)
+
+It is necessary in finding the MLE, and tells something about how sensitive the (log-)likelihood is to changes in the parameter values. The covariance matrix of the score function is the Fisher information matrix.
+
+
+# Problem 4: Fisher information
+
+## a) 
+
+See module pages for definitions: <https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html#the_expected_fisher_information_matrix_(f(boldsymbol{beta}))>. Fisher information is the covariance matrix of the score function. Expected and observed are equal for the canonical link functions (we mainly use canonical links in this course).
+
+## b)
+
+The Fisher information matrix is used to calculate the asymptotic covariance matrix for the MLE. It can also be used in the formulation of test statistics, such as the Wald test (week 3 of Module 3).
+
+## c) 
+
+Also here, use $\text{logit}(\pi_i) = \mathbf{x}_i^T\beta$, $\pi_i = (1 + e^{-\mathbf{x_i}^T\mathbf{\beta}})^{-1}$ and $1-\pi_i = (1 + e^{\mathbf{x_i}^T\mathbf{\beta}})^{-1}$ to obtain an expression with $\beta$:
+
+$$F(\mathbf{\beta}) = \sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \frac{e^{\mathbf{x_i}^T\mathbf{\beta}}}{(1 + e^{\mathbf{x_i}^T\mathbf{\beta}})^2}$$
+
+## d)
+
+$$F(\boldsymbol{\beta})=\sum_{j=1}^n {\bf x}_j {\bf x}_j^T \pi_j (1-\pi_j)$$
+
+# Problem 5: Maximum likelihood
+
+## a) 
+
+??
+
+## b)
+
+Covergence criterion for the glm: `glm.control(epsilon = 1e-8, maxit = 25, trace = FALSE)` is the default. See `?glm.control` for more.
+
+## c)
+
+```{r}
+loglik_gr <- function(par, args) {
+    
+    y <- args$y
+    x <- args$x
+    n <- args$n
+    
+    res <- y %*% x - t(t(n * x) %*% ((1 + exp(-x %*% par))^(-1)))
+    return(res)
+}
+
+opt <- optim(c(-60, 30), fn = loglik, gr = loglik_gr, args = list(y = beetleds$killed, 
+    x = cbind(rep(1, nrow(beetleds)), beetleds$ldose), n = rep(1, nrow(beetleds))), 
+    control = list(fnscale = -1), hessian = TRUE)
+opt 
+
+sqrt(diag(-solve(opt$hessian))) # calculate the standard deviations of the parameters
+
+```
+
+
+# Problem 6: Interpreting results
+
+## a)
+
+Intercept: For small numbers, $\text{expit}(x) \approx exp(x)$, and the exponential of a large negative number is very close to zero. So the probability of dying when the logarithm of the dose is zero (which is when the dose is 1) is extremely small, basically zero.
+
+`ldose`: if the logarithm of the dose changes one unit, the probability of dying increases with approximately $e^{34} \approx 6 \cdot 10^{14}$. This is very much, but looking at the data, this does not actually make sense as the data range from about 1.6 to 1.9.
+
+## b)
+
+```{r}
+
+mod <- glm(cbind(y, n-y) ~ ldose, family = "binomial", data = beetle)
+
+ggplot(data = data.frame(x = beetle$ldose, y = mod$fitted.values), mapping = aes(x = x, y = y)) + 
+  geom_point() + geom_line()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,332 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 5: GLM in general - intractive lectures solution"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# Exercise 1: Exam 2011, problem 3
+
+### a)
+
+**Likelihoods:**
+
+1. Independent observation
+2. Member of the exponential family of canonical form.
+3. Should be of same kind for all observations, but possible different expectation/parameter.
+
+**Link functions:**
+
+1. Monotone
+2. Differentiable
+
+**Linear component:**
+
+1. Linear in parameters
+
+
+### b)
+
+**Likelihoods:**
+1. (Gaussian) and 3. (Poisson) are ok, as they are from the exponential family of distributions, but 2. (Binomial with unfixed $n$) is not, we get a problem with the binomial coefficient which is non-linear in $y$ (so it need to go into $c(y, \phi, w)$), but includes the unknown parameter $n$ (so it cannot go into $c(y, \phi, w$ after all). Note that this problem is solved by fixing $n$, which we do in logistic regression.
+
+Exponential family: $f(y) = \exp\left(\frac{y\theta - b(\theta)}{\phi} w + c(y, \phi, w)\right)$ (note that $\theta$ can be a vector)
+
+Binomial distribution: $f(y) = \binom{n}{y} \pi^y(1-\pi)^{n-y} = \exp\left( \ln \binom{n}{y} + y \ln \frac{\pi}{(1-\pi)} + n \ln \pi \right)$
+
+**Link functions:**
+1. ($cos(\mu)$) is not monotone and thus not a valid link function. The other two (2. ($\mu$) and 3. ($\log(\mu)$)) are valid.
+
+**Linear component:**
+The third linear component is not linear in $\beta_1$ and thus not valid. The others are linear in $\mathbf{\beta}$ and are valid (does not have to be linear in the covariates $x_i$).
+
+Thus we have two linear components that can be used with any model, which leaves four alternatives for link and repsponse (and in total 8 different model combinations):
+
+* Gaussian response with identity link: Common linear regression
+* Gaussian response with log-link: Gives a model with only positive expected values (which *can* (do not have to) have negative observations), only in special situations
+* Poisson response with identity link: Poisson requires positive expectation, and with this link we need restrictions on the parameters to ensure the positive expectation
+* Poisson response with log-link: Common model
+
+
+
+# Exercise 2: December 2005, Problem 2 (modified)
+
+## 1)
+
+$$f(y) = \text{P}(Y=y) = \binom{n}{y} \pi^y (1-\pi)^{n-y}$$
+$$\log(f) = \log \binom{n}{y} + y\log(\pi) + (n-y)\log(1-\pi) = \log \binom{n}{y} + y \log\left(\frac{\pi}{1-\pi}\right) + n\log(1-\pi)$$
+
+$$l(y, \mu) = \sum_{i=1}^n \log(f)$$
+
+$$D^*(y, \hat{\mu}) = 2 l(y, y) - 2 l(\hat{\mu}, y) = 2 \sum\left[y_i \log\left( \frac{y_i}{n_i-y_i}\right) + n_i \log\left( \frac{n_i-y_i}{n_i}\right) - y_i \log\left( \frac{\frac{\hat{\mu}_i}{n_i}}{\frac{n_i-\hat{\mu}_i}{n_i}}\right) - n_i \log\left( \frac{n_i - \hat{\mu}_i}{n_i}\right) \right] \\
+= 2 \sum\left[y_i \log\left( \frac{y_i}{\hat{\mu}_i}\right) + n_i \log\left( \frac{n_i-y_i}{n_i - \hat{\mu}_i}\right) - y_i \log\left( \frac{n_i - y_i}{n_i - \hat{\mu}_i}\right) \right]$$
+
+
+## 2)
+
+$\text{Cov}(\hat{\beta}) = (\mathbf{X}^T\mathbf{W}\mathbf{X})^{-1}$
+
+### a)
+
+$w_{ii} = \left(\frac{\partial \mu_i}{\partial \eta_i}\right)^2 \Big/\text{Var}(y_i)$
+
+
+### b)
+
+$$\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies w_{ii} = \frac{1}{\mu_i}$$
+
+$$\mu = e^{\eta} \implies \frac{\partial \mu}{\partial \eta} = e^{\eta} \implies w_{ii} = \frac{e^{2 \eta_i}}{e^{\eta_i}} = e^{\eta_i} = \mu_i$$
+
+
+### c) 
+
+$$\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies w_{ii} = \frac{1}{n_i \pi_i (1-\pi_i)}$$
+
+$$\mu = n\frac{e^{\eta}}{1+e^{\eta}} \implies \frac{\partial \mu}{\partial \eta} = n\frac{e^{\eta}}{(1+e^{\eta})^2} = n \pi (1-\pi) \implies w_{ii} = \frac{(n_i \pi_i (1-\pi_i))^2}{n_i \pi_i (1-\pi_i)} = n_i \pi_i (1-\pi_i)$$
+
+### d)
+
+No solution.
+
+# Exercise 3: Exam 2006, problem 2 a, b, d
+
+## a)
+
+This is the exponential distribution (which is a special case of the gamma distribution, $\nu = 1$ and $\mu = 1/\alpha$).
+
+$$f(y_i ; \alpha_i)=\alpha_i e^{-\alpha_iy_i} = e^{-\alpha_i y_i + \ln \alpha_i} $$
+
+which comes from the exponential family:
+
+$$ f(y) = \exp\left(\frac{y\theta - b(\theta)}{\phi} w + c(y, \phi, w)\right) = \exp\Big(\theta y_i -\ln(-1/\theta)\Big) $$
+
+with $\phi = 1$, $w = 1$, $c(y, \phi, w) = 0$, $\theta = - \alpha_i$, and $b(\theta) = - \ln (\alpha_i) = - \ln(-\theta)$.
+
+Expected value: E$(Y_i) = b'(\theta) = - \frac{1}{\theta} = \frac{1}{\alpha_i}$
+
+The variance: Var$(Y_i) = b''(\theta) \frac{\phi}{w} = \frac{-1}{\theta^2} = \frac{1}{\alpha_i^2}$
+
+Note that you could also use $\theta = \alpha_i$, $b(\theta) = \ln(\theta) = \ln(\alpha)$, $c(y, \phi, w) = 0$, and either $\phi$ **or** $w$ equal to -1, the other equal to 1, so $\frac{\phi}{w} = -1$. Then E$(Y_i) = b'(\theta) = \frac{1}{\theta_i} = \frac{1}{\alpha_i}$ and Var$(Y_i) = -b''(\theta) = -\frac{-1}{\theta^2} = \frac{1}{\alpha_i^2}$. These two parameterizations are equivalent, which shows that they are not necessarily unique! It is however some parameterizations that is the standard. For the Gamma (and thus the spexial case exponential) we use the first one, where $\phi = w = 1$. 
+
+## b) 
+
+Per definition:
+
+$$ l = \sum_{i=1}^N \ln f(y_i;\alpha_i) = \sum_{i=1}^N(-\alpha_iy_i + \ln\alpha_i) $$
+
+$$D = 2(l_{saturated}-l_{model})$$
+
+Saturated model: All $\alpha_i$ are different, so $\frac{\partial l}{\partial \alpha_i} = -y_i + 1/\alpha_i$. MLE: $-y_i + 1/\alpha_i = 0 \ \implies \ \hat{\alpha_i} = 1/y_i$. So
+
+$$ l_{saturated} = \sum_{i=1}^N(-1 + \ln(1/y_i)) $$
+
+In GLM-models we estimate the mean $\mu_i$ using $\hat{\mu_i}$ (do not need the expression for this), which we call $\hat{y_i}$, and we have
+
+$$ l_{model} = \sum_{i=1}^N \left( -\frac{y_i}{\hat{y_i}} +\ln \frac{1}{\hat{y_i}} \right) = \sum_{i=1}^N \left( -\frac{y_i}{\hat{y_i}} -\ln \hat{y_i} \right)$$
+
+Then we get the deviance
+
+$$ D = \sum_{i=1}^N \left(-1-\ln(y_i) + \frac{y_i}{\hat{y_i}} + \ln \hat{y_i} \right) = D = \sum_{i=1}^N \left( \frac{y_i-\hat{y_i}}{\hat{y_i}} - \ln\frac{y_i}{\hat{y_i}} \right) $$
+
+## d) 
+
+$H_0$ corresponds to a GLM where all $\alpha_i$ are equal to the same value, here denoted $\alpha$. Then
+
+$$ l = - \alpha \sum_{i=1}^N y_i + N \ln \alpha $$
+
+Take the derivative and set equal to zero gives
+
+$$ \frac{dl}{d\alpha} = \sum_{i=1}^N + \frac{N}{\alpha} \implies \hat{\alpha} = \frac{1}{\frac{1}{N}\sum_{i=1}^N} = \frac{1}{\bar{y}} $$
+
+Thus, $\alpha_i = \frac{1}{\bar{y}}$ for each i, which means that $\hat{\mu_i} = \hat{y_i} = \bar{y}$. Then the deviance becomes
+
+$$ D = 2 \sum_{i=1}^N \left( {\frac{y_i - \bar{y}}{\bar{y}} - \ln \frac{y_i}{\bar{y}}} \right) $$
+which is approximately $\chi_{N-1}^2$ distributed under $H_0$. $N-1$ = no. of parameters in the saturated model minus no. of parameters in the model under $H_0$. We reject $H_0$ if the deviance $D$ is large. 
+
+
+
+
+# Exercise 4: Exam 2007, Problem 2 a, b, c
+
+## a)
+
+This is the Gamma distribution with $\nu = 2$ and $\mu = 2/\gamma$.
+
+$$ f(y_i; \gamma_i) = \frac{\gamma_i^2}{2}y_ie^{-\gamma_iy_i} = \exp\Big( -\gamma_i y_i + 2\ln\gamma_i + \ln y_i - \ln2 \Big) = \exp \left( -\frac{-\frac{-y\gamma_i}{2}+\ln(-\gamma_i/2)}{1/2} + \ln y_i - \ln2 \right)$$
+
+$$ f(y) = \exp\left(\frac{y\theta - b(\theta)}{\phi} w + c(y, \phi, w)\right) = \exp\Big( \frac{y_i(-\gamma_i) - (-2\ln\gamma_i)}{1}1 + (\ln y_i - \ln2) \Big) \\
+= \exp\Big( \frac{y_i(\gamma_i) - (2\ln\gamma_i)}{-1}1 + (\ln y_i - \ln2) \Big) $$
+Also here we have several choices for parameterization. We choose the following (which is the standard for the Gamma distribution): $w = 1$, $\phi = 1/2$, $c(y, \phi, w) = \ln y_i - \ln2$, $\theta = -\gamma_i/2$ and $b(\theta) = -\ln(-\theta)$.
+
+(An alternative that might be simpler is: $w = 1$, $\phi = -1$, $c(y, \phi, w) = \ln y_i - \ln2$, $\theta = \gamma_i$, and $b(\theta) = 2 \ln \theta$. The results will be the same, but this is not the standard way and we do not use this parameterization.)
+
+Expected value: E$(Y_i) = b'(\theta) = \frac{-1}{\theta} = \frac{2}{\gamma_i}$
+
+The variance: Var$(Y_i) = b''(\theta) \frac{\phi}{w} = \frac{2}{\theta^2} = \frac{2}{\gamma_i^2}$
+
+
+## b)
+
+Score: $s(\beta) = [s_1(\beta), \dots, s_p(\beta)]^T$
+
+Fisher: $F(\beta) = [F_{ij}(\beta)]_{i,j = 1}^p$
+
+$$ s_j(\beta) = \sum_{i=1}^N \Big( \frac{y_i-\mu_i}{Var(Y_i)} x_{ij} \frac{\partial \mu_i}{\partial \eta_i} \Big) $$
+
+$$\frac{\partial \eta}{\partial \mu} = 1/\mu \implies \frac{\partial \mu}{\partial \eta} = \mu = e^{x^T\beta} $$
+
+Using that $\ln \mu = x^T\beta$ and $\mu = 2/\theta$ we get $\mu = 2/\theta = e^{x^T\beta} \implies \theta = 2e^{-x^T\beta}$. Using this and the expected value and variance from a), the score $s_j(\beta)$ becomes
+
+$$ s_j(\beta) = \sum_{i=1}^N \left[ \frac{y_i - 2/\theta_i}{2/\theta_i^2}x_{ij}e^{x_i^T\beta} \right] = \sum_{i=1}^N \left[ \frac{y_i - e^{x_i^T\beta}}{\frac{1}{2}e^{2x_i^T\beta}}x_{ij}e^{x_i^T\beta} \right] = 2\sum_{i=1}^N \left[ \frac{y_i - e^{x_i^T\beta}}{e^{x_i^T\beta}}x_{ij} \right] $$
+
+The general formula for the expected Fisher information is:
+
+$$ F_{jk}(\beta) = \sum_{i=1}^N \left[\frac{x_{ij} x_{ik}}{Var(Y_i)} \left(\frac{\partial \mu_i}{\partial \eta_i}\right)^2 \right] $$
+
+Thus we get
+
+$$ F_{jk}(\beta) = \sum_{i=1}^N \left[\frac{x_{ij} x_{ik}}{2/\theta_i^2} \left(e^{x_i^T\beta}\right)^2 \right] = \sum_{i=1}^N \left[\frac{x_{ij} x_{ik}}{\frac{1}{2}e^{2x_i^T\beta}} \left(e^{x_i^T\beta}\right)^2 e^{2x_i^T\beta} \right] = 2\sum_{i=1}^Nx_{ij}x_{ik} $$
+
+which means that the full matrix can be written as $F(\beta) = 2X^TX$. Note that it is not a function of $\beta$.
+
+The recursive equation we use to find the MLE is 
+
+$$ \beta^{(m)} = \beta^{(m-1)} + F^{-1}s(\beta^{(m-1)}) $$
+
+## c)
+
+$$ L = \prod_{i=1}^N \frac{\gamma_i^2}{2}y_ie^{-\gamma_iy_i} $$
+
+$$ l(\gamma_i) = \sum_{i=1}^n \Big( 2 \ln\gamma_i + \ln y_i - \gamma_iy_i - \ln2 \Big) $$
+
+Using that the estimated expected value is $\hat{\mu_i} = 2/\hat{\gamma_i} \iff \hat{\gamma_i} = 1/\hat{\mu_i} = 1/\hat{y_i}$
+
+$$ l(\hat{\beta}) = \sum_{i=1}^n \Big( 2 \ln\hat{\gamma_i} + \ln y_i - \hat{\gamma_i}y_i - \ln2 \Big) \\
+= \sum_{i=1}^n \Big( 2\ln2 -2\ln\hat{y_i} + \ln y_i - 2\frac{y_i}{\hat{y_i}} - \ln2 \Big) \\
+= \sum_{i=1}^n \Big( \ln2 -2\ln\hat{y_i} + \ln y_i - 2\frac{y_i}{\hat{y_i}} \Big) $$
+
+Saturated model has one $\alpha_i$ for each observed $y_i$, so we get (by derivating the likelihood and setting equal to zero) $\hat{\gamma_i} = 2/y_i$ for the saturated model, and:
+
+$$l_{saturated} = \sum_{i=1}^n \Big( 2 \ln\frac{2}{y_i} + \ln y_i - \frac{2}{y_i}y_i - \ln2 \Big) \\
+= \sum_{i=1}^n \Big( 2 \ln2 - 2\ln y_i + \ln y_i - 2 - \ln2 \Big) \\
+= \sum_{i=1}^n \Big( \ln2 - \ln y_i - 2 \Big) $$
+
+Then the deviance is
+
+$$ D = 2(l_{saturated} - l_{model}) = 2 \sum_{i=1}^N \Big( \ln2 - \ln y_i - 2 - \ln2 +2\ln\hat{y_i} - \ln y_i + 2\frac{y_i}{\hat{y_i}} \Big) \\
+= 2\sum_{i=1}^N \Big( 2 \ln \frac{\hat{y_i}}{y_i} - 2\Big(1-\frac{y_i}{\hat{y_i}}\Big)\Big) \\
+= 4\sum_{i=1}^N \Big( \ln \frac{\hat{y_i}}{y_i} + \frac{y_i - \hat{y_i}}{\hat{y_i}} \Big) $$
+
+The deviance residuals are then
+
+$$d_i = 2 \text{sign}(y_i - \hat{y_i}) \sqrt{\ln \frac{\hat{y_i}}{y_i} + \frac{y_i - \hat{y_i}}{\hat{y_i}}} $$
+
+and $D = \sum_{i=1}^N d_i^2$.
+
+
+
+
+
+
+# Exercise 5: Exam UiO December 2017, Problem 2
+
+
+We assume that the random variable $\Lambda$ is gamma distributed with pdf
+
+$$f(\lambda; \nu, \mu) = \frac{(\nu/\mu)^\nu}{\Gamma(\nu)} \lambda^{\nu-1} e^{-\lambda/\mu}; \ \lambda > 0$$
+
+and further that given $\Lambda = \lambda$, the conditional pmf of the random variable $Y$, given $\Lambda = \lambda$, takes the form
+
+$$\text{P}(Y = y | \lambda) = \frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2, \dots.$$
+
+
+## a)
+
+For $y = 0, 1, \dots$ the marginal pmf of $Y$ is given by
+
+$$
+\begin{aligned}
+p(y; \mu, \nu) &= \text{P}(Y = y; \mu, \nu) \\
+&= \int_0^{\infty} \text{P}(Y = y|\lambda) f(\lambda; \nu, \mu) d\lambda \\
+&= \int_0^{\infty} \frac{\lambda^y}{y!} \exp(-\lambda) \frac{(\nu/\mu)^\nu}{\Gamma(\nu)} \lambda^{\nu-1} e^{-\lambda/\mu} d\lambda \\
+&= \frac{(\nu/\mu)^\nu}{\Gamma(\nu)y!} \int_0^{\infty} \lambda^{y+k-1}e^{-(\mu+\nu)\lambda/\mu} d\lambda \\
+&= \frac{(\nu/\mu)^\nu}{\Gamma(\nu)\Gamma(y+1)} \int_0^{\infty} \left(\frac{\mu}{\mu+\nu}\right)^{y+\nu-1} e^{-\mu} \frac{\mu}{\mu+\nu} du \ \ \ \ [\text{substitute } u = (\mu+k)\lambda/\mu] \\
+&= \frac{(\nu/\mu)^\nu}{\Gamma(\nu)\Gamma(y+1)} \left(\frac{\mu}{\mu+\nu}\right)^{y+\nu} \int_0^{\infty} u^{y+\nu-1} e^{-u} du \\
+&= \frac{(\nu/\mu)^\nu}{\Gamma(\nu)\Gamma(y+1)} \left(\frac{\mu}{\mu+\nu}\right)^{y+\nu} \Gamma(y+\nu) \\
+&= \frac{\Gamma(y+\nu)}{\Gamma(\nu)\Gamma(y+1)} \left(\frac{\mu}{\mu+\nu}\right)^y \left(\frac{\nu}{\mu+\nu}\right)^\nu
+\end{aligned}
+$$
+
+
+## b)
+
+We now assume that the parameter $\nu$ is fixed, and consider the random variable $Y^* = Y/\nu$. We have that $\text{P}(Y^* = y^*) = \text{P}(Y = ky^*)$, so $Y^*$ has pmf
+
+$$p^*(y^*; \mu, \nu) = \frac{\Gamma(\nu y^* + \nu)}{\Gamma(\nu)\Gamma(\nu y^* + 1)} \left(\frac{\mu}{\mu+\nu}\right)^{\nu y^*} \left(\frac{\nu}{\mu+\nu}\right)^\nu; \ y^* = 0, \frac{1}{k}, \frac{2}{k}, \dots$$
+
+If we introduce 
+
+$$c(y^*, \nu) = \log \left(\frac{\Gamma(\nu y^* + \nu)}{\Gamma(\nu) \Gamma(ky^* + 1)}\right)$$
+
+
+we may rewrite the pmf of $p^*(y^*; \mu, \nu)$ as follows:
+
+$$
+\begin{aligned}
+p^*(y^*; \mu, \nu) &= \exp\left\{ (\nu y^*) \log\left(\frac{\mu}{\nu+\mu}\right) + \nu\log\left(\frac{\nu}{\nu+\mu}\right) + c(y^*, \nu) \right\} \\
+&= \exp\left\{ \frac{1}{1/\nu} \left[ y^* \log\left(\frac{\mu}{\nu+\mu}\right) + \log\left(\frac{\nu}{\nu+\mu}\right) \right] + c(y^*, \nu) \right\} \\
+&= \exp\left\{ \frac{1}{1/\nu} \left[ y^* \log\left(\frac{\mu}{\nu+\mu}\right) + \log\left(1 - \frac{\mu}{\nu+\mu}\right) \right] + c(y^*, \nu) \right\}
+\end{aligned}
+$$
+
+
+
+
+This is an exponential family with $\theta = \log(\mu/(\mu+\nu))$, $b(\theta) = -\log(1 - e^{\theta})$, $w = 1$ and $\phi = 1/\nu$.
+
+
+## c)
+
+From general results for exponential families, we have that $\text{E}(Y^*) = b'(\theta)$ and $\text{Var}(Y^*) = b''(\theta)\phi/w$. Hence we have that
+
+$$\text{E}(Y^*) = \frac{d}{d\theta} \left[-\log(1-e^{\theta})\right] = \frac{e^{\theta}}{1-e^{\theta}} = \frac{\mu/(\mu+\nu)}{1-\mu/(\mu+\nu)} = \frac{\mu}{\nu}$$
+
+and
+
+$$\text{Var}(Y^*) = \frac{1}{\nu} \frac{d^2}{d\theta^2} \left[-\log(1-e^{\theta})\right] = \frac{1}{\nu} \frac{e^{\theta}}{(1-e^{\theta})^2} = \frac{1}{\nu} \frac{\mu/(\mu+\nu)}{(1-\mu/(\mu+\nu))^2} = \frac{1}{\nu} \frac{\mu/(\mu+\nu)}{(\nu/(\mu+\nu))^2} = \frac{1}{\nu^3}\mu(\mu+\nu)$$
+
+Now $Y = \nu Y^*$, so we have that $\text{E}(Y) = \nu \text{E}(Y^*) = \nu \mu/\nu = \mu$ and $\text{Var}(Y) = \nu^2 \text{Var}(Y^*) = \mu(\mu+\nu)/\nu = \mu + \mu^2/\nu$.
+
+
+
+
+
+c) Use the expressions for $b(\theta)$ and $\phi$ to determine $\text{E}(Y^*)$ and $\text{Var}(Y^*)$. Show that $\text{E}(Y) = \mu$ and find $\text{Var}(Y)$.
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+---
+subtitle: "Autumn 2018"
+title: "TMA4315 Generalized linear models"
+author: "Mette Langaas, Department of Mathematical Sciences NTNU"
+date: "01.12.2019"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+#   pdf_document:
+#    toc: true
+#    toc_depth: 2
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+---
+
+(Last changes: added links to solutions to interactive lecture exercises for each module)
+
+This is an overview of learning material in the course [TMA4315 Generalized linear models](https://wiki.math.ntnu.no/tma4315) given at the [Department of Mathematical Sciences](https://www.ntnu.edu/imf) at [NTNU](https://www.ntnu.edu/) in the autumn of 2018. [Course description with formal information](https://www.ntnu.edu/studies/courses/TMA4315#tab=omEmnet).
+
+# Module pages
+
+These are links to (html-versions of) module pages in TMA4315 Generalized linear models in the autumn semester 2018 at NTNU. (To see .Rmd just replace .html with .Rmd).
+
+1. [Introduction](https://www.math.ntnu.no/emner/TMA4315/2018h/1Intro.html) with [solutions](https://www.math.ntnu.no/emner/TMA4315/2018h/M1solutions.pdf)
+2. [Multiple linear regression](https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html) with [solution w1](https://www.math.ntnu.no/emner/TMA4315/2018h/M2w1solutions.html) and [w2](https://www.math.ntnu.no/emner/TMA4315/2018h/M2w2solutions.html)
+3. [Binary regression](https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html) with [solution w1](https://www.math.ntnu.no/emner/TMA4315/2018h/M3w1solutions.html) and [w2](https://www.math.ntnu.no/emner/TMA4315/2018h/M3w2solutions.html)
+4. [Poisson and gamma regression](https://www.math.ntnu.no/emner/TMA4315/2018h/4PoissonGamma.html) with [solution w1](https://www.math.ntnu.no/emner/TMA4315/2018h/M4w1solutions.html) and [w2](https://www.math.ntnu.no/emner/TMA4315/2018h/M4w2solutions.html)
+5. [GLM — common core](https://www.math.ntnu.no/emner/TMA4315/2018h/5GLM.html) with [solutions](https://www.math.ntnu.no/emner/TMA4315/2018h/M5w1solutions.html)
+6. [Categorical regression ](https://www.math.ntnu.no/emner/TMA4315/2018h/6Categorical.html) with [solutions](https://www.math.ntnu.no/emner/TMA4315/2018h/M6w1solutions.html)
+7. [Linear mixed models](https://www.math.ntnu.no/emner/TMA4315/2018h/7LMM.html) with [solution w1](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w1solutions.html) and [w2](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w2solutions.html)
+8. [Generalized linear mixed models](https://www.math.ntnu.no/emner/TMA4315/2018h/8GLMM.html) with [solutions](https://www.math.ntnu.no/emner/TMA4315/2018h/M8w1solutions.html) 
+9. [Summing up](https://www.math.ntnu.no/emner/TMA4315/2018h/9Final.html)
+
+# Compulsory exercises
+
+* [Compulsory1](https://www.math.ntnu.no/emner/TMA4315/2018h/project1_h18.html) 
+* [Compulsory2](https://www.math.ntnu.no/emner/TMA4315/2018h/project2_h18.html) 
+* [Compulsory3](https://www.math.ntnu.no/emner/TMA4315/2018h/project3_h18.html) 
+
+<!-- # Solutions to recommended exercises -->
+<!-- The recommended exercises are found in each of the module pages (in the end of the material for each week). -->
+<!-- (To see .Rmd and .pdf just use in place of .html). -->
+

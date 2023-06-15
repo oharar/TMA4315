@@ -1,0 +1,284 @@
+---
+subtitle: "TMA4315 Generalized linear models H2018"
+title: "Module 4: POISSON REGRESSION, solution IL week 1"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+#  pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# Problem 1: Exam 2005 (Problem 1d-f - slightly modified) - Female crabs and satellites
+
+
+```{r, tidy = FALSE}
+crab <- read.table(file = "https://www.math.ntnu.no/emner/TMA4315/2017h/crab.txt")
+colnames(crab) <- c("Obs", "C", "S", "W", "Wt", "Sa")
+crab <- crab[,-1] #remove column with Obs
+crab$C <- as.factor(crab$C)
+modelEXAM <- glm(Sa ~ W + C, family = poisson(link = log), data = crab, contrasts = list(C = "contr.sum"))
+summary(modelEXAM)
+head(model.matrix(modelEXAM)) #remeber the effect coding
+library(car)
+Anova(modelEXAM, type = "III", test.statistic = "Wald")
+```
+
+## a)
+
+Estimated model: $\lambda = \exp($ 
+`r modelEXAM$coefficients[1]`+
+`r modelEXAM$coefficients[2]`W+
+`r modelEXAM$coefficients[3]`C1+
+`r modelEXAM$coefficients[4]`C2+
+`r modelEXAM$coefficients[5]`C3).
+
+Intercept, W and C1 are significant on a 5 % significance level.
+For C4, we have that $\beta_{C4}$=-`r modelEXAM$coefficients[3]`-
+`r modelEXAM$coefficients[4]`-
+`r modelEXAM$coefficients[5]`=`r -sum(modelEXAM$coefficients[3:5])`, and if we want to see the standard deviation and test if the effect is significant it is easiest to relevel the factor and refit. Alternative you may just use the covariance matrix and find the variance $-\hat{\beta}_{C1}-\hat{\beta}_{C2}-\hat{\beta}_{C3}$.
+
+```{r}
+newC=relevel(crab$C,ref="4")
+modelEXAM2=glm(Sa ~ W + newC, family = poisson(link = log), data = crab, contrasts = list(newC = "contr.sum"))
+summary(modelEXAM2)
+```
+Observe that all coeffs are unchanged - and we see that C4 is not significant (the newC1)
+
+From the `Anova` print-out we see that the `C` colour factor is significant on the overall level, the $H_0$ tested is then that all the levels of the factor are 0.
+
+To evaluate the fit of the model we have the null hypothesis that "this model is good" - compared to the saturated model, and we may either use the deviance or the Pearson chisquare test statistics to evaluat this - both have an asymptotic $\chi^2$-distribution with $n-p$ degrees of freedom (however this is not a good approximation if we have many small counts).
+
+The deviance is $D=$ `r modelEXAM$deviance`, with a $p$-value of 
+```{r}
+1-pchisq(modelEXAM$deviance,modelEXAM$df.residual)
+# or alternatively critical value
+qchisq(0.05, modelEXAM$df.residual)
+```
+We reject the null hypothesis and conclude that the model fit is _not_ good.
+
+Checking the Pearson test also (which should give the same result):
+```{r}
+X2p=sum(residuals(modelEXAM,type="pearson")^2)
+X2p
+# or alternatively
+altX2p=sum((crab$Sa-modelEXAM$fitted.values)^2/modelEXAM$fitted.values)
+altX2p
+1-pchisq(X2p,modelEXAM$df.residual)
+```
+
+## b)
+
+```{r, tidy = FALSE}
+
+library(ggplot2)
+
+#connection between SA and W for each cathegory of C
+
+W <- range(crab$W)
+W <- seq(W[1], W[2], 0.1)
+coefs <- coef(modelEXAM)
+crab_frame <- data.frame(W = W, 
+                         C1 = coefs[1] + coefs[2]*W + coefs[3] + 0 + 0,
+                         C2 = coefs[1] + coefs[2]*W + 0 + coefs[4] + 0,
+                         C3 = coefs[1] + coefs[2]*W + 0 + 0 + coefs[5],
+                         C4 = coefs[1] + coefs[2]*W - coefs[3] - coefs[4] - coefs[5])
+# On log-scale
+ggplot(crab_frame, mapping = aes(x = W)) + 
+  geom_line(mapping = aes(y = C1, col = "C1")) + 
+  geom_line(mapping = aes(y = C2, col = "C2")) + 
+  geom_line(mapping = aes(y = C3, col = "C3")) + 
+  geom_line(mapping = aes(y = C4, col = "C4")) +
+  labs(x = "Width", y = expression(log(lambda))) + scale_color_discrete("")
+
+# On real scale
+ggplot(crab_frame, mapping = aes(x = W)) + 
+  geom_line(mapping = aes(y = exp(C1), col = "C1")) + 
+  geom_line(mapping = aes(y = exp(C2), col = "C2")) + 
+  geom_line(mapping = aes(y = exp(C3), col = "C3")) + 
+  geom_line(mapping = aes(y = exp(C4), col = "C4")) +
+  labs(x = "Width", y = expression(lambda)) + scale_color_discrete("")
+```
+
+For a given colour, the model includes an intercept and an additive effect of the width. See the graphs, and follow one line only. We have no interactions. If we added interaction between colour and width then the change in width would have a different effect for the different colours. Can see from model: we did not include interactions, thus we chose this ourselves!
+
+Finally, confidence interval for the change.
+We know that asymptotically $\hat{\beta}_1\approx N_1(\beta_1,\widehat{SD}(\hat{\beta}_1))$, where $\widehat{SD}(\hat{\beta}_1)$ is found as the square root of the diagonal element of the inverse of the expected Fisher information matrix - and can be read off from the `R` print-out as `Std.Error` for  `W`.
+First we find a CI for $beta_1$ and then we transform the lower and upper limits of the confidence interval by $\exp$.
+$$ Z_1=\frac{\hat{\beta}_1-\beta_1}{\widehat{SD}(\hat{\beta}_1)} \approx N(0,1)$$
+$$ P(-z_{\alpha/2}\le Z_1 \le z_{\alpha/2})=1-\alpha$$
+$$ P(\hat{\beta}_1-z_{\alpha/2}
+\widehat{SD}(\hat{\beta}_1)
+\le \beta_j \le \hat{\beta}_1-z_{\alpha/2}\widehat{SD}(\hat{\beta}_1))=1-\alpha$$
+A $(1-\alpha)$% CI for $\beta_1$ is when we insert numerical values for the upper and lower limits.
+
+A $(1-\alpha)$% CI for $\exp(\beta_1)$ is then found by transforming the lower and upper limits of the CI for $\beta_1$ with the $\exp$.
+$$[\exp(\hat{\beta}_1-z_{\alpha/2}
+\widehat{SD}(\hat{\beta}_1)), \exp(\hat{\beta}_1+z_{\alpha/2}
+\widehat{SD}(\hat{\beta}_1))] $$
+
+```{r}
+lower=modelEXAM$coefficients-qnorm(0.975)*sqrt(diag(vcov(modelEXAM)))
+lower
+upper=modelEXAM$coefficients+qnorm(0.975)*sqrt(diag(vcov(modelEXAM)))
+upper
+print(c(exp(lower[2]), exp(upper[2])))
+```
+
+
+## c)
+
+$$\hat{\eta}(x_{W})=\hat{\beta}_0+\hat{\beta}_1x_{W}+\hat{\beta}_2$$
+For simplicity let $c^T=(1,x_W,1,0,0,0)$ be a row vector so that $\hat{\eta}(x_W)=c^T \hat{\beta}$.
+Since $\hat{\beta} \approx N_p(\beta,F^{-1}(\hat{\beta}))$ and $\hat{\eta}(x_{W})$ is a linear combination of the elements of $\hat{\beta}$ then $\hat{\eta}(x_{W})$ will be approximately normal with mean 
+$c^T \beta=\beta_0+\beta_1 x_W+\beta_2$ and variance $c^T F^{-1}(\hat{\beta}) c$. The latter can be written as
+$$\text{Var}(\hat{\eta}(x_W))=\text{Var}(\hat{\beta_0} + \hat{\beta_1}x_W + \hat{\beta_2}) = Var(\hat{\beta_0}) + x_W^2Var(\hat{\beta_1}) + Var(\hat{\beta_2}) + \\ 2x_W\text{Cov}(\hat{\beta_0}, \hat{\beta_1}) + 2\text{Cov}(\hat{\beta_0}, \hat{\beta_2}) + 2x_W\text{Cov}(\hat{\beta_1}, \hat{\beta_2}) $$
+
+Now, the estimated mean number of satellites for $x_W$ and light medium color is $\hat{\lambda}=\exp(\hat{\eta}(x_{W}))$, and we set this equal to 5 and solve for $x_W$.
+$$ \exp(\hat{\beta}_0 + \hat{\beta}_1 x_W + \hat{\beta}_2) = 5$$
+
+$$ \implies x_W = \frac{\ln(5) - \hat{\beta}_0 - \hat{\beta_2}}{\hat{\beta_1}} = \frac{\ln 5+2.92-0.27}{0.149}=28.5215 $$
+```{r}
+(log(5)-modelEXAM$coeff[1]-modelEXAM$coefficients[3])/modelEXAM$coefficients[2]
+```
+
+Finally, for this value of $x_W$ we use `R` to calculate a 95% CI for the expected number of satellites for the light medium crabs.
+
+
+```{r}
+
+# width estimate for
+no_sat <- 5
+crac_col <- 1 # light medium
+beta_0 <- coef(modelEXAM)[1]
+beta_1 <- coef(modelEXAM)[2]
+beta_2 <- coef(modelEXAM)[3]
+
+x_W <- as.numeric((log(5)-beta_0-beta_2)/(beta_1))
+x_W
+
+eta_W <- as.numeric(beta_0+beta_1*x_W+beta_2)
+eta_W
+exp(eta_W) # just to check
+
+cvec <- matrix(c(1,x_W,1,0,0),nrow=1)
+covmat <- vcov(modelEXAM)
+vareta_W = cvec%*%covmat%*%t(cvec)
+vareta_W
+
+# first CI for eta - then transform with exp 
+
+z0.025 <- qnorm(0.025, lower.tail = FALSE)
+
+lower <- (eta_W-z0.025*sqrt(vareta_W))
+upper <- (eta_W+z0.025*sqrt(vareta_W))
+
+print(c(exp(lower),exp(upper)))
+```
+
+The plot can be seen in part b).
+
+
+# Problem 2: Exam 2017 (Problem 1) - Poisson regression
+
+See the solution sketch: <https://www.math.ntnu.no/emner/TMA4315/Exam/E2017TMA4315TentativeSolutions.pdf>
+
+
+# Problem 3, from UiO
+
+
+The random variable $Y$ us Poisson distributed with pmf
+
+$$\text{P}(Y = y | \lambda)= \frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2, \dots.$$
+
+## a) 
+
+We may rewrite the pmf as
+
+$$\text{P}(Y = y | \lambda)= \frac{\lambda^y}{y!} \exp(-\lambda) = \exp\{y\log(\lambda) - \lambda -\log(y!)\},$$
+
+which is on the form 
+
+$$\exp\left\{\frac{y \theta - b(\theta)}{\phi}w + c(y, \phi, w)\right\}$$
+
+with $\theta = \log(\lambda)$, $b(\theta) = e^{\theta} = \lambda$, $\phi = w = 1$, and $c(y, \phi, w) = -\log(y!)$.
+
+
+## b)
+
+A GLM for $Y_1, Y_2, \dots, Y_n$ with link function $g(\cdot)$ is specified by assuming that
+
+* $Y_1, Y_2, \dots, Y_n$ are independent and all have a pmf that is an exponential family, in this case the Poisson family
+* Corresponding to each $Y_i$ we have covariates $\mathbf{x}_i = (x_{i0}, x_{i2}, \dots, x_{ik})$, with $x_{i0} = 1 \ \forall \ i$ (intercept), and a linear predictor $\eta_i = \mathbf{x}_i \mathbf{\beta} = \sum_{j=0}^k \beta_j x_{ij}s$
+* The mean $\mu_i = \text{E}(Y_i)$ is linked with the linear predictor by the relation $g(\mu_i) = \eta_i$. Here the link function $g(\cdot)$ is a strictly increasing, differentiable function.
+
+We have a canonical link function when the linear predictor $\eta_i$ is equal to the natural parameter $\theta_i$, i.w., when $g(\mu_i) = \theta_i$. From a) we have that $\theta = \log(\lambda) = \log(\mu_i)$ so $g(\mu_i) = \log(\mu_i)$ is the canonical link function.
+
+
+## c)
+
+We have that $Y_1, Y_2, \dots, Y_n$ are independent with Poisson pmf with $\lambda_i = \mu_i$. Therefore the likelihood function is given by
+
+$$L(\mathbf{\mu}; \mathbf{y}) = \prod_{i=1}^n \frac{\mu_i^{y_i}}{y_i!} \exp(-\mu_i).$$
+
+Hence the log-likelihood function becomes
+
+$$l(\mathbf{\mu}; \mathbf{y}) = \log(L(\mathbf{\mu}; \mathbf{y})) = \sum_{i=1}^n \{y_i\log(\mu_i) - \mu_i -\log(y_i!)\}.$$
+
+## d)
+
+For a saturated model there are nop restrictions on the expected values, so there is a separate parameter $\mu_i$ for each observation $y_i$.
+
+The log-likelihood obtains its maximum value when
+
+$$\frac{\partial}{\partial \mu_i} l(\mathbf{\mu}; \mathbf{y}) = 0 \ \forall i = 1, \dots, n.$$
+
+Now we have
+
+$$\frac{\partial}{\partial \mu_i} l(\mathbf{\mu}; \mathbf{y}) = \frac{y_i}{\mu_i} - 1$$
+
+so the log-likelihood takes its maximum value when $\frac{y_i}{\mu_i} - 1 = 0$. Thus the ML estimates for the saturated model are $\tilde{\mu}_i = y_i$, and the maximal value of the log-likelihood becomes 
+
+$$l(\mathbf{y}; \mathbf{y}) = \sum_{i=1}^n \{y_i\log(y_i) - y_i -\log(y_i!)\}.$$
+
+## e) 
+
+For a Poisson GLM we have $\phi = 1$ from a). Then the deviance $D(\mathbf{y}; \mathbf{\hat{\mu}})$ for a model with fitted values $\mathbf{\hat{\mu}} = (\hat{\mu}_1, \dots, \hat{\mu}_n)^T$ is given by
+
+$$D(\mathbf{y}; \mathbf{\hat{\mu}}) = -2\log\left(\frac{\text{max likelihood for actual model}}{\text{max likelihood for saturated model}}\right).$$
+
+The deviance measures how far the log-likelihood of the model is from the maximum value of the log-likelihood. For a Poisson GLM the deviance is given by
+
+
+$$D(\mathbf{y}; \mathbf{\hat{\mu}}) = -2\log\left( \frac{\prod_{i = 1}^n (\hat{\mu}_i^{y_i}) \exp(-\hat{\mu}_i)}{\prod_{i = 1}^n (y_i^{y_i}) \exp(-y_i)}\right) = 2\sum_{i=1}^n \left\{ y_i \log\left(\frac{y_i}{\hat{\mu}_i}\right) - y_i + \hat{\mu}_i \right\}$$
+
+The deviances may be used for comparing nested models. In order to explain how this may be done, we consider two Poisson GLM models with the same link function $g(\cdot)$. For model $M_1$ we have the linear predictors $\eta_i = \mathbf{x}_i \mathbf{\beta} = \sum_{j=0}^k \beta_j x_{ij}; \ i = 1, \dots, n$, while the linear predictors for model $M_0$ are obtained by setting $p-q$ of the $\beta_j$'s equla to zero (or by imposing the same number of linear restrictions on the $\beta_j$'s). Thus model $M_0$ has $q$ parameters, and $M_1$ has $p = k+1$. The fitted values under model $M_0$ and $M_1$ are denoted $\mathbf{\hat{\mu}}_0$ and $\mathbf{\hat{\mu}}_1$, respectively.
+
+We now assume that model $M_1$ holds and want to test the null hypothesis that also model $M_0$ holds. The likelihood ratio test for this hypothesis problem rejects the null hypothesis for large vavlues of:
+
+$$-2\log\left(\frac{\text{max likelihood for model }M_0}{\text{max likelihood for model }M_1}\right) = \\
+-2\log\left(\frac{\text{max likelihood for actual model }M_0}{\text{max likelihood for saturated model}}\right) \\
++ 2\log\left(\frac{\text{max likelihood for actual model }M_1}{\text{max likelihood for saturated model}}\right) \\
+= D(\mathbf{y}; \mathbf{\hat{\mu}_1}) - D(\mathbf{y}; \mathbf{\hat{\mu}_0})$$
+
+Thus the difference between the deviances of the two nested models $M_0$ and $M_1$ can be used for testing the null hypothesis that model $M_0$ holds. When model $M_0$ holds, we have that the difference between the deviances is approximately $\chi^2$-distributed with $p-q$ degrees of freedom.
+
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+---
+subtitle: "Autumn 2017"
+title: "TMA4315 Generallized linear models"
+author: "Mette Langaas, Department of Mathematical Sciences NTNU"
+date: "22.05.2018"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+#   pdf_document:
+#    toc: true
+#    toc_depth: 2
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+---
+
+This is an overview of learning material in the course [TMA4315 Generalized linear models](https://wiki.math.ntnu.no/tma4315) given at the [Department of Mathematical Sciences](https://www.ntnu.edu/imf) at [NTNU](https://www.ntnu.edu/). [Course description with formal information](https://www.ntnu.edu/studies/courses/TMA4315#tab=omEmnet).
+
+# Module pages
+
+These are links to (html-versions of) module pages in TMA4315 Generalized linear models, that was held in the autumn semester in 2017 at NTNU. (To see .Rmd and .pdf just use in place of .html).
+
+1. [Introduction](https://www.math.ntnu.no/emner/TMA4315/2017h/1Intro.html)
+2. [Multiple linear regression](https://www.math.ntnu.no/emner/TMA4315/2017h/2MLR.html) 
+3. [Binary regression](https://www.math.ntnu.no/emner/TMA4315/2017h/3BinRegw123.html)
+4. [Poisson and gamma regression](https://www.math.ntnu.no/emner/TMA4315/2017h/4PoissonGamma.html)
+5. [GLM in general and quasi likelihood](https://www.math.ntnu.no/emner/TMA4315/2017h/5GLM.html)
+6. [Linear mixed models](https://www.math.ntnu.no/emner/TMA4315/2017h/6LMM.html)
+7. [Generalized linear mixed models](https://www.math.ntnu.no/emner/TMA4315/2017h/7GLMM.html) 
+8. [Summing up](https://www.math.ntnu.no/emner/TMA4315/2017h/8Final.html)
+
+# Compulsory exercises
+
+* [Compulsory1](https://www.math.ntnu.no/emner/TMA4315/2017h/project_1final.html) 
+* [Compulsory2](https://www.math.ntnu.no/emner/TMA4315/2017h/project_2final.html) 
+* [Compulsory3](https://www.math.ntnu.no/emner/TMA4315/2017h/project_3.html) 
+
+<!-- # Solutions to recommended exercises -->
+<!-- The recommended exercises are found in each of the module pages (in the end of the material for each week). -->
+<!-- (To see .Rmd and .pdf just use in place of .html). -->
+
+<!-- 2. Multiple linear regression: -->
+<!-- [w2](https://www.math.ntnu.no/emner/TMA4315/2017h/2MLRsolutions.html) -->
+<!-- 3. Binary regression: [w2](https://www.math.ntnu.no/emner/TMA4315/2017h/M3w2_solution.html) -->
+<!-- [w3](https://www.math.ntnu.no/emner/TMA4315/2017h/M3w3_solution.html) -->
+<!-- 4. Poisson and gamma regression: [w1](https://www.math.ntnu.no/emner/TMA4315/2017h/module4_1_solutions.html), [w2](https://www.math.ntnu.no/emner/TMA4315/2017h/module4_2_solutions.html). -->
+<!-- 5. [GLM in general and quasi likelihood](https://www.math.ntnu.no/emner/TMA4315/2017h/module5_1_solutions.html) -->
+<!-- 6. Linear mixed models: [w1](https://www.math.ntnu.no/emner/TMA4315/2017h/module6_1_solutions.html) [w2](https://www.math.ntnu.no/emner/TMA4315/2017h/module6_2_solutions.html) -->
+<!-- 7. [Generalized linear mixed models](https://www.math.ntnu.no/emner/TMA4315/2017h/module7_1_solutions.html) -->
+
+# Suggested changes for 2018
+
+* Applied for digital exam.
+
+## Reading list
+
+* M1 (w1): one week - add stuff on working in groups, and theoretical exercises and group kahoot?
+* M2 (w2) : only one week lectures. More theory on likelihoods already in Module 2, sequential anova and dummy coding, interactions (the stuff not covered so well in TMA4267/68). 
+* One week of CompEx1 after M2 (w3): mylm, but maybe a bit less functionality.
+* M3: More on other links than logit in Module 3, test for overdispersion, maybe also mention lasso and ridge penalty. Only two weeks (w4+5).
+* M4: More on offset models for Poisson in Module 4. Possible with only 1 w? (w6).
+* More theory on likelihoods and orthogonality++ in Module 5 (w7).
+* One week of CompEx2 after M5 (w8).
+* Add module on multinomial models and contingency tables (before LMM) (w9) 
+* Is there room for a last module on quantile regression? before LMM? (w10)
+* LMM (2 weeks) (w11+12)
+* GLMM (1 week) (w13)
+* Summing up (1 week,w14) - including CompEx3.
+
+## Recommended exercises
+
+* Not programming - all code already written (if follow feed-back from focus interviews)
+* No coding in IL, scroll and point+click
+* Mainly exam questions - but change a bit for the first modules?
