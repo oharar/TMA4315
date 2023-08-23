@@ -1,0 +1,30 @@
+---
+title: "Plan IL: Module 2, week 1"
+author: "Mette Langaas"
+date: "8/31/2018"
+output: html_document
+---
+
+# First session: 8.15-9.00
+
+Before 8.15:
+
+1. Division criterion: At the door you will be asked "would you like to have most focus on theory or interpretation?" and I will try to make groups of these two flavours.
+2. In groups: short presentation round (name, study programme, interests) in the groups. One student (the "manager") log in to the PC at each table, or connect her/his own laptop and display the module page. And who is the secretary. 
+
+
+* 8.15: Short into by Mette
+* 8.18: Work on Problem 1. If time, start on Problem 2.
+* 8.30: AV-person will come to Smia and help with technical stuff for those you want that.
+* 8.55: Mette summarizes.
+
+# Intermission 9.00-9.15
+
+waffles, fruits for those do do not eat waffles
+
+# Second session: 9.15-10.00
+
+* 9.15: Short into by Mette
+* 9.18: Work on Problem 2, then 4 and finally 3. If time, there is also Problem 6 to discuss.
+* 9.55: Mette summarizes.
+

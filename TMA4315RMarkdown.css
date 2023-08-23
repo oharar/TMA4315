@@ -1,0 +1,14 @@
+```{css, echo=FALSE}
+details > summary {
+  padding: 20px 6px;
+  background-color: #e5f5f5;
+  border: none;
+  cursor: pointer;
+}
+
+.question {
+  font-size: 120%;
+  color: blue
+}
+
+```
