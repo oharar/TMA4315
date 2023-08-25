@@ -14,3 +14,14 @@ The GLM course webpage with html versions of the file are found here:
 Please consider the licence for this repo to be [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 
+## Notes on improvement
+
+### Module 1
+
+Lesson plan for lecture could be more explicit?
+
+Add solutions to exercises in folds
+
+### Module 2
+
+

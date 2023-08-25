@@ -258,7 +258,7 @@ For the subsequent module pages this information will be available in the end of
 ## The Munich Rent Index Data set
 We will use this data set when working with multiple linear regression (next module), so this is a good way to start to know the data set and the ggplot functions, which can be installed together with a suite of useful libraries from `tidyverse`. 
 
-A version of the Munich Rent Index data is available as `rent` in library `catdata` from CRAN. 
+A version of the Munich Rent Index data is available as `rent99` in library `gamlss.data` from CRAN. 
 
 ```{r, eval=TRUE,include=TRUE,message=FALSE}
 library(gamlss.data)

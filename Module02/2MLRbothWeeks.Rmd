@@ -5,6 +5,7 @@ author: "Mette Langaas, Department of Mathematical Sciences, NTNU -- with contri
 date: "30.08 and 06.09 [PL], 31.08 and 07.09 [IL]"
 output: #3rd letter intentation hierarchy
   html_document:
+    css: "../TMA4315RMarkdown.css"
     toc: true
     toc_float: true
     toc_depth: 2
@@ -46,7 +47,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * big data implementation (if time)
 * properties of parameter estimators
 * assessing model fit (diagnostic), residuals, QQ-plots
-* design matric: how to code categorical covariates (dummy or effect coding), and how to handle interactions
+* design matrix: how to code categorical covariates (dummy or effect coding), and how to handle interactions
 
 Jump to [IL for first week](#interactivew1)
 
@@ -128,10 +129,10 @@ We assume that pairs $({\bf x}_i^T,y_i)$ ($i=1,...,n$) are measured from samplin
 
 Study the print-out and discuss the following questions:
 
-a) What can be response, and what covariates? (using what you know about rents) 
-b)  What type of response(s) do we have? (continuous, categorical, nominal, ordinal, discrete, factors, ...). 
-c) What types of covariates? (continuous, categorical, nominal, ordinal, discrete, factors, ...) 
-d) Explain what the elements of `model.matrix` are. (Hint: coding of `location`) 
+- <span class="question">What can be response, and what covariates? (using what you know about rents)</span>
+- <span class="question">What type of response(s) do we have? (continuous, categorical, nominal, ordinal, discrete, factors, ...). </span>
+- <span class="question">What types of covariates? (continuous, categorical, nominal, ordinal, discrete, factors, ...) </span>
+- <span class="question">Explain what the elements of `model.matrix` are. (Hint: coding of `location`) </span>
 
 
 ```{r , echo=FALSE, eval=showsol, warning=FALSE, message=FALSE}
@@ -187,10 +188,10 @@ $\mu_i=\eta_i$.
 
 ### Questions
 
-* Compare the traditional and GLM way. Have we made the same assumptions for both?
-* What is the connection between each ${\bf x}_i$ and the design matrix? 
-* What is "full rank"? Why is this needed? Example of rank less than $p$?
-* Why do you think we move from traditional to GLM way? Could we not just let $\varepsilon$ be from binomial, Poisson, etc. distribution?
+* <span class="question">Compare the traditional and GLM way. Have we made the same assumptions for both?
+* <span class="question">What is the connection between each ${\bf x}_i$ and the design matrix? 
+* <span class="question">What is "full rank"? Why is this needed? Example of rank less than $p$?
+* <span class="question">Why do you think we move from traditional to GLM way? Could we not just let $\varepsilon$ be from binomial, Poisson, etc. distribution?
 
 # Parameter estimation
 
@@ -202,7 +203,7 @@ In multiple linear regression there are two popular methods for estimating the r
 We assume that pairs of covariates and response are measured independently of each other: $({\bf x}_i,Y_i)$, and $Y_i$ follows the distribution specified above, and ${\bf x}_i$ is fixed.
 
 $$L(\beta)=\prod_{i=1}^n L_i(\beta)=\prod_{i=1}^n f(y_i; \beta)$$
-**Q**: fill in with the normal density for $f$ and the multiple linear regression model.
+**Q**: <span class="question">fill in with the normal density for $f$ and the multiple linear regression model.
 
 ---
 
@@ -216,7 +217,7 @@ l(\beta)=\ln L(\beta)=\sum_{i=1}^n \ln L_i(\beta)=\sum_{i=1}^n l_i(\beta)\\
 $$
 Observe that the log-likelihood is a sum of individual contributions for each observation pair $i$.
 
-**Q**: fill in with the normal density for $f$ and the multiple linear regression model.
+**Q**: <span class="question">fill in with the normal density for $f$ and the multiple linear regression model.
 
 ---
 
@@ -252,14 +253,14 @@ $$s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
 
 Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
 
-**Q**: fill in for the multiple linear regression model.
+**Q**: <span class="question">fill in for the multiple linear regression model.
 
 ---
 
 To find the maximum likelihood estimate $\hat{\beta}$ we solve the set of $p$ equations:
 $$s(\hat{\beta})=0$$
 
-**Q**: fill in for the multiple linear regression model. Specify what the _normal equations_ are.
+**Q**: <span class="question">fill in for the multiple linear regression model. Specify what the _normal equations_ are.
 
 For the normal linear regression model, these equations $s(\hat{\beta})=0$ have a solution to be written on closed form. 
 
@@ -269,7 +270,7 @@ For the normal linear regression model, these equations $s(\hat{\beta})=0$ have 
 
 $$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
 
-**Q**: How can you see that least squares and ML gives the same estimator?
+**Q**: <span class="question">How can you see that least squares and ML gives the same estimator?
 
 ---
 
@@ -304,7 +305,7 @@ $$H(\beta) = -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} = -\frac{\
 so this is minus the Hessian of the loglikelihood. $H(\beta)$ may be considered as a _local measure of information_ that the likelihood contains. The higher the curvature of the log-likelihood near its maximum the more information is providd by the likelihood about the unknown parameter. Since we look at minus the Hessian, we have a positive $H(\beta)$ near the maximum.
 
 
-**Q:** Calculate this for the multiple linear regression model. What is the dimension of $H(\beta)$?
+**Q:** <span class="question">Calculate this for the multiple linear regression model. What is the dimension of $H(\beta)$?
 
 ---
 
@@ -312,7 +313,7 @@ In addition we also use the _expected Fisher information matrix $F(\beta)$_ whic
 
 $$F(\beta) = E\left( -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} \right).$$
 
-**Q:** Calculate this for the multiple linear regression model. What is the dimension of $F(\beta)$?
+**Q:** <span class="question">Calculate this for the multiple linear regression model. What is the dimension of $F(\beta)$?
 
 In Module 3 we need the Fisher information matrix in the Newton-Raphson method, and also to find the (asympotic) covariance matrix of our estimated coefficents $\hat{\beta}$ - so much more about this then.
 
@@ -413,7 +414,7 @@ $$ \hat{\sigma}^2=\frac{1}{n-p}({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\ha
 
 The restricted maximum likelihood estimate is used in `lm`.
 
-**Q:** What does it mean that the REML estimate is unbiased? Where is the estimate $\hat{\sigma}$ in the regression output? (See output from `lm` for the rent index example.)
+**Q:** <span class="question">What does it mean that the REML estimate is unbiased? Where is the estimate $\hat{\sigma}$ in the regression output? (See output from `lm` for the rent index example.)
 
 ```{r , echo=FALSE, eval=showsol, warning=FALSE, message=FALSE}
 cat("Answer: \n")
@@ -457,11 +458,12 @@ and
 $$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\tilde{\sigma}}\sim N(0,1)$$
 where $\tilde{\sigma}^2=\frac{\text{SSE}}{n}$ (the ML estimator).
 
-**Q:** Pointing forwards: do you see any connection between the covariance matrix of $\hat{\boldsymbol{\beta}}$ and the Fisher information?
+**Q:** <span class="question">Pointing forwards: do you see any connection between the covariance matrix of $\hat{\boldsymbol{\beta}}$ and the Fisher information?
 
 ----
 
 ## Are $\hat{{\bf \beta}}$ and SSE are independent? (optional)
+
 Can be proven using knowledge from TMA4267 on properties of the multivariate normal distribution.
 
 Independence:  Let ${\bf X}_{(p \times 1)}$ be a random vector from
@@ -534,7 +536,7 @@ Be aware: don't mix errors (the unobserved) with the residuals ("observed").
 
 But, we see that the residuals are not independent and may have different variance, therefore we will soon define variants of the residuals that we may use to assess model assumptions after a data set is fitted.
 
-**Q:** How can we say that the residuals can have different variance and may be correlated? Why is that a problem?
+**Q:** <span class="question">How can we say that the residuals can have different variance and may be correlated? Why is that a problem?
 
 ---
 
@@ -707,14 +709,14 @@ levels(ds$location)=c("average","good","excellent")
 ggpairs(ds)
 ```
 
-**Q**: comment on what you see in the `ggpairs` plot.
+**Q**: <span class="question">comment on what you see in the `ggpairs` plot.
 
 ---
 
 Categorical covariates may either be ordered or unordered. We will only consider unordered categories here. 
 In general, we could like to estimate regression coefficients for all levels for the categorical covariates. However, if we want to include an intercept in our model we can only include codings for one less variable than the number of levels we have - or else our design matrix will not have full rank.
 
-**Q**: Assume you have a categorical variable with three levels. Check for yourself that making a design matrix with one intercept and three columns with dummy (0-1) variable coding will result in a matrix that is singular.
+**Q**: <span class="question">Assume you have a categorical variable with three levels. Check for yourself that making a design matrix with one intercept and three columns with dummy (0-1) variable coding will result in a matrix that is singular.
 
 ```{r}
 # make "wrong" dummy variable coding with 3 columns
@@ -749,6 +751,7 @@ X2[c(1,3,69),]
 ```
 
 So, what does this mean in practice? Model 1 has `average` as reference category and model 2 `good`.
+
 ```{r}
 fit1=lm(rent~area+location,data=ds,contrasts = list(location="contr.treatment"))
 summary(fit1)
@@ -756,22 +759,25 @@ fit2=lm(rent~area+locationRELEVEL,data=ds,contrasts = list(locationRELEVEL="cont
 summary(fit2)
 ```
 
-**Q**: Comment on the print-out. How do we interpret the intercept estimate?
+**Q**: <span class="question">Comment on the print-out. How do we interpret the intercept estimate?
 
 ---
 
 ### Effect coding aka sum-zero-contrast: 
 
 This is an equally useful and popular coding - and this is the coding that is preferred when working with analysis of variance in general. The effect coding assumes that the sum of the effects for the levels of the factor sums to zero, and this is done with the following coding scheme (Model 3 with the original location and 4 with the releveled version.)
+
 ```{r}
 X3=model.matrix(~area+location,data=ds,contrasts=list(location="contr.sum"))
 X3[c(1,3,69),]
 X4=model.matrix(~area+locationRELEVEL,data=ds,contrasts=list(locationRELEVEL="contr.sum"))
 X4[c(1,3,69),]
 ```
+
 Observe the coding scheme. This means that when we find "the missing location level estimate" as the negative of the sum of the parameter estimates for the other estimated levels.
 
 So, what does this mean in practice? 
+
 ```{r}
 fit3=lm(rent~area+location,data=ds,contrasts = list(location="contr.sum"))
 summary(fit3)
@@ -779,9 +785,10 @@ fit4=lm(rent~area+locationRELEVEL,data=ds,contrasts = list(locationRELEVEL="cont
 summary(fit4)
 ```
 
-**Q**: Comment on the print-out. How do we now interpret the intercept estimate?
+**Q**: <span class="question">Comment on the print-out. How do we now interpret the intercept estimate?
 
 # Interactions 
+
 (read for yourself)
 
 To illustrate how interactions between covariates can be included we use the `ozone` data set from the `ElemStatLearn` library. This data set is measurements from 1973 in New York and contains 111 observations of the following variables:
@@ -825,7 +832,7 @@ However, one might think that the covariate `wind` (wind speed) might act differ
 $$\begin{aligned} Y &= \beta_0 +  \beta_1 x_t + \beta_2 x_w + \beta_3\cdot(x_t  \cdot x_w) +\varepsilon \\ &= \beta_0 +  (\beta_1 + \beta_3 x_w) \cdot x_t + \beta_2 x_w + \varepsilon \\ &= \beta_0 + \beta_1 x_t + (\beta_2 + \beta_3 x_t) \cdot x_w + \varepsilon \end{aligned}.$$
 We fit this model in `R`. An interaction term can be included in the model using the `*` symbol.
 
-**Q:** Look at the `summary` below. Is this a better model than without the interaction term? It the term significant?
+**Q:** <span class="question">Look at the `summary` below. Is this a better model than without the interaction term? It the term significant?
 
 ---
 
@@ -853,7 +860,7 @@ Below we see that the interaction term is highly significant. The $p$-value is v
 
 **The hierarchical principle**
 
-It is possible that the interaction term is higly significant, but the main effects are not.
+It is possible that the interaction term is highly significant, but the main effects are not.
 
 In our `ozone.int` model above: the main effects are `temperature` and `wind`. The hierarchical principle states that if we include an interaction term in our model, the main effects are also to be included, even if they are not significant. This means that if the coefficients $\hat \beta_1$ or $\hat \beta_2$ would be insignificant, while the coefficient $\hat \beta_3$ is significant, $\hat \beta_1$ and $\hat \beta_2$ should still be included in the model.
 
@@ -896,23 +903,23 @@ ggplot(ozone)+geom_line(aes(y=interceptlow+slopelow*wind, x = wind), col="blue")
 
 ### Problem 1
 
-1. Write down the GLM way for the multiple linear regression model. Explain.
+1. <span class="question">Write down the GLM way for the multiple linear regression model. Explain.
 
-2. Write down the likelihood and loglikelihood. Then define the score vector.
+2. <span class="question">Write down the likelihood and loglikelihood. Then define the score vector.
 
-What is the set of equations we solve to find parameter estimates? What if we could not find a closed form solution to our set of equations - what could we do then? 
+<span class="question">What is the set of equations we solve to find parameter estimates? What if we could not find a closed form solution to our set of equations - what could we do then? 
 
-3. Define the observed and the expected Fisher information matrix. What dimension does these matrices have? What can these matrices tell us?
+3. <span class="question">Define the observed and the expected Fisher information matrix. What dimension does these matrices have? What can these matrices tell us?
 
 4. A core finding is $\hat \beta$. 
 \[ \hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
 with $\hat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
 
-Show that $\hat{\beta}$ has this distribution with the given mean and covariance matrix. What does this imply for the distribution of the $j$th element of $\hat{\beta}$? In particular, how can we calculate the variance of $\hat{\beta}_j$?
+<span class="question">Show that $\hat{\beta}$ has this distribution with the given mean and covariance matrix. What does this imply for the distribution of the $j$th element of $\hat{\beta}$? In particular, how can we calculate the variance of $\hat{\beta}_j$?
 
-5. Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this?
+5. <span class="question">Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this?
 
-6. That is the theoretical intercept and slope of a QQ--plot based on a normal sample?
+6. <span class="question">That is the theoretical intercept and slope of a QQ--plot based on a normal sample?
 
 ---
 
@@ -926,15 +933,15 @@ Fit the regression model with first `rent` and then `rentsqm` as reponse and fol
 #CODE
 ```
 
-1. Look at diagnostic plots for the two fits. Which response do you prefer?
+1. <span class="question">Look at diagnostic plots for the two fits. Which response do you prefer?
 
 Consentrate on the response-model you choose for the rest of the tasks.
 
-2. Explain what the parameter estimates mean in practice. In particular, what is the interpretation of the intercept?
+2. <span class="question">Explain what the parameter estimates mean in practice. In particular, what is the interpretation of the intercept?
 
 <!-- 3. What if you wanted to recode the location variable (average-good-excellent) so that the good location is the reference level. How can you do that, and what would that mean for your fitted model? Hint: first define a location factor, and then use `relevel`. -->
 
-3. Go through the summary printout and explain the parts you know now, and also observe the parts you don't know yet (on the agenda for next week?). 
+3. <span class="question">Go through the summary printout and explain the parts you know now, and also observe the parts you don't know yet (on the agenda for next week?). 
 
 Next week: more on inference on this data set.
 
@@ -942,11 +949,11 @@ Next week: more on inference on this data set.
 
 ### Problem 3: Simple vs. multiple regression
 
-1. In a design matrix orthogonal columns gives diagonal ${\bf X}^T {\bf X}$. What does that mean? How can we get orthogonal columns?
+1. <span class="question">In a design matrix orthogonal columns gives diagonal ${\bf X}^T {\bf X}$. What does that mean? How can we get orthogonal columns?
 
-2. If we have orthogonal columns, will then simple (only one covariate) and multiple estimated regression coefficients be different? Explain.
+2. <span class="question">If we have orthogonal columns, will then simple (only one covariate) and multiple estimated regression coefficients be different? Explain.
 
-3. What is multicollinearity? Is that a problem? Why (not)?
+3. <span class="question">What is multicollinearity? Is that a problem? Why (not)?
 
 ### Problem 4: Dummy vs. effect coding in MLR
 
@@ -971,13 +978,13 @@ data <- data.frame(income,gender=factor(gender,levels=c("Female","Male")),
 ```
 
 2. Check out the `interaction.plot(data$gender,data$place,data$income)`. What does it show? Do we need an interaction term if we want to model a MLR with `income` as response?
-Is there a `ggplot` version of the interaction plot?
+<span class="question">Is there a `ggplot` version of the interaction plot?
 
-3. Check our `plot.design(income~place+gender, data = data)`. What does it show?
+3. <span class="question">Check our `plot.design(income~place+gender, data = data)`. What does it show?
 
-4. First, use treatment contrast (dummy variable coding) and fit a MLR with `income` as response and `gender` and `place` as covariates. Explain what your model estimates mean. In particular, what is the interpretation of the intercept estimate?
+4. <span class="question">First, use treatment contrast (dummy variable coding) and fit a MLR with `income` as response and `gender` and `place` as covariates. Explain what your model estimates mean. In particular, what is the interpretation of the intercept estimate?
 
-5. Now, turn to sum-zero contrast (effect coding). Explain what your model estimates mean. Now, what is the intercept estimate?
+5. <span class="question">Now, turn to sum-zero contrast (effect coding). Explain what your model estimates mean. Now, what is the intercept estimate?
 Calculate the estimate for `place=C`.
 
 Next week we connect this to linear hypotheses and ANOVA.
@@ -987,7 +994,7 @@ Next week we connect this to linear hypotheses and ANOVA.
 ### Problem 5: Simulations in R (optional)
 (this problem was also given in TMA4268 Statistical learning)
 
-1. For simple linear regression, simulate at data set with homoscedastic errore and with heteroscedastic errors. Here is a suggestion of one solution - not using `ggplot`. You use `ggplot`.
+1. For simple linear regression, simulate at data set with homoscedastic errors and with heteroscedastic errors. Here is a suggestion of one solution - not using `ggplot`. You use `ggplot`.
 Why this? To see how things looks when the model is correct and wrong.
 
 ```{r, eval=FALSE}
@@ -1016,7 +1023,11 @@ plot(x,e2,pch=20)
 abline(h=0,col=2)
 ```
 
-2. All this fuss about raw, standardized and studentized residuals- does really matter in practice? Below is one example where the raw residuals are rather different from the standardized, but the standardized is identical to the studentized. Can you come up with a simuation model where the standardized and studentized are very different? Hint: what about at smaller sample size?
+2. All this fuss about raw, standardized and studentized residuals- does really matter in practice? Below is one example where the raw residuals are rather different from the standardized, but the standardized is identical to the studentized. 
+
+<span class="question">Can you come up with a simuation model where the standardized and studentized are very different? 
+
+Hint: what about at smaller sample size?
 
 ```{r, eval=FALSE}
 n=1000
@@ -1058,11 +1069,12 @@ Statistic for inference about $\beta_j$, $c_{jj}$ is diagonal element $j$ of $({
 This requires that $\hat{\beta}_j$ and $\hat{\sigma}$ are independent.
 
 # Inference
+
 We will consider confidence intervals and prediction intervals, and then test single and linear hypotheses.
 
 ## Confidence intervals (CI)
 
-In addition to providing a parameter estimate for each element of our parameter vector $\beta$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element. (We will not consider simultanous confidence regions in this course.)
+In addition to providing a parameter estimate for each element of our parameter vector $\beta$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element. (We will not consider simultanious confidence regions in this course.)
 
 We focus on element $j$ of $\beta$, called $\beta_j$. It is known that $T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}$ follows a $t$-distribution with $n-p$ degrees of freedom. Let $t_{\alpha/2,n-p}$ be such that $P(T_j>t_{\alpha/2,n-p})=\alpha/2$. REMARK: our textbook would here look at area to the left instead of to the right - but we stick with this notation.
 Since the $t$-distribution is symmetric around 0, then $P(T_j< -t_{\alpha/2,n-p})=\alpha/2$. We may then write
@@ -1112,6 +1124,7 @@ $$ P(\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}
 A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: $[\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}]$.
 
 CIs can be found in R using `confint` on an `lm` object. (Here dummy variable coding is used for `location`, with average as reference location.)
+
 ```{r}
 library(gamlss.data)
 fit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
@@ -1120,13 +1133,13 @@ confint(fit)
 
 **Q** (and A): 
 
-1. What is the interpretation of a 95% confidence interval? 
+1. <span class="question">What is the interpretation of a 95% confidence interval? 
 <!-- A: [see Classnotes 04.09.2017](https://www.math.ntnu.no/emner/TMA4315/2017h/M2_Classnotes20170904.pdf) -->
 
-2. Does the CI for $\hat{\beta}_{\text{area}}$ change if we change the regression model (e.g. not include `cheating`)? 
+2. <span class="question">Does the CI for $\hat{\beta}_{\text{area}}$ change if we change the regression model (e.g. not include `cheating`)? 
 <!-- A: Yes! -->
 
-3. How can we in practice find a CI for `location1` (average location) - when that is not printed above? (Yes, may use formula, but in R without maths?) 
+3. <span class="question">How can we in practice find a CI for `location1` (average location) - when that is not printed above? (Yes, may use formula, but in R without maths?) 
 <!-- A: relevel to give good as reference. -->
 
 ----
@@ -1176,13 +1189,12 @@ predict(fit,newdata=newobs,interval="prediction",type="response")
 
 **Q** (and A): 
 
-1. When is a prediction interval of interest? 
+1. <span class="question">When is a prediction interval of interest? 
 <!-- A: Always? Gives useful information in addition to a point prediction. -->
 
-2. Explain the result from `predict` above.
+2. <span class="question">Explain the result from `predict` above.
 <!-- A: Fit it point prediction, lwr is lower and upr is upper limit of the 95% PI (default with 95, argument if other.) -->
-3. What is the interpretation of a 95% prediction
-interval? 
+3. <span class="question">What is the interpretation of a 95% prediction interval? 
 <!-- A: [see Classnotes 04.09.2017](https://www.math.ntnu.no/emner/TMA4315/2017h/M2_Classnotes20170904.pdf) -->
 
 ---
@@ -1206,7 +1218,7 @@ These are our _fake news_, which are very important for us to avoid.
 We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test (see below) is smaller than the chosen significance level.
 We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
 
-**Q**: Draw a 2 by 2 table showing the connection between 
+**Q**: <span class="question">Draw a 2 by 2 table showing the connection between 
 
 * "truth" ($H_0$ true or $H_0$ false) - rows in the table, and 
 * "action" (reject $H_0$ and accept $H_0$) - columns in the table,
@@ -1264,13 +1276,13 @@ summary(fit)
 
 **Q** (and A):
 
-1. Where is hypothesis testing performed here, and which are the hypotheses rejected at level $0.01$?
+1. <span class="question">Where is hypothesis testing performed here, and which are the hypotheses rejected at level $0.01$?
 <!-- A: Column named `t value` gives numerical value for the t-statistic and column `*Pr(>|t|)` gives $p$-value for the two-sided test. -->
 
-2. Will the test statistics and $p$-values change if we change the regression model?
+2. <span class="question">Will the test statistics and $p$-values change if we change the regression model?
 <!-- A: Yes. Unless our design matrix has orthogonal columns. -->
 
-3. What is the relationship between performing an hypothesis test and constructing a CI interval? Remember:
+3. <span class="question">What is the relationship between performing an hypothesis test and constructing a CI interval? Remember:
 ```{r}
 library(gamlss.data)
 fit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
@@ -1342,7 +1354,7 @@ fit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
 summary(fit)
 ```
 
-**Q** (and A): Is the regression significant? 
+**Q** (and A): <span class="question">Is the regression significant? 
 <!-- A: Yes, the F-test is given in the last row of the `summary` print-out and gives a $p$-value clearly below any sensible signficance level. -->
 
 ----
@@ -1573,7 +1585,7 @@ In R the p-value is calculated as `1-pf(f0,Df)` or as `1-pchisq(Df*f0,Df)` if th
 
 So, this is what is presented - a sequential record of the effect of adding a new covariate.
 
-**Q*: what if you change the order of the covariates into the model? Yes, then everything changes. That is the drawback of Type I (sequential) thinking.
+**Q*: <span class="question">what if you change the order of the covariates into the model? Yes, then everything changes. That is the drawback of Type I (sequential) thinking.
 
 ----
 
@@ -1608,7 +1620,7 @@ Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
 ----
 
-###AIC Akaike information criterion 
+### AIC Akaike information criterion 
 
 AIC is one of the most widely used criteria, and is designed for likelihood-based inference.
 Let $l(\hat{\beta}_M,\tilde{\sigma}^2)$ be the maximum of the log-likelihood of the data inserted the maximum likelihood estimates for the regression and nuisance parameter. Further, let $\lvert M \rvert$ be the number of estimated regression parameters in our model.
@@ -1621,7 +1633,7 @@ Remark that $\tilde{\sigma}^2=SSE/n$ - our ML estimator (not our unbiased REML),
 
 Choose the model with the minimum AIC. 
 
-###BIC  Bayesian information criterion.
+### BIC  Bayesian information criterion.
 
 The BIC is also based on the likelihood (see notation above).
 $$\text{BIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)$$
@@ -1651,21 +1663,21 @@ In general we would not like a model that is too complex.
 
 ### Problem 1
 
-1. What is the interpretation of a 95% confidence interval? Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$? 
+1. <span class="question">What is the interpretation of a 95% confidence interval? Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$? 
 
-2. What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\bf x}_0$.
+2. <span class="question">What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\bf x}_0$.
 
-3. Construct a 95% CI for ${\bf x}_0^T \beta$. Explain what is the connections between a CI for $\beta_j$, a CI for ${\bf x}_0^T \beta$ and a PI for $Y$ at ${\bf x}_0$.
+3. <span class="question">Construct a 95% CI for ${\bf x}_0^T \beta$. Explain what is the connections between a CI for $\beta_j$, a CI for ${\bf x}_0^T \beta$ and a PI for $Y$ at ${\bf x}_0$.
 
-4. Explain why using `summary` and `anova` on a fitted `lm` gives differen $p$-values listed for each covariate. Maybe test out `Anova` in library `car` with type 3 ANOVA to compare?
+4. <span class="question">Explain why using `summary` and `anova` on a fitted `lm` gives differen $p$-values listed for each covariate. Maybe test out `Anova` in library `car` with type 3 ANOVA to compare?
 
 ```{r}
 # code
 ```
 
-5. Consider a MLR model $A$ and a submodel $B$ (all parameters in $B$ are in $A$ also). We say that $B$ is nested within $A$. Assume that regression parameters are estimated using maximum likelihood. Why is then the following true: SSE for model $A$ will always be smaller or equal to SSE for model $B$. And thus, $R^2$ for model $A$ can never be worse than $R^2$ for model B.
+5. <span class="question">Consider a MLR model $A$ and a submodel $B$ (all parameters in $B$ are in $A$ also). We say that $B$ is nested within $A$. Assume that regression parameters are estimated using maximum likelihood. Why is then the following true: SSE for model $A$ will always be smaller or equal to SSE for model $B$. And thus, $R^2$ for model $A$ can never be worse than $R^2$ for model B.
 
-6. Take a look at the details getting from the general AIC criterion to the version used for MLR. We will partly be using AIC for this course, but with likelihood from the binomial, Possion, etc. 
+6. <span class="question">Take a look at the details getting from the general AIC criterion to the version used for MLR. We will partly be using AIC for this course, but with likelihood from the binomial, Possion, etc. 
 
 ---
 
@@ -1673,7 +1685,7 @@ In general we would not like a model that is too complex.
 
 Last week all groups decided on using `rent` or `rentsqm` as response, and in short - there was not really a big difference. So, now use `rent` as the response.
 
-1. We now want to use model selection to arrive at a good model. Start by defining which covariates you want to include and how to code them (`location` as dummy or effect coding). What about year of construction - is that a linear covariate? Maybe you want to make intervals in time instead? Linear or categorical for the time? What about the `district`? We leave that since we have not talked about how to use spatial covariates.
+1. <span class="question">We now want to use model selection to arrive at a good model. Start by defining which covariates you want to include and how to code them (`location` as dummy or effect coding). What about year of construction - is that a linear covariate? Maybe you want to make intervals in time instead? Linear or categorical for the time? What about the `district`? We leave that since we have not talked about how to use spatial covariates.
 
 Hint: if you want to test out interval versions of year of construction the function `mutate` (from `dplyr`) is useful:
 ```{r, eval=FALSE}
@@ -1683,10 +1695,11 @@ More on `dplyr`: Tutorial: <http://genomicsclass.github.io/book/pages/dplyr_tuto
 and Cheat sheet (data wrangling): <https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf> and dplyr in particular: <https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf>
 
 2. There are many ways to perform model selection in MLR. One possibility is best subsets, which can be done using the `regsubsets` function from library `leaps`. You may define `x` from `model.matrix(fit)[,-1]` (not including the intercept term), and then run `best=regsubsets(x=model.matrix(fit)[,-1],y=rent99$rent)` and look at `summary(best)`.
-Explain the print-out (with all the stars). Using the Mallows Cp (named `cp` in the list from `summary(best)`) will give the same result at using AIC (which is not available in this function). What is your preferred model?
+
+<span class="question">Explain the print-out (with all the stars). Using the Mallows Cp (named `cp` in the list from `summary(best)`) will give the same result at using AIC (which is not available in this function). What is your preferred model?
 Hint: look at the R-code in Problem 2 (Figure 3) from the TMA4267V2017 exam: [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/eV2017Enew.pdf), and maybe the solutions for the interprtation [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/mergedLFV2017.pdf)
 
-3. Check what is done if you use `stepAIC`. Do you get the same model choice as with best subset selection based on AIC? Why, or why not?
+3. <span class="question">Check what is done if you use `stepAIC`. Do you get the same model choice as with best subset selection based on AIC? Why, or why not?
 
 ----
 
@@ -1709,7 +1722,11 @@ data <- data.frame(income,gender=factor(gender,levels=c("Female","Male")),
 2. Fit the following model
 `model = lm(income~place-1,data=data,x=TRUE)`. Here `x=TRUE` tells the function to calculate the design matrix X, which is stored as `model$x`.
 
-Examine the results with `summary` and `anova`. What parametrization is used? What is the interpretation of the parameters? Which null hypothesis is tested in the anova-call? What is the result of the hypothesis test?
+Examine the results with `summary` and `anova`. 
+- <span class="question">What parametrization is used? 
+- <span class="question">What is the interpretation of the parameters? 
+- <span class="question">Which null hypothesis is tested in the anova-call? 
+- <span class="question">What is the result of the hypothesis test?
 
 ```{r}
 #code
@@ -1725,13 +1742,14 @@ head(model2$x)
 summary(model2)
 ```
 
-We have talked about dummy- and effect encoding of categorical covariates. What are the
-parametrizations used here? What is the interpretation of the parameters and how do the
+We have talked about dummy- and effect encoding of categorical covariates. 
+<span class="question">What are the parametrizations used here? 
+<span class="question">What is the interpretation of the parameters and how do the
 parameter interpretations differ between `model1` and `model2`?
 
 4. We want to test the (one-way ANOVA) null hypothesis that there is no effect of place. Use
 the $F_{obs}$ to do this both using the dummy-variable and the effect coding of the place-factor.
-Compare the results from the two coding strategies. Hint: in R this can be done using `anova(model0,model1)` where `model0` is the model with only intercept.
+<span class="question">Compare the results from the two coding strategies. Hint: in R this can be done using `anova(model0,model1)` where `model0` is the model with only intercept.
 
 5. Suppose now that there are two factors `place`and `gender`.
 ```{r}
@@ -1742,10 +1760,14 @@ model4 = lm(income~place+gender,data=data,x=TRUE,contrasts = list(place="contr.s
 summary(model4)
 anova(model4)
 ```
-What are the parameterizations? What is the interpretation of the parameters? Does the
-ANOVA table look different for the two parametrizations? Hint: orthogonality of design matrix for this balanced design?
 
-6. Finally, fit a model with interactions (model formula is place*gender for both the contrasts and
+- <span class="question">What are the parameterizations? 
+- <span class="question">What is the interpretation of the parameters? 
+- <span class="question">Does the ANOVA table look different for the two parametrizations? 
+
+**Hint: orthogonality of design matrix for this balanced design?**
+
+6. <span class="question">Finally, fit a model with interactions (model formula is place*gender for both the contrasts and
 check if the interaction effect is significant. 
 
 ---

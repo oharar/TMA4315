@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.10.28)  22 AUG 2023 09:52
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.10.28)  24 AUG 2023 11:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1240,14 +1240,27 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
-Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-bold]:mapping=tex
--text;!
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
+(Font)              scaled to size 11.28015pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
+(Font)              scaled to size 7.8961pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
+(Font)              scaled to size 5.64008pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
+(Font)              scaled to size 11.28131pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
+(Font)              scaled to size 7.89691pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
+(Font)              scaled to size 5.64066pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
+(Font)              scaled to size 11.27914pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
+(Font)              scaled to size 7.8954pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
+(Font)              scaled to size 5.63957pt on input line 231.
 [5
 
-]
-Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-bold]:mapping=tex
--text;!
-[6
+] [6
 
 ] [7
 
@@ -1547,11 +1560,11 @@ Overfull \vbox (28.47723pt too high) detected at line 1425
 
 (./Module01IntroPresentation.aux) ) 
 Here is how much of TeX's memory you used:
- 30162 strings out of 476179
- 616727 string characters out of 5809543
+ 30195 strings out of 476179
+ 617922 string characters out of 5809543
  1116127 words of memory out of 5000000
- 50308 multiletter control sequences out of 15000+600000
- 472874 words of font info for 70 fonts, out of 8000000 for 9000
+ 50332 multiletter control sequences out of 15000+600000
+ 474327 words of font info for 79 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,122p,1022b,903s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

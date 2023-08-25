@@ -1,0 +1,449 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+subtitle: "Module 2: MULTIPLE LINEAR REGRESSION, interactive sessions, Week 2"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU -- with contributions from Oyvind Bakke and Ingeborg Hem" 
+date: "30.08 and 06.09 [PL], 31.08 and 07.09 [IL]"
+output:
+ html_document:
+   toc: true
+   toc_float: true
+   toc_depth: 2
+   css: "../TMA4315RMarkdown.css"
+  # pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+  #   keep_tex: yes
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+always_allow_html: yes
+---
+
+<!-- rmarkdown::render("/Users/mettela/Box Sync/NTNUgitcourses/NRkurs/NRkursC.Rmd","html_document") -->
+<!-- rmarkdown::render("/Users/mettela/Box Sync/NTNUgitcourses/NRkurs/NRkursC.Rmd","beamer_presentation") -->
+<!-- rmarkdown::render("/Users/mettela/Box Sync/NTNUgitcourses/NRkurs/NRkursC.Rmd","pdf_document") -->
+
+```{r setup, include=FALSE}
+library(formatR)
+showsol<-FALSE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE,warning=FALSE,error=FALSE,message=FALSE)#,results="hold"
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Interactive lectures- problem set second week
+
+
+# What to remember from the first week?
+
+### Munich rent index
+
+Munich, 1999: 3082 observations on 9 variables.
+
+* `rent`: the net rent per month (in Euro).
+* `rentsqm`: the net rent per month per square meter (in Euro).
+* `area`: living area in square meters.
+* `yearc`: year of construction.
+* `location`: quality of location: a factor indicating whether the location is average location, 1, good location, 2, and top location, 3.
+* `bath`: quality of bathroom: a a factor indicating whether the bath facilities are standard, 0, or premium, 1.
+* `kitchen`: Quality of kitchen: 0 standard 1 premium.
+* `cheating`: central heating: a factor 0 without central heating, 1 with central heating.
+* `district`: District in Munich.
+
+More information in Fahrmeir et. al., (2013) page 5.
+
+```{r}
+library(gamlss.data)
+library(ggfortify)
+?rent99
+
+mod1 <- lm(rent ~ area + location + bath + kitchen + cheating, data = rent99)
+mod2 <- lm(rentsqm ~ area + location + bath + kitchen + cheating, data = rent99)
+autoplot(mod1, label.size = 2)
+autoplot(mod2, label.size = 2)
+```
+
+---
+
+### The GLM way
+
+Independent pairs $(Y_i, {\bf x}_i)$ for $i=1,\ldots,n$.
+
+1. Random component: $Y_i \sim N$ with $\text{E}(Y_i)=\mu_i$ and $\text{Var}(Y_i)=\sigma^2$.
+2. Systematic component: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
+3. Link function: linking the random and systematic component (linear predictor): Identity link and response function.
+$\mu_i=\eta_i$.
+
+---
+
+### Likelihood, loglikelihood, score function, observed and expected Fisher information matrix
+
+* Likelihood $L(\beta)=\prod_{i=1}^n f(y_i; \beta)$.
+* Loglikelihood $l(\beta)=\ln L(\beta)$.
+* Score function $s(\beta)=\frac{\partial l(\beta)}{\partial \beta}$. Find ML estimates by solving $s(\hat{\boldsymbol \beta})={\bf 0}$.
+* Observed $H(\boldsymbol{\beta}) = -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T}$ and expected Fisher information $F(\beta) =\text{E}(H(\boldsymbol{\beta}))$
+
+
+<span class="question">**Q**: How is this done in `lm`?</span>
+
+# Interactive tasks for the second week
+
+### Problem 1: Theory
+
+1. <span class="question">What is the interpretation of a 95% confidence interval?</span>
+
+**Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$? **
+
+<!-- 2. What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\bf x}_0$. -->
+
+<!-- 3. Construct a 95% CI for ${\bf x}_0^T \beta$. Explain what is the connections between a CI for $\beta_j$, a CI for ${\bf x}_0^T \beta$ and a PI for $Y$ at ${\bf x}_0$. -->
+
+2. <span class="question">Explain in words and with formulas the $p$-values printed in a `summary` from `lm`.</span>
+
+```{r}
+fit=lm(rent~area+location+bath+kitchen+cheating,
+       data=rent99)
+summary(fit)
+```
+
+3. <span class="question">Explain in words and with formulas the full output (with $p$-values) printed in an `anova` from `lm`.</span>
+
+```{r}
+anova(fit)
+```
+
+4. <span class="question">In particular: why does using `summary` and `anova` on a fitted `lm` give different test statistics and different $p$-values listed for each covariate. And, why is `summary` listing `location2` and `location3` while `anova` is listing `location`?</span>
+
+Optional: Maybe test out `Anova` in library `car` with type 3 ANOVA to compare?
+
+Consider a MLR model $A$ and a submodel $B$ (all parameters in $B$ are in $A$ also). We say that $B$ is nested within $A$. Assume that regression parameters are estimated using maximum likelihood. 
+
+5. <span class="question">Why is the following true: the likelihood for model $A$ will always be larger or equal to the likelihood for model $B$.</span> 
+
+6. <span class="question">How do we define the deviance of model $A$? What is a _saturated model_ in our MLR setting? What does our finding in 5. imply for the deviance (can the deviance both be positive and negative)?</span>
+
+<!-- 6. Take a look at the details getting from the general AIC criterion to the version used for MLR. We will partly be using AIC for this course, but with likelihood from the binomial, Possion, etc.  -->
+
+---
+
+### Problem 2: Dummy vs. effect coding in MLR (continued)
+
+We have studied the data set with income, place and gender - with focus on dummy variable coding (with different reference levels) and effect coding and the interpretation of parameter estimates. Now we continue with the same data set, but with focus on hypothesis testing (linear hypotheses) and analysis of variance decomposition.
+
+1. Previously, we have read in the data and fitted linear models - look back to see what we found.
+
+```{r}
+income <- c(300, 350, 370, 360, 400, 370, 420, 390,
+            400,430,420, 410, 300, 320, 310, 305,
+            350, 370, 340, 355,370, 380, 360, 365)
+gender <- c(rep("Male", 12),rep("Female",12))
+place <- rep(c(rep("A",4),rep("B",4),rep("C",4)),2)
+data <- data.frame(income,gender=factor(gender,levels=c("Female","Male")),
+                   place=factor(place,levels=c("A","B","C")))
+```
+
+2. Fit the following model
+`model = lm(income~place-1,data=data,x=TRUE)`. Here `x=TRUE` tells the function to calculate the design matrix X, which is stored as `model$x`.
+
+```{r}
+model = lm(income~place-1,data=data,x=TRUE)
+model$x
+```
+
+Examine the results with `summary` and `anova`. 
+
+<span class="question">What parametrization is used?</span>
+
+<span class="question">What is the interpretation of the parameters?/span>
+
+<span class="question">Which null hypothesis is tested in the anova-call?</span>
+
+<span class="question">What is the result of the hypothesis test?</span>
+
+```{r}
+summary(model)
+anova(model)
+```
+
+3.  Fit the models:
+
+```{r}
+model1 = lm(income~place,data=data,x=TRUE,contrasts = list(place="contr.treatment"))
+head(model1$x)
+summary(model1)
+model2 = lm(income ~ place,data=data,x=TRUE,contrasts = list(place="contr.sum"))
+head(model2$x)
+summary(model2)
+```
+
+We have talked about dummy- and effect encoding of categorical covariates. 
+
+<span class="question">What are the parametrizations used here? What is the interpretation of the parameters and how do the parameter interpretations differ between `model1` and `model2`?</span>
+
+4. We want to test the (one-way ANOVA) null hypothesis that there is no effect of place. Use
+the $F_{obs}$ to do this both using the dummy-variable and the effect coding of the place-factor. 
+
+<span class="question">Compare the results from the two coding strategies.</span>
+
+```{r}
+model0=lm(income~1,data=data)
+anova(model0,model1)
+anova(model0,model2)
+```
+
+
+5. Suppose now that there are two factors `place`and `gender`.
+
+```{r}
+model3 = lm(income~place+gender,data=data,x=TRUE,contrasts = list(place="contr.treatment",gender="contr.treatment"))
+summary(model3)
+anova(model3)
+model4 = lm(income~place+gender,data=data,x=TRUE,contrasts = list(place="contr.sum",gender="contr.sum"))
+summary(model4)
+anova(model4)
+```
+
+<span class="question">What are the parameterizations?</span>
+<span class="question">What is the interpretation of the parameters?</span>
+<span class="question">Does the ANOVA table look different for the two parametrizations?</span>
+
+**Hint: orthogonality of design matrix for this balanced design?**
+
+6. Finally, fit a model with interactions (model formula is place*gender for both the contrasts and
+check if the interaction effect is significant. 
+
+```{r}
+model5 = lm(income~place*gender,data=data,x=TRUE,contrasts = list(place="contr.treatment",gender="contr.treatment"))
+summary(model5)
+anova(model5)
+```
+
+```{r}
+model6 = lm(income~place*gender,data=data,x=TRUE,contrasts = list(place="contr.sum",gender="contr.sum"))
+summary(model6)
+anova(model6)
+```
+
+---
+
+### Problem 3: Compulsory exercise 1
+
+Introduction to the first compulsory exercise by TA Ingeborg - and an introduction to packages and classes in `R`.
+
+The exercise: <https://www.math.ntnu.no/emner/TMA4315/2018h/project1_h18.html>
+
+Packages: `ggplot2`, `gamlss.data`, and so on. Some are already loaded when `R` starts (like `stats`), others must be loaded (like `MASS`).
+
+You are going to make your own package, called `mylm`, which performs multiple linear regression and is a smaller version of `lm`.
+
+**Show how to create package in R Studio**
+
+Classes in R: Something we do not have to think much about, but we use all the time. We are now going to make a new class in R, that we call "test".
+
+```{r}
+
+# takes a word, and returns the index in the alphabet of each letter in an object with class "test"
+test <- function(word){
+  
+  x <- 1:nchar(word)
+  y <- match(c(strsplit(tolower(word), "")[[1]]), letters[1:26])
+  
+  res <- list(x = x, y = y, word = word) # if you are not familiar with lists, you should read up on this
+  class(res) <- "test"
+  
+  return(res)
+  
+}
+
+```
+
+Now we make an object of this class and try to look at it.
+
+```{r}
+
+myname <- test("Ingeborg")
+# "print(myname)" and "myname" returns the same thing in a script, so to simplify we just write "myname" here
+myname # prints everything
+
+# lets make a print function that only prints the word
+print.test <- function(obj) cat(obj$word)
+
+myname # and now we get only the name
+
+```
+
+Now we want a function that plots objects of this class in a particular way.
+
+```{r}
+
+# important that it is called plot.test with .test at the end!!!
+plot.test <- function(obj) plot(obj$x, obj$y, xlab = "Letter", ylab = "Index",
+                                main = obj$word, col = rainbow(length(obj$x)), pch = 19, cex = 2)
+
+plot(myname) # we do not have to specify that this is plot.test, because "myname" is already of class "test"!
+
+```
+
+```{r}
+
+# And a summary function
+summary.test <- function(obj){
+  
+  cat("Word: ", obj$word, "\n")
+  cat("Length of word: ", length(obj$x), " letters\n")
+  cat("Occurrence of each letter:")
+  print(table(strsplit(tolower(obj$word), "")))
+  
+}
+
+summary(myname)
+
+```
+
+Now we have made a class with a plot, print and summary function, and this is what you do in the exercise! But a bit more advanced...
+
+---
+
+Let us look at what happens when we use the plotting function on objects with different classes: The function called `plot`. First we make two new objects that can be plotted:
+
+```{r}
+
+data <- data.frame(x = rnorm(10), y = rnorm(10))
+mod <- lm(y ~ x, data = data)
+
+```
+
+And then we plot them:
+
+```{r, echo = c(-1, -3, -5), fig.height = 3}
+layout(1)
+plot(data)
+layout(matrix(1:4, nrow = 1))
+plot(mod)
+layout(1)
+plot(myname)
+
+```
+
+What is happening? `R` reads the class of the objects and uses the plot-function made for that specific class. The user does not have to specify the class as this is already stored in the object!
+
+The different objects we have declared earlier have the following classes:
+
+```{r, results = "hold"}
+
+class(data)
+class(mod)
+class(myname)
+
+```
+
+---
+
+
+You will make a new class in `R` called `mylm`, and `R` will also then understand which plot-function to use based on the class.
+
+Note that an object can have more than one class.
+
+---
+
+You write the report using R Markdown, use this template: <https://www.math.ntnu.no/emner/TMA4315/2018h/template_glm.Rmd>
+
+---
+
+#### Exercises:
+
+Discuss with the group to get a feeling on what to do in the exercise.
+
+1. <span class="question">Go through how to make an R package together in the group, and make the mylm-package.</span>
+2. The core is the `mylm` function. Which formulas are used to
+    + <span class="question">calculate parameters estimates?</span>
+    + <span class="question">calculate covariance matrix of the estimated regression coefficients?</span>
+    + <span class="question">perform type 3 hypothesis tests (remember you need to do the asymptotic normal - so no t-distributions)?</span>
+3. You will make `print.mylm`, `plot.mylm` and `summary.mylm`. <span class="question">What should these functions contain?</span>
+4. Look at the mylm-template (<https://www.math.ntnu.no/emner/TMA4315/2018h/mylm.R>) and see if you understand it, or if you have questions about some of the parts. In particular, explore the functions `model.frame`, `model.matrix` and `model.response`.
+
+
+### Problem 4: Munich Rent index (optional)
+
+Last week all groups decided on using `rent` or `rentsqm` as response, and in short - there was not really a big difference. So, now use `rent` as the response.
+
+1. We now want to use model selection to arrive at a good model. Start by defining which covariates you want to include and how to code them (`location` as dummy or effect coding). What about year of construction - is that a linear covariate? Maybe you want to make intervals in time instead? Linear or categorical for the time? What about the `district`? We leave that since we have not talked about how to use spatial covariates.
+
+**Hint: if you want to test out interval versions of year of construction the function `mutate` (from `dplyr`) is useful:**
+
+```{r, eval=FALSE}
+rent99 <- rent99 %>% mutate(yearc.cat = cut(yearc, breaks = c(-Inf, seq(1920,2000,10)), labels = 10*1:9))
+```
+More on `dplyr`: Tutorial: <http://genomicsclass.github.io/book/pages/dplyr_tutorial.html>
+and Cheat sheet (data wrangling): <https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf> and dplyr in particular: <https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf>
+
+2. There are many ways to perform model selection in MLR. One possibility is best subsets, which can be done using the `regsubsets` function from library `leaps`. You may define `x` from `model.matrix(fit)[,-1]` (not including the intercept term), and then run `best=regsubsets(x=model.matrix(fit)[,-1],y=rent99$rent)` and look at `summary(best)`.
+Explain the print-out (with all the stars). Using the Mallows Cp (named `cp` in the list from `summary(best)`) will give the same result at using AIC (which is not available in this function). 
+
+<span class="question">What is your preferred model? Are there other models worth considering?</span>
+
+Hint: look at the R-code in Problem 2 (Figure 3) from the TMA4267V2017 exam: [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/eV2017Enew.pdf), and maybe the solutions for the interprtation [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/mergedLFV2017.pdf)
+
+3. <span class="question">Check what is done if you use `stepAIC`. Do you get the same model choice as with best subset selection based on AIC? Why, or why not?</span>
+
+---
+
+# Wordclouds are cool?
+
+Run the following code to make the wordcloud. The code can not be run by `knit` for a pdf because of how the graphics are made - in that case you need to run it and then you need to save the resulting figure as a file (I choose png: the code to do this has been commented out). Maybe you want to run the code on another document? Please mail us if you do cool stuff for others to see!
+
+```{r,eval=TRUE}
+library(wordcloud2)
+library(tm)
+all=scan("https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.Rmd",what="s")
+
+corpus=Corpus(VectorSource(all))
+corpus[[1]][1]
+corpus=tm_map(corpus,content_transformer(tolower))
+corpus=tm_map(corpus,removeNumbers)
+corpus=tm_map(corpus,removeWords,stopwords("english"))
+corpus=tm_map(corpus,removeWords,c("---","bf","boldsymbol","will","include","use","can","follow","provide","using"))
+corpus=tm_map(corpus,removePunctuation)
+corpus=tm_map(corpus,stripWhitespace)
+#corpus=tm_map(corpus,stemDocument)
+
+tdm=TermDocumentMatrix(corpus)
+m=as.matrix(tdm)
+v=sort(rowSums(m),decreasing=TRUE)
+d=data.frame(word=names(v),freq=v)
+dim(d)
+d[1:10,]
+# png("M2wordcloud.png") # send graphics output to a png file
+wordcloud2(d,shape="cardioid",maxRotation=pi/10, minRotation = -pi/10)
+# dev.off() # stop sending graphics output to a png file
+```
+
+<!---
+![](M2wordcloud.png)
+--->
+
+
+# R packages
+
+```{r, eval=FALSE}
+install.packages(c("formatR",
+                   "gamlss.data",
+                   "tidyverse",
+                   "ggplot2", 
+                   "GGally", 
+                   "Matrix",
+                   "nortest",
+                   "lmtest",
+                   "wordcloud2",
+                   "tm"))
+```
+
+
+# References and further reading
+
+* Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 2:  Regression (by Mette Langaas).](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
+* And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA] (http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)
+
+

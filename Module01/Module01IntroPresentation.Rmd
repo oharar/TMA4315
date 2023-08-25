@@ -65,7 +65,7 @@ What will not change:
 We will consider relationships between the _conditional mean of $Y_i$_, $\text{E}(Y_i\mid {\bf x}_i)=\mu_i$, and linear combinations of the covariates in _a linear predictor_ 
 
 $$
-\eta_i=\beta_0+\beta_1 x_{i1}+\cdots +\beta_k x_{ik}={\bf x}_i^T {\bf \beta}.
+\eta_i=\beta_0+\beta_1 x_{i1}+\cdots +\beta_k x_{ik}={\bf x}_i^T \boldsymbol{\beta}.
 $$
 
 We connect $\eta_i$ and $\mu$ through a *link function*: 
@@ -79,7 +79,7 @@ $$\mu_i = g^{-1}(\eta_i)$$
 For most of the course we will assume observation pairs ($Y_i,{\bf x}_i$) are independent $i=1,\ldots,n$, but we will also consider clustered pairs (in Module 7+8: Linear mixed effects models LMM and Generalized linear mixed effects models GLMM).
 
 $$
-\eta_i={\bf x}_i^T {\bf \beta} + \bf{Z} u
+\eta_i={\bf x}_i^T \boldsymbol{\beta} + \bf{Z} u
 $$
 
 (notation to be explained: the take-home message is that this is still linear)
