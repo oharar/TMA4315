@@ -2194,5 +2194,5 @@ install.packages(c("formatR",
 
 * Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 2:  Regression (by Mette Langaas).](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
 * And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA] (http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)
-
+* For those interested in an essay on some of the ideas behind the practicalities of modeling with regression, [Bill Venables' exegesis](https://www.stats.ox.ac.uk/pub/MASS3/Exegeses.pdf) is a good read.
 
