@@ -41,30 +41,116 @@ knitr::opts_chunk$set(echo = TRUE)
 
 1. <span class="question">Write down the GLM way for the multiple linear regression model. Explain how it is different.</span>
 
+<details><summary>Solution</summary>
+
+Independent pairs $(Y_i, {\bf x}_i)$ for $i=1,\ldots,n$.
+
+1. Random component: $Y_i \sim N$ with $\text{E}(Y_i)=\mu_i$ and $\text{Var}(Y_i)=\sigma^2$.
+2. Systematic component: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
+3. Link function: linking the random and systematic component (linear predictor): Identity link and response function.
+$\mu_i=\eta_i$.
+
+The model is the same, but it is expressed differently, and htere are several ways of looing at this:
+
+- the focus is on $y_i$ having a distribution with a mean that is modeled, rather than $\varepsilon_i$ having a distribution.
+- the random and systematic components are explicitly separated
+- the link function is thrown is as overkill
+
+This helps us get to the generalisation to GLMs.
+
+</details>
+
+
 2. <span class="question">Write down the likelihood and loglikelihood. Then define the score vector.</span>
+
+<details><summary>Solution</summary>
+
+Likelihood:
+
+$$
+L({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = \frac{1}{2\pi \sigma^2} e^{-\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X {\boldsymbol \beta})}
+$$
+
+log-likelihood:
+
+$$
+l({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = -\log{2\pi \sigma^2} -\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X {\boldsymbol \beta})
+$$
+The score vector is
+
+$$
+s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
+\sum_{i=1}^n \frac{\partial l_i(\beta)}{\partial \beta}=
+\sum_{i=1}^n s_i(\beta)
+$$
+
+which will be filled in when I get the time...
+
+</details>
+
 
 3. <span class="question">What is the set of equations we solve to find parameter estimates? What if we could not find a closed form solution to our set of equations - what could we do then?</span>
 
+<details><summary>Solution</summary>
+
+Start with $s(\beta)=0$...
+
+If there is no closed solution, we have to resort to numerical methods, of which there are a lot
+
+</details>
+
+
 4. <span class="question">Define the observed and the expected Fisher information matrix. What dimension does these matrices have? What can these matrices tell us?</span>
+
+<details><summary>Solution</summary>
+
+The matrices can tell us the location of the Holy Grail?
+
+</details>
 
 ---
 
 4. A core finding is $\hat \beta$. 
 $$
-\hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}
+\hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf y}
 $$
 
 with $\hat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
 
 <span class="question">Show that $\hat{\beta}$ has this distribution with the given mean and covariance matrix.</span>
 
+<details><summary>Hint</summary>
+The only element that is random is ${\bf y}$, and we know its distribution. And we know the distribution of linear functions of ${\bf y}$.
+</details>
+
+<details><summary>Solution</summary>
+[Go here](https://statproofbook.github.io/P/mlr-olsdist). But come back when you've finished.
+</details>
+
 <span class="question">What does this imply for the distribution of the $j$th element of $\hat{\beta}$? In particular, how can we calculate the variance of $\hat{\beta}_j$?</span>
 
+<details><summary>Solution</summary>
+Hmm. 
+</details>
+
 5. <span class="question">Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this?</span>
+
+<details><summary>Solution</summary>
+The difference between an estimand and an estimate.
+
+To be explained later...
+
+</details>
 
 6. <span class="question">What is the theoretical intercept and slope of a QQ--plot based on a normal sample?</span>
 
 **Hint: [QQ--plot as html](https://www.math.ntnu.no/emner/TMA4315/2017h/qq.html)**
+
+<details><summary>Solution</summary>
+Whatever you want: you can re-scale the predicted quantiles.
+
+(not the best answer, of course)
+</details>
 
 ---
 

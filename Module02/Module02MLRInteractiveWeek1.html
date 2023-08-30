@@ -1512,42 +1512,145 @@ NTNU – with contributions from Oyvind Bakke and Ingeborg Hem</h4>
 <div id="problem-1" class="section level3">
 <h3>Problem 1</h3>
 <ol style="list-style-type: decimal">
-<li><p><span class="question">Write down the GLM way for the multiple
-linear regression model. Explain how it is different.</span></p></li>
-<li><p><span class="question">Write down the likelihood and
-loglikelihood. Then define the score vector.</span></p></li>
-<li><p><span class="question">What is the set of equations we solve to
-find parameter estimates? What if we could not find a closed form
-solution to our set of equations - what could we do
-then?</span></p></li>
-<li><p><span class="question">Define the observed and the expected
-Fisher information matrix. What dimension does these matrices have? What
-can these matrices tell us?</span></p></li>
+<li><span class="question">Write down the GLM way for the multiple
+linear regression model. Explain how it is different.</span></li>
 </ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>Independent pairs <span class="math inline">\((Y_i, {\bf
+x}_i)\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li>Random component: <span class="math inline">\(Y_i \sim N\)</span>
+with <span class="math inline">\(\text{E}(Y_i)=\mu_i\)</span> and <span class="math inline">\(\text{Var}(Y_i)=\sigma^2\)</span>.</li>
+<li>Systematic component: <span class="math inline">\(\eta_i={\bf x}_i^T
+\boldsymbol{\beta}\)</span>.</li>
+<li>Link function: linking the random and systematic component (linear
+predictor): Identity link and response function. <span class="math inline">\(\mu_i=\eta_i\)</span>.</li>
+</ol>
+<p>The model is the same, but it is expressed differently, and htere are
+several ways of looing at this:</p>
+<ul>
+<li>the focus is on <span class="math inline">\(y_i\)</span> having a
+distribution with a mean that is modeled, rather than <span class="math inline">\(\varepsilon_i\)</span> having a distribution.</li>
+<li>the random and systematic components are explicitly separated</li>
+<li>the link function is thrown is as overkill</li>
+</ul>
+<p>This helps us get to the generalisation to GLMs.</p>
+</details>
+<ol start="2" style="list-style-type: decimal">
+<li><span class="question">Write down the likelihood and loglikelihood.
+Then define the score vector.</span></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>Likelihood:</p>
+<p><span class="math display">\[
+L({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = \frac{1}{2\pi \sigma^2}
+e^{-\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X
+{\boldsymbol \beta})}
+\]</span></p>
+<p>log-likelihood:</p>
+<p><span class="math display">\[
+l({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = -\log{2\pi \sigma^2}
+-\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X
+{\boldsymbol \beta})
+\]</span> The score vector is</p>
+<p><span class="math display">\[
+s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
+\sum_{i=1}^n \frac{\partial l_i(\beta)}{\partial \beta}=
+\sum_{i=1}^n s_i(\beta)
+\]</span></p>
+<p>which will be filled in when I get the time…</p>
+</details>
+<ol start="3" style="list-style-type: decimal">
+<li><span class="question">What is the set of equations we solve to find
+parameter estimates? What if we could not find a closed form solution to
+our set of equations - what could we do then?</span></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>Start with <span class="math inline">\(s(\beta)=0\)</span>…</p>
+<p>If there is no closed solution, we have to resort to numerical
+methods, of which there are a lot</p>
+</details>
+<ol start="4" style="list-style-type: decimal">
+<li><span class="question">Define the observed and the expected Fisher
+information matrix. What dimension does these matrices have? What can
+these matrices tell us?</span></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The matrices can tell us the location of the Holy Grail?</p>
+</details>
 <hr />
 <ol start="4" style="list-style-type: decimal">
 <li>A core finding is <span class="math inline">\(\hat \beta\)</span>.
 <span class="math display">\[
-\hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}
+\hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf y}
 \]</span></li>
 </ol>
 <p>with <span class="math inline">\(\hat{\beta}\sim
 N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})\)</span>.</p>
 <p><span class="question">Show that <span class="math inline">\(\hat{\beta}\)</span> has this distribution with
 the given mean and covariance matrix.</span></p>
+<details>
+<summary>
+Hint
+</summary>
+The only element that is random is <span class="math inline">\({\bf
+y}\)</span>, and we know its distribution. And we know the distribution
+of linear functions of <span class="math inline">\({\bf y}\)</span>.
+</details>
+<details>
+<summary>
+Solution
+</summary>
+<a href="https://statproofbook.github.io/P/mlr-olsdist">Go here</a>. But
+come back when you’ve finished.
+</details>
 <p><span class="question">What does this imply for the distribution of
 the <span class="math inline">\(j\)</span>th element of <span class="math inline">\(\hat{\beta}\)</span>? In particular, how can we
 calculate the variance of <span class="math inline">\(\hat{\beta}_j\)</span>?</span></p>
+<details>
+<summary>
+Solution
+</summary>
+Hmm.
+</details>
 <ol start="5" style="list-style-type: decimal">
-<li><p><span class="question">Explain the difference between
-<em>error</em> and <em>residual</em>. What are the properties of the raw
-residuals? Why don’t we want to use the raw residuals for model check?
-What is our solution to this?</span></p></li>
-<li><p><span class="question">What is the theoretical intercept and
-slope of a QQ–plot based on a normal sample?</span></p></li>
+<li><span class="question">Explain the difference between <em>error</em>
+and <em>residual</em>. What are the properties of the raw residuals? Why
+don’t we want to use the raw residuals for model check? What is our
+solution to this?</span></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The difference between an estimand and an estimate.</p>
+<p>To be explained later…</p>
+</details>
+<ol start="6" style="list-style-type: decimal">
+<li><span class="question">What is the theoretical intercept and slope
+of a QQ–plot based on a normal sample?</span></li>
 </ol>
 <p><strong>Hint: <a href="https://www.math.ntnu.no/emner/TMA4315/2017h/qq.html">QQ–plot as
 html</a></strong></p>
+<details>
+<summary>
+Solution
+</summary>
+<p>Whatever you want: you can re-scale the predicted quantiles.</p>
+(not the best answer, of course)
+</details>
 <hr />
 </div>
 </div>

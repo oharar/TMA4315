@@ -260,9 +260,11 @@ The score function is a $p\times 1$ vector, $s(\beta)$, with the partial derivat
 <!-- **Q**: Write down the rules for derivatives: chain rule, product rule, fraction rule, and in particular derivative of $\ln(x)$, $\exp(x)$ and $\frac{1}{x}$, you will need them now. (Yes, known from the R1 course in vgs.) -->
 <!-- A: Chain rule: $\frac{d f(u(x))}{du}=\frac{df}{du}\cdot \frac{du}{dx}$, product rule: $(u\cdot v)'=u'\cdot v+u\cdot v'$, fraction rule: $(\frac{u}{v})'=\frac{u' \cdot v - u\cdot v'}{v^2}$, $\frac{d \ln(x)}{dx}=\frac{1}{x}$, $\frac{d\exp(x)}{dx}=\exp(x)$ and $\frac{d(\frac{1}{x})}{dx}=-\frac{1}{x^2}$. -->
 
-$$s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
+$$
+s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
 \sum_{i=1}^n \frac{\partial l_i(\beta)}{\partial \beta}=
-\sum_{i=1}^n s_i(\beta)$$
+\sum_{i=1}^n s_i(\beta)
+$$
 
 Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
 

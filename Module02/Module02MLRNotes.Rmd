@@ -435,10 +435,13 @@ However, to perform inference we need an estimator for $\sigma^2$.
 
 The maximum likelihood estimator for $\sigma^2$ is $\frac{\text{SSE}}{n}$, which is found from maximizing the likelihood inserted our estimate of $\hat{\beta}$
 $$L(\hat{\beta},{\sigma^2})=(\frac{1}{2\pi})^{n/2}(\frac{1}{\sigma^2})^{n/2}\exp(-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta}))$$
-\begin{align*}
+$$
+\begin{align}
 l(\hat{\beta},{\sigma^2})&=\text{ln}(L(\hat{\beta},{\sigma^2}))\\
-&=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})\\
-\end{align*}
+&=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})
+\end{align}
+$$
+
 The score vector with respect to $\sigma^2$ is
 $$\frac{\partial l}{\partial \sigma^2}=0-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta}) $$
 Solving $\frac{\partial l}{\partial \sigma^2}=0$ gives us the estimator
