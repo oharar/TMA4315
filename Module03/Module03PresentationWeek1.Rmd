@@ -1,0 +1,585 @@
+---
+title: "TMA4315 Generalized linear models"
+subtitle: "Module 3: BINARY REGRESSION"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU - with contributions from Øyvind Bakke, Thea Bjørnland and Ingeborg Hem"
+output: #3rd letter intentation hierarchy
+  # html_document:
+  #   toc: true
+  #   toc_float: true
+  #   toc_depth: 2
+ # pdf_document:
+ #   toc: true
+ #   toc_depth: 2
+ #   keep_tex: yes
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
+showsol<-TRUE
+```
+
+# Overview
+
+## Learning material
+
+* Textbook: Fahrmeir et al (2013): Chapter 2.3, 5.1, B4.1-3
+* [Classnotes 13.09.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/TMA4315M3H20180913.pdf) 
+* [Classnotes 20.09.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/TMA4315M3H20180920.pdf) 
+
+---
+
+## Topics
+### [First week](#firstweek)
+
+* aim of binary regression
+* how to model a binary response 
+* three ingredients of a GLM model
+* the logit model: logistic regression
+* interpreting the logit model - with odds
+* grouped vs. individual data
+* parameter estimation with maximum likelihood
+    + likelihood, log-likelihood, 
+    + score function
+
+
+---
+
+### [Second week](#secondweek)
+
+* Parameter estimation
+    + score function- and mean and covariance thereof, 
+    + observed and expected information matrix
+* comparison with the normal distribution - score function and Fisher information
+* exponential family and canonical link
+* iterative calculation of ML estimator (Newton-Raphson and Fisher scoring) - and in R with `optim`
+* asymptotic properties of ML estimators - how to use in inference?
+* statistical inference
+    + confidence intervals
+    + hypothesis testing: Wald, and likelihood ratio
+* deviance: definition, analysis of deviance, deviance residuals 
+* model fit and model choice
+* overdispersion and estimating overdispersion parameter
+* sampling stragegy: cohort, but also case-control data good for logit model
+
+
+---
+
+# Aim of binary regression
+
+## Two aims
+
+1. Construct a model to help understand the relationship between a "success probability" and one or several explanatory variables. The response measurements are binary (present/absent, true/false, healthy/diseased).
+2. Use the model for estimation and prediction of success probabilites.
+
+Two running examples: mortality of beetles and probability of respiratory infant disease.
+
+---
+
+## Example: Dose response of beetles
+
+A total of 481 beetles were exposed to 8 different concentration of CS$_2$ (data on log10-dose). 
+
+For each beetle is was recorded if the beetle was alive or killed at the given concentration. 
+
+Data for beetle $i$: $Y_i=0$ if beetle $i$ was alive and $Y_i=1$ if it was killed, and $x_i$ is then the log10-dose beetle $i$ was given. 
+
+---
+
+The table below shows the 8 values of the log10-dose against the number of beetles alive and killed. The plot shows log10-dose on the horizontal axis and fraction of beetles killed (killed/total) for each log10-dose.
+
+```{r,echo=c(-2)}
+library(investr)
+library(ggplot2)
+# from aggregated to individual data (because these data were aggregated)
+ldose=rep(round(beetle$ldose, 2), beetle$n)
+y=NULL; for (i in 1:8) y=c(y,rep(0,beetle$n[i]-beetle$y[i]),rep(1,beetle$y[i]))
+beetleds=data.frame("killed"=y,"ldose"=ldose)
+knitr::kable(table(beetleds), digits = 2)
+```
+
+---
+
+```{r,echo=showsol, fig.height=5}
+# plot from aggregated data
+frac=beetle$y/beetle$n
+dss=data.frame(fkilled=frac,ldose=beetle$ldose)
+ggplot(dss,aes(ldose,fkilled))+
+  geom_point()
+```
+
+---
+
+**Q**: 
+
+a. What might be the effect (mathematical function) of the log10-dose on the probability of killing a beetle?
+b. How can this curve be part of a regression model?
+
+```{r , echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
+cat("Answers \n")
+cat("a) logistic, sigmoid, normal cdf?.\n")
+cat("b) see item 3 below - the response function connects the mean of the respons to the linear predictor. \n")
+```
+
+
+---
+
+# How to model a binary response?
+
+In multiple linear regression we have 
+
+1. Random component: Distribution of response: $Y_i\sim N(\mu_i,\sigma^2)$, where $\mu_i$ is _parameter of interest_ and $\sigma^2$ is _nuisance_.
+
+2. Systematic component: Linear predictor: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$. Here ${\bf x}_i$ is our fixed (not random) $p$-dimensional column vector of covariates (intercept included).
+
+3. Link: Connection between the linear predictor and the mean (parameter of interest):
+$\mu_i=\eta_i$.
+
+* It would not make sense to fit the continuous linear regression to $Y_i$ when $Y_i=\{0,1\}$ - since $Y_i$ is not a continuous random variable, and $Y_i$ is not normal.
+* So, we need to change 1. We keep 2. And, we make 3. more general.
+
+---
+
+## Binary regression
+
+1. $Y_i \sim \text{bin}(n_i,\pi_i)$. 
+
+First look at $n_i=1$ (i.e. a Bernoulli distribution). 
+
+Our parameter of interest is $\pi_i$ which is the mean $\text{E}(Y_i)=\mu_i=\pi_i$.
+
+**For a generalized linear model (GLM) we require that the distribution of the response is an exponential family. We have seen in M1 that the binomial distribution is an exponential family.**
+
+---
+
+## Linear Predictor
+
+$\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
+
+---
+
+## Link Function
+
+3. Relationships between the mean $\mu_i=\pi_i$ and the linear predictor $\eta_i$:
+
+$$
+g(\mu_i)=\eta_i
+$$
+
+and the inverse of the link function, called the _response function_, and denoted by 
+
+$$
+h(\eta_i)=g^{-1}(\eta_i)=\mu_i
+$$
+
+We thus also have to require that the link function is monotone, and we will soon see that we also need to require that it is twice differential.
+
+---
+
+## Response function for binary regression 
+
+Based on selecting a cumulative distribution function (cdf) as the response function.
+
+The cdf will always be within [0,1], and the cdf is monotone - which will help us to interpret results. 
+
+The most popular response functions are:
+
+* _logistic cdf_ (with corresponding _logit_ link function) referred to as the _logit model_, 
+* _normal cdf_ - (with corresponding _probit_ link function) referred to as the _probit model_ , 
+* the _extreme minimum-value cdf_ (with corresponding _complementary log-log_ link function) referred to as the _complementary log-log model_.
+
+In this module we focus on the logit model.
+
+---
+
+## The logit model aka logistic regression
+
+In the beetle example we have a simple linear predictor: $\eta_i=\beta_0+\beta_1 x_i$ where $x_i$ is the log10-dose for beetle $i$.
+
+```{r,echo=FALSE,eval=TRUE}
+fit=glm(killed~ldose,family=binomial(link="logit"),data=beetleds)
+beta0=round(fit$coefficients[1],1)
+beta1=round(fit$coefficients[2],1)
+```
+
+Assume that $\beta_0=$ `r beta0` and $\beta_1=$ `r beta1`. (These values are estimates from our data, and we will see later how to find these estimates using maximum likelihood estimation.)
+
+---
+
+Below the response function is plotted for $\eta_i=$`r beta0`+`r beta1`$x_i$.
+
+```{r,echo=FALSE, fig.height=5}
+library(ggplot2)
+#print(c(beta0, beta1))
+xrange=range(beetleds$ldose)
+xrange[1]=xrange[1]-0.05
+etas=beta0+beta1*seq(xrange[1],xrange[2],length=100)
+ggplot(data.frame(eta=range(etas),mu=c(0,1)), aes(eta,mu))+
+  xlab(expression(eta))+ 
+  ylab(expression(mu))+
+  stat_function(fun=function(eta) exp(eta)/(1+exp(eta)), geom="line", colour="red")
+```
+
+**Q**: Explain to your neighbour what is on the x- and y-axis of this plot. Where are the observed log10-doses in this graph?
+
+<!---
+On the x-axis is the linear predictor $\eta=\beta_0+\beta_1 x_1$ for the given values of $\beta_0$ and $\beta_1$ and values for $x_1$ is chosen from the range of the log10-dose values. On the y-axis is the model for the mean of the response, which also here is the probability of success. This is our non-linear relationship between the linear predictor and the mean = our response function.
+--->
+
+---
+
+## <a id="logitlink">Link and reponse function</a>
+
+The logit model is based on the logistic cdf as the response function, given as 
+$$ \mu_i=\pi_i=h(\eta_i)=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$$
+or alternatively as the link function (the inverse of the response function)
+$$ g(\mu_i)=h^{-1}(\mu_i)=\ln(\frac{\mu_i}{1-\mu_i})=\ln(\frac{\pi_i}{1-\pi_i})$$
+
+**Hands-on**: show this for yourself.
+
+---
+
+## Interpreting the logit model
+
+If the value of the linear predictor $\eta_i$ changes to $\eta_i+1$ the probability $\pi$ increases non-linearly from $\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ to $\frac{\exp(\eta_i+1)}{1+\exp(\eta_i+1)}$, as shown in the graph above.
+
+---
+
+Before we go further: do you know about the odds?
+The ratio $\frac{P(Y_i=1)}{P(Y_i=0)}=\frac{\pi_i}{1-\pi_1}$ is called the _odds_. 
+If $\pi_i=\frac{1}{2}$ then the odds is $1$, and if $\pi_i=\frac{1}{4}$ then the odds is $\frac{1}{3}$. We may make a table for probability vs. odds in R:
+
+```{r,echo=FALSE}
+library(knitr)
+library(kableExtra)
+pivec=seq(0.1,0.9,0.1)
+odds=pivec/(1-pivec)
+kable(t(data.frame(pivec,odds)),digits=c(2,2))%>%
+  kable_styling()
+```
+
+---
+
+```{r,echo=FALSE}
+library(knitr)
+library(kableExtra)
+pivec=seq(0.1,0.9,0.1)
+odds=pivec/(1-pivec)
+plot(pivec,odds,type="b",ylab="odds",xlab="probability")
+```
+
+Odds may be seen to be a better scale than probability to represent chance, and is used in betting. In addition, odds are unbounded above. 
+
+---
+
+We look at the link function (inverse of the response function). Let us assume that our linear predictor has $k$ covariates present
+
+\begin{align*}
+\eta_i&= \beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik}\\
+\pi_i&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\\
+\eta_i&=\ln(\frac{\pi_i}{1-\pi_i})\\
+\ln(\frac{\pi_i}{1-\pi_i})&=\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik}\\
+\frac{\pi_i}{1-\pi_i}=&\frac{P(Y_i=1)}{P(Y_i=0)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_k x_{ik})
+\end{align*}
+
+We have a _multiplicative model_ for the odds. 
+
+---
+
+**So, what if we increase $x_{1i}$ to $x_{1i}+1$?**
+
+If the covariate $x_{1i}$ increases by one unit (while all other covariates are kept fixed) then the odds is multiplied by $\exp(\beta_1)$:
+
+\begin{align*}
+\frac{P(Y_i=1\mid x_{i1}+1)}{P(Y_i=0)\mid x_{i1}+1)}&=\exp(\beta_0)\cdot \exp(\beta_1 (x_{i1}+1))\cdots\exp(\beta_k x_{ik})\\
+&=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\exp(\beta_1)\cdots\exp(\beta_k x_{ik})\\
+&=\frac{P(Y_i=1\mid x_{i1})}{P(Y_i=0\mid x_{i1})}\cdot \exp(\beta_1)\\
+\end{align*}
+
+This means that if $x_{i1}$ increases by $1$ then: if $\beta_1<0$ we get a decrease in the odds, if $\beta_1=0$ no change, and if $\beta_1>0$ we have an increase.
+In the logit model $\exp(\beta_1)$ can be easier to interpret than $\beta_1$.
+
+---
+
+## To Sum Up
+
+For the linear predictor we interpret effects in the same way as for the linear model (in Module 2), then we transform this linear effect in $\eta$ into a nonlinear effect for $\pi=\frac{\exp(\eta)}{1+\exp(\eta)}$, and use the odds to interpret changes.
+
+**Q:** If $x_{i1}$ increases by $1$ AND$\beta_1$ is small, what is the relationship between the change in the odds, the change in the log odds and the change in the probability?
+
+
+---
+
+<!-- ## Beetle mortality: interpretation of $\beta_0$ and $\beta_1$.
+In our beetle example let $\beta_0=$ `r beta0` and $\beta_1=$ `r beta1`.
+
+**Q**:
+
+1. The covariate $x$ is given as log10-dose of CS$_2$, and we have data in the range `r range(beetleds$ldose)`. So, a dose of $1$ gives a log10-dose of $0$, so $x=0$. 
+Further,for $x=0$ then $\pi=\frac{\exp(\beta_0+\beta_1\cdot 0)}{1+\exp(\beta_0+\beta_1\cdot 0)}=\frac{\exp(\beta_0)}{1+\exp(\beta_0)}$ is `r exp(beta0)/(1+exp(beta0))`. Can that help us interpret the value of $\beta_0$ in our model?
+
+2. Now, $\beta_1= `r beta1`$ and $\exp(\beta_1)= `r exp(beta1)`$. Use this to give an interpretation of $\beta_1$ in our example. 
+
+Dropped because difficult to interpret on logdose scale?
+-->
+
+## Infant respiratory disease: interpretating parameter estimates
+
+This example is taken from Faraway (2006): "Extending the linear model with R"
+
+We select a sample of newborn babies (girls and boys) where the parents had decided on the method of feeding (bottle, breast, breast with some supplement), and then monitored the babies during their first year to see if they developed infant respiratory disease (the event we want to model). 
+
+We fit a logistic regression to the data, and focus on the parameter estimates.
+
+---
+
+```{r,echo=showsol}
+library(faraway)
+data(babyfood)
+# babyfood
+xtabs(disease/(disease+nondisease)~sex+food,babyfood)
+```
+
+---
+
+```{r,echo=FALSE}
+fit=glm(cbind(disease, nondisease)~sex+food,family=binomial(link=logit),data=babyfood)
+knitr::kable(summary(fit)$coefficients, digits=2)
+```
+
+---
+
+## Questions
+
+Observe that the two factors by default is coded with dummy variable coding, and that `sexBoy` is the reference category for sex and `foodBottle` the reference category for feeding method. 
+
+1: Explain how to interpret the `Estimate` for `sexGirl`, `foodBreast` and `foodSuppl`.
+
+2: What are the 6 values given by the call to `predict`? What is the least favourable combination of sex and method of feeding? And the most favourable?
+
+```{r,echo=TRUE, digits}
+print(predict(fit,type="response"), digits=2) #gives predicted probabilites
+```
+
+
+---
+
+## More response function plots for the logit model
+
+The response function as a function of the covariate $x$ and not of $\eta$. Solid lines: $\beta_0=0$ and $\beta_1$ is $0.8$ (blue), $1$ (red) and $2$ (orange), and dashed lines with $\beta_0=1$.
+
+```{r,echo=FALSE, fig.height=5}
+library(ggplot2)
+ggplot(data.frame(x=c(-6,5)), aes(x))+
+  xlab(expression(x))+ 
+  ylab(expression(mu))+
+    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red")+
+    stat_function(fun=function(x) exp(2*x)/(1+exp(2*x)), geom="line", colour="orange")+
+          stat_function(fun=function(x) exp(0.8*x)/(1+exp(0.8*x)), geom="line", colour="blue")+
+    stat_function(fun=function(x) exp(1+x)/(1+exp(1+x)), geom="line", colour="red",linetype="dashed")+
+    stat_function(fun=function(x) exp(1+2*x)/(1+exp(1+2*x)), geom="line", colour="orange",linetype="dashed")+
+          stat_function(fun=function(x) exp(1+0.8*x)/(1+exp(1+0.8*x)), geom="line", colour="blue",linetype="dashed")+
+  scale_colour_manual("0+k x",values = c("red", "orange","blue"),labels=c("1","2","0.8"))
+
+```
+
+<!-- Observe that adding $\beta_0$ translates along the $x$-axis.  -->
+
+<!--The function is steepest at $\eta=0$?? slope at steepest? $\beta_1/4$. MER I BOKA til Ingeborg-->
+
+# Grouped vs. individual data
+
+So far we have only mentioned individual data. 
+
+However, in both the examples we have looked at some covariate vectors are _identical_ (rows in the design matrix are identical). We call these unique combinations of covariates _covariate patterns_, and say we have _grouped_ data.
+
+```{r,echo=FALSE}
+library(kableExtra)
+knitr::kable(babyfood) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+---
+
+Here we have 6 groups of covariate patterns. The first group has covariates `Boy` and `Bottle`, there are 77+381= `r 77+381` babies with this combination and 77 of these got the disease.
+
+We prefer to group data if possible. Grouping is good because then data can be kept in a condensed form, it will speed up computations and makes model diagnosis easier (than for individual data).
+
+---
+
+For the grouped data we still have a binomial distribution, and possible generalization is to let
+
+* $n_j\bar{Y_j}$ be the number of successes in group $j$, 
+* which means that $\bar{Y_j}=\frac{1}{n_j}\sum Y_i$ where the sum is over all $i$ in group $j$.
+
+Further
+$$ n_j\bar{Y_j} \sim \text{bin}(n_j,\pi_j)$$
+such that $\text{E}(n_j\bar{Y_j})=n_j \pi_j$ and $\text{Var}(n_j\bar{Y_j})=n_j \pi_j(1-\pi_j)$, and $\text{E}(\bar{Y_j})=\pi_j$ and $\text{Var}(\bar{Y_j})=\frac{1}{n_j} \pi_j(1-\pi_j)$
+
+We then keep the linear predictor, and the link function is still
+$\eta_j=\ln(\frac{\pi_j}{1-\pi_j})$. That is, we do not model the mean $n_j \pi_j$ but $\pi_j$ directly.
+
+--- 
+
+
+#  Likelihood and derivations thereof
+
+Our parameter of interest is the vector $\boldsymbol{\beta}$ of regression coefficients, and we have no nuicance parameters (because the variance is related directly to the $\pi_j$ and $n_j$ is known). 
+
+We would like to estimate $\boldsymbol{\beta}$ from maximizing the likelihood, but we will soon see that we have no closed form solution. First we look at the likelihood, the log-likelihood and first and second derivatives thereof.
+
+For simplicity we do the derivations for the case where $n_i=1$, but then include the results for the case where we have $G$ covariate patterns with $n_j$ observations of each pattern.
+
+---
+
+## Assumptions
+
+1. $Y_i \sim \text{bin}(n_i=1,\pi_i)$, and $\text{E}(Y_i)=\mu_i=\pi_i$, and $\text{Var}(Y_i)=\pi_i(1-\pi_i)$.
+2. Linear predictor: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
+3. Logit link
+$$\eta_i=\ln(\frac{\pi_i}{1-\pi_i})=g(\mu_i)$$
+and (inverse thereof) logistic response function
+$$\mu_i=\pi_i=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}=h(\eta_i)$$
+
+We will also need:
+$$(1-\pi_i)=1-\frac{\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}.$$
+
+---
+
+## Likelihood $L(\boldsymbol{\beta})$
+
+We assume that pairs of covariates and response are measured independently of each other: $({\bf x}_i,Y_i)$, and $Y_i$ follows the distribution specified above, and ${\bf x}_i$ is fixed.
+
+$$L(\boldsymbol{\beta})=\prod_{i=1}^n L_i(\boldsymbol{\beta})=\prod_{i=1}^n f(y_i; \boldsymbol{\beta})=\prod_{i=1}^n\pi_i^{y_i}(1-\pi_i)^{1-y_i}$$
+
+<!---
+**Q**: What is the interpretation of the likelihood? Is it not a misuse of notation to write $L(\boldsymbol{\beta})$ when the right hand side does not involve $\boldsymbol{\beta}$? 
+
+```{r , echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
+cat("Answer \n")
+cat("The likelihood is the joint distribution of the responses, but with focus on the unknown parameter vector. Yes, a slight misuse of notation, need to fill in $\pi_i=h(\eta_i)$ and 
+$\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, really. But we keep this version because when we want to take the partical derivatives we will use the chain rule.\n")
+```
+
+**A**:
+
+The likelihood is the joint distribution of the responses, but with focus on the unknown parameter vector. Yes, a slight misuse of notation, need to fill in $\pi_i=h(\eta_i)$ and 
+$\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, really. But we keep this version because when we want to take the partical derivatives we will use the chain rule.
+--->
+
+<!-- Result with grouped data (that is, $G$ covariate patterns with $n_j$, $j=1,\ldots,G$ observations for each pattern) -->
+<!-- $$L(\boldsymbol{\beta})=\prod_{j=1}^G L_j(\boldsymbol{\beta})=\prod_{j=1}^G f(y_j; \boldsymbol{\beta})=\prod_{j=1}^G {n_j \choose y_j} \pi_j^{y_j}(1-\pi_j)^{n_j-y_j}$$ -->
+
+---
+
+## Loglikelihood $l(\boldsymbol{\beta})$
+
+
+\begin{align}
+l(\boldsymbol{\beta})&=\ln L(\boldsymbol{\beta})=\sum_{i=1}^n \ln L_i(\boldsymbol{\beta})=\sum_{i=1}^n l_i(\boldsymbol{\beta})\\
+&=\sum_{i=1}^n[y_i \ln \pi_i+(1-y_i) \ln(1-\pi_i)]\\
+&=\sum_{i=1}^n[y_i \ln (\frac{\pi_i}{1-\pi_i})+\ln(1-\pi_i)]
+\end{align}
+
+Observe that the log-likelihood is a sum of invidual contributions for each observation pair $i$.
+
+<!-- Result with grouped data: -->
+
+<!-- $$l(\boldsymbol{\beta})=\sum_{j=1}^G[y_j \ln \pi_j-y_j\ln(1-\pi_j)+n_j\ln(1-\pi_j)+ \ln {n_j \choose y_j}]$$ -->
+
+---
+
+The log-likelihood is now expressed as a function of $\pi_i$, but we want to make this a function of $\boldsymbol{\beta}$ and the connection between $\pi_i$ and $\boldsymbol{\beta}$ goes through $\eta_i$. We have that
+$\pi=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ and in our log-likelihood we need
+
+$$(1-\pi_i)=\frac{1}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}$$
+and 
+
+$$\ln(\frac{\pi_i}{1-\pi_1})=\eta_i$$ (the last is our logit link function). 
+
+---
+
+Then we get:
+
+$$l(\boldsymbol{\beta})=\sum_{i=1}^n[y_i \eta_i + \ln (\frac{1}{1+\exp(\eta_i)})]=\sum_{i=1}^n[y_i \eta_i - \ln (1+\exp(\eta_i))]$$
+which is now our function of $\eta_i$.
+
+Finally, since $\eta_i={\bf x}_i^T \boldsymbol{\beta}$, 
+$$l(\boldsymbol{\beta})=\sum_{i=1}^n[y_i {\bf x}_i^T \boldsymbol{\beta} - \ln (1+\exp({\bf x}_i^T \boldsymbol{\beta}))].$$
+
+---
+
+**Q**: What does the graph of $l$ look like as a function of $\boldsymbol{\beta}$? 
+
+If we look at the beetle example we only have one covariate (in addition to the intercept) - so this means that we have $\boldsymbol{\beta}=(\beta_0,\beta_1)$. Plotting the log-likelihood (for the beetle data set) will be one of the tasks for the interactive lecture.
+
+**But, next we take partial derivatives, and then we will (instead of using this formula) look at $l_i(\boldsymbol{\beta})=l_i(\eta_i(\boldsymbol{\beta}))$ and use the chain rule.**
+
+<!-- Remark: this will be the general way of thinking for the GLMs, the only difference is that in general we use $\mu_i$ in place of $\pi_i$. -->
+
+---
+
+## Score function $s(\boldsymbol{\beta})$
+
+The score function is a $p\times 1$ vector, $s(\boldsymbol{\beta})$, with the partial derivatives of the log-likelihood with respect to the $p$ elements of the $\boldsymbol{\beta}$ vector. 
+
+Solving $s(\boldsymbol{\beta})=0$ wil give us our MLEs
+
+---
+
+We will need the following:
+
+Chain rule:  $\frac{d f(u(x))}{du}=\frac{df}{du}\cdot \frac{du}{dx}$, 
+
+Product rule: $(u\cdot v)'=u'\cdot v+u\cdot v'$, 
+
+Fraction rule: $(\frac{u}{v})'=\frac{u' \cdot v - u\cdot v'}{v^2}$, 
+
+$\frac{d \ln(x)}{dx}=\frac{1}{x}$, $\frac{d\exp(x)}{dx}=\exp(x)$ and $\frac{d(\frac{1}{x})}{dx}=-\frac{1}{x^2}$.
+
+Partial derivatives of scalar wrt a vector $\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}}={\bf a}$
+
+and later we will also need $\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}^T}=(\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}})^T={\bf a}^T.$
+
+--- 
+
+Here we go:
+$$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=
+\sum_{i=1}^n \frac{\partial l_i(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=
+\sum_{i=1}^n s_i(\boldsymbol{\beta})$$
+
+Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
+
+---
+
+We will use the chain rule to calculate $s_i(\boldsymbol{\beta})$.
+
+$$s_i(\boldsymbol{\beta})=\frac{\partial l_i(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=\frac{\partial l_i(\boldsymbol{\beta})}{\partial \eta_i}\cdot \frac{\partial \eta_i}{\partial \boldsymbol{\beta}}=\frac{\partial [y_i\eta_i-\ln(1+{\exp(\eta_i)})]}{\partial \eta_i}\cdot \frac{\partial [{\bf x}_i^T\boldsymbol{\beta} ]}{\partial \boldsymbol{\beta}}$$
+
+$$s_i(\boldsymbol{\beta})=(y_i-\frac{\exp(\eta_i)}{1+\exp(\eta_i)})\cdot {\bf x}_i=(y_i-\pi_i) {\bf x}_i $$
+
+---
+
+The score function is given as: 
+
+$$s(\boldsymbol{\beta})=\sum_{i=1}^n s_i(\boldsymbol{\beta})=\sum_{i=1}^n {\bf x}_i (y_i-\pi_i)=\sum_{i=1}^n {\bf x}_i (y_i-\frac{\exp({\bf x}_i^T\boldsymbol{\beta})}{1+\exp({\bf x}_i^T\boldsymbol{\beta})})$$
+
+To find the maximum likelihood estimate $\hat{\boldsymbol{\beta}}$ we solve the set of $p$ non-linear equations:
+$$s(\hat{\boldsymbol{\beta}})=0$$
+
+Next week we will see how we can do that using the Newton-Raphson or Fisher Scoring iterative methods, but first we will work on finding the mean and covariance matrix of the score vector - and the derivatives of the score vector (the Hessian, which is minus the observed Fisher matrix).
+
+---
+
+**Remark**: in Module 5 we will see that the general formula for GLMs is:
+$$s(\boldsymbol{\beta})=\sum_{i=1}^n
+[\frac{y_i-\mu_i}{\text{Var}(Y_i)}{\bf x}_i \frac{\partial \mu_i}{\partial \eta_i}]=\sum_{i=1}^n
+[\frac{y_i-\mu_i}{\text{Var}(Y_i)}{\bf x}_i h'(\eta_i)]={\bf X}^T {\bf D} \Sigma^{-1} ({\bf y} -\mu)$$
+where ${\bf X}$ is the $n\times p$ design matrix, ${\bf D}=\text{diag}(h'(\eta_1),h'(\eta_2),\ldots,h'(\eta_n))$ is a diagonal matrix with the derivatives of the response function evaluated at each observation. Further, $\Sigma=\text{diag}(\text{Var}(Y_1),\text{Var}(Y_2),\ldots,\text{Var}(Y_n))$ is a diagonal matrix with the variance for each response, and ${\bf y}$ is the observed $n\times 1$ vector of responses and $\mu$ is the $n\times 1$ vector of individual expectations $\mu_i=\text{E}(Y_i)=h(\eta_i)$.
+
+
+---
+

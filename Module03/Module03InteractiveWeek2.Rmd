@@ -1,0 +1,321 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+subtitle: "Module 3: BINARY REGRESSION"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU - with contributions from Øyvind Bakke, Thea Bjørnland and Ingeborg Hem"
+date: "13.09 and 20.09 [PL],  14.09 and 21.09 [IL]"
+output: #3rd letter intentation hierarchy
+ html_document:
+   toc: true
+   toc_float: true
+   toc_depth: 2
+# pdf_document:
+#   toc: true
+#   toc_depth: 2
+#   keep_tex: yes
+#  beamer_presentation:
+#    keep_tex: yes
+#    fig_caption: false
+#    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
+showsol<-TRUE
+```
+
+
+# Interactive lecture - second week
+
+We will use a data set on contraceptive use in Fiji (data from 1975). The data is to be analysed with 
+"current use of contraceptive" as response and some (or all of) "age", "level of education", "desire for more children" as covariates
+
+The data is available at <https://grodri.github.io/datasets/cuse.dat> with the following description:
+  
+* Contraceptive use: yes (`using`) or no (`notUsing`)
+* `age`: categorical variable with 5 levels: "<25", "25-29", "30-39", "40-49"
+* `education`: categorical variable with 2 levels giving highest level of education obtained: Lower and Upper 
+* `wantsMore`: Desires more children: yes or no
+
+```{r, echo = FALSE,eval=FALSE}
+ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
+```
+
+
+```{r,eval=TRUE}
+ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
+names(ds)
+summary(ds)
+dim(ds)
+head(ds)
+```
+
+We will study binary regression using the logit model, and we will work with grouped data.
+
+<!-- Useful functions: `qlogis(p)` calculates the logit logit(p) = log(p/(1-p)) and the function `plogis(x)` is the inverse logit, that is exp(x)/(1-exp(x)). -->
+
+**Plan: Start with Problem 2, then move to 3 and 4, and if you have time you look at Problem 1. We will do a team Kahoot! in the end of the IL - on one device go to kahoot.it or use an app version. **
+
+### Problem 1: The null model - no covariates included.
+(This is the most theoretical of the problems and rather technical - but with some cool results on the null model.)
+
+**a)** Fit the null model and call it `fit0`. Explain what you see. 
+```{r}
+fit0=glm(cbind(using,notUsing)~1,data=ds,family=binomial(link=logit))
+summary(fit0)
+```
+
+Observe: When we only have an intercept in the model, the model matrix will be an $n \times 1$-matrix with only ones. 
+Then ${\bf x}_j^T\boldsymbol{\beta}=\beta_0$. The log-likelihood can be written as (let $j=1,\ldots,G$)
+
+\begin{align} l(\boldsymbol{\beta}) &=\sum_{j=1}^G (y_j{\bf x}_j^T \boldsymbol{\beta} - n_j \log(1+\exp({\bf x}_j^T\boldsymbol{\beta})))= \sum_{j=1}^G (y_j\beta_0 - n_j \log(1+\exp(\beta_0)))\\
+&= \beta_0 \sum_{j=1}^G y_j - \log(1+\exp(\beta_0))\sum_{j=1}^G n_j =\beta_0 N_1 - \log(1+\exp(\beta_0))N
+\end{align}
+where $N_1=\sum_{j=1}^G y_j$ is the total number of successes and $N=\sum_{j=1}^G n_j$ is the total number of trials (over all covariates patterns, that is, here the number of individuals in the data set). Also $N_2=N-N_1$ is the total number of failures.
+
+We will use this loglikelihood in the next question.
+
+**b)** What is the relationship between your estimated coefficient and the proportion in the data set using contraception ($N_1/N$)? (Hint 0: What would be your intuitive estimator for $\pi$ (common to all groups). Hint 1: Find the derivative of the log-likelihood with respect to $\beta_0$, and use this to find the MLE for $\beta_0$. Hint 2: maybe easier to see what $\hat{\pi}$ is, where $\hat{\pi}=\frac{\exp{\hat{\beta}_0}}{1+\exp{\hat{\beta}_0}}$ (so `plogis`), and then $\hat{\boldsymbol{\beta}}_0=\text{logit}(\hat{\pi})$ (so `qlogis`). Hint 3: You can verify by using the estimate from `glm`.)
+
+```{r}
+N = sum(ds$using + ds$notUsing)
+N
+N1 = sum(ds$using)
+N1
+N2 = N - N1
+N2
+qlogis(N1/N)
+fit0$coefficients
+```
+
+**c)** We know that the (asymptotic) estimated covariance matrix of the ML estimate is the inverse of the expected Fisher information matrix, here the matrix is only a scalar and the covariance matrix is just the variance. Find the mathematical expression for the estimated variance of our estimated intercept.
+ (Hint 1: We have $F(\boldsymbol{\beta}) = \sum_{j=1}^G x_jx_j^T n_j \pi_j(1-\pi_j)$, and then insert $x_j = 1$ and $\pi_j(1-\pi_j)=\pi(1-\pi)$, and hopefully you found above that $\hat{\pi}=N_1/N$ in our model with only intercept. Hint 2: $\frac{N}{N_1 \cdot N_2}=\frac{1}{N_1}+\frac{1}{N_2}$ to make things prettier.)
+
+**d)** What is the estimated (numerical value) standard deviation of the parameter estimate? Hint: `vcov(fit0)`. Did your calculation above gives the same result?
+
+```{r}
+vcov(fit0)
+```
+
+**e)** What is the asymptotic distribution of the estimated regression coefficient? Use this to write down the formula for the 95% confidence interval for the intercept, and calculate the interval in R. Compare numerically to `confint.default` and `confint`.
+
+```{r}
+ci=confint.default(fit0)
+ci
+confint(fit0)
+```
+
+**f)** Translate the 95% CI to probability scale (Hint: `plogis` is the inverse logit.)
+
+```{r}
+plogis(ci)
+fit0$family$linkinv(ci)
+```
+
+### Problem 2: We then study the effect of the covariate "wantsMore"
+(a little less maths)
+
+**a)** Fit a regression with `wantsMore` as covariate, and call this `fit1`. Explain what the estimated coefficient ($\beta_1$) means. Hint: Interpretation using odds -- if `wantsMore´ goes from 0=no to 1=yes, then...
+
+```{r,eval=TRUE}
+fit1=glm(cbind(using,notUsing)~wantsMore,data=ds,family=binomial)
+summary(fit1)
+exp(fit1$coefficients)
+```
+
+**b)** Is this covariate significant? Write down the null and alternative hypothesis to test. Then test using the Wald test - write down the formula yourself. Use `vcov(fit1)` to access the inverse of the Fisher information matrix. What is the degrees of freedom for this test? Compare to the print-out from `summary`. 
+
+```{r}
+vcov(fit1)
+```
+
+**c)** Alternatively, the likelihood ratio test can be used. Write down the formula for the likelihood ratio test statistic. Use this in combination with the `fit0` and  `fit1` objects to calculate the likelihood ratio statistic. Then calculate the $p$-value.
+
+```{r}
+loglik <- function(par, args) {
+    y <- args$y
+    x <- args$x
+    n <- args$n
+    res <- sum(y * x %*% par - n * log(1 + exp(x %*% par)))
+    return(res)
+}
+
+args0 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds))))
+args1 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds)), 
+    as.numeric(ds$wantsMore) - 1))
+
+betas0 <- fit0$coefficients
+betas1 <- fit1$coefficients
+
+ll0 <- loglik(betas0, args0)
+ll0
+ll1 <- loglik(betas1, args1)
+ll1
+```
+
+**d)** The likelihood ratio test statistic can alternatively be calculated using the residual deviance in `fit1` and `fit0`, and is given as `fit0$deviance-fit1$deviance`. Do you see why?
+
+```{r}
+fit0$deviance-fit1$deviance
+```
+
+**e)** Are the two test statistics (Wald and LRT) equal? Do the two tests give the same conclusions?
+
+### Problem 3: Now two covariates - deviance and model comparison
+(no maths - only definitions and print-out)
+
+Now we study the response together with `age` and `wantsMore`. We will consider the following 5 models. See R-code and print-out below. 
+**a)** Explain what each of these models include. 
+
+**b)** What is the definition of the deviance and df. What can we use the deviance for? Optional: derive the formula for the deviance for the logit model (the derivation is not given on the module pages.)
+
+**c)** Perform a likelihood ratio test - based on the deviance results given in the data frame in the R chunk- to compare the additive and interact models. First write down the null and alternative hypothesis you are testing. Which of the two models would you prefer?
+
+**d)** What if you use the AIC for model selection, which model (out of the 5) will you then use?
+
+```{r}
+ds$Y <- cbind(ds$using, ds$notUsing)
+models <- list(
+  null     = glm(Y ~ 1, family=binomial, data=ds),
+  age      = glm(Y ~ age, family=binomial, data=ds),
+  desire   = glm(Y ~ wantsMore, family=binomial, data=ds),
+  additive = glm(Y ~ age + wantsMore, family=binomial, data=ds),
+  interact = glm(Y ~ age*wantsMore, family=binomial, data=ds)
+)
+models
+lapply(models,summary)
+data.frame(deviance=round(unlist(lapply(models,deviance)),2),df=unlist(lapply(models,df.residual)),aic=round(unlist(lapply(models,AIC))))
+```
+Note: The function `lapply` (list apply) will apply a function to each element of a list.
+
+###Problem 4: Plotting
+(yes, mainly R and trying to understand) 
+
+Finally, we want to use the additive model with all three covariates: `Y~age+education+wantsMore` to study different plots.
+
+```{r,eval=TRUE}
+fit3add=glm(cbind(using,notUsing)~age+education+wantsMore,data=ds,family=binomial)
+summary(fit3add)
+exp(fit3add$coefficients)
+```
+
+**a)** Comment on the output from `summary`. Use the deviance to test if this is a good model. Which model do you then compare to (what is the saturated model here)?.
+
+**b)** Look at the plot of fitted values vs. deviance residuals. Do you see a trend?
+
+```{r}
+library(ggplot2)
+plotdf <- data.frame(dres = fit3add$residuals, fitted = fit3add$fitted.values, 
+    age = ds$age)
+ggplot(plotdf, aes(x = fitted, y = dres)) + geom_point() + labs(x = "Fitted values", 
+    y = "Deviance residuals")
+```
+
+**c)** Here is a code to produce a plot of fitted values for the 16 covariate patterns together with a saturated model (called frac) - on the logit scale. How can you see from the dots for fitted values that we are assuming an additive model on the logit scale (that is, the pattern for each panel for logit fitted vs age is the same for each panel if we have an additive model on the logit scale - you see that from the fitted points)? Do you also see that for the observed values? Implication? Any other observations?
+
+```{r,eval=TRUE}
+library(ggplot2)
+frac=ds$using/(ds$using+ds$notUsing)
+logitdf=data.frame(lfitted=qlogis(fit3add$fitted),lfrac=qlogis(frac),age=ds$age,wantsMore=ds$wantsMore,education=ds$education)
+ggplot(logitdf,aes(x=age))+geom_point(aes(y=lfrac,colour="saturated"))+geom_point(aes(y=lfitted,colour="fitted"))+facet_wrap(facets=~wantsMore*education) + labs(x = "age", y = "")
+```
+
+To see what Rodríguez have found to be the best model, look at the bottom of <http://data.princeton.edu/wws509/R/c3s6.html>.
+  
+**Note:** This exercise is based on the excellent notes of Germán Rodríguez at Princeton, see in particular the R logs at <http://data.princeton.edu/wws509/R/c3s1.html>.
+
+
+<!--
+We will use a data set on embryogenic anters of the plant species Dutura innoxia (as described in Dobson and Barnett, 2008), given as
+```{r}
+storage=c(1,1,1,2,2,2)
+centrifuge=c(40,150,350,40,150,350)
+anters=data.frame(y=c(55,52,57,55,50,50),n=c(102,99,108,76,81,90),storage=factor(storage),lncentrifuge=log(centrifuge))
+knitr::kable(anters)
+```
+For each combination of `storage` (1= control, 2=treatment=at 3 degrees for 48 hours) and `lncentrifuge`(centrifuging force, three continuous values chosen on the natural log scale) a total of `n` anthers (pollenknapper) were prepared and resulted in `y` embryogenic anthers (germinated). As covariates we will used `storage` as a factor (you may choose either dummy or effect coding), and `lncentrifuge` will be used as a continuous covariate.
+
+The aim is to build a model to predict the probability of germination, and to understand the possible influence of covariates storage and centrifuge. 
+
+1. Explore the data set. Plot each covariate against fraction of anters germinated for the different groups. Does the plot hint to a relationship between the possible covariates and the response?
+
+2. Why may a binominal regression be suitable for these data? Write down assumptions we make if we want to fit a logit model.
+
+We will continue to look at the logit model.
+
+3. Let $x$ be the `lncentrifuge`. We start fitting Model 1: "linear effect of lncentrifuge, but different intercept and different slope for control and treatment". Hint: this can be given as model formula `cbind(y,n-y)~storage*lncentrifuge`. 
+-->
+
+<!-- ## Team mode kahoot! -->
+
+<!-- [Beamer presentation with the 8 questions (answers on last slide))](https://www.math.ntnu.no/emner/TMA4315/2017h/M3quiz.pdf)  -->
+
+
+# Exam questions
+
+For this module the following are exam questions to work with
+
+* 2012 – [Problem 1](https://www.math.ntnu.no/emner/TMA4315/Exam/GLMeksamen2012E.pdf)
+* 2011 – [Problem 1](https://www.math.ntnu.no/emner/TMA4315/Exam/eksDes11e.pdf)
+<!-- * 2009 – [Problem 3](https://www.math.ntnu.no/emner/TMA4315/Exam/e2009.pdf) -->
+<!-- * 2008 – Problem 2 -->
+<!-- * 2005 – Problem 1 and 2 -->
+
+In addition these essay-type exam questions are closely related to this module.
+
+## December 2014
+There are two main asymptotic results that are behind essentially everything we
+have done with respect to inference for generalized linear models. These are
+
+1. asymptotic normality of maximum likelihood estimators (MLE), and
+
+2. asymptotic result for likelihood ratio tests (LRT).
+
+State, describe and discuss the main assumptions behind these two
+asymptotic results, how these results are used in practice to do inference
+for parameters, testing various hypotheses and comparing nested
+models, for logistic regression.
+
+## December 2016
+We will consider (binomial or binary) logistic regression, where we have independent observations
+$$Y_i \sim \text{Binomial}(n_i,\pi_i) \text{ } i=1,\ldots,n$$
+so that 
+$$P(Y_i)=\binom{n_i}{y_i}\pi_i^{y_i}(1-\pi_i)^{n_i-y_i}, \text{ } y_i=0,1,\ldots, n_i$$
+The linear predictor is 
+$$ \eta_i={\bf x}_i^T\boldsymbol{\beta}$$
+and 
+$$ \pi_i=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$$
+or 
+$$ \text{logit}(\pi_i)=\eta_i.$$
+Here, ${\bf x}_i$ is a vector of the $p$ covariates for the $i$th observation $y_i$ with size (number of trials) $n_i$, and $\boldsymbol{\beta}$ is the vector of $p$ unknown regression coefficients.
+
+Write an introduction to logistic regression and its practical usage, for a student
+with a good background in statistics, but no knowledge about Generalized Linear
+Models (GLM). Topics you may want to consider, are
+
+* When to use it? Underlying assumptions.
+* Parameter estimation, limiting results for the MLE, Fisher information and
+observed Fisher information, confidence intervals and hypothesis testing.
+* Output analysis, residual plots (when it is possible) and interpretation of the $\boldsymbol{\beta}$-coefficients
+* Deviance and its usage.
+
+# R packages
+
+```{r, eval=FALSE}
+install.packages(c("tidyverse",
+                   "investr",
+                   "knitr",
+                   "kableExtra",
+                   "faraway",
+                   "viridis",
+                   "statmod"))
+```
+
+
+# References for further reading
+
+* A. Agresti (2015): "Foundations of Linear and Generalized Linear Models." Wiley.
+* A. J. Dobson and A. G. Barnett (2008): "An Introduction to Generalized Linear Models", Third edition. 
+* J. Faraway (2015): "Extending the Linear Model with R", Second Edition. <http://www.maths.bath.ac.uk/~jjf23/ELM/>
+* P. McCullagh and J. A. Nelder (1989): "Generalized Linear Models". Second edition.
+
+

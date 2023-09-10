@@ -8,14 +8,14 @@ output: #3rd letter intentation hierarchy
   #   toc: true
   #   toc_float: true
   #   toc_depth: 2
- pdf_document:
-   toc: true
-   toc_depth: 2
-   keep_tex: yes
-#  beamer_presentation:
-#    keep_tex: yes
-#    fig_caption: false
-#    latex_engine: xelatex
+ # pdf_document:
+ #   toc: true
+ #   toc_depth: 2
+ #   keep_tex: yes
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}
@@ -48,7 +48,6 @@ showsol<-TRUE
     + likelihood, log-likelihood, 
     + score function
 
-Jump to [interactive lecture (week 1)](#ILw1)
 
 ---
 
@@ -69,9 +68,8 @@ Jump to [interactive lecture (week 1)](#ILw1)
 * overdispersion and estimating overdispersion parameter
 * sampling stragegy: cohort, but also case-control data good for logit model
 
-Jump to [interactive lecture (week 2)](#ILw2)
 
-**<a id="firstweek">FIRST WEEK</a>**
+---
 
 # Aim of binary regression
 
@@ -124,6 +122,9 @@ cat("Answers \n")
 cat("a) logistic, sigmoid, normal cdf?.\n")
 cat("b) see item 3 below - the response function connects the mean of the respons to the linear predictor. \n")
 ```
+
+
+---
 
 # How to model a binary response?
 
@@ -585,173 +586,14 @@ $$s(\boldsymbol{\beta})=\sum_{i=1}^n
 [\frac{y_i-\mu_i}{\text{Var}(Y_i)}{\bf x}_i h'(\eta_i)]={\bf X}^T {\bf D} \Sigma^{-1} ({\bf y} -\mu)$$
 where ${\bf X}$ is the $n\times p$ design matrix, ${\bf D}=\text{diag}(h'(\eta_1),h'(\eta_2),\ldots,h'(\eta_n))$ is a diagonal matrix with the derivatives of the response function evaluated at each observation. Further, $\Sigma=\text{diag}(\text{Var}(Y_1),\text{Var}(Y_2),\ldots,\text{Var}(Y_n))$ is a diagonal matrix with the variance for each response, and ${\bf y}$ is the observed $n\times 1$ vector of responses and $\mu$ is the $n\times 1$ vector of individual expectations $\mu_i=\text{E}(Y_i)=h(\eta_i)$.
 
-More in Module 5.
-
-# <a id="interactivew1">Interactive lecture - first week</a>
-
-## Theoretical questions - with and without use of R
-
-### Problem 1: Model assumptions
-
-a) What are the model assumptions for a binary regression? 
-b) Which link function and response function is used for the logit model? 
-c) What is the difference between the logit model and a logistic regression?
 
 ---
 
-### Problem 2: Log-likelihood.  
 
-a) What is the definition of the log-likelihood?
 
-b) For the logit model the log-likelihood is
-$$l(\boldsymbol{\beta})=\sum_{j=1}^G[\ln \binom{n_j}{y_j}+ y_j \ln \pi_j-y_j\ln(1-\pi_j)+n_j\ln(1-\pi_j)]$$
-for grouped data. Explain how we have arrived at this formula?
 
-c) Write the version of the loglikelihood for individual data (i.e. $n_j=1$ and $G=n$).
 
-d) Where is $\boldsymbol{\beta}$ in the loglikelihood in c? Rewrite this to be a function of $\boldsymbol{\beta}$.  
 
-e) Why can we ignore the normalizing constant (what is the constant?) in the case of $n_j = 1 \ \forall j$? Considering what the log-likelihood is used for, why can we ignore the normalizing constant in all cases (i.e., also when $n_j \neq 1$)?
-
-f) What does this graph of $l$ look like as a function of $\boldsymbol{\beta}$ for the beetle data? First discuss shortly and then to aid you in answering this we look at the loglikelihood for the beetle data. Read the R code, discuss what is done and work on interpreting the final graph - in particular comment on the yellow ridge in the plot.
-
-The beetle data has only one covariate (in addition to the intercept) - so this means that we have $\boldsymbol{\beta}=(\boldsymbol{\beta}_0,\boldsymbol{\beta}_1)$. Look at the following code and explain what is done - remark: we have used the $n_i=1$ version of the loglikelihood here.
-
-```{r}
-library(investr)
-library(ggplot2)
-library(viridis)
-
-# from aggregated to individual data (because these data were aggregated)
-ldose <- rep(investr::beetle$ldose, investr::beetle$n)
-y <- NULL
-for (i in 1:8) y = c(y, rep(0, investr::beetle$n[i] - investr::beetle$y[i]), rep(1, investr::beetle$y[i]))
-beetleds = data.frame(killed = y, ldose = ldose)
-
-loglik <- function(par, args){
-  y <- args$y; x <- args$x; n <- args$n
-  res <- sum(y*x%*%par - n*log(1 + exp(x%*%par)))
-  return(res)
-}
-
-loglik(c(1,1), args = list(y = beetleds$killed, 
-                           x = cbind(rep(1, nrow(beetleds)), beetleds$ldose), 
-                           n = rep(1, nrow(beetleds))))
-
-loglikmat <- matrix(NA, nrow = 100, ncol = 100)
-loglikframe <- data.frame()
-beta_0 <- seq(-90,-30, length.out = 100)
-beta_1 <- seq(20, 50, length.out = 100)
-
-for (i in 1:length(beta_0)){
-  for (j in 1:length(beta_1)){
-    
-    loglikmat[i,j] <- loglik(c(beta_0[i], beta_1[j]), args = list(y = beetleds$killed, 
-                                                                  x = cbind(rep(1, nrow(beetleds)), beetleds$ldose), 
-                                                                  n = rep(1, nrow(beetleds))))
-    
-    loglikframe <- rbind(loglikframe, c(beta_0[i], beta_1[j], loglikmat[i,j]))
-  
-  }
-}
-names(loglikframe) <- c("beta_0", "beta_1", "loglik")
-head(loglikframe)
-
-ggplot(data = loglikframe, mapping = aes(x = beta_0, y = beta_1, z = loglik)) + geom_raster(aes(fill = exp(0.0001*loglik))) +
-  geom_point(data = loglikframe[which.max(loglikframe$loglik),], mapping = aes(x = beta_0, y = beta_1), 
-             size = 5, col = "red", shape = 21, stroke = 2) + scale_shape(solid = FALSE) +
-  scale_fill_viridis() + geom_contour(col = "black")
-```
-
-Comments to the code: for the `loglik` function we have two arguments: par= the parameters to be estimated, and args=a list with data. The reason for only having these two arguments is that it is easier to use when we later perform optimization (with `optim`) of the loglikelihood to find the ML estimates.
-
----
-
-### Problem 3: Score function
-
-a) What is the definition of the score function? What is the dimension of the score function?
-b) Derive the score function for the logit model (individual data). The result should be
-$$s(\boldsymbol{\beta})=\sum_{i=1}^n {\bf x}_i (y_i-\pi_i)=\sum_{i=1}^n {\bf x}_i (y_i-\frac{\exp({\bf x}_i^T\boldsymbol{\beta})}{1+\exp({\bf x}_i^T\boldsymbol{\beta})})$$
-c) What do we need the score function for? 
-
----
-
-### Problem 4: Fisher information. 
-
-(We did not cover this in the lecture week 1, but we know one of the definitions from Module 2. Either you skip Problem 4 and move to Problem 5, or you look at the section ["Properties of the score function"](#propscore), and ["The expected Fisher information matrix $F(\boldsymbol{\beta})$"](#covscore) together.)
-
-a) What is the definition of the expected (and the observed) Fisher information matrix? What is the dimension of thise matrix (matrices)?
-b) What is the role of these matrices in ML estimation?
-
-c) For the logit model with grouped data the expected and the observed Fisher information matrix are equal and given as
-
-$$F(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \pi_j (1-\pi_j)$$
-Where is $\boldsymbol{\beta}$ in this expression?
-
-d) Write the version of the expected Fisher information for individual data (i.e. $n_j=1$ and $G=n$). 
-
----
-
-### Problem 5: Maximum likelihood
-
-To find the ML estimate for $\boldsymbol{\beta}$ we may either use the function `glm` or optimize the log-likelihood manually. We will do both.
-
-a) First we use the `glm` function in R, and we also check that the individual and the grouped data give the same parameter estimates for the $\boldsymbol{\beta}$. Read the R-code, notice the different input structures and check the results.
-
-```{r}
-# the beetle.ds was made above
-fitind=glm(killed ~ ldose, family = "binomial", data = beetleds) # individual data
-summary(fitind)
-```
-
-```{r}
-fitgrouped=glm(cbind(y, n-y) ~ ldose, family = "binomial", data = investr::beetle) # grouped data. response is #success AND #fails (here we have defined a dead beetle as a success)
-summary(fitgrouped)
-```
-
-b) What is the default convergence criterion for the glm? (Note: IRWLS used in `glm` - more in Module 5.)
-
-c) We implemented the log-likelihood as a function in item 2 above. Now we will use this together with the `optim` function on the beetle data set to optimize the loglikelihood. Read the R-code, take notice of how we put data into the `args` slot and how the optimization is called with `optim`. (In Compulsory exercise 2 you will use this in a Poisson regression.)
-
-```{r}
-loglik_gr <- function(par, args) {
-    
-    y <- args$y
-    x <- args$x
-    n <- args$n
-    
-    res <- y %*% x - t(t(n * x) %*% ((1 + exp(-x %*% par))^(-1)))
-    return(res)
-}
-
-opt <- optim(c(-60, 30), fn = loglik, gr = loglik_gr, args = list(y = beetleds$killed, 
-    x = cbind(rep(1, nrow(beetleds)), beetleds$ldose), n = rep(1, nrow(beetleds))), 
-    control = list(fnscale = -1), hessian = TRUE,method="BFGS")
-opt 
-
-sqrt(diag(-solve(opt$hessian))) # calculate the standard deviations of the parameters
-```
-
----
-
-### Problem 6: Interpreting results
-
-a) Interpret the estimated $\boldsymbol{\beta}$´s. Odds ratio is useful for this. 
-b) Plot the predicted probability of a beetle dying against the dosage and discuss what you see. (Yes, since this is the last question you may try to program by yourself!)
-
-<!-- # Summing up and moving on? -->
-
-<!-- ## Aim of binary regression:  -->
-<!-- 1. Construct a model to help understand the relationship between a "success probability" and one or several explanatory variables. The response measurements are binary (present/absent, true/false, healthy/diseased). -->
-<!-- 2. Use the model for estimation and prediction of success probabilites. -->
-
-<!-- Our two examples: -->
-
-<!-- * probability of killing a beetle, for given dose chemicals -->
-
-<!-- * probability for getting infant respiratory disease, covariates are sex of infant (boy, girl) and method of feeding (bottle, supplement, breast) -->
-
----
 
 **<a id="secondweek">SECOND WEEK</a>**
 
@@ -1679,7 +1521,7 @@ We see that the only difference between the parameters of interest in the retros
 We will use a data set on contraceptive use in Fiji (data from 1975). The data is to be analysed with 
 "current use of contraceptive" as response and some (or all of) "age", "level of education", "desire for more children" as covariates
 
-The data is available at <http://data.princeton.edu/wws509/datasets/cuse.dat> with the following description:
+The data is available at <https://grodri.github.io/datasets/cuse.dat> with the following description:
   
 * Contraceptive use: yes (`using`) or no (`notUsing`)
 * `age`: categorical variable with 5 levels: "<25", "25-29", "30-39", "40-49"
@@ -1687,12 +1529,12 @@ The data is available at <http://data.princeton.edu/wws509/datasets/cuse.dat> wi
 * `wantsMore`: Desires more children: yes or no
 
 ```{r, echo = FALSE,eval=FALSE}
-ds=read.table("http://data.princeton.edu/wws509/datasets/cuse.dat",header=TRUE)
+ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
 ```
 
 
 ```{r,eval=TRUE}
-ds=read.table("http://data.princeton.edu/wws509/datasets/cuse.dat",header=TRUE)
+ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
 names(ds)
 summary(ds)
 dim(ds)
