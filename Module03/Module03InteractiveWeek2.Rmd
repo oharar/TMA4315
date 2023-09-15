@@ -8,6 +8,7 @@ output: #3rd letter intentation hierarchy
    toc: true
    toc_float: true
    toc_depth: 2
+   css: "../TMA4315RMarkdown.css"
 # pdf_document:
 #   toc: true
 #   toc_depth: 2
@@ -23,11 +24,20 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
 showsol<-TRUE
 ```
 
+**Hints and reminders are in bold**
+ 
+<span class="question">Questions appear in blue.</span>
+
+<details><summary>Some hints and answers are hidden away in a fold like this</summary>
+Well done, you found me!
+</details>
+
+The exam style questions are optional, but will be helpful for, well, the exam. They will also help you now to see if you understand the content.
 
 # Interactive lecture - second week
 
 We will use a data set on contraceptive use in Fiji (data from 1975). The data is to be analysed with 
-"current use of contraceptive" as response and some (or all of) "age", "level of education", "desire for more children" as covariates
+"current use of contraceptive" as response and some (or all of) "age", "level of education", "desire for more children" as covariates.
 
 The data is available at <https://grodri.github.io/datasets/cuse.dat> with the following description:
   
@@ -35,10 +45,6 @@ The data is available at <https://grodri.github.io/datasets/cuse.dat> with the f
 * `age`: categorical variable with 5 levels: "<25", "25-29", "30-39", "40-49"
 * `education`: categorical variable with 2 levels giving highest level of education obtained: Lower and Upper 
 * `wantsMore`: Desires more children: yes or no
-
-```{r, echo = FALSE,eval=FALSE}
-ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
-```
 
 
 ```{r,eval=TRUE}
@@ -53,16 +59,24 @@ We will study binary regression using the logit model, and we will work with gro
 
 <!-- Useful functions: `qlogis(p)` calculates the logit logit(p) = log(p/(1-p)) and the function `plogis(x)` is the inverse logit, that is exp(x)/(1-exp(x)). -->
 
-**Plan: Start with Problem 2, then move to 3 and 4, and if you have time you look at Problem 1. We will do a team Kahoot! in the end of the IL - on one device go to kahoot.it or use an app version. **
+**Plan: Start with Problem 2, then move to 3 and 4, and if you have time you look at Problem 1. **
 
-### Problem 1: The null model - no covariates included.
+## Problem 1: The null model - no covariates included.
+
 (This is the most theoretical of the problems and rather technical - but with some cool results on the null model.)
 
-**a)** Fit the null model and call it `fit0`. Explain what you see. 
+<span class="question">**a)** Fit the null model and call it `fit0`. Explain what you see. </span>
+
+<details><summary>Answer</summary>
 ```{r}
 fit0=glm(cbind(using,notUsing)~1,data=ds,family=binomial(link=logit))
 summary(fit0)
 ```
+
+We see some output. The estimate of the intercept is `r round(coef(fit0),2)`: this is less than 0.5, so the mean probability is <0.5. 
+The null and residual deviances are the same, because this is the null model.
+
+</details>
 
 Observe: When we only have an intercept in the model, the model matrix will be an $n \times 1$-matrix with only ones. 
 Then ${\bf x}_j^T\boldsymbol{\beta}=\beta_0$. The log-likelihood can be written as (let $j=1,\ldots,G$)
@@ -74,64 +88,207 @@ where $N_1=\sum_{j=1}^G y_j$ is the total number of successes and $N=\sum_{j=1}^
 
 We will use this loglikelihood in the next question.
 
-**b)** What is the relationship between your estimated coefficient and the proportion in the data set using contraception ($N_1/N$)? (Hint 0: What would be your intuitive estimator for $\pi$ (common to all groups). Hint 1: Find the derivative of the log-likelihood with respect to $\beta_0$, and use this to find the MLE for $\beta_0$. Hint 2: maybe easier to see what $\hat{\pi}$ is, where $\hat{\pi}=\frac{\exp{\hat{\beta}_0}}{1+\exp{\hat{\beta}_0}}$ (so `plogis`), and then $\hat{\boldsymbol{\beta}}_0=\text{logit}(\hat{\pi})$ (so `qlogis`). Hint 3: You can verify by using the estimate from `glm`.)
+<span class="question">**b)** What is the relationship between your estimated coefficient and the proportion in the data set using contraception ($N_1/N$)?</span>
+
+<details><summary>Hint 0</summary>
+What would be your intuitive estimator for $\pi$ (common to all groups). </details>
+<details><summary>Hint 1</summary>
+Find the derivative of the log-likelihood with respect to $\beta_0$, and use this to find the MLE for $\beta_0$.
+</details>
+<details><summary>Hint 2</summary>
+maybe easier to see what $\hat{\pi}$ is, where $\hat{\pi}=\frac{\exp{\hat{\beta}_0}}{1+\exp{\hat{\beta}_0}}$ (so `plogis`), and then $\hat{\boldsymbol{\beta}}_0=\text{logit}(\hat{\pi})$ (so `qlogis`). 
+</details>
+<details><summary>Hint 3</summary>
+You can verify by using the estimate from `glm`.
+</details>
+<details><summary>Answer</summary>
+
+The intuitive estimate of $\hat{\pi}$ is $N_1/N$. From above, $l(\boldsymbol{\beta}) = \beta_0 N_1 - \log(1+\exp(\beta_0))N$, so we can differentiate (to get the score), set that to 0 and solve...
+
+$$
+\begin{align} \frac{dl(\boldsymbol{\beta})}{d\beta_0} &=  N_1 - \frac{\log(1+\exp(\beta_0))N}{d\beta_0}
+ \\
+&= N_1 - N \frac{\log(u)}{du}\frac{(1+\exp(\beta_0))}{d\beta_0} && \text{using } u=1+\exp(\beta_0) \\
+&= N_1 - N \frac{1}{1+\exp(\beta_0)}\exp(\beta_0) = 0 \\
+ \hat{\pi} &= \frac{N_1}{N} = \frac{\exp(\beta_0)}{1+\exp(\beta_0)}
+\end{align}
+$$
+
+Recognise this? it's the logistic function, so the inverse is the logit link: $\beta_0 = \log(\hat{\pi}/(1-\hat{\pi}))$.
+
+We can verify this in R:
 
 ```{r}
 N = sum(ds$using + ds$notUsing)
-N
 N1 = sum(ds$using)
-N1
 N2 = N - N1
-N2
-qlogis(N1/N)
+
+log(N1/N2)
 fit0$coefficients
 ```
 
-**c)** We know that the (asymptotic) estimated covariance matrix of the ML estimate is the inverse of the expected Fisher information matrix, here the matrix is only a scalar and the covariance matrix is just the variance. Find the mathematical expression for the estimated variance of our estimated intercept.
- (Hint 1: We have $F(\boldsymbol{\beta}) = \sum_{j=1}^G x_jx_j^T n_j \pi_j(1-\pi_j)$, and then insert $x_j = 1$ and $\pi_j(1-\pi_j)=\pi(1-\pi)$, and hopefully you found above that $\hat{\pi}=N_1/N$ in our model with only intercept. Hint 2: $\frac{N}{N_1 \cdot N_2}=\frac{1}{N_1}+\frac{1}{N_2}$ to make things prettier.)
+</details>
 
-**d)** What is the estimated (numerical value) standard deviation of the parameter estimate? Hint: `vcov(fit0)`. Did your calculation above gives the same result?
+
+**c)** We know that the (asymptotic) estimated covariance matrix of the ML estimate is the inverse of the expected Fisher information matrix, here the matrix is only a scalar and the covariance matrix is just the variance. 
+
+<span class="question">Find the mathematical expression for the estimated variance of our estimated intercept.</span>
+
+<details><summary>Hint 1</summary>
+We have $F(\boldsymbol{\beta}) = \sum_{j=1}^G x_jx_j^T n_j \pi_j(1-\pi_j)$, and then insert $x_j = 1$ and $\pi_j(1-\pi_j)=\pi(1-\pi)$, and hopefully you found above that $\hat{\pi}=N_1/N$ in our model with only intercept. 
+</details>
+<details><summary>Hint 2</summary>
+$\frac{N}{N_1 \cdot N_2}=\frac{1}{N_1}+\frac{1}{N_2}$ to make things prettier.
+</details>
+<details><summary>Answer</summary>
+
+$Var(\boldsymbol{\beta}) = F^{-1}(\boldsymbol{\beta})$, so find $F(\boldsymbol{\beta})$:
+
+$$
+\begin{aligned}
+F(\boldsymbol{\beta}) &= \sum_{j=1}^G x_jx_j^T n_j \pi_j(1-\pi_j) \\
+&= N \pi(1-\pi) \\
+&= N \frac{N_1}{N}\left(\frac{N_2}{N}\right) \\
+&= \frac{N_1 N_2}{N}
+\end{aligned}
+$$
+
+So, $F^{-1}(\boldsymbol{\beta}) = Var(\boldsymbol{\beta}) = N/(N_1 N_2) = \frac{1}{N_1}+\frac{1}{N_2}$
+</details>
+
+
+<span class="question">**d)** What is the estimated (numerical value) standard deviation of the parameter estimate? Did your calculation above gives the same result?</span>
+
+<details><summary>Hint</summary>
+`vcov(fit0)`
+</details>
+<details><summary>Answer</summary>
 
 ```{r}
 vcov(fit0)
 ```
 
-**e)** What is the asymptotic distribution of the estimated regression coefficient? Use this to write down the formula for the 95% confidence interval for the intercept, and calculate the interval in R. Compare numerically to `confint.default` and `confint`.
+Hopefully, "yes", especially if `1/sum(ds$notUsing) + 1/sum(ds$using) = ` `r 1/sum(ds$notUsing) + 1/sum(ds$using)`
+</details>
+
+<span class="question">**e)** What is the asymptotic distribution of the estimated regression coefficient? Use this to write down the formula for the 95% confidence interval for the intercept, and calculate the interval in R. Compare numerically to `confint.default` and `confint`.</span>
+
+<details><summary>Answer</summary>
+The coefficient is asymptotically normally distributed, so the (approximate) 95% confidence interval is
+
+$\hat{\beta}_0 \pm 1.96 \sqrt{\sigma^2_{\beta_0}} =$ `r round(coef(fit0),2)` $\pm 1.96 \times$ `r round(sqrt(vcov(fit0)),2)` = (`r round(coef(fit0)- 1.96*sqrt(vcov(fit0)),2)`, `r round(coef(fit0)+ 1.96*sqrt(vcov(fit0)),2)`).
 
 ```{r}
-ci=confint.default(fit0)
-ci
+c(coef(fit0) - 1.96*sqrt(vcov(fit0)), coef(fit0) + 1.96*sqrt(vcov(fit0)))
+(ci=confint.default(fit0))
 confint(fit0)
+
 ```
 
-**f)** Translate the 95% CI to probability scale (Hint: `plogis` is the inverse logit.)
+So, the asymptotic answer is (almost) the same as the one `confint.default()` gives. `confint()` (which is actually `confint.glm()`) is different in the third decimal place. It uses a different approach, something called a profile likelihood.
 
+</details>
+
+<span class="question">**f)** Translate the 95% CI to probability scale</span>
+<details><summary>Hint</summary>
+`plogis` is the inverse logit. Or write your own function.
+</details>
+<details><summary>Answer</summary>
 ```{r}
 plogis(ci)
 fit0$family$linkinv(ci)
 ```
 
-### Problem 2: We then study the effect of the covariate "wantsMore"
+</details>
+
+
+
+## Problem 2: We then study the effect of the covariate "wantsMore"
 (a little less maths)
 
-**a)** Fit a regression with `wantsMore` as covariate, and call this `fit1`. Explain what the estimated coefficient ($\beta_1$) means. Hint: Interpretation using odds -- if `wantsMore´ goes from 0=no to 1=yes, then...
+Fit a regression with `wantsMore` as covariate, and call this `fit1`.
+<span class="question">**a)**  Explain what the estimated coefficient ($\beta_1$) means. </span>
 
+<details><summary>Hint</summary>
+Interpretation using odds -- if `wantsMore´ goes from 0=no to 1=yes, then...
+</details>
+
+<details><summary>Answer</summary>
 ```{r,eval=TRUE}
 fit1=glm(cbind(using,notUsing)~wantsMore,data=ds,family=binomial)
 summary(fit1)
 exp(fit1$coefficients)
 ```
 
-**b)** Is this covariate significant? Write down the null and alternative hypothesis to test. Then test using the Wald test - write down the formula yourself. Use `vcov(fit1)` to access the inverse of the Fisher information matrix. What is the degrees of freedom for this test? Compare to the print-out from `summary`. 
+$\beta_1$ is the difference between the two levels of `wantsMore`, i.e. it is the difference in the log odds between women who want more children and those who do not. The odds for a woman who wants more children are `r round(exp(fit1$coefficients)*100)`\% of what they are for those who do not. Put the other way around, they are `r round(exp(-fit1$coefficients),1)` times higher for women who do not want more children.
+
+</details>
+
+<span class="question">**b)** Is this covariate significant?</span>
+
+- Write down the null and alternative hypothesis to test. 
+- Then test using the Wald test - write down the formula yourself. 
+- Use `vcov(fit1)` to access the inverse of the Fisher information matrix. 
+- What is the degrees of freedom for this test? 
+- Compare to the print-out from `summary`. 
+
+<details><summary>Answer</summary>
+
+- Write down the null and alternative hypothesis to test. 
+$H_0: \beta_1=0$
+$H_1: \beta_1 \ne 0$
+
+- Then test using the Wald test - write down the formula yourself. 
+
+Formula:
+
+$$
+w = \frac{\beta_1 - 0}{\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})}} 
+$$
+
+
+- Use `vcov(fit1)` to access the inverse of the Fisher information matrix. 
+
+In code:
 
 ```{r}
-vcov(fit1)
+(w <- coef(fit1)["wantsMoreyes"]^2/vcov(fit1)["wantsMoreyes", "wantsMoreyes"])
+(z <- coef(fit1)["wantsMoreyes"]/sqrt(vcov(fit1)["wantsMoreyes", "wantsMoreyes"]))
+
 ```
 
-**c)** Alternatively, the likelihood ratio test can be used. Write down the formula for the likelihood ratio test statistic. Use this in combination with the `fit0` and  `fit1` objects to calculate the likelihood ratio statistic. Then calculate the $p$-value.
+- What is the degrees of freedom for this test? 
+
+1
+
+- Compare to the print-out from `summary`. 
 
 ```{r}
-loglik <- function(par, args) {
+summary(fit1)
+```
+
+They are the same!
+
+</details>
+
+
+
+**c)** Alternatively, the likelihood ratio test can be used. 
+
+<span class="question">Write down the formula for the likelihood ratio test statistic. Use this in combination with the `fit0` and  `fit1` objects to calculate the likelihood ratio statistic. What is the $p$-value?</span>
+
+<details><summary>Hint</summary>
+Write a function to calculate the log likelihoods
+</details>
+<details><summary>Answer</summary>
+
+$$
+- 2\ln \lambda=-2(\ln L(\hat{\boldsymbol{\beta}}_B)-\ln L(\hat{\boldsymbol{\beta}}_A))
+$$
+We can calculate the log likelihoods:
+
+```{r}
+calcloglik <- function(par, args) {
     y <- args$y
     x <- args$x
     n <- args$n
@@ -141,36 +298,55 @@ loglik <- function(par, args) {
 
 args0 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds))))
 args1 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds)), 
-    as.numeric(ds$wantsMore) - 1))
+    as.numeric(ds$wantsMore=="yes")))
 
 betas0 <- fit0$coefficients
 betas1 <- fit1$coefficients
 
-ll0 <- loglik(betas0, args0)
-ll0
-ll1 <- loglik(betas1, args1)
-ll1
+(ll0 <- calcloglik(betas0, args0))
+(ll1 <- calcloglik(betas1, args1))
+
+
+(LRTstat <- -2*(ll0-ll1))
+
 ```
 
-**d)** The likelihood ratio test statistic can alternatively be calculated using the residual deviance in `fit1` and `fit0`, and is given as `fit0$deviance-fit1$deviance`. Do you see why?
+</details>
+
+
+**d)** The likelihood ratio test statistic can alternatively be calculated using the residual deviance in `fit1` and `fit0`, and is given as `fit0$deviance-fit1$deviance`. 
+
+<span class="question">Do you see why?</span>
+
+<details><summary>Hint</summary>
+"No" may be correct, but is not the answer we are looking for. 
+
+Also, think about deviances being additive.
+</details>
+<details><summary>Answer</summary>
+Yes, of course I see why! The total deviance is the sum of the "explained" and residual deviance, so we can look at either the increase in deviance or the decrease in residual deviance: they are the same.
 
 ```{r}
 fit0$deviance-fit1$deviance
 ```
 
-**e)** Are the two test statistics (Wald and LRT) equal? Do the two tests give the same conclusions?
+</details>
 
-### Problem 3: Now two covariates - deviance and model comparison
+
+
+
+<span class="question">**e)** Are the two test statistics (Wald and LRT) equal? Do the two tests give the same conclusions?</span>
+
+
+<details><summary>Answer</summary>
+No, they are not quite equal, but lead to the same conclusion: there is strong evidence for an effect of wanting more children on the probability of using contraception.
+</details>
+
+
+## Problem 3: Now two covariates - deviance and model comparison
 (no maths - only definitions and print-out)
 
 Now we study the response together with `age` and `wantsMore`. We will consider the following 5 models. See R-code and print-out below. 
-**a)** Explain what each of these models include. 
-
-**b)** What is the definition of the deviance and df. What can we use the deviance for? Optional: derive the formula for the deviance for the logit model (the derivation is not given on the module pages.)
-
-**c)** Perform a likelihood ratio test - based on the deviance results given in the data frame in the R chunk- to compare the additive and interact models. First write down the null and alternative hypothesis you are testing. Which of the two models would you prefer?
-
-**d)** What if you use the AIC for model selection, which model (out of the 5) will you then use?
 
 ```{r}
 ds$Y <- cbind(ds$using, ds$notUsing)
@@ -187,7 +363,53 @@ data.frame(deviance=round(unlist(lapply(models,deviance)),2),df=unlist(lapply(mo
 ```
 Note: The function `lapply` (list apply) will apply a function to each element of a list.
 
-###Problem 4: Plotting
+
+<span class="question">**a)** Explain what each of these models include. </span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+
+- null: Constant only, no effects. This is the same as the model in Q1
+- age: only has Age as an effect
+- desire: Only has whether the woman wants more children. This is the model in Q2
+- additive: has two main effects: from the age and desire models,
+- interact: includes an interaction, i.e. the effect of age depends on whether the woman wants more children.
+
+</details>
+
+<span class="question">**b)** What is the definition of the deviance and df. What can we use the deviance for? </span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
+<span class="question">Optional: derive the formula for the deviance for the logit model (the derivation is not given on the module pages.)</span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
+
+**c)** Perform a likelihood ratio test - based on the deviance results given in the data frame in the R chunk- to compare the additive and interact models. First write down the null and alternative hypothesis you are testing. 
+<span class="question">Which of the two models would you prefer?</span>
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
+
+<span class="question">**d)** What if you use the AIC for model selection, which model (out of the 5) will you then use?</span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
+
+## Problem 4: Plotting
 (yes, mainly R and trying to understand) 
 
 Finally, we want to use the additive model with all three covariates: `Y~age+education+wantsMore` to study different plots.
@@ -198,9 +420,22 @@ summary(fit3add)
 exp(fit3add$coefficients)
 ```
 
-**a)** Comment on the output from `summary`. Use the deviance to test if this is a good model. Which model do you then compare to (what is the saturated model here)?.
 
-**b)** Look at the plot of fitted values vs. deviance residuals. Do you see a trend?
+<span class="question">**a)** Comment on the output from `summary`. Use the deviance to test if this is a good model. Which model do you then compare to (what is the saturated model here)?.</span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
+**b)** Look at the plot of fitted values vs. deviance residuals. 
+<span class="question">Do you see a trend?</span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
 
 ```{r}
 library(ggplot2)
@@ -210,7 +445,7 @@ ggplot(plotdf, aes(x = fitted, y = dres)) + geom_point() + labs(x = "Fitted valu
     y = "Deviance residuals")
 ```
 
-**c)** Here is a code to produce a plot of fitted values for the 16 covariate patterns together with a saturated model (called frac) - on the logit scale. How can you see from the dots for fitted values that we are assuming an additive model on the logit scale (that is, the pattern for each panel for logit fitted vs age is the same for each panel if we have an additive model on the logit scale - you see that from the fitted points)? Do you also see that for the observed values? Implication? Any other observations?
+**c)** Here is a code to produce a plot of fitted values for the 16 covariate patterns together with a saturated model (called frac) - on the logit scale. 
 
 ```{r,eval=TRUE}
 library(ggplot2)
@@ -218,6 +453,14 @@ frac=ds$using/(ds$using+ds$notUsing)
 logitdf=data.frame(lfitted=qlogis(fit3add$fitted),lfrac=qlogis(frac),age=ds$age,wantsMore=ds$wantsMore,education=ds$education)
 ggplot(logitdf,aes(x=age))+geom_point(aes(y=lfrac,colour="saturated"))+geom_point(aes(y=lfitted,colour="fitted"))+facet_wrap(facets=~wantsMore*education) + labs(x = "age", y = "")
 ```
+
+<span class="question">How can you see from the dots for fitted values that we are assuming an additive model on the logit scale (that is, the pattern for each panel for logit fitted vs age is the same for each panel if we have an additive model on the logit scale - you see that from the fitted points)? Do you also see that for the observed values? Implication? Any other observations?</span>
+
+<details><summary>Answer</summary>
+</details>
+<details><summary>Answer</summary>
+</details>
+
 
 To see what Rodríguez have found to be the best model, look at the bottom of <http://data.princeton.edu/wws509/R/c3s6.html>.
   

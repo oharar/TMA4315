@@ -19,7 +19,7 @@ output: #3rd letter intentation hierarchy
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
-showsol<-TRUE
+showsol<-FALSE
 ```
 
 # Overview
@@ -91,7 +91,7 @@ Data for beetle $i$: $Y_i=0$ if beetle $i$ was alive and $Y_i=1$ if it was kille
 
 The table below shows the 8 values of the log10-dose against the number of beetles alive and killed. The plot shows log10-dose on the horizontal axis and fraction of beetles killed (killed/total) for each log10-dose.
 
-```{r,echo=c(-2)}
+```{r,echo=FALSE}
 library(investr)
 library(ggplot2)
 # from aggregated to individual data (because these data were aggregated)

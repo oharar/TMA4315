@@ -20,7 +20,7 @@ output: #3rd letter intentation hierarchy
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
-showsol<-TRUE
+showsol<-FALSE
 ```
 
 (Latest changes: 09.11: clarified one sentence on the devianc. 23.09: score test moved to M4. 20.09: typos, and added solutions to Qs in class. 18.09: typos and added sententence ILw2Problem3c. 16.09: edited and added material for week 2, 13.09 moved material not lectured to after the ILw1, and added one sentence to Problem 5 ILw1.)
@@ -66,536 +66,12 @@ showsol<-TRUE
 * deviance: definition, analysis of deviance, deviance residuals 
 * model fit and model choice
 * overdispersion and estimating overdispersion parameter
-* sampling stragegy: cohort, but also case-control data good for logit model
+* sampling strategy: cohort, but also case-control data good for logit model
 
 
 ---
 
-# Aim of binary regression
-
-## Two aims
-
-1. Construct a model to help understand the relationship between a "success probability" and one or several explanatory variables. The response measurements are binary (present/absent, true/false, healthy/diseased).
-2. Use the model for estimation and prediction of success probabilites.
-
-Two running examples: mortality of beetles and probability of respiratory infant disease.
-
----
-
-## <a id="beetle1">Example: Mortality of beetles</a>
-
-A total of 481 beetles were exposed to 8 different consentration of CS$_2$ (data on log10-dose). Yes, only one consentration tried for each beetle. For each beetle is was recorded if the beetle was alive or killed at the given concentration. 
-
-Data for beetle $i$: $Y_i=0$ if beetle $i$ was alive and $Y_i=1$ if it was killed, and $x_i$ is then the log10-dose beetle $i$ was given. 
-
-The table below shows the 8 values of the log10-dose against the number of beetles alive and killed. The plot shows log10-dose on the horisontal axis and fraction of beetles killed (killed/total) for each log10-dose.
-
-```{r,echo=c(-2)}
-library(investr)
-library(ggplot2)
-# from aggregated to individual data (because these data were aggregated)
-ldose=rep(beetle$ldose,beetle$n)
-y=NULL; for (i in 1:8) y=c(y,rep(0,beetle$n[i]-beetle$y[i]),rep(1,beetle$y[i]))
-beetleds=data.frame("killed"=y,"ldose"=ldose)
-table(beetleds)
-```
-
----
-
-```{r,echo=showsol}
-# plot from aggregated data
-frac=beetle$y/beetle$n
-dss=data.frame(fkilled=frac,ldose=beetle$ldose)
-ggplot(dss,aes(ldose,fkilled))+
-  geom_point()
-```
-
----
-
-**Q**: 
-
-a. What might be the effect (mathematical function) of the log10-dose on the probability of killing a beetle?
-b. How can this curve be part of a regression model?
-
-```{r , echo=FALSE, eval=showsol, warning=FALSE, message=FALSE}
-cat("Answers \n")
-cat("a) logistic, sigmoid, normal cdf?.\n")
-cat("b) see item 3 below - the response function connects the mean of the respons to the linear predictor. \n")
-```
-
-
----
-
-# How to model a binary response?
-
-In multiple linear regression we have 
-
-1. Random component: Distribution of response: $Y_i\sim N(\mu_i,\sigma^2)$, where $\mu_i$ is _parameter of interest_ and $\sigma^2$ is _nuisance_.
-
-2. Systematic component: Linear predictor: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$. Here ${\bf x}_i$ is our fixed (not random) $p$-dimensional column vector of covariates (intercept included).
-
-3. Link: Connection between the linear predictor and the mean (parameter of interest):
-$\mu_i=\eta_i$.
-
-In addition we have independent pairs $({\bf x}_i,Y_i)$, and assume that the design matrix - with the covariates for all observation in a $n \times p$ matrix - has full rank $p$.
-
-* It would not make sense to fit the continuous linear regression to $Y_i$ when $Y_i=\{0,1\}$ - since $Y_i$ is not a continuous random variable, and $Y_i$ is not normal.
-* So, we need to change 1. We keep 2. And, we make 3. more general.
-
----
-
-## <id="binary"> Binary regression</a>
-
-1. $Y_i \sim \text{bin}(n_i,\pi_i)$. First we study the case that $n_i=1$, that is, each individual observation comes from a Bernoulli process with $n_i=1$ trials (this version of the binomial distribution is called the Bernoulli distribution). (Remark: later we will also look at "grouped" data with $n_i>1$.) 
-Our parameter of interest is $\pi_i$ which is the mean $\text{E}(Y_i)=\mu_i=\pi_i$.
-
-**For a generalized linear model (GLM) we require that the distribution of the response is an exponential family. We have seen in M1 that the binomial distribution is an exponential family.**
-
----
-
-2. Linear predictor: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
-
-3. We will consider different relationships between the mean $\mu_i=\pi_i$ and the linear predictor $\eta_i$, and define the _link function_ $g$ as
-$$g(\mu_i)=\eta_i$$
-and the inverse of the link function, called the _response function_, and denoted by 
-$$h(\eta_i)=g^{-1}(\eta_i)=\mu_i$$
-
-We thus also have to require that the link function is monotone, and we will soon see that we also need to require that it is twice differential.
-
-**These three ingredients (exponential family distribution of reponse, linear predictor and choice of reponse or link function) give the core of our GLM model.**
-
----
-
-Popular choices for the respons function for binary regression are based on selecting a cumulative distribution function (cdf) as the response function.
-The cdf will always be within [0,1], and the cdf is monotone - which will help us to interpret results. 
-
-The most popular response functions are:
-
-* _logistic cdf_ (with corresponding _logit_ link function) referred to as the _logit model_, followed by the 
-
-* _normal cdf_ - (with corresponding _probit_ link function) referred to as the _probit model_ , and
-
-* the _extreme minimum-value cdf_ (with corresponding _complementary log-log_ link function) referred to as the _complementary log-log model_.
-
-In this module we focus on the logit model.
-
-# The logit model aka logistic regression
-
-## Beetle mortality: response function
-
-In the beetle example we have a simple linear predictor: $\eta_i=\beta_0+\beta_1 x_i$ where $x_i$ is the log10-dose for beetle $i$.
-
-```{r,echo=FALSE,eval=TRUE}
-library(investr)
-ldose=rep(beetle$ldose,beetle$n)
-y=NULL; for (i in 1:8) y=c(y,rep(0,beetle$n[i]-beetle$y[i]),rep(1,beetle$y[i]))
-beetleds=data.frame("killed"=y,"ldose"=ldose)
-fit=glm(killed~ldose,family=binomial(link="logit"),data=beetleds)
-beta0=round(fit$coefficients[1],1)
-beta1=round(fit$coefficients[2],1)
-```
-
-Assume that $\beta_0=$ `r beta0` and $\beta_1=$ `r beta1`. (These values are estimates from our data, and we will see later how to find these estimates using maximum likelihood estimation.)
-
-Below the response function is plotted for $\eta_i=$`r beta0`+`r beta1`$x_i$.
-
----
-
-```{r,echo=showsol}
-library(ggplot2)
-#print(c(beta0, beta1))
-xrange=range(beetleds$ldose)
-xrange[1]=xrange[1]-0.05
-etas=beta0+beta1*seq(xrange[1],xrange[2],length=100)
-ggplot(data.frame(eta=range(etas),mu=c(0,1)), aes(eta,mu))+
-  xlab(expression(eta))+ 
-  ylab(expression(mu))+
-  stat_function(fun=function(eta) exp(eta)/(1+exp(eta)), geom="line", colour="red")
-```
-
-R: more on greek letters with ggplot: <https://github.com/tidyverse/ggplot2/wiki/Plotmath>
-
----
-
-**Q**: Explain to your neighbour what is on the x- and y-axis of this plot. Where are the observed log10-doses in this graph?
-
-```{r , echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
-cat("Answers \n")
-cat("On the x-axis is the linear predictor $\eta=\beta_0+\beta_1 x_1$ for the given values of $\beta_0$ and $\beta_1$ and values for $x_1$ is chosen from the range of the log10-dose values. On the y-axis is the model for the mean of the response, which also here is the probability of success. This is our non-linear relationship between the linear predictor and the mean = our response function.\n")
-```
-
-**A**:
-
-On the x-axis is the linear predictor $\eta=\beta_0+\beta_1 x_1$ for the given values of $\beta_0$ and $\beta_1$ and values for $x_1$ is chosen from the range of the log10-dose values. On the y-axis is the model for the mean of the response, which also here is the probability of success. This is our non-linear relationship between the linear predictor and the mean = our response function.
-
----
-
-## <a id="logitlink">Link and reponse function</a>
-
-The logit model is based on the logistic cdf as the response function, given as 
-$$ \mu_i=\pi_i=h(\eta_i)=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$$
-or alternatively as the link function (the inverse of the response function)
-$$ g(\mu_i)=h^{-1}(\mu_i)=\ln(\frac{\mu_i}{1-\mu_i})=\ln(\frac{\pi_i}{1-\pi_i})$$
-
-**Hands-on**: show this for yourself.
-
----
-
-## Interpreting the logit model
-
-If the value of the linear predictor $\eta_i$ changes to $\eta_i+1$ the probability $\pi$ increases non-linearly from $\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ to $\frac{\exp(\eta_i+1)}{1+\exp(\eta_i+1)}$, as shown in the graph above.
-
----
-
-Before we go further: do you know about the odds?
-The ratio $\frac{P(Y_i=1)}{P(Y_i=0)}=\frac{\pi_i}{1-\pi_1}$ is called the _odds_. 
-If $\pi_i=\frac{1}{2}$ then the odds is $1$, and if $\pi_i=\frac{1}{4}$ then the odds is $\frac{1}{3}$. We may make a table for probability vs. odds in R:
-
-```{r,echo=showsol}
-library(knitr)
-library(kableExtra)
-pivec=seq(0.1,0.9,0.1)
-odds=pivec/(1-pivec)
-kable(t(data.frame(pivec,odds)),digits=c(2,2))%>%
-  kable_styling()
-```
-
----
-
-```{r,echo=showsol}
-library(knitr)
-library(kableExtra)
-pivec=seq(0.1,0.9,0.1)
-odds=pivec/(1-pivec)
-plot(pivec,odds,type="b",ylab="odds",xlab="probability")
-```
-
-R: Pretty table with [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
-
-Odds may be seen to be a better scale than probability to represent chance, and is used in betting. In addition, odds are unbounded above. 
-
----
-
-We look at the link function (inverse of the response function). Let us assume that our linear predictor has $k$ covariates present
-
-\begin{align*}
-\eta_i&= \beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik}\\
-\pi_i&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\\
-\eta_i&=\ln(\frac{\pi_i}{1-\pi_i})\\
-\ln(\frac{\pi_i}{1-\pi_i})&=\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik}\\
-\frac{\pi_i}{1-\pi_i}=&\frac{P(Y_i=1)}{P(Y_i=0)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_k x_{ik})
-\end{align*}
-
-We have a _multiplicative model_ for the odds. 
-
----
-
-**So, what if we increase $x_{1i}$ to $x_{1i}+1$?**
-
-If the covariate $x_{1i}$ increases by one unit (while all other covariates are kept fixed) then the odds is multiplied by $\exp(\beta_1)$:
-
-\begin{align*}
-\frac{P(Y_i=1\mid x_{i1}+1)}{P(Y_i=0)\mid x_{i1}+1)}&=\exp(\beta_0)\cdot \exp(\beta_1 (x_{i1}+1))\cdots\exp(\beta_k x_{ik})\\
-&=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\exp(\beta_1)\cdots\exp(\beta_k x_{ik})\\
-&=\frac{P(Y_i=1\mid x_{i1})}{P(Y_i=0\mid x_{i1})}\cdot \exp(\beta_1)\\
-\end{align*}
-
-This means that if $x_{i1}$ increases by $1$ then: if $\beta_1<0$ we get a decrease in the odds, if $\beta_1=0$ no change, and if $\beta_1>0$ we have an increase.
-In the logit model $\exp(\beta_1)$ is easier to interpret than $\beta_1$.
-
----
-
-**So, to sum up: for the linear predictor we interpret effects in the same way as for the linear model (in Module 2), then we transform this linear effect in $\eta$ into a nonlinear effect for $\pi=\frac{\exp(\eta)}{1+\exp(\eta)}$, and use the odds to interpret changes.**
-
----
-
-<!-- ## Beetle mortality: interpretation of $\beta_0$ and $\beta_1$.
-In our beetle example let $\beta_0=$ `r beta0` and $\beta_1=$ `r beta1`.
-
-**Q**:
-
-1. The covariate $x$ is given as log10-dose of CS$_2$, and we have data in the range `r range(beetleds$ldose)`. So, a dose of $1$ gives a log10-dose of $0$, so $x=0$. 
-Further,for $x=0$ then $\pi=\frac{\exp(\beta_0+\beta_1\cdot 0)}{1+\exp(\beta_0+\beta_1\cdot 0)}=\frac{\exp(\beta_0)}{1+\exp(\beta_0)}$ is `r exp(beta0)/(1+exp(beta0))`. Can that help us interpret the value of $\beta_0$ in our model?
-
-2. Now, $\beta_1= `r beta1`$ and $\exp(\beta_1)= `r exp(beta1)`$. Use this to give an interpretation of $\beta_1$ in our example. 
-
-Dropped because difficult to interpret on logdose scale?
--->
-
-##<a id="infant1">Infant respitory disease : interpretation of parameter estimates</a>
-(This example is taken from Faraway (2006): "Extending the linar model with R")
-
-We select a sample of newborn babies (girls and boys) where the parents had decided on the method of feeding (bottle, breast, breast with some supplement), and then monitored the babies during their first year to see if they developed infant respiratory disease (the event we want to model). 
-
-We fit a logistic regression to the data, and focus on the parameter estimates.
-
----
-
-```{r,echo=showsol}
-library(faraway)
-data(babyfood)
-babyfood
-xtabs(disease/(disease+nondisease)~sex+food,babyfood)
-```
-
----
-
-\footnotesize
-```{r,echo=showsol}
-fit=glm(cbind(disease, nondisease)~sex+food,family=binomial(link=logit),data=babyfood)
-summary(fit)
-exp(fit$coefficients)
-predict(fit,type="response") #gives predicted probabilites
-```
-\normalsize
-
----
-
-**Q:** Observe that the two factors by default is coded with dummy variable coding, and that `sexBoy` is the reference category for sex and `foodBottle` the reference category for feeding method. 
-
-1: Explain how to interpret the `Estimate` for `sexGirl`, `foodBreast` and `foodSuppl`.
-
-2: What are the 6 values given by the call to `predict`? What is the least favourable combination of sex and method of feeding? And the most favourable?
-
-Comment: we have here fitted an additive model in the two covariates, but we could also include an interaction term. This will be discussed later.
-
-```{r,echo=FALSE, eval=FALSE}
-library(faraway)
-data(babyfood)
-babyfood
-xtabs(disease/(disease+nondisease)~sex+food,babyfood)
-fit=glm(cbind(disease, nondisease)~sex+food,family=binomial(link=logit),data=babyfood)
-sixres=cbind(rep(fit$coefficients[1],6),c(rep(0,3),rep(fit$coefficients[2],3)),c(0, fit$coefficients[3], fit$coefficients[4],0, fit$coefficients[3], fit$coefficients[4]))
-for (i in 1:6)
-{}
-print(c(beta0, beta1))
-xrange=range(beetleds$ldose)
-xrange[1]=xrange[1]-0.05
-etas=beta0+beta1*seq(xrange[1],xrange[2],length=100)
-ggplot(data.frame(eta=range(etas),mu=c(0,1)), aes(eta,mu))+
-  xlab(expression(eta))+ 
-  ylab(expression(mu))+
-  stat_function(fun=function(eta) exp(eta)/(1+exp(eta)), geom="line", colour="red")
-
-  
-```
-
----
-
-## More response function plots for the logit model
-
-The response function as a function of the covariate $x$ and not of $\eta$. Solid lines: $\beta_0=0$ and $\beta_1$ is $0.8$ (blue), $1$ (red) and $2$ (orange), and dashed lines with $\beta_0=1$.
-
-```{r,echo=showsol}
-library(ggplot2)
-ggplot(data.frame(x=c(-6,5)), aes(x))+
-  xlab(expression(x))+ 
-  ylab(expression(mu))+
-    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red")+
-    stat_function(fun=function(x) exp(2*x)/(1+exp(2*x)), geom="line", colour="orange")+
-          stat_function(fun=function(x) exp(0.8*x)/(1+exp(0.8*x)), geom="line", colour="blue")+
-    stat_function(fun=function(x) exp(1+x)/(1+exp(1+x)), geom="line", colour="red",linetype="dashed")+
-    stat_function(fun=function(x) exp(1+2*x)/(1+exp(1+2*x)), geom="line", colour="orange",linetype="dashed")+
-          stat_function(fun=function(x) exp(1+0.8*x)/(1+exp(1+0.8*x)), geom="line", colour="blue",linetype="dashed")+
-  scale_colour_manual("0+k x",values = c("red", "orange","blue"),labels=c("1","2","0.8"))
-
-```
-
-<!-- Observe that adding $\beta_0$ translates along the $x$-axis.  -->
-
-<!--The function is steepest at $\eta=0$?? slope at steepest? $\beta_1/4$. MER I BOKA til Ingeborg-->
-
-# Grouped vs. individual data
-
-So far we have only mentioned individual (ungrouped) data. That is, every $Y_i$ is 0 or 1 and has a corresponding covariate vector ${\bf x}_i$ - and together they form _one_ unit.
-$$Y_i \sim \text{bin}(n_i=1,\pi_i)$$
-However, in both the examples we have looked at some covariate vectors are _identical_ (rows in the design matrix are identical). We call these unique combinations of covariates _covariate patterns_, and say we have _grouped_ data.
-
-```{r,echo=showsol}
-library(kableExtra)
-knitr::kable(babyfood) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
-```
-
----
-
-Here we have 6 groups of covariate patterns. The first group has covariates `Boy` and `Bottle`, there are 77+381= `r 77+381` babies with this combination and 77 of these got the disease.
-
-We prefer to group data if possible. Grouping is good because then data can be kept in a condenced form, it will speed up computations and makes model diagnosis easier (than for individual data).
-
----
-
-For the grouped data we still have a binomial distribution, and possible generalization is to let
-
-* $n_j\bar{Y_j}$ be the number of successes in group $j$, 
-* which means that $\bar{Y_j}=\frac{1}{n_j}\sum Y_i$ where the sum is over all $i$ in group $j$.
-
-Further
-$$ n_j\bar{Y_j} \sim \text{bin}(n_j,\pi_j)$$
-such that $\text{E}(n_j\bar{Y_j})=n_j \pi_j$ and $\text{Var}(n_j\bar{Y_j})=n_j \pi_j(1-\pi_j)$, and $\text{E}(\bar{Y_j})=\pi_j$ and $\text{Var}(\bar{Y_j})=\frac{1}{n_j} \pi_j(1-\pi_j)$
-
-We then keep the linear predictor, and the link function is still
-$\eta_j=\ln(\frac{\pi_j}{1-\pi_j})$. That is, we do not model the mean $n_j \pi_j$ but $\pi_j$ directly.
-
-**Q:** What is a covariate pattern? 
-
-```{r , echo=FALSE, eval=showsol, warning=FALSE, message=FALSE}
-cat("Answer \n")
-cat("A set of values for covariates that are the same for a group of individual data. For the beetle example we have 8 covariate patterns - the 8 dosages, while for the infant respiratory disease we have 6 covariate patterns (boy, girl)*(bottle, supplement, breast). So, unique rows of the design matrix.\n")
-```
-
-#  Likelihood and derivations thereof
-
-Our parameter of interest is the vector $\boldsymbol{\beta}$ of regression coefficients, and we have no nuicance parameters (because the variance is related directly to the $\pi_j$ and $n_j$ is known). 
-
-We would like to estimate $\boldsymbol{\beta}$ from maximizing the likelihood, but we will soon see that we have no closed form solution. First we look at the likelihood, the log-likelihood and first and second derivatives thereof.
-
-For simplicity we do the derivations for the case where $n_i=1$, but then include the results for the case where we have $G$ covariate patterns with $n_j$ observations of each pattern.
-
----
-
-**<a id="binaryregassump">Assumptions:</a>**
-
-1. $Y_i \sim \text{bin}(n_i=1,\pi_i)$, and $\text{E}(Y_i)=\mu_i=\pi_i$, and $\text{Var}(Y_i)=\pi_i(1-\pi_i)$.
-
-2. Linear predictor: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
-
-3. Logit link
-$$\eta_i=\ln(\frac{\pi_i}{1-\pi_i})=g(\mu_i)$$
-and (inverse thereof) logistic response function
-$$\mu_i=\pi_i=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}=h(\eta_i)$$
-
-We will also need:
-$$(1-\pi_i)=1-\frac{\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}.$$
-
----
-
-## Likelihood $L(\boldsymbol{\beta})$
-
-We assume that pairs of covariates and response are measured independently of each other: $({\bf x}_i,Y_i)$, and $Y_i$ follows the distribution specified above, and ${\bf x}_i$ is fixed.
-
-$$L(\boldsymbol{\beta})=\prod_{i=1}^n L_i(\boldsymbol{\beta})=\prod_{i=1}^n f(y_i; \boldsymbol{\beta})=\prod_{i=1}^n\pi_i^{y_i}(1-\pi_i)^{1-y_i}$$
-
-**Q**: What is the interpretation of the likelihood? Is it not a misuse of notation to write $L(\boldsymbol{\beta})$ when the right hand side does not involve $\boldsymbol{\beta}$? 
-
-```{r , echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
-cat("Answer \n")
-cat("The likelihood is the joint distribution of the responses, but with focus on the unknown parameter vector. Yes, a slight misuse of notation, need to fill in $\pi_i=h(\eta_i)$ and 
-$\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, really. But we keep this version because when we want to take the partical derivatives we will use the chain rule.\n")
-```
-
-**A**:
-
-The likelihood is the joint distribution of the responses, but with focus on the unknown parameter vector. Yes, a slight misuse of notation, need to fill in $\pi_i=h(\eta_i)$ and 
-$\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, really. But we keep this version because when we want to take the partical derivatives we will use the chain rule.
-
-<!-- Result with grouped data (that is, $G$ covariate patterns with $n_j$, $j=1,\ldots,G$ observations for each pattern) -->
-<!-- $$L(\boldsymbol{\beta})=\prod_{j=1}^G L_j(\boldsymbol{\beta})=\prod_{j=1}^G f(y_j; \boldsymbol{\beta})=\prod_{j=1}^G {n_j \choose y_j} \pi_j^{y_j}(1-\pi_j)^{n_j-y_j}$$ -->
-
----
-
-## <a id="loglik">Loglikelihood $l(\boldsymbol{\beta})$</a>
-The log-likelihood is the natural log of the likelihood, and makes the mathematics simpler - since we work with exponential families.
-The main aim with the likelihood is to maximize it to find the maximum likelihood estimate, and since the log is a monotone function the maximum of the log-likelihood will be in the same place as the maximum of the likelihood.
-
-\begin{align}
-l(\boldsymbol{\beta})&=\ln L(\boldsymbol{\beta})=\sum_{i=1}^n \ln L_i(\boldsymbol{\beta})=\sum_{i=1}^n l_i(\boldsymbol{\beta})\\
-&=\sum_{i=1}^n[y_i \ln \pi_i+(1-y_i) \ln(1-\pi_i)]\\
-&=\sum_{i=1}^n[y_i \ln (\frac{\pi_i}{1-\pi_i})+\ln(1-\pi_i)]
-\end{align}
-
-Observe that the log-likelihood is a sum of invidual contributions for each observation pair $i$.
-
-<!-- Result with grouped data: -->
-
-<!-- $$l(\boldsymbol{\beta})=\sum_{j=1}^G[y_j \ln \pi_j-y_j\ln(1-\pi_j)+n_j\ln(1-\pi_j)+ \ln {n_j \choose y_j}]$$ -->
-
----
-
-The log-likelihood is now expressed as a function of $\pi_i$, but we want to make this a function of $\boldsymbol{\beta}$ and the connection between $\pi_i$ and $\boldsymbol{\beta}$ goes through $\eta_i$. We have that
-$\pi=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ and in our log-likelihood we need
-
-$$(1-\pi_i)=\frac{1}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}$$
-and 
-$$\ln(\frac{\pi_i}{1-\pi_1})=\eta_i$$ (the last is our logit link function). Then we get:
-
-$$l(\boldsymbol{\beta})=\sum_{i=1}^n[y_i \eta_i + \ln (\frac{1}{1+\exp(\eta_i)})]=\sum_{i=1}^n[y_i \eta_i - \ln (1+\exp(\eta_i))]$$
-which is now our function of $\eta_i$.
-
----
-
-Finally, since $\eta_i={\bf x}_i^T \boldsymbol{\beta}$, 
-$$l(\boldsymbol{\beta})=\sum_{i=1}^n[y_i {\bf x}_i^T \boldsymbol{\beta} - \ln (1+\exp({\bf x}_i^T \boldsymbol{\beta}))].$$
-
-**Q**: What does the graph of $l$ look like as a function of $\boldsymbol{\beta}$? 
-
-If we look at the beetle example we only have one covariate (in addition to the intercept) - so this means that we have $\boldsymbol{\beta}=(\beta_0,\beta_1)$. Plotting the log-likelihood (for the beetle data set) will be one of the tasks for the interactive lecture.
-
-**But, next we take partial derivatives, and then we will (instead of using this formula) look at $l_i(\boldsymbol{\beta})=l_i(\eta_i(\boldsymbol{\beta}))$ and use the chain rule.**
-
-<!-- Remark: this will be the general way of thinking for the GLMs, the only difference is that in general we use $\mu_i$ in place of $\pi_i$. -->
-
----
-
-## <a id="score">Score function $s(\boldsymbol{\beta})$</a>
-
-The score function is a $p\times 1$ vector, $s(\boldsymbol{\beta})$, with the partial derivatives of the log-likelihood with respect to the $p$ elements of the $\boldsymbol{\beta}$ vector.
-
-**Q**: Write down the rules for derivatives: chain rule, product rule, fraction rule, and in particular derivative of $\ln(x)$, $\exp(x)$ and $\frac{1}{x}$, you will need them now. 
-
-**A:** Chain rule: $\frac{d f(u(x))}{du}=\frac{df}{du}\cdot \frac{du}{dx}$, product rule: $(u\cdot v)'=u'\cdot v+u\cdot v'$, fraction rule: $(\frac{u}{v})'=\frac{u' \cdot v - u\cdot v'}{v^2}$, $\frac{d \ln(x)}{dx}=\frac{1}{x}$, $\frac{d\exp(x)}{dx}=\exp(x)$ and $\frac{d(\frac{1}{x})}{dx}=-\frac{1}{x^2}$.
-
-Here we go:
-$$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=
-\sum_{i=1}^n \frac{\partial l_i(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=
-\sum_{i=1}^n s_i(\boldsymbol{\beta})$$
-
-Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
-
----
-
-We will use the chain rule to calculate $s_i(\boldsymbol{\beta})$.
-
-$$s_i(\boldsymbol{\beta})=\frac{\partial l_i(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=\frac{\partial l_i(\boldsymbol{\beta})}{\partial \eta_i}\cdot \frac{\partial \eta_i}{\partial \boldsymbol{\beta}}=\frac{\partial [y_i\eta_i-\ln(1+{\exp(\eta_i)})]}{\partial \eta_i}\cdot \frac{\partial [{\bf x}_i^T\boldsymbol{\beta} ]}{\partial \boldsymbol{\beta}}$$
-
-$$s_i(\boldsymbol{\beta})=(y_i-\frac{\exp(\eta_i)}{1+\exp(\eta_i)})\cdot {\bf x}_i=(y_i-\pi_i) {\bf x}_i $$
-
----
-
-Here we have used the general rule for all partial derivatives of scalar with respect to vector (also used in TMA4267):
-$$\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}}={\bf a}$$
-and later we will also need
-$$\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}^T}=(\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}})^T={\bf a}^T.$$
-
----
-
-The score function is given as: 
-
-$$s(\boldsymbol{\beta})=\sum_{i=1}^n s_i(\boldsymbol{\beta})=\sum_{i=1}^n {\bf x}_i (y_i-\pi_i)=\sum_{i=1}^n {\bf x}_i (y_i-\frac{\exp({\bf x}_i^T\boldsymbol{\beta})}{1+\exp({\bf x}_i^T\boldsymbol{\beta})})$$
-
-To find the maximum likelihood estimate $\hat{\boldsymbol{\beta}}$ we solve the set of $p$ non-linear equations:
-$$s(\hat{\boldsymbol{\beta}})=0$$
-
-We will soon see how we can do that using the Newton-Raphson or Fisher Scoring iterative methods, but first we will work on finding the mean and covariance matrix of the score vector - and the derivatives of the score vector (the Hessian, which is minus the observed Fisher matrix).
-
----
-
-**Remark**: in Module 5 we will see that the general formula for GLMs is:
-$$s(\boldsymbol{\beta})=\sum_{i=1}^n
-[\frac{y_i-\mu_i}{\text{Var}(Y_i)}{\bf x}_i \frac{\partial \mu_i}{\partial \eta_i}]=\sum_{i=1}^n
-[\frac{y_i-\mu_i}{\text{Var}(Y_i)}{\bf x}_i h'(\eta_i)]={\bf X}^T {\bf D} \Sigma^{-1} ({\bf y} -\mu)$$
-where ${\bf X}$ is the $n\times p$ design matrix, ${\bf D}=\text{diag}(h'(\eta_1),h'(\eta_2),\ldots,h'(\eta_n))$ is a diagonal matrix with the derivatives of the response function evaluated at each observation. Further, $\Sigma=\text{diag}(\text{Var}(Y_1),\text{Var}(Y_2),\ldots,\text{Var}(Y_n))$ is a diagonal matrix with the variance for each response, and ${\bf y}$ is the observed $n\times 1$ vector of responses and $\mu$ is the $n\times 1$ vector of individual expectations $\mu_i=\text{E}(Y_i)=h(\eta_i)$.
-
-
----
-
-
-
-
-
-
-
-**<a id="secondweek">SECOND WEEK</a>**
+## SECOND WEEK
 
 Remember the [beetle](#beetle1) and [infant respitory disease](#infant1) examples?
 
@@ -615,13 +91,50 @@ $$s(\boldsymbol{\beta})=\sum_{i=1}^n {\bf x}_i (y_i-\pi_i)$$
 
 ---
 
-## <a id="propscore">Properties of the score function</a>
+## Properties of the score function
 
-Since the score function depends on $Y_i=y_i$ we may regard the score function as a random vector. We will now calculate the mean and covariance matrix for the score function. The expected value is
+Since the score function depends on $Y_i=y_i$ we may regard the score function as a random vector. We will now calculate the mean and covariance matrix for the score function. 
 
-$$E(s(\boldsymbol{\beta})) = E(\sum_{i=1}^n(Y_i-\pi_i){\bf x}_i) = \sum_{i=1}^nE((Y_i-\pi_i){\bf x}_i) = \sum_{i=1}^n(E(Y_i)-\pi_i){\bf x}_i = 0 $$
+---
 
-as $E(Y_i) = \pi_i$. We also see that $E(s_i(\boldsymbol{\beta})) = E((Y_i-\pi_i){\bf x}_i) = 0 \ \forall i$.
+## $E(s(\boldsymbol{\beta}))$
+
+The expected value of the score function is
+
+$$
+\begin{aligned}
+E(s(\boldsymbol{\beta})) &= E(\sum_{i=1}^n(Y_i-\pi_i){\bf x}_i) \\
+&= \sum_{i=1}^nE((Y_i-\pi_i){\bf x}_i) \\
+&= \sum_{i=1}^n(E(Y_i)-\pi_i){\bf x}_i = 0 \\
+\end{aligned}
+$$
+
+as $E(Y_i) = \pi_i$. 
+
+We also see that $E(s_i(\boldsymbol{\beta})) = E((Y_i-\pi_i){\bf x}_i) = 0, \forall i$.
+
+
+---
+
+## Fisher Information and Variances of Estimates
+
+The "amount of information" that the data carry about the parameters, $\boldsymbol{\beta}$, can be summarised by the curvature in the likelihood surface
+
+```{r Curvature, echo=FALSE, fig.height=4.5}
+beta0 <- seq(-4,4,length=50)
+data <- rbinom(100, 1, 0.45)
+CalcBinLhood <- function(b0, n, r) {
+  eta <- 1/(1+exp(-b0))
+  sum(dbinom(r, n, eta, log=TRUE))
+}
+lhoodLots <- sapply(beta0, CalcBinLhood, n=100, r=40)
+lhoodLittle <- sapply(beta0, CalcBinLhood, n=10, r=4)
+plot(beta0, lhoodLots-max(lhoodLots), type="l", ylim=c(-100,0), 
+     xlab=expression(beta[0]), ylab="log likelihood")
+lines(beta0, lhoodLittle-max(lhoodLittle), col=2)
+legend(-2, -30, c("n=100", "n=10"), lty=1, col=1:2)
+
+```
 
 ---
 
@@ -629,19 +142,30 @@ as $E(Y_i) = \pi_i$. We also see that $E(s_i(\boldsymbol{\beta})) = E((Y_i-\pi_i
 
 The covariance of $s(\boldsymbol{\beta})$ is called the expected Fisher information matrix, $F(\boldsymbol{\beta})$ and is given by
 
-\begin{align} F(\boldsymbol{\beta}) &= \text{Cov}(s(\boldsymbol{\beta})) =   \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta})) \\
-&= \sum_{i=1}^n E\left[\Big(s_i(\boldsymbol{\beta}) - E(s_i(\boldsymbol{\beta}))\Big)\Big(s_i(\boldsymbol{\beta})-E(s_i(\boldsymbol{\beta}))\Big)^T\right] \\
-&= \sum_{i=1}^n E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = \sum_{i=1}^n F_i(\boldsymbol{\beta}) 
-\end{align}
 
-where it is used that the responses $Y_i$ and $Y_j$ are independent, and that $E(s_i(\boldsymbol{\beta})) = 0 \ \forall i$.
+$$
+\begin{aligned} 
+F(\boldsymbol{\beta}) &= \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta})) \\
+&= \sum_{i=1}^n E\left[\Big(s_i(\boldsymbol{\beta}) - E(s_i(\boldsymbol{\beta}))\Big)\Big(s_i(\boldsymbol{\beta})-E(s_i(\boldsymbol{\beta}))\Big)^T\right] \\
+&= \sum_{i=1}^n E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = \sum_{i=1}^n F_i(\boldsymbol{\beta}) \end{aligned}
+$$
+
+
+assuming that the responses $Y_i$ and $Y_j$ are independent
 
 ---
 
+## $F_i(\boldsymbol{\beta})$
+
 Remember that $s_i(\boldsymbol{\beta})=(Y_i-\pi_i){\bf x}_i$, then:
 
-$$ F_i(\boldsymbol{\beta}) = E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = E((Y_i-\pi_i){\bf x}_i(Y_i-\pi_i){\bf x}_i^T) $$
-$$= {\bf x}_i{\bf x}_i^T E((Y_i-\pi_i)^2) = {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i) $$
+$$
+\begin{aligned}
+F_i(\boldsymbol{\beta}) &= E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = E((Y_i-\pi_i){\bf x}_i(Y_i-\pi_i){\bf x}_i^T) \\
+&= {\bf x}_i{\bf x}_i^T E((Y_i-\pi_i)^2)\\ 
+&= {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i) 
+\end{aligned}
+$$
 where $E((Y_i-\pi_i)^2)=\text{Var}(Y_i)=\pi_i(1-\pi_i)$ is the variance of $Y_i$. Thus
 
 $$F(\boldsymbol{\beta}) = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
@@ -650,18 +174,25 @@ $$F(\boldsymbol{\beta}) = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
 
 **A useful relationship:** Under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \boldsymbol{\beta}}$):
 
-$$\text{Cov}(s(\boldsymbol{\beta})=F(\boldsymbol{\beta}) = E\left( -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} \right) = E(-\text{Hessian matrix of }l)$$
-which relates the expected to the observed Fisher information matrix.
+$$\text{Cov}(s(\boldsymbol{\beta}))=F(\boldsymbol{\beta}) = E\left( -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} \right) = E(-\text{Hessian matrix of }l)$$
 
-[Do you want to see an explanation?](ExpectedFisherinfo.pdf)
+which relates the expected to the observed Fisher information matrix.
 
 ---
 
 ## Observed Fisher information matrix $H(\boldsymbol{\beta})$
 
+What is the observed Fisher information matrix? i.e. don't take expectations...
+
 $$H(\boldsymbol{\beta}) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} = -\frac{\partial s(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}^T} = \frac{\partial}{\partial\boldsymbol{\beta}^T}\left[\sum_{i=1}^n (\pi_i-y_i){\bf x}_i \right] $$
 
-because $s(\boldsymbol{\beta}) = \sum_{i=1}^n (y_i-\pi_i){\bf x}_i$ and hence $-s(\boldsymbol{\beta}) = \sum_{i=1}^n (\pi_i-y_i){\bf x}_i$. Note that $\pi_i = \pi_i(\boldsymbol{\beta})$.
+because $s(\boldsymbol{\beta}) = \sum_{i=1}^n (y_i-\pi_i){\bf x}_i$, so $-s(\boldsymbol{\beta}) = \sum_{i=1}^n (\pi_i-y_i){\bf x}_i$. 
+
+Note that $\pi_i = \pi_i(\boldsymbol{\beta})$.
+
+---
+
+## Calculating $H(\boldsymbol{\beta})$
 
 $$H(\boldsymbol{\beta}) = \sum_{i=1}^n \frac{\partial}{\partial\boldsymbol{\beta}^T}[{\bf x}_i\pi_i-{\bf x}_iy_i] = \sum_{i=1}^n \frac{\partial}{\partial\boldsymbol{\beta}^T}{\bf x}_i\pi_i = \sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \eta_i} \frac{\partial \eta_i}{\partial \boldsymbol{\beta}^T} $$
 
@@ -673,15 +204,28 @@ $$ \frac{\partial \eta_i}{\partial \boldsymbol{\beta}^T}=\frac{\partial {\bf x}_
 
 and 
 
-$$ \frac{\partial \pi_i}{\partial \eta_i} =  \frac{\partial\left(\frac{\exp(\eta_i)}{1+\exp(\eta_i)}\right)}{\partial \eta_i} = \frac{(1+\exp(\eta_i))\exp(\eta_i) - \exp(\eta_i)\exp(\eta_i)}{(1+\exp(\eta_i))^2} $$
-$$=\pi_i (1-\pi_i).$$
+$$
+\begin{aligned}
+\frac{\partial \pi_i}{\partial \eta_i} &=  \frac{\partial\left(\frac{\exp(\eta_i)}{1+\exp(\eta_i)}\right)}{\partial \eta_i}\\ &= \frac{(1+\exp(\eta_i))\exp(\eta_i) - \exp(\eta_i)\exp(\eta_i)}{(1+\exp(\eta_i))^2} \\
+&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)} \frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)} \\
+&=\pi_i (1-\pi_i).
+\end{aligned}
+$$
 
 ---
 
 And thus
 
-$$H(\boldsymbol{\beta}) =\sum_{i=1}^n {\bf x}_i\pi_i(1-\pi_i) {\bf x}_i^T = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
-Note that the observed and the expected Fisher information matrix are equal (see below - canonical link - that this is a general finding). 
+$$
+\begin{aligned}
+H(\boldsymbol{\beta}) &=\sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \eta_i} \frac{\partial \eta_i}{\partial \boldsymbol{\beta}^T} \\
+&=\sum_{i=1}^n {\bf x}_i\pi_i(1-\pi_i) {\bf x}_i^T\\
+&= \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).
+\end{aligned}
+$$
+
+So the observed and the expected Fisher information matrix are equal.
+
 This is not the case for the probit or complementary log-log models.
 
 ---
@@ -729,116 +273,32 @@ The observed Fisher information matrix equals the expected Fisher information ma
 
 ---
 
-## Look back at MLR - what is $s(\boldsymbol{\beta})$ and $F(\boldsymbol{\beta})$ then?
+## Fitting the Models
 
-1. $Y_i \sim \text{N}(\mu_i, \sigma^2)$
-
-2. $\eta_j = x_i^T\boldsymbol{\beta}$
-
-3. $\mu_i = \eta_i$ (identity response function and link function)
-
-Likelihood:
-
-$$L(\boldsymbol{\beta}) = \left(\frac{1}{2\pi}\right)^{n/2}\left(\frac{1}{\sigma^2}\right)^{n/2} \exp\left(-\frac{1}{2\sigma^2}(y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta})\right)$$
-
- 
-Loglikelihood:
-$$l(\boldsymbol{\beta}) = \ln L(\boldsymbol{\beta}) = -\frac{n}{2} \ln (2\pi) - \frac{n}{2} \ln (\sigma^2) - \frac{1}{2\sigma^2}(y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta})$$
+There is no analytic solution, so we have to resort to numerics. Luckily, these models behave well enough
 
 ---
 
-Since $(y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta}) = Y^TY - 2Y^T{\bf X}\boldsymbol{\beta}  + \boldsymbol{\beta}^T{\bf X}^T{\bf X}\boldsymbol{\beta}$, then
 
+## Iterative gradient-based methods
 
-$$s(\boldsymbol{\beta}) = \frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = -\frac{1}{2\sigma^2}(2{\bf X}^T{\bf X}\boldsymbol{\beta}-2{\bf X}^TY) = \frac{1}{\sigma^2}({\bf X}^TY - {\bf X}^T{\bf X}\boldsymbol{\beta})$$
+Use a first order multivariate Taylor approximation for $s(\hat{\boldsymbol{\beta}})$, around some chosen reference value $\boldsymbol{\beta}^{(0)}$:
 
-and $s(\hat{\boldsymbol{\beta}}) = 0$ gives ${\bf X}^TY - {\bf X}^T{\bf X}\boldsymbol{\beta} = 0$ which can be solved on closed form giving $\hat{\boldsymbol{\beta}} = ({\bf X}^T{\bf X})^{-1}{\bf X}^TY$. So, no need for iterative methods.
-
----
-
-Finally, observed Fisher information matrix.
-
-$$H(\boldsymbol{\beta}) = \frac{\partial s(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}^T} = -\frac{\partial}{\partial \boldsymbol{\beta}_T}(\frac{1}{\sigma^2}{\bf X}^TY - \frac{1}{\sigma^2}{\bf X}^T{\bf X}\boldsymbol{\beta}) = \frac{1}{\sigma^2}{\bf X}^T{\bf X}$$
-
-which is independent on $\boldsymbol{\beta}$, and also we see that $F(\boldsymbol{\beta})=\text{E}(H(\boldsymbol{\beta}))=H(\boldsymbol{\beta})$ since no random variables are present. The identity link is also the canonical link. Finally, the (asymptotic) covariance of the ML estimate is $F^{-1}(\hat{\boldsymbol{\beta}})=({\bf X}^T{\bf X})^{-1}\sigma^2$ which we know as $\text{Cov}(\hat{\boldsymbol{\beta}})$.
-
-# Exponential family - and canonical link
-
-In Module 1 we introduced distributions of the $Y_i$, that could be written in the form of a _univariate exponential family_
-\[ f(y_i\mid \theta_i)=\exp \left( \frac{y_i \theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right) \]
-where
-
-* $\theta_i$ is called the canonical parameter and is a parameter of interest
-
-* $\phi$ is called a nuisance parameter (and is not of interest to us=therefore a nuisance (plage))
-
-* $w_i$ is a weight function, in most cases $w_i=1$
-
-* $b$ and $c$ are known functions.
-
-It can be shown that $\text{E}(Y_i)=b'(\theta_i)$ and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w_i}$.
-
----
-
-In Module 1 we found that the binomial distribution $Y_i\sim \text{bin}(1,\pi_i)$ is an exponential family (derivation from Module 1: <https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf>)
-
-and that
-
-* $\theta_i=\ln( \frac{\pi_i}{1-\pi_i})$ is the canonical parameter
-* $\phi=1$, no nuisance
-* $w_i=1$
-* $b(\theta_i)=\ln(1+\exp(\theta_i))$
-
----
-
-Recall that in a GLM we choose a link function $g$, linking the linear predictor and the mean: $\eta_i=g(\mu_i)$. For the logit model we had that $\eta_i=\ln(\frac{\pi_i}{1-\pi_i})$.
-
-Now (new to us) - every exponential family has a unique _canonical link function_ such that
-$$\theta_i=\eta_i$$
-Since $\eta_i=g(\mu_i)$ this means to us that we need 
-$$ g(\mu_i)=\theta_i$$
-to have a canonical link.
-
-**Q:** Is the logit link the canonical link for the binary model?
-
-```{r , echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
-cat("Answer \n")
-cat("yes, since $\theta_i=\ln( \frac{\pi_i}{1-\pi_i})=g(\pi_i)$ then the logit link is the canonical link for the binary regression.\n")
-```
-
-**A**:
-
-Yes, since $\theta_i=\ln( \frac{\pi_i}{1-\pi_i})=g(\pi_i)$ then the logit link is the canonical link for the binary regression.
-
----
-
-##Properties of a GLM with canonical link
-
-1. The log-likelihod is always concave so that the ML estimated is always unique (given that it exists).
-
-2. The observed Fisher information matrix $H(\boldsymbol{\beta})$ _equals_ the expected Fisher information matrix $F(\boldsymbol{\beta})$.
-That is, $$-\frac{\partial^2 l}{\partial \boldsymbol{\beta} \boldsymbol{\beta}^T}=\text{E}(-\frac{\partial^2 l}{\partial \boldsymbol{\beta} \boldsymbol{\beta}^T})$$
-
-Proving this is beyond the scope of this course.
-
-# Parameter estimation - in practise
-To find the ML estimate $\hat{\boldsymbol{\beta}}$ we need to solve
-$$s(\hat{\boldsymbol{\beta}})=0$$
-We have that the score function for the logit model is:
-$$s(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j (y_j-n_j\pi_j)$$
-where $\pi_j=\frac{\exp({\bf x}_j^T\hat{\boldsymbol{\beta}})}{1+\exp({\bf x}_j^T\hat{\boldsymbol{\beta}})}$. Observe that this is a non-linear function in $\boldsymbol{\beta}$, and has no closed form solution. 
-
----
-
-##Iterative gradient-based methods
-
-Back to the general case - we may use a first order multivariate Taylor approximation for $s(\hat{\boldsymbol{\beta}})$, around some chosen reference value $\boldsymbol{\beta}^{(0)}$:
-$$s(\hat{\boldsymbol{\beta}})\approx s(\boldsymbol{\beta}^{(0)})+\frac{\partial s(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}\big\rvert_{\boldsymbol{\beta}=\boldsymbol{\beta}^{(0)}} (\hat{\boldsymbol{\beta}}-\boldsymbol{\beta}^{(0)})$$
+$$
+s(\hat{\boldsymbol{\beta}})\approx s(\boldsymbol{\beta}^{(0)})+\frac{\partial s(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}\big\rvert_{\boldsymbol{\beta}=\boldsymbol{\beta}^{(0)}} (\hat{\boldsymbol{\beta}}-\boldsymbol{\beta}^{(0)})
+$$
 
 Let $H(\boldsymbol{\beta}^{(0)})=-\frac{\partial s(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}\big\rvert_{\boldsymbol{\beta}=\boldsymbol{\beta}^{(0)}}$.
 Setting $s(\hat{\boldsymbol{\beta}})=0$ solving for $\hat{\boldsymbol{\beta}}$ gives 
-$$ \hat{\boldsymbol{\beta}}=\boldsymbol{\beta}^{(0)} + H(\boldsymbol{\beta}^{(0)})^{-1} s(\boldsymbol{\beta}^{(0)})$$
+
+$$
+\hat{\boldsymbol{\beta}}=\boldsymbol{\beta}^{(0)} + H(\boldsymbol{\beta}^{(0)})^{-1} s(\boldsymbol{\beta}^{(0)})
+$$
 where $H(\boldsymbol{\beta}^{(0)})^{-1}$ is the matrix inverse of $H(\boldsymbol{\beta}^{(0)})$.
+
+---
+
+## Enter nNewton and Raphson
 
 If we start with some value $\boldsymbol{\beta}^{(0)}$ and then find a new value $\boldsymbol{\beta}^{(1)}$ by applying this equation, and then continue applying the equation until convergence we have the _Newton-Raphson_ method:
 
@@ -854,9 +314,13 @@ This algorithm is run until the relative difference in Euclidean distance betwee
 
 ---
 
-##Requirements for convergence
+## Requirements for convergence
 
 For the Newton-Raphson algorithm we see that the observed Fisher information matrix $H$ needs to be invertible for all $\boldsymbol{\beta}$, alternatively for the Fisher scoring algorithm the expected Fisher information matrix $F$ needs to be invertible.
+
+---
+
+## Proof of convergence
 
 In our logit model $$F(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \pi_j (1-\pi_j)$$ 
 
@@ -866,7 +330,8 @@ If we require that the design matrix has full rank ($G$) then also ${\bf X}^T{\b
 
 ---
 
-**Why is $F(\boldsymbol{\beta})$ positive definite if we require that the design matrix has full rank?**
+## Why is $F(\boldsymbol{\beta})$ positive definite if we require that the design matrix has full rank? 
+
 Formally, let ${\bf X}$ be a $n\times p$ matrix and $\Lambda$ a $n\times n$ diagonal matrix where all the diagonal elements are positive (like our $\pi_j(1-\pi_j)$, yes, put them on the diagonal). 
 Let ${\bf X}$ have independent columnes (full rank) $\Leftrightarrow$ ${\bf X}^T\Lambda{\bf X}$ is positive definite.
 
@@ -879,17 +344,42 @@ $\Leftarrow$: Assume that ${\bf X}{\bf v}={\bf 0}$. Then ${\bf v}^T {\bf X}^T \L
 
 ---
 
+## We need a full rank
+
 Therefore, for GLMs we will also - as for the multiple linear regression model in Module 2 - assume that the design matrix has full rank!
 
 We will see in Module 5 that this is the requirement needed for GLMs in general.
 
-However, it is possible that the algorithm does not converge. This may happen for "unfavorable" data configurations (especially for small samples). Accoring to our text book, Fahrmeir et al (2013), page 284, the conditions for uniqueness and existence of ML estimators are very complex, and the authors suggest that the GLM user instead checks for convergence in practice by performing the iterations.
+---
+
+## Convergence
+
+Convergence is still not guarnateed, especially for small samples. 
+
+According to our text book, Fahrmeir et al (2013), page 284, the conditions for uniqueness and existence of ML estimators are very complex, and the authors suggest that the GLM user instead checks for convergence in practice by performing the iterations.
+
+In practice, the logit model most often causes problems, when (for grouped data) $y_i=0$ or $y_i=n_i$, because $\hat{\pi}_i=0/1$, so $\hat{\eta}_i=\pm \infty$. Computers do not like infinity
+
+---
+
+stopped here
+
+---
 
 # Asymptotic properties of ML estimates
 
 ## Results
 
-Under some (weak) regularity conditions (including that $\boldsymbol{\beta}$ falls in the interior of the parameter space and $p$ is fixed that $n$ increases, Agresti (2015) page 125):
+We need some weak regularity conditions, including 
+
+- $\boldsymbol{\beta}$ falls in the interior of the parameter space and 
+- $p$ is fixed that $n$ increases
+
+(Agresti (2015) page 125):
+
+--- 
+
+## The Results
 
 Let $\hat{\boldsymbol{\beta}}$ be the maximum likelihood (ML) estimate in the GLM model. As the total sample size increases, $n\rightarrow \infty$:
 
@@ -897,29 +387,40 @@ Let $\hat{\boldsymbol{\beta}}$ be the maximum likelihood (ML) estimate in the GL
 2. $\hat{\boldsymbol{\beta}}$ is consistent (convergence in probability, yielding asymptotically unbiased estimator, variances goes towards 0)
 3. $\hat{\boldsymbol{\beta}} \approx N_p(\boldsymbol{\beta},F^{-1}(\hat{\boldsymbol{\beta}}))$ 
 
-Observe that this means that asymptotically $\text{Cov}(\hat{\boldsymbol{\beta}})=F^{-1}(\hat{\boldsymbol{\beta}})$: the inverse of the expected Fisher information matrix evaluated at the ML estimate. 
+So asymptotically $\text{Cov}(\hat{\boldsymbol{\beta}})=F^{-1}(\hat{\boldsymbol{\beta}})$: the inverse of the expected Fisher information matrix evaluated at the ML estimate. 
 
-Observe: The result requires that the _total_ sample size goes to infinity (not the individual $n_j$ for the covariate patterns).
-
----
-
-The _proof_ (for the univariate case) is given in the course TMA4295 Statistical Inference course, Casella and Berger (2002):"Statistical inference", page 472. It starts by a first order Taylor expansion of the score function (derivative of loglikelihood) around the true parameter, and utilizes the fact that the maximum likelihood estimate is defined as the zero of the score function. 
 
 ---
 
-The following is not a formal proof, but a sketch - and I use the parameter of interest $\boldsymbol{\theta}$ in the exponential family version of the distribution (and then there is a connection to the mean $\boldsymbol{\mu}$ and then to $\boldsymbol{\eta}$ and finally $\boldsymbol{\beta}$):
+The _proof_ (for the univariate case) is given in the course TMA4295 Statistical Inference course, Casella and Berger (2002):"Statistical inference", page 472. 
 
-We start with the multivariate version of the first order Taylor expansion around the true parameter value $\boldsymbol{\theta}$:
+Here we will sketch the proof. The strategy:
 
-$${\bf 0}=s(\hat{\boldsymbol{\theta}})\approx s({\boldsymbol{\theta}})-{\bf H}({\boldsymbol{\theta}})(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}})$$
+- make a first order Taylor expansion of the score function around the true parameter, 
+- use the fact that the maximum likelihood estimate is defined as the zero of the score function. 
 
-We assume that $\hat{\boldsymbol{\theta}}$ is the maximum likelihood estimate, and there the score function is ${\bf 0}$ so we get:
+---
+
+## The sketch
+
+Use $\boldsymbol{\theta}$ as the parameter of interest
+
+(there is the connection to $\boldsymbol{\mu}$, then to $\boldsymbol{\eta}$ and finally to $\boldsymbol{\beta}$)
+
+We start with the multivariate version of the first order Taylor expansion of the score around the true parameter value $\boldsymbol{\theta}$:
+
+$$s({\boldsymbol{\theta}}) \approx s(\hat{\boldsymbol{\theta}}) + s'({\boldsymbol{\theta}})(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}})$$
+As $s'({\boldsymbol{\theta}}) = {\bf H}({\boldsymbol{\theta}})$, and $s(\hat{\boldsymbol{\theta}})=0$, 
+
+$$s(\hat{\boldsymbol{\theta}})\approx s({\boldsymbol{\theta}})-{\bf H}({\boldsymbol{\theta}})(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}}) = 0$$
+
 $$s({\boldsymbol{\theta}})\approx {\bf H}({\boldsymbol{\theta}})(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}})$$
 And premultiplying with ${\bf H}^{-1}(\boldsymbol{\theta})$ gives
 $$ (\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}})\approx {\bf H}^{-1}({\boldsymbol{\theta}})s({\boldsymbol{\theta}})$$
-Then, to use the central limit theorem we need some smart manipulations with $n$, so we start by multiplying with $\sqrt{n}$ and split that into $n$ and $\frac{1}{\sqrt{n}}$.
 
 ---
+
+Then, to use the central limit theorem we need some smart manipulations with $n$, so we start by multiplying with $\sqrt{n}$ and split that into $n$ and $\frac{1}{\sqrt{n}}$.
 
 $$ \sqrt{n}(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}})\approx \sqrt{n}{\bf H}^{-1}({\boldsymbol{\theta}})s({\boldsymbol{\theta}})=(\frac{1}{n}{\bf H}({\boldsymbol{\theta}}))^{-1}\frac{1}{\sqrt{n}}s({\boldsymbol{\theta}})$$
 
@@ -928,16 +429,15 @@ From the central limit theorem:
 
 1) $\frac{1}{n}{\bf H}(\boldsymbol{\theta})$ goes to the expected value which is ${\bf F}(\boldsymbol{\theta})$ (in probability),
 
-2) the part $\frac{1}{\sqrt{n}}s({\boldsymbol{\theta}})$ asymptoticalle goes to a random variable $W$ that follows a multivariate normal with 
+2) the part $\frac{1}{\sqrt{n}}s({\boldsymbol{\theta}})$ asymptotically goes to a random variable $W$ that follows a multivariate normal with ${\bf W} \sim N({\bf 0},\frac{1}{n}{\bf F}(\boldsymbol{\theta}))$:
    + mean $\text{E}(\frac{1}{\sqrt{n}}s({\boldsymbol{\theta}}))={\bf 0}$ and the 
    + covariance matrix is $\text{Cov}(\frac{1}{\sqrt{n}}s({\boldsymbol{\theta}}))=\frac{1}{n}{\bf F}(\boldsymbol{\theta})$
-   
-$$ {\bf W} \sim N({\bf 0},\frac{1}{n}{\bf F}(\boldsymbol{\theta}))$$
 
 ---
 
-
-$$\sqrt{n}(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}}) \approx \bf{F}^{-1}(\boldsymbol{\theta}){\bf W}$$
+$$
+\sqrt{n}(\hat{\boldsymbol{\theta}}-{\boldsymbol{\theta}}) \approx \bf{F}^{-1}(\boldsymbol{\theta}){\bf W}
+$$
 
 On the right side here we have a multivariate normal distributed random variable $\bf{F}^{-1}(\boldsymbol{\theta}){\bf W}$ with mean ${\bf 0}$ and covariance matrix 
 $$\text{Cov}({\bf F}^{-1}(\boldsymbol{\theta}){\bf W})={\bf F}^{-1}(\boldsymbol{\theta})\frac{1}{n}{\bf F}(\boldsymbol{\theta}){\bf F}^{-1}(\boldsymbol{\theta})=\frac{1}{n}{\bf F}^{-1}(\boldsymbol{\theta})$$
@@ -1004,6 +504,10 @@ For one element of the parameter vector:
 $$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}$$
 is asymptotically standard normal. We will use this now!
 
+---
+
+<!---
+
 **Q**: Where can you find $\hat{\boldsymbol{\beta}}$ and $F^{-1}(\hat{\boldsymbol{\beta}})$ in the print-out below?
 
 ---
@@ -1016,18 +520,22 @@ summary(fitgrouped)$cov.scaled
 sqrt(diag(summary(fitgrouped)$cov.scaled))
 ```
 Note: `cov.unscaled` is the estimated covariance matrix for the estimated coefficients, and `cov.scaled` is the the `cov.unscaled` scaled with the dispersion parameter. For the binomial the dispersion is equal to 1, so no difference between the two.
+--->
 
----
 
 ## Confidence intervals
+
 In addition to providing a parameter estimate for each element of our parameter vector $\boldsymbol{\beta}$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element.
 
 We focus on element $k$ of $\boldsymbol{\beta}$, called $\boldsymbol{\beta}_k$. It is known that asympotically 
-$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{{a}_{kk}(\hat{\beta})}}$$
-is asymptotically standard normal. 
+
+$$
+Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{{a}_{kk}(\hat{\beta})}} \sim N(0,1)
+$$
+
 We use that to form confidence intervals.
 
-Let $z_{\alpha/2}$ be such that $P(Z_k>z_{\alpha/2})=\alpha/2$. REMARK: our textbook would here look at area to the left instead of to the right - but we stick with this notation.
+Let $z_{\alpha/2}$ be such that $P(Z_k>z_{\alpha/2})=\alpha/2$.
 
 ---
 
@@ -1047,7 +555,7 @@ A $(1-\alpha)$% CI for $\beta_k$ is when we insert numerical values for the uppe
 
 Again, we study our beetle data - in the grouped version.
 
-Here we calculate the upper and lower limits of the confidence interval using the formula. Then, there is also an `R` function `confint.glm` that can be used. This function may give a slightly different answer to our calculations because here an extra "profiling" step is done to check the convergence of the glm, and to recalculate the estimated covariance matrix for the regression parameter estimate.
+Here we calculate the upper and lower limits of the confidence interval using the formula.
 
 ```{r,echo=-1}
 library(investr)
@@ -1058,7 +566,6 @@ alpha=0.05
 lower=coeff-qnorm(1-alpha/2)*sds
 upper=coeff+qnorm(1-alpha/2)*sds
 cbind(lower,upper)
-confint(fitgrouped)
 ```
 
 **Q:** Explain what is done in the `R`-print-out.
@@ -1067,7 +574,14 @@ confint(fitgrouped)
 
 ## Hypothesis testing
 
-There are three methods that are mainly used for testing hypotheses in GLMs - these are called Wald test, likelihood ratio test and score test. We will look at the first two.
+There are three methods that are mainly used for testing hypotheses in GLMs:
+- Wald test, 
+- likelihood ratio test and 
+- score test. 
+
+We will look at the first two.
+
+---
 
 First, look at linear hypotheses: We study a binary regression model with $p=k+1$ covariates, and refer to this as model A (the larger model). As for the multiple linear model we then want  to investigate the null and alternative hypotheses of the following type(s):
 
@@ -1090,11 +604,16 @@ by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column
 ### The Wald test
 
 The Wald test statistic is given as:
-$$w=({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d}) $$
+
+$$
+w=({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})
+$$
 and measures the distance between the estimate ${\bf C}\hat{\boldsymbol{\beta}}$ and the value under then null hypothesis ${\bf d}$, weighted by the asymptotic covariance matrix of ${\bf C}\hat{\boldsymbol{\beta}}$.
+
+
 Remember: $\text{Cov}({\bf C}\hat{\boldsymbol{\beta}})={\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}$.
 
-Asymptotically it is found that $w$ under the null hypothesis follows a $\chi^2$ distribution with $r$ degrees of freedom (where $r$ is the number of hypotheses tested). Why is that?
+Asymptotically, under the null hypothesis $w \sim \chi_r^2$ distribution with (where $r$ is the number of hypotheses tested).
 
 $P$-values are calculated in the upper tail of the $\chi^2$-distribution.
 
@@ -1109,15 +628,16 @@ and the Wald test becomes
 $$ (\hat{\beta}_k-\beta_k)[a_{kk}(\hat{\boldsymbol{\beta}})]^{-1}(\hat{\beta}_k-\beta_k)=\left(\frac{\hat{\beta}_k-\beta_k}{\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})}}\right)^2=Z_k^2$$
 so, asymptotically the square of the standard normal, which we know follows a $\chi^2$-distribution with 1 degree of freedom.
 
+---
 
 **Q**: Explain what you find in the columns named `z value` and `Pr(>|z|)` below, and which hypothesis tests these are related to. Are the hypothesis tests performed using the Wald test?
 
----
 
-```{r}
+```{r, echo=TRUE}
 library(investr)
-fitgrouped=glm(cbind(y, n-y) ~ ldose, family = "binomial", data = investr::beetle) 
-summary(fitgrouped)
+fitgrouped=glm(cbind(y,n-y) ~ ldose, family="binomial", 
+               data = investr::beetle) 
+knitr::kable(summary(fitgrouped)$coefficients, digits=2)
 ```
 
 
@@ -1134,16 +654,15 @@ summary(fitgrouped)
 
 
 ### The likelihood ratio test
-An alternative to the Wald test is the likelihood ratio test (LRT), which compares the likelihood of two models.
 
-We stick with the notation of A: the larger model and B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
+The likelihood ratio test (LRT), which compares the likelihood of two models.
 
-* First we maximize the likelihood for model A (the larger model) and find the parameter estimate $\hat{\boldsymbol{\beta}}_A$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\hat{\boldsymbol{\beta}}_A)$.
-* Then we maximize the likelihood for model B (the smaller model) and find the parameter estimate $\hat{\boldsymbol{\beta}}_B$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\hat{\boldsymbol{\beta}}_B)$.
+* First we maximize the likelihood for model A (the larger model) to get $L(\hat{\boldsymbol{\beta}}_A)$ and $\hat{\boldsymbol{\beta}}_A$.
+* Then we maximize the likelihood for model B (the smaller model) to get $L(\hat{\boldsymbol{\beta}}_B)$ and $\hat{\boldsymbol{\beta}}_B$.
 
 ---
 
-The likelihood of the larger model (A) will always be larger or equal to the likelihood of the smaller mode (B). Why? How is this compared to our result for SSE for small and large model in MLR?
+The likelihood of the larger model (A) will always be larger or equal to the likelihood of the smaller mode (B). (Why?)
 
 The likelihood ratio statistic is defined as
 $$- 2\ln \lambda=-2(\ln L(\hat{\boldsymbol{\beta}}_B)-\ln L(\hat{\boldsymbol{\beta}}_A)) $$ 
@@ -1173,7 +692,10 @@ loglik <- function(par, args){
   res <- sum(y*x%*%par - n*log(1 + exp(x%*%par)))
   return(res)
 }
+```
 
+---
+```{r}
 # call this with parameters estimated under model A=larger model
 beetleargs = list(y = investr::beetle$y, 
             x = cbind(rep(1, nrow(investr::beetle)), investr::beetle$ldose), 
@@ -1185,47 +707,58 @@ llA=loglik(matrix(fitgrouped$coefficients,ncol=1),args=beetleargs)
 llB=loglik(matrix(c(fitnull$coefficients,0),ncol=1),args=beetleargs)
 lrt=-2*(llB-llA)
 lrt
-pchisq(lrt,df=1)
-anova(fitgrouped,fitnull,test="LRT")
+pchisq(lrt,df=1, lower.tail = FALSE)
+```
+
+---
+
+```{r}
+anova(fitnull, fitgrouped, test="LRT")
 ```
 
 **Q and A:** Here the small model is the model with only intercept and the large is the one with dose as covariate. This means that the null hypothesis is that "the small model is preferred" and our $p$-value is very small, so we reject the null hyptheses and stick with the model with dose as covariate. Observe that the LRT can be performed using `anova`.
+
+---
 
 # Deviance
 
 The _deviance_ is used to assess model fit and also for model choice, and is based on the likelihood 
 ratio test statistic. 
 
-The derivation assumes that data can be grouped into covariate patterns, with $G$ groups and $n_j$ observations in each group (individual data later).
-
-
 **Saturated model:**
-If we were to provide a perfect fit to our data then we would estimate $\pi_j$ by the observed frequency for the group: $\tilde{\pi}_j=\frac{y_j}{n_j}$. Then $\tilde{\pi}$ is a $G$-dimensional column vector with the elements $\tilde{\pi}_j$.
+One parmeter per group: estimate $\pi_j$ by the observed frequency for the group: $\tilde{\pi}_j=\frac{y_j}{n_j}$. Then $\tilde{\pi}$ is a $G$-dimensional column vector with the elements $\tilde{\pi}_j$.
 
 This "imaginary model" is called the _saturated_ model.
-This would be a model where each group was given its own parameter. 
 
 **Candidate model:**
-The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood and get $\hat{\boldsymbol{\beta}}$ which through our linear predictor and link function we turn into estimates for each group $\hat{\pi}_j$. Then $\hat{\pi}$ is a $G$-dimensional column vector with the elements $\hat{\pi}_j$.
+The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood to get $\hat{\boldsymbol{\beta}}$ & thus $\hat{\pi}_j$. Then $\hat{\pi}$ is a $G$-dimensional column vector with the elements $\hat{\pi}_j$.
 
 ---
 
-The _deviance_ is then defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
+The _deviance_ is defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
 
-$$D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))=-2(l(\hat{\pi})-l(\tilde{\pi}))=
--2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))$$
+$$
+\begin{aligned}
+D&=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model})) \\
+&=-2(l(\hat{\pi})-l(\tilde{\pi}))=
+-2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))
+\end{aligned}
+$$
 
 For our logit model this can be written as (after some maths):
-$$ D=2\sum_{j=1}^G [y_j\ln(\frac{y_j}{n_j\hat{\pi}_j})+(n_j-y_j)\ln(\frac{n_j-y_j}{n_j-n_j\hat{\pi}_j})]$$
+$$ 
+D=2\sum_{j=1}^G [y_j\ln(\frac{y_j}{n_j\hat{\pi}_j})+(n_j-y_j)\ln(\frac{n_j-y_j}{n_j-n_j\hat{\pi}_j})]
+$$
+
 Verify this by yourself.
 
 ---
 
-The reasoning behind this is that if our model is good, it should not be too far from the saturated model, and we measure this distance by the deviance.
+If our model is good, it should not be too far from the saturated model, and we measure this distance by the deviance.
 
 If we want to investigate the null hypothesis that "our model fits the data well" to the negation, it is useful to know that asymptotically $D$ is distributed as $\chi^2$ with $G-p$ degrees of freedom (same reason as for the likelihood ratio test statistic).
 
-This result depends on that $n_j$ is large, hard to say how large (at least 5 is a rule of thumb).
+This result depends on $n_j$ being large, hard to say how large (at least 5 is a rule of thumb).
 
 ---
 
@@ -1344,7 +877,7 @@ Residual plots for the logistics regression - and for the GLM in general - is hi
 
 ---
 
-```{r,echo=-1}
+```{r,echo=FALSE, fig.height=3}
 library(ggplot2)
 df=data.frame("fitted"=fitgrouped$fitted.values,"dres"=residuals(fitgrouped,type="deviance"),"ldose"=investr::beetle$ldose)
 ggplot(df,aes(x=fitted,y=dres))+geom_point()
@@ -1357,7 +890,7 @@ ggplot(df,aes(x=ldose,y=dres))+geom_point()
 
 A useful plot is to show observed and fitted proportions (grouped data) plotted against the linear predictor or covariates.
 
-```{r,echo=-1}
+```{r,echo=TRUE, fig.height=4}
 library(ggplot2)
 df=data.frame("fitted"=fitgrouped$fitted.values,"dres"=residuals(fitgrouped,type="deviance"),"ldose"=investr::beetle$ldose,"frac"=investr::beetle$y/investr::beetle$n)
 ggplot(df,aes(x=ldose))+geom_point(aes(y=frac,colour="observed"))+geom_point(aes(y=fitted,colour="fitted"))
@@ -1450,357 +983,7 @@ fitquasi=glm(cbind(y, n-y) ~ ldose, family = "quasibinomial", data = investr::be
 summary(fitquasi)$dispersion
 ```
 
-# Prospective vs. retrospective sampling
-This section is optional - but it is very useful if you will work within biostatistics.
-(Examples motivated by Faraway (2006), Extending the linear model with R, Section 2.6.)
-
-In a _prospective sampling_ strategy we sample individuals from a population (covariates are then fixed) and wait for a predefined period to check if an event has happend (e.g. disease). This is also called a _cohort study_. An example might be that we select a sample of newborn babies (girls and boys) where the parents had decided on the method of feeding (bottle, breast, breast with some supplement), and then monitored the babies during their first year to see if they developed infant respiratory disease (the event we want to model).
-For rare events the sample may then include few individuals with success (disease), which might lead to wide confidence intervals for parameters. 
-
-An alternative strategy is called _retrospective sampling_. Here we have access to medical registers and select a sample of $n_1$ babies where we know that they developed infant respiratory disease (the _cases_) and a sample of $n_2$ babies where we know that they did not develop infant respiratory disease (the _controls_). We require that the samples are selected independently of the values of the covariates (here: sex and food=method of feeding). This is called a _case--control study_.
-
-If we aim to _model the relationship between the covariates and the response_ (here: infant respiratory disease) we would naturally by default choose the cohort design, however, we will now show that the case--control design is also a valid design _if_ we use the logit model to analyse the data.
-
-To illustrate this we use a data set from a prospective study, 
-```{r}
-library(faraway)
-data(babyfood)
-head(babyfood)
-xtabs(disease/(disease+nondisease)~sex+food,babyfood)
-```
-and for simplicity we focus on girls who were breast or bottle fed:
-
-```{r}
-babyfood[c(4,6),]
-```
-
-Notice - we now look at the observed data within the different covariate patterns. This would be the same as fitting a binomial glm with sex, food and the interaction thereof as covariates.
-
-We read off: given that the infant is breast fed:
-31/433= `r round(31/433,2)` is the estimated odds of respiratory disease, and the log-odds is `r round(log(31/433,base=exp(1)),2)`. 
-And, given that the infant is bottle fed: 48/336= `r round(48/336,2)` is the estimated odds of respiratory disease, and the log-odds is `r round(log(48/336,base=exp(1)),2)`. 
-The difference between these two log-odds represents the increased risk of infant respiratory disease caused by bottle feeding relative to breast feeding:
-
-$\Delta$= `r round(log(48/336,base=exp(1)),2)`- `r round(log(31/433,base=exp(1)),2)`= `r  round(log(48/336,base=exp(1))-log(31/433,base=exp(1)),2)`.
-
-But, what if we instead had performed a case--control study, and then wanted to compute the log odds difference between feeding type given respiratory disease status. 
-
-We read off: given that the infant got the disease (case): 48/31= `r round(48/31,2)` is the estimated odds for bottle compared to breast, and the log-odds is `r round(log(48/31,base=exp(1)),2)`. Given that the infant did not get the disease (control): 336/433= `r round(336/433,2)` is the estimated odds for bottle compared to breast, and the log-odds is `r round(log(336/433,base=exp(1)),2)`. The difference between these two log-odds represents the "increased risk" of bottle feeding relative to breast feeding "caused by respiratory disease".
-
-$\Delta^*$=`r round(log(48/31,base=exp(1)),2)`- `r round(log(336/433,base=exp(1)),2)`=`r  round(log(48/31,base=exp(1))-log(336/433,base=exp(1)),2)`.
-
-Observe that $\Delta$ and $\Delta^*$ are equal, and shows (with a numerical example) why a retrospective design can be use to estimate change in log-odds. But, this argumentation is only valid for our logit model (where we estimate changes in odds), and not for the probit or complementary-log-log model.
-
-We would like to use the retrospective case--control design instead of the prospective cohort design because it is more convenient to get a sample of cases on the same size as a sample of controls - which give us better properties of the parameter estimators. However, to use the case--control design it is important that covariates are reliably measured retrospective (rely on records).
-
-In a mathematical comparison between logit models for pro- and retrospective designs we will find that the regression parameters $\beta_1, \ldots, \beta_k$ will be the same in the two models, but the intercept terms will differ.
-
-In the prospectictive study we model $\pi_i$, the probability of sucess (e.g. respiratory disease) for covariates $x_{i1}, x_{i2}, \ldots, x_{ik}$ (e.g. sex and food). Using the logit model in the proseptive study, the regression model is
-\[ \ln (\frac{\pi_i}{1-\pi_i}) = \eta_i =  \beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik} \]
-and we write
-\[ \pi_i=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}.\]
-
-In a retrospective study we consider $\rho_i$, the probability of sucess for covariates $x_{i1}, x_{i2}, \ldots, x_{ik}$, given that individual $i$ was sampled to be part of the case-control study. 
-
-Let $S$ denote the event 'sampled', and let $D$ denote event 'disease' (or sucess). Then, using Bayes' rule and the law of total probability, we have
-\[ \rho_i= P_i(D|S) = \frac{P_i(D \cap S)}{P_i(S)} = \frac{P_i(S|D)P_i(D)}{P_i(S|D)P_i(D) + P_i(S|D^c)P_i(D^c)}  \]
-where $P_i(D) = \pi_i$ and $P_i(D^c) = 1-\pi_i$.
-
-In the retrospective study, the probability of being sampled is equal for any individual with the disease; $\tau_1 = P(S|D) = P_i(S|D)$ and similarly for individuals who do not have the disease; $\tau_0 = P(S|D^c) = P_i(S|D^c)$. Then, 
-\[ \rho_i= \frac{\tau_1 \pi_i}{\tau_1 \pi_i + \tau_0 (1-\pi_i)}  =  \frac{\tau_1 \frac{\exp(\eta_i)}{1+\exp(\eta_i)}}{\tau_1 \frac{\exp(\eta_i)}{1+\exp(\eta_i)} + \tau_0 \frac{1}{1+\exp(\eta_i)}}\]
-
-Dividing by $\tau_0$ and multiplying by $1+\exp(\eta_i)$ in the numerator and denominator gives
-\[ \rho_i= \frac{(\tau_1/\tau_0) \exp(\eta_i)}{(\tau_1/\tau_0) \exp(\eta_i) + 1} = \frac{\exp(\ln(\tau_1/\tau_0) + \eta_i)}{\exp(\ln(\tau_1/\tau_0) + \eta_i) + 1}\]
-
-Using the logit model for $\rho_i$ in the retrospective model, the regression model is
-\[ \ln (\frac{\rho_i}{1-\rho_i}) = \ln(\tau_1/\tau_0) + \eta_i = \ln(\tau_1/\tau_0) + \beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik} \]
-We see that the only difference between the parameters of interest in the retrospective study and the parameters of interest in the prospective study is the intercept of the regression model. All other covariates are equal. 
-
-# <a id="ILw2">Interactive lecture - second week</a>
-
-We will use a data set on contraceptive use in Fiji (data from 1975). The data is to be analysed with 
-"current use of contraceptive" as response and some (or all of) "age", "level of education", "desire for more children" as covariates
-
-The data is available at <https://grodri.github.io/datasets/cuse.dat> with the following description:
-  
-* Contraceptive use: yes (`using`) or no (`notUsing`)
-* `age`: categorical variable with 5 levels: "<25", "25-29", "30-39", "40-49"
-* `education`: categorical variable with 2 levels giving highest level of education obtained: Lower and Upper 
-* `wantsMore`: Desires more children: yes or no
-
-```{r, echo = FALSE,eval=FALSE}
-ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
-```
-
-
-```{r,eval=TRUE}
-ds=read.table("https://grodri.github.io/datasets/cuse.dat",header=TRUE)
-names(ds)
-summary(ds)
-dim(ds)
-head(ds)
-```
-
-We will study binary regression using the logit model, and we will work with grouped data.
-
-<!-- Useful functions: `qlogis(p)` calculates the logit logit(p) = log(p/(1-p)) and the function `plogis(x)` is the inverse logit, that is exp(x)/(1-exp(x)). -->
-
-**Plan: Start with Problem 2, then move to 3 and 4, and if you have time you look at Problem 1. We will do a team Kahoot! in the end of the IL - on one device go to kahoot.it or use an app version. **
-
-### Problem 1: The null model - no covariates included.
-(This is the most theoretical of the problems and rather technical - but with some cool results on the null model.)
-
-**a)** Fit the null model and call it `fit0`. Explain what you see. 
-```{r}
-fit0=glm(cbind(using,notUsing)~1,data=ds,family=binomial(link=logit))
-summary(fit0)
-```
-
-Observe: When we only have an intercept in the model, the model matrix will be an $n \times 1$-matrix with only ones. 
-Then ${\bf x}_j^T\boldsymbol{\beta}=\beta_0$. The log-likelihood can be written as (let $j=1,\ldots,G$)
-
-\begin{align} l(\boldsymbol{\beta}) &=\sum_{j=1}^G (y_j{\bf x}_j^T \boldsymbol{\beta} - n_j \log(1+\exp({\bf x}_j^T\boldsymbol{\beta})))= \sum_{j=1}^G (y_j\beta_0 - n_j \log(1+\exp(\beta_0)))\\
-&= \beta_0 \sum_{j=1}^G y_j - \log(1+\exp(\beta_0))\sum_{j=1}^G n_j =\beta_0 N_1 - \log(1+\exp(\beta_0))N
-\end{align}
-where $N_1=\sum_{j=1}^G y_j$ is the total number of successes and $N=\sum_{j=1}^G n_j$ is the total number of trials (over all covariates patterns, that is, here the number of individuals in the data set). Also $N_2=N-N_1$ is the total number of failures.
-
-We will use this loglikelihood in the next question.
-
-**b)** What is the relationship between your estimated coefficient and the proportion in the data set using contraception ($N_1/N$)? (Hint 0: What would be your intuitive estimator for $\pi$ (common to all groups). Hint 1: Find the derivative of the log-likelihood with respect to $\beta_0$, and use this to find the MLE for $\beta_0$. Hint 2: maybe easier to see what $\hat{\pi}$ is, where $\hat{\pi}=\frac{\exp{\hat{\beta}_0}}{1+\exp{\hat{\beta}_0}}$ (so `plogis`), and then $\hat{\boldsymbol{\beta}}_0=\text{logit}(\hat{\pi})$ (so `qlogis`). Hint 3: You can verify by using the estimate from `glm`.)
-
-```{r}
-N = sum(ds$using + ds$notUsing)
-N
-N1 = sum(ds$using)
-N1
-N2 = N - N1
-N2
-qlogis(N1/N)
-fit0$coefficients
-```
-
-**c)** We know that the (asymptotic) estimated covariance matrix of the ML estimate is the inverse of the expected Fisher information matrix, here the matrix is only a scalar and the covariance matrix is just the variance. Find the mathematical expression for the estimated variance of our estimated intercept.
- (Hint 1: We have $F(\boldsymbol{\beta}) = \sum_{j=1}^G x_jx_j^T n_j \pi_j(1-\pi_j)$, and then insert $x_j = 1$ and $\pi_j(1-\pi_j)=\pi(1-\pi)$, and hopefully you found above that $\hat{\pi}=N_1/N$ in our model with only intercept. Hint 2: $\frac{N}{N_1 \cdot N_2}=\frac{1}{N_1}+\frac{1}{N_2}$ to make things prettier.)
-
-**d)** What is the estimated (numerical value) standard deviation of the parameter estimate? Hint: `vcov(fit0)`. Did your calculation above gives the same result?
-
-```{r}
-vcov(fit0)
-```
-
-**e)** What is the asymptotic distribution of the estimated regression coefficient? Use this to write down the formula for the 95% confidence interval for the intercept, and calculate the interval in R. Compare numerically to `confint.default` and `confint`.
-
-```{r}
-ci=confint.default(fit0)
-ci
-confint(fit0)
-```
-
-**f)** Translate the 95% CI to probability scale (Hint: `plogis` is the inverse logit.)
-
-```{r}
-plogis(ci)
-fit0$family$linkinv(ci)
-```
-
-### Problem 2: We then study the effect of the covariate "wantsMore"
-(a little less maths)
-
-**a)** Fit a regression with `wantsMore` as covariate, and call this `fit1`. Explain what the estimated coefficient ($\beta_1$) means. Hint: Interpretation using odds -- if `wantsMore´ goes from 0=no to 1=yes, then...
-
-```{r,eval=TRUE}
-fit1=glm(cbind(using,notUsing)~wantsMore,data=ds,family=binomial)
-summary(fit1)
-exp(fit1$coefficients)
-```
-
-**b)** Is this covariate significant? Write down the null and alternative hypothesis to test. Then test using the Wald test - write down the formula yourself. Use `vcov(fit1)` to access the inverse of the Fisher information matrix. What is the degrees of freedom for this test? Compare to the print-out from `summary`. 
-
-```{r}
-vcov(fit1)
-```
-
-**c)** Alternatively, the likelihood ratio test can be used. Write down the formula for the likelihood ratio test statistic. Use this in combination with the `fit0` and  `fit1` objects to calculate the likelihood ratio statistic. Then calculate the $p$-value.
-
-```{r}
-loglik <- function(par, args) {
-    y <- args$y
-    x <- args$x
-    n <- args$n
-    res <- sum(y * x %*% par - n * log(1 + exp(x %*% par)))
-    return(res)
-}
-
-args0 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds))))
-args1 <- list(y = ds$using, n = ds$using + ds$notUsing, x = cbind(rep(1, nrow(ds)), 
-    as.numeric(ds$wantsMore) - 1))
-
-betas0 <- fit0$coefficients
-betas1 <- fit1$coefficients
-
-ll0 <- loglik(betas0, args0)
-ll0
-ll1 <- loglik(betas1, args1)
-ll1
-```
-
-**d)** The likelihood ratio test statistic can alternatively be calculated using the residual deviance in `fit1` and `fit0`, and is given as `fit0$deviance-fit1$deviance`. Do you see why?
-
-```{r}
-fit0$deviance-fit1$deviance
-```
-
-**e)** Are the two test statistics (Wald and LRT) equal? Do the two tests give the same conclusions?
-
-### Problem 3: Now two covariates - deviance and model comparison
-(no maths - only definitions and print-out)
-
-Now we study the response together with `age` and `wantsMore`. We will consider the following 5 models. See R-code and print-out below. 
-**a)** Explain what each of these models include. 
-
-**b)** What is the definition of the deviance and df. What can we use the deviance for? Optional: derive the formula for the deviance for the logit model (the derivation is not given on the module pages.)
-
-**c)** Perform a likelihood ratio test - based on the deviance results given in the data frame in the R chunk- to compare the additive and interact models. First write down the null and alternative hypothesis you are testing. Which of the two models would you prefer?
-
-**d)** What if you use the AIC for model selection, which model (out of the 5) will you then use?
-
-```{r}
-ds$Y <- cbind(ds$using, ds$notUsing)
-models <- list(
-  null     = glm(Y ~ 1, family=binomial, data=ds),
-  age      = glm(Y ~ age, family=binomial, data=ds),
-  desire   = glm(Y ~ wantsMore, family=binomial, data=ds),
-  additive = glm(Y ~ age + wantsMore, family=binomial, data=ds),
-  interact = glm(Y ~ age*wantsMore, family=binomial, data=ds)
-)
-models
-lapply(models,summary)
-data.frame(deviance=round(unlist(lapply(models,deviance)),2),df=unlist(lapply(models,df.residual)),aic=round(unlist(lapply(models,AIC))))
-```
-Note: The function `lapply` (list apply) will apply a function to each element of a list.
-
-###Problem 4: Plotting
-(yes, mainly R and trying to understand) 
-
-Finally, we want to use the additive model with all three covariates: `Y~age+education+wantsMore` to study different plots.
-
-```{r,eval=TRUE}
-fit3add=glm(cbind(using,notUsing)~age+education+wantsMore,data=ds,family=binomial)
-summary(fit3add)
-exp(fit3add$coefficients)
-```
-
-**a)** Comment on the output from `summary`. Use the deviance to test if this is a good model. Which model do you then compare to (what is the saturated model here)?.
-
-**b)** Look at the plot of fitted values vs. deviance residuals. Do you see a trend?
-
-```{r}
-library(ggplot2)
-plotdf <- data.frame(dres = fit3add$residuals, fitted = fit3add$fitted.values, 
-    age = ds$age)
-ggplot(plotdf, aes(x = fitted, y = dres)) + geom_point() + labs(x = "Fitted values", 
-    y = "Deviance residuals")
-```
-
-**c)** Here is a code to produce a plot of fitted values for the 16 covariate patterns together with a saturated model (called frac) - on the logit scale. How can you see from the dots for fitted values that we are assuming an additive model on the logit scale (that is, the pattern for each panel for logit fitted vs age is the same for each panel if we have an additive model on the logit scale - you see that from the fitted points)? Do you also see that for the observed values? Implication? Any other observations?
-
-```{r,eval=TRUE}
-library(ggplot2)
-frac=ds$using/(ds$using+ds$notUsing)
-logitdf=data.frame(lfitted=qlogis(fit3add$fitted),lfrac=qlogis(frac),age=ds$age,wantsMore=ds$wantsMore,education=ds$education)
-ggplot(logitdf,aes(x=age))+geom_point(aes(y=lfrac,colour="saturated"))+geom_point(aes(y=lfitted,colour="fitted"))+facet_wrap(facets=~wantsMore*education) + labs(x = "age", y = "")
-```
-
-To see what Rodríguez have found to be the best model, look at the bottom of <http://data.princeton.edu/wws509/R/c3s6.html>.
-  
-**Note:** This exercise is based on the excellent notes of Germán Rodríguez at Princeton, see in particular the R logs at <http://data.princeton.edu/wws509/R/c3s1.html>.
-
-
-<!--
-We will use a data set on embryogenic anters of the plant species Dutura innoxia (as described in Dobson and Barnett, 2008), given as
-```{r}
-storage=c(1,1,1,2,2,2)
-centrifuge=c(40,150,350,40,150,350)
-anters=data.frame(y=c(55,52,57,55,50,50),n=c(102,99,108,76,81,90),storage=factor(storage),lncentrifuge=log(centrifuge))
-knitr::kable(anters)
-```
-For each combination of `storage` (1= control, 2=treatment=at 3 degrees for 48 hours) and `lncentrifuge`(centrifuging force, three continuous values chosen on the natural log scale) a total of `n` anthers (pollenknapper) were prepared and resulted in `y` embryogenic anthers (germinated). As covariates we will used `storage` as a factor (you may choose either dummy or effect coding), and `lncentrifuge` will be used as a continuous covariate.
-
-The aim is to build a model to predict the probability of germination, and to understand the possible influence of covariates storage and centrifuge. 
-
-1. Explore the data set. Plot each covariate against fraction of anters germinated for the different groups. Does the plot hint to a relationship between the possible covariates and the response?
-
-2. Why may a binominal regression be suitable for these data? Write down assumptions we make if we want to fit a logit model.
-
-We will continue to look at the logit model.
-
-3. Let $x$ be the `lncentrifuge`. We start fitting Model 1: "linear effect of lncentrifuge, but different intercept and different slope for control and treatment". Hint: this can be given as model formula `cbind(y,n-y)~storage*lncentrifuge`. 
--->
-
-<!-- ## Team mode kahoot! -->
-
-<!-- [Beamer presentation with the 8 questions (answers on last slide))](https://www.math.ntnu.no/emner/TMA4315/2017h/M3quiz.pdf)  -->
-
-
-# Exam questions
-
-For this module the following are exam questions to work with
-
-* 2012 – [Problem 1](https://www.math.ntnu.no/emner/TMA4315/Exam/GLMeksamen2012E.pdf)
-* 2011 – [Problem 1](https://www.math.ntnu.no/emner/TMA4315/Exam/eksDes11e.pdf)
-<!-- * 2009 – [Problem 3](https://www.math.ntnu.no/emner/TMA4315/Exam/e2009.pdf) -->
-<!-- * 2008 – Problem 2 -->
-<!-- * 2005 – Problem 1 and 2 -->
-
-In addition these essay-type exam questions are closely related to this module.
-
-## December 2014
-There are two main asymptotic results that are behind essentially everything we
-have done with respect to inference for generalized linear models. These are
-
-1. asymptotic normality of maximum likelihood estimators (MLE), and
-
-2. asymptotic result for likelihood ratio tests (LRT).
-
-State, describe and discuss the main assumptions behind these two
-asymptotic results, how these results are used in practice to do inference
-for parameters, testing various hypotheses and comparing nested
-models, for logistic regression.
-
-## December 2016
-We will consider (binomial or binary) logistic regression, where we have independent observations
-$$Y_i \sim \text{Binomial}(n_i,\pi_i) \text{ } i=1,\ldots,n$$
-so that 
-$$P(Y_i)=\binom{n_i}{y_i}\pi_i^{y_i}(1-\pi_i)^{n_i-y_i}, \text{ } y_i=0,1,\ldots, n_i$$
-The linear predictor is 
-$$ \eta_i={\bf x}_i^T\boldsymbol{\beta}$$
-and 
-$$ \pi_i=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$$
-or 
-$$ \text{logit}(\pi_i)=\eta_i.$$
-Here, ${\bf x}_i$ is a vector of the $p$ covariates for the $i$th observation $y_i$ with size (number of trials) $n_i$, and $\boldsymbol{\beta}$ is the vector of $p$ unknown regression coefficients.
-
-Write an introduction to logistic regression and its practical usage, for a student
-with a good background in statistics, but no knowledge about Generalized Linear
-Models (GLM). Topics you may want to consider, are
-
-* When to use it? Underlying assumptions.
-* Parameter estimation, limiting results for the MLE, Fisher information and
-observed Fisher information, confidence intervals and hypothesis testing.
-* Output analysis, residual plots (when it is possible) and interpretation of the $\boldsymbol{\beta}$-coefficients
-* Deviance and its usage.
-
-# R packages
-
-```{r, eval=FALSE}
-install.packages(c("tidyverse",
-                   "investr",
-                   "knitr",
-                   "kableExtra",
-                   "faraway",
-                   "viridis",
-                   "statmod"))
-```
+---
 
 
 # References for further reading
@@ -1811,3 +994,124 @@ install.packages(c("tidyverse",
 * P. McCullagh and J. A. Nelder (1989): "Generalized Linear Models". Second edition.
 
 
+---
+
+
+If we have time
+
+---
+
+## Look back at MLR - what is $s(\boldsymbol{\beta})$ and $F(\boldsymbol{\beta})$ then?
+
+1. $Y_i \sim \text{N}(\mu_i, \sigma^2)$
+
+2. $\eta_j = x_i^T\boldsymbol{\beta}$
+
+3. $\mu_i = \eta_i$ (identity response function and link function)
+
+Likelihood:
+
+$$L(\boldsymbol{\beta}) = \left(\frac{1}{2\pi}\right)^{n/2}\left(\frac{1}{\sigma^2}\right)^{n/2} \exp\left(-\frac{1}{2\sigma^2}(y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta})\right)$$
+
+ 
+Loglikelihood:
+$$l(\boldsymbol{\beta}) = \ln L(\boldsymbol{\beta}) = -\frac{n}{2} \ln (2\pi) - \frac{n}{2} \ln (\sigma^2) - \frac{1}{2\sigma^2}(y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta})$$
+
+---
+
+
+Since $(y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta}) = Y^TY - 2Y^T{\bf X}\boldsymbol{\beta}  + \boldsymbol{\beta}^T{\bf X}^T{\bf X}\boldsymbol{\beta}$, then
+
+
+$$s(\boldsymbol{\beta}) = \frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = -\frac{1}{2\sigma^2}(2{\bf X}^T{\bf X}\boldsymbol{\beta}-2{\bf X}^TY) = \frac{1}{\sigma^2}({\bf X}^TY - {\bf X}^T{\bf X}\boldsymbol{\beta})$$
+
+and $s(\hat{\boldsymbol{\beta}}) = 0$ gives ${\bf X}^TY - {\bf X}^T{\bf X}\boldsymbol{\beta} = 0$ which can be solved on closed form giving $\hat{\boldsymbol{\beta}} = ({\bf X}^T{\bf X})^{-1}{\bf X}^TY$. So, no need for iterative methods.
+
+---
+
+
+Finally, observed Fisher information matrix.
+
+$$H(\boldsymbol{\beta}) = \frac{\partial s(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}^T} = -\frac{\partial}{\partial \boldsymbol{\beta}_T}(\frac{1}{\sigma^2}{\bf X}^TY - \frac{1}{\sigma^2}{\bf X}^T{\bf X}\boldsymbol{\beta}) = \frac{1}{\sigma^2}{\bf X}^T{\bf X}$$
+
+which is independent on $\boldsymbol{\beta}$, and also we see that $F(\boldsymbol{\beta})=\text{E}(H(\boldsymbol{\beta}))=H(\boldsymbol{\beta})$ since no random variables are present. The identity link is also the canonical link. Finally, the (asymptotic) covariance of the ML estimate is $F^{-1}(\hat{\boldsymbol{\beta}})=({\bf X}^T{\bf X})^{-1}\sigma^2$ which we know as $\text{Cov}(\hat{\boldsymbol{\beta}})$.
+
+---
+
+
+# Exponential family - and canonical link
+
+In Module 1 we introduced distributions of the $Y_i$, that could be written in the form of a _univariate exponential family_
+\[ f(y_i\mid \theta_i)=\exp \left( \frac{y_i \theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right) \]
+where
+
+* $\theta_i$ is called the canonical parameter and is a parameter of interest
+
+* $\phi$ is called a nuisance parameter (and is not of interest to us=therefore a nuisance (plage))
+
+* $w_i$ is a weight function, in most cases $w_i=1$
+
+* $b$ and $c$ are known functions.
+
+It can be shown that $\text{E}(Y_i)=b'(\theta_i)$ and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w_i}$.
+
+---
+
+In Module 1 we found that the binomial distribution $Y_i\sim \text{bin}(1,\pi_i)$ is an exponential family (derivation from Module 1: <https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf>)
+
+and that
+
+* $\theta_i=\ln( \frac{\pi_i}{1-\pi_i})$ is the canonical parameter
+* $\phi=1$, no nuisance
+* $w_i=1$
+* $b(\theta_i)=\ln(1+\exp(\theta_i))$
+
+---
+
+Recall that in a GLM we choose a link function $g$, linking the linear predictor and the mean: $\eta_i=g(\mu_i)$. For the logit model we had that $\eta_i=\ln(\frac{\pi_i}{1-\pi_i})$.
+
+Now (new to us) - every exponential family has a unique _canonical link function_ such that
+$$\theta_i=\eta_i$$
+Since $\eta_i=g(\mu_i)$ this means to us that we need 
+$$ g(\mu_i)=\theta_i$$
+to have a canonical link.
+
+**Q:** Is the logit link the canonical link for the binary model?
+
+```{r , echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
+cat("Answer \n")
+cat("yes, since $\theta_i=\ln( \frac{\pi_i}{1-\pi_i})=g(\pi_i)$ then the logit link is the canonical link for the binary regression.\n")
+```
+
+
+**A**:
+
+Yes, since $\theta_i=\ln( \frac{\pi_i}{1-\pi_i})=g(\pi_i)$ then the logit link is the canonical link for the binary regression.
+
+---
+
+##Properties of a GLM with canonical link
+
+1. The log-likelihod is always concave so that the ML estimated is always unique (given that it exists).
+
+2. The observed Fisher information matrix $H(\boldsymbol{\beta})$ _equals_ the expected Fisher information matrix $F(\boldsymbol{\beta})$.
+That is, $$-\frac{\partial^2 l}{\partial \boldsymbol{\beta} \boldsymbol{\beta}^T}=\text{E}(-\frac{\partial^2 l}{\partial \boldsymbol{\beta} \boldsymbol{\beta}^T})$$
+
+Proving this is beyond the scope of this course.
+
+---
+
+# Parameter estimation - in practise
+To find the ML estimate $\hat{\boldsymbol{\beta}}$ we need to solve
+$$s(\hat{\boldsymbol{\beta}})=0$$
+We have that the score function for the logit model is:
+
+$$
+s(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j (y_j-n_j\pi_j)
+$$
+
+<!---
+where $\pi_j=\frac{\exp({\bf x}_j^T\hat{\boldsymbol{\beta}})}{1+\exp({\bf x}_j^T\hat{\boldsymbol{\beta}})}$. Observe that this is a non-linear function in $\boldsymbol{\beta}$, and has no closed form solution. 
+--->
+
+---

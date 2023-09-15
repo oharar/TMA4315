@@ -296,21 +296,10 @@ given.
 \end{block}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 The table below shows the 8 values of the log10-dose against the number
 of beetles alive and killed. The plot shows log10-dose on the horizontal
 axis and fraction of beetles killed (killed/total) for each log10-dose.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(investr)}
-\CommentTok{\# from aggregated to individual data (because these data were aggregated)}
-\NormalTok{ldose}\OtherTok{=}\FunctionTok{rep}\NormalTok{(}\FunctionTok{round}\NormalTok{(beetle}\SpecialCharTok{$}\NormalTok{ldose, }\DecValTok{2}\NormalTok{), beetle}\SpecialCharTok{$}\NormalTok{n)}
-\NormalTok{y}\OtherTok{=}\ConstantTok{NULL}\NormalTok{; }\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{) y}\OtherTok{=}\FunctionTok{c}\NormalTok{(y,}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,beetle}\SpecialCharTok{$}\NormalTok{n[i]}\SpecialCharTok{{-}}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y[i]),}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,beetle}\SpecialCharTok{$}\NormalTok{y[i]))}
-\NormalTok{beetleds}\OtherTok{=}\FunctionTok{data.frame}\NormalTok{(}\StringTok{"killed"}\OtherTok{=}\NormalTok{y,}\StringTok{"ldose"}\OtherTok{=}\NormalTok{ldose)}
-\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\FunctionTok{table}\NormalTok{(beetleds), }\AttributeTok{digits =} \DecValTok{2}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}lrrrrrrrr@{}}
 \toprule\noalign{}
@@ -323,17 +312,7 @@ axis and fraction of beetles killed (killed/total) for each log10-dose.
 \end{longtable}
 \end{frame}
 
-\begin{frame}[fragile]
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# plot from aggregated data}
-\NormalTok{frac}\OtherTok{=}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{/}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n}
-\NormalTok{dss}\OtherTok{=}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{fkilled=}\NormalTok{frac,}\AttributeTok{ldose=}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{ldose)}
-\FunctionTok{ggplot}\NormalTok{(dss,}\FunctionTok{aes}\NormalTok{(ldose,fkilled))}\SpecialCharTok{+}
-  \FunctionTok{geom\_point}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
+\begin{frame}
 \includegraphics{Module03PresentationWeek1_files/figure-beamer/unnamed-chunk-2-1.pdf}
 \end{frame}
 
@@ -605,15 +584,6 @@ estimates.
 \end{frame}
 
 \begin{frame}[fragile]
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(faraway)}
-\FunctionTok{data}\NormalTok{(babyfood)}
-\CommentTok{\# babyfood}
-\FunctionTok{xtabs}\NormalTok{(disease}\SpecialCharTok{/}\NormalTok{(disease}\SpecialCharTok{+}\NormalTok{nondisease)}\SpecialCharTok{\textasciitilde{}}\NormalTok{sex}\SpecialCharTok{+}\NormalTok{food,babyfood)}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
 ##       food
 ## sex        Bottle     Breast      Suppl
