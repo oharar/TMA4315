@@ -182,7 +182,7 @@ which relates the expected to the observed Fisher information matrix.
 
 ## Observed Fisher information matrix $H(\boldsymbol{\beta})$
 
-What is the observed Fisher information matrix? i.e. don't take expectations...
+What is the observed Fisher information matrix?
 
 $$H(\boldsymbol{\beta}) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} = -\frac{\partial s(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}^T} = \frac{\partial}{\partial\boldsymbol{\beta}^T}\left[\sum_{i=1}^n (\pi_i-y_i){\bf x}_i \right] $$
 
@@ -224,7 +224,7 @@ H(\boldsymbol{\beta}) &=\sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \e
 \end{aligned}
 $$
 
-So the observed and the expected Fisher information matrix are equal.
+So the observed and the expected Fisher information matrix are equal., i.e. $Cov(s(\beta) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T}$
 
 This is not the case for the probit or complementary log-log models.
 
@@ -298,7 +298,7 @@ where $H(\boldsymbol{\beta}^{(0)})^{-1}$ is the matrix inverse of $H(\boldsymbol
 
 ---
 
-## Enter nNewton and Raphson
+## Enter Newton and Raphson
 
 If we start with some value $\boldsymbol{\beta}^{(0)}$ and then find a new value $\boldsymbol{\beta}^{(1)}$ by applying this equation, and then continue applying the equation until convergence we have the _Newton-Raphson_ method:
 

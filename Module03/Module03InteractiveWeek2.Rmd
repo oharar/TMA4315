@@ -73,7 +73,8 @@ fit0=glm(cbind(using,notUsing)~1,data=ds,family=binomial(link=logit))
 summary(fit0)
 ```
 
-We see some output. The estimate of the intercept is `r round(coef(fit0),2)`: this is less than 0.5, so the mean probability is <0.5. 
+We see some output. The estimate of the intercept is `r round(coef(fit0),2)`: this is less than 0.5, so the mean probability that a woman uses contraception is <0.5 (the response is written as `cbind(success, failure)`: there are other ways of writing it, see the help page for `glm`).
+
 The null and residual deviances are the same, because this is the null model.
 
 </details>
@@ -211,6 +212,8 @@ Fit a regression with `wantsMore` as covariate, and call this `fit1`.
 
 <details><summary>Hint</summary>
 Interpretation using odds -- if `wantsMore´ goes from 0=no to 1=yes, then...
+
+Also, check whether a "success" is using or not using contraceptives.
 </details>
 
 <details><summary>Answer</summary>
@@ -220,8 +223,7 @@ summary(fit1)
 exp(fit1$coefficients)
 ```
 
-$\beta_1$ is the difference between the two levels of `wantsMore`, i.e. it is the difference in the log odds between women who want more children and those who do not. The odds for a woman who wants more children are `r round(exp(fit1$coefficients)*100)`\% of what they are for those who do not. Put the other way around, they are `r round(exp(-fit1$coefficients),1)` times higher for women who do not want more children.
-
+$\beta_1$ is the difference between the two levels of `wantsMore`, i.e. it is the difference in the log odds between women who want more children and those who do not. The estimate is negative (`r round(fit1$coefficients[2],2)`), so a woman who wants more children is less likely to be using contraceptives. The odds for a woman who wants more children are `r round(exp(fit1$coefficients[2])*100)`\% lower than they are for those who want more children, . Put the other way around, they are `r round(exp(-fit1$coefficients[2]),1)` ($=1/0.35$) times higher for women who do not want more children.
 </details>
 
 <span class="question">**b)** Is this covariate significant?</span>
@@ -235,6 +237,7 @@ $\beta_1$ is the difference between the two levels of `wantsMore`, i.e. it is th
 <details><summary>Answer</summary>
 
 - Write down the null and alternative hypothesis to test. 
+
 $H_0: \beta_1=0$
 $H_1: \beta_1 \ne 0$
 
@@ -366,7 +369,8 @@ Note: The function `lapply` (list apply) will apply a function to each element o
 
 <span class="question">**a)** Explain what each of these models include. </span>
 
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+We're interested in which covariate is in which model
 </details>
 <details><summary>Answer</summary>
 
@@ -383,13 +387,30 @@ Note: The function `lapply` (list apply) will apply a function to each element o
 <details><summary>Answer</summary>
 </details>
 <details><summary>Answer</summary>
+
+The _deviance_ is defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
+
+$$
+\begin{aligned}
+D&=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model})) \\
+&=-2(l(\hat{\pi})-l(\tilde{\pi}))=
+-2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))
+\end{aligned}
+$$
+
+The df is the difference in the number of parameters of the models being compared.
+
+We can use it to (a) compare models, (b) test howgoodness of fit of a model, and (c) test for overdispersion.
+
 </details>
 
 <span class="question">Optional: derive the formula for the deviance for the logit model (the derivation is not given on the module pages.)</span>
 
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+No answer yet!
 </details>
 <details><summary>Answer</summary>
+Sorry 😢 
 </details>
 
 

@@ -383,8 +383,7 @@ which relates the expected to the observed Fisher information matrix.
 \begin{block}{Observed Fisher information matrix
 \(H(\boldsymbol{\beta})\)}
 \protect\hypertarget{observed-fisher-information-matrix-hboldsymbolbeta}{}
-What is the observed Fisher information matrix? i.e.~don't take
-expectations\ldots{}
+What is the observed Fisher information matrix?
 
 \[H(\boldsymbol{\beta}) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} = -\frac{\partial s(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}^T} = \frac{\partial}{\partial\boldsymbol{\beta}^T}\left[\sum_{i=1}^n (\pi_i-y_i){\bf x}_i \right] \]
 
@@ -429,7 +428,8 @@ H(\boldsymbol{\beta}) &=\sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \e
 \end{aligned}
 \]
 
-So the observed and the expected Fisher information matrix are equal.
+So the observed and the expected Fisher information matrix are equal.,
+i.e.~\(Cov(s(\beta) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T}\)
 
 This is not the case for the probit or complementary log-log models.
 \end{frame}
@@ -520,8 +520,8 @@ Setting \(s(\hat{\boldsymbol{\beta}})=0\) solving for
 \end{frame}
 
 \begin{frame}
-\begin{block}{Enter nNewton and Raphson}
-\protect\hypertarget{enter-nnewton-and-raphson}{}
+\begin{block}{Enter Newton and Raphson}
+\protect\hypertarget{enter-newton-and-raphson}{}
 If we start with some value \(\boldsymbol{\beta}^{(0)}\) and then find a
 new value \(\boldsymbol{\beta}^{(1)}\) by applying this equation, and
 then continue applying the equation until convergence we have the
