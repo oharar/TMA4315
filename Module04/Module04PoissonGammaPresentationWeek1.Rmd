@@ -585,7 +585,7 @@ To calculate ${\bf F}^{-1}(\tilde{\boldsymbol{\beta}})$ this is a submatrix of t
 
 <!-- ${\bf F}(\tilde{\boldsymbol{\beta}})$ is a submatrix of ${\bf F}(\boldsymbol{\beta})$, and general formulas for inverse of submatrix must be used. -->
 
-When the null hypothesis is true $U \sim \chi^2_r$ (assumptotcially): $r$ is the difference in number of estimated parameters between the models.
+When the null hypothesis is true $U \sim \chi^2_r$ (assymptotically): $r$ is the difference in number of estimated parameters between the models.
 
 ---
 
@@ -602,7 +602,7 @@ When the null hypothesis is true $U \sim \chi^2_r$ (assumptotcially): $r$ is the
 
 ### Example: Female crabs with satellites - the different tests.
 
-We fit a model with two covariates, one is categorical and we use effect coding. We want to test if we need to add these covariates.
+We fit a model with two covariates (`Width` & `Colour`): C is categorical and we use effect coding. We want to test if we need to add these covariates.
 
 ```{r}
 model3=glm(Sa~W+C,family=poisson(link=log),data=crab,contrasts=list(C="contr.sum"))
@@ -640,4 +640,8 @@ anova(model3,test="LRT")
 
 anova(model3,test="Rao")
 ```
+
+---
+
+Yeah, let's stop here
 
