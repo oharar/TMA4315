@@ -23,6 +23,10 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results=
 showsol<-TRUE
 ```
 
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
 #<a id="interactivew2">Interactive session - second week</a>
 
 ## Problem 1: Exam 2007 (Problem 1, a bit modified) - Smoking and lung cancer
@@ -40,7 +44,7 @@ You can look at the dataset here: <https://www.math.ntnu.no/emner/TMA4315/2018h/
 and can be found here as well: <http://data.princeton.edu/wws509/datasets/#smoking>
 
 Remark: the data set is probably taken from <https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents>
-and there it is said the the persons under study are males who have contributed in wars before 1956 and who answered a questionary. The authors point out that the dataset is not representative for the whole population.
+and there it is said the the persons under study are males who have contributed in wars before 1956 and who answered a questionaire. The authors point out that the dataset is not representative for the whole population.
 
 We are interested in studying if the mortality rate due to lung cancer (the number of deaths due to lung cancer per individual during six year) controlled for age group and smoking status. Assume that the number of deaths for each set of covariate values, $Y_i$, can be considered Poisson distributed, $Y_i \sim \text{Poisson}(\lambda_i)$. We fit the following model:
 
@@ -55,19 +59,51 @@ summary(model1)
 ```
 
 
-**a)**
-What is an offset?  
-For 53-year old non-smokers, what is the estimated number of deaths due to lung cancer (per person over 6 years)?  
-Why is the number of degrees of freedom for the deviance of this model 24? Does the model give a good fit?
+<span class="question">a) What is an offset?</span>
 
-**b)**
-Let $\lambda(a,s)$ denote the expected number of lung cancer deaths per person in age group $a$ with smoking status $s$. For two different smoking statuses $s_1$ and $s_2$, define
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">For 53-year old non-smokers, what is the estimated number of deaths due to lung cancer (per person over 6 years)?  </span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">Why is the number of degrees of freedom for the deviance of this model 24?</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">Does the model give a good fit?</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+b) Let $\lambda(a,s)$ denote the expected number of lung cancer deaths per person in age group $a$ with smoking status $s$. For two different smoking statuses $s_1$ and $s_2$, define
 
 $$r(a, s_1, s_2) = \frac{\lambda(a, s_1)}{\lambda(a, s_2)}.$$
 
-Explain why $r(a, s_1, s_2)$ does **not** vary as a function of $a$ in `model1`.  
-For $s_1 =$ `cigarPipeOnly` and $s_2 =$ `cigaretteOnly`, find an estimate value for $r(a, s_1, s_2)$ and an approximate 90 % confidence interval. Is there a significant difference in the expected number of lung cancer deaths for individuals that smoke cigarettes `cigaretteOnly` versus those that smoke cigar/pipe `cigarPipeOnly`?
+<span class="question">Explain why $r(a, s_1, s_2)$ does **not** vary as a function of $a$ in `model1`.  </span>
 
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">For $s_1 =$ `cigarPipeOnly` and $s_2 =$ `cigaretteOnly`, find an estimate value for $r(a, s_1, s_2)$ and an approximate 90 % confidence interval.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">Is there a significant difference in the expected number of lung cancer deaths for individuals that smoke cigarettes `cigaretteOnly` versus those that smoke cigar/pipe `cigarPipeOnly`?</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 **c)**
 We will now consider two alternative models, `model2` and `model3`:
@@ -80,9 +116,28 @@ summary(model2)
 summary(model3)
 ```
 
-Why does `model2` and `model3` have 32 and 31 degrees of freedom, respectively? If we want to compare the three models `model1`, `model2` and `model3`, which model would you choose as the best? Justify your answer by formulating relevant hypotheses and perform hypothesis tests, based on the print-outs above. Hint: remember that to compare two models then one model needs to be nested within the other model.
+<span class="question">Why does `model2` and `model3` have 32 and 31 degrees of freedom, respectively?</span>
 
-New: For `model3`: Plot the regression line for the expected number of lung cancer deaths per person as a function of `age` for each of the four different smoking levels in the same plot. First use all coefficients, and then only the ones that are significant. Use `ggplot`! Discuss what you see.
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">If we want to compare the three models `model1`, `model2` and `model3`, which model would you choose as the best? Justify your answer by formulating relevant hypotheses and perform hypothesis tests, based on the print-outs above.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+Hint: remember that to compare two models then one model needs to be nested within the other model.
+
+New: For `model3`: <span class="question">Plot the regression line for the expected number of lung cancer deaths per person as a function of `age` for each of the four different smoking levels in the same plot. First use all coefficients, and then only the ones that are significant. Use `ggplot`! Discuss what you see.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 <!--
 **d)** The (asymptotic) covariance matrix for the regression parameters (in a GLM) are given as $({\bf X}^T{\bf W}{\bf X})^{-1}$ where ${\bf X}$ is the design matrix for the problem.
@@ -109,20 +164,63 @@ $$ f_Y(y) = \frac{1}{\Gamma(\nu)} \left(\frac{\nu}{\mu}\right)^{\nu} y^{\nu-1}\e
 
 In this problem we consider $N$ observations, each gamma distributed with $Y_i \sim Gamma(\nu, \mu_i)$ (remark: common $\nu$). Here $\nu$ is considered to be a known nuisance parameter, and the $\mu_i$s are unknown.
 
-**a)** Show that the gamma distribution function is member of the exponential family when $\mu_i$ is the parameter of interest.  
-Use this to find expressions for the expected value and the variance of $Y_i$, in terms of $(\nu,\mu_i)$, and interpret $\nu$.  
-New: What is the canonical link for the Gamma distribution?
+**a)** <span class="question">Show that the gamma distribution function is member of the exponential family when $\mu_i$ is the parameter of interest.</span>
 
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">Use this to find expressions for the expected value and the variance of $Y_i$, in terms of $(\nu,\mu_i)$, and interpret $\nu$.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+New: <span class="question">What is the canonical link for the Gamma distribution?</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 Hint: if you want to focus on discussing - you may look at the solutions from [Module 1 together](https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf).
 
-**b)** Explain what a saturated model is.  
-Set up the log-likelihood function expressed by $\mu_i$, and use it to find the maximum likelihood estimators for $\mu_i$-s of the saturated model.  
-Find the deviance (based on all $N$ observations).
+**b)** <span class="question">Explain what a saturated model is.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">Set up the log-likelihood function expressed by $\mu_i$, and use it to find the maximum likelihood estimators for $\mu_i$-s of the saturated model.  </span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<span class="question">Find the deviance (based on all $N$ observations).</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 Hint: Do you see directly that $\hat{\mu}_i=y_i$? If not, you may look at the likelihood for one observation and solve that the derivative equals 0.
 
 **c)** We now want to construct a model for amount of precipitation (given that there are occurrence) with precipitation forecast as explanatory variable.  
-Let $Y_i$ be amount of precipitation for day $i$, and let $x_i$ be the precipitation forecast valid for day $i$. Set up a GLM for this, and argue for your choice of link function and linear predictor.
+<span class="question">Let $Y_i$ be amount of precipitation for day $i$, and let $x_i$ be the precipitation forecast valid for day $i$. Set up a GLM for this, and argue for your choice of link function and linear predictor.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 Hint: explain why this fits into our GLM-gamma framework and set up our 3 equation model (random, systematic, link).
 
@@ -150,11 +248,33 @@ The number of survivors is modelled as a binomially distributed variable using a
 
 $$ \eta = \beta_0 + \beta_1 \texttt{ fapp} + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3} $$
 
-is displayed below. What is the interpretation of the estimate of the coefficient of appearance, `fapp` (`f` means factor)? Explain also how this coefficient can be expressed in terms of an odds ratio.
+is displayed below. 
+
+<span class="question">What is the interpretation of the estimate of the coefficient of appearance, `fapp` (`f` means factor)? Explain also how this coefficient can be expressed in terms of an odds ratio.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 Hint: first explain what is the predicted odds of survivial for country $j$ for a benign tumor, then the same for a malignant tumor- and then make an odds ratio.
 
-New: The main difference between our dataset and UiO's dataset is the number of degrees of freedom for the null model; we have 34, they have 35. How many observations do we have in the dataset? And how many does UiO have? Hint: All the covariates in the dataset are categorical, two with 3 levels, and two with 2 levels. How many possible combinations of observations does that make?
+New: The main difference between our dataset and UiO's dataset is the number of degrees of freedom for the null model; we have 34, they have 35. 
+
+<span class="question">How many observations do we have in the dataset? And how many does UiO have?</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+Hint: All the covariates in the dataset are categorical, two with 3 levels, and two with 2 levels. How many possible combinations of observations does that make?
 
 ```
 Call:
@@ -181,8 +301,16 @@ Residual deviance: 36.625  on 31  degrees of freedom
 
 ```
 
-**b)** The output below is an analysis of deviance for comparing various model spesifications. Fill out the positions indicated `i-iv`.  
+**b)** The output below is an analysis of deviance for comparing various model spesifications. <span class="question">Fill out the positions indicated `i-iv`.  </span>
 Note: `y ~ x1*x2` gives both the linear components and the interaction, i.e., it is the same as `y ~ x1 + x2 + x1:x2` (`x1:x2` gives interaction only).  
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 Remark: remember that `anova` gives the sequential comparison of deviances - that is - comparing each model to the previous model.
 
@@ -211,14 +339,34 @@ $$ H_0 : \beta_2 + \beta_3 = -1 \text{ versus } H_1 : \beta_2 + \beta_3 \neq -1 
 
 Note: what are you testing now?
 
-**c)** The estimated covariance matrix between the estimators of the coefficients $\beta_2$ and $\beta_3$ above is $\left(\begin{matrix} 0.040 & 0.021 \\ 0.021 & 0.043\end{matrix} \right)$. Use a Wald test to test the null hypothesis above.
+**c)** The estimated covariance matrix between the estimators of the coefficients $\beta_2$ and $\beta_3$ above is $\left(\begin{matrix} 0.040 & 0.021 \\ 0.021 & 0.043\end{matrix} \right)$. <span class="question">Use a Wald test to test the null hypothesis above.</span>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 Note: remember - this was a written exam so you do this by hand!
 
-**d)** Explain how the null hypothesis can be tested with a likelihood ratio test by fitting two suitable models. No numerical calculations are necessary, but it must be specified how the predictors should be defined.  
+**d)** <span class="question">Explain how the null hypothesis can be tested with a likelihood ratio test by fitting two suitable models.</span> No numerical calculations are necessary, but it must be specified how the predictors should be defined.  
 Remark: rather technical - and hint: offset term?
 
-New: Do this test in `R`. [Here is the data set!](https://www.math.ntnu.no/emner/TMA4315/2018h/breastcancer.txt)
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
+
+
+
+New: <span class="question">Do this test in `R`.</span>
+
+[Here is the data set!](https://www.math.ntnu.no/emner/TMA4315/2018h/breastcancer.txt)
+
+<details><summary>Answer/Hint (not yet added)</summary>
+42
+</details>
 
 # Work on your own: Exam questions
 

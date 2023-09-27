@@ -1530,8 +1530,9 @@ distributed, <span class="math inline">\(Y_i \sim
 smoking &lt;- read.table(file = &quot;https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt&quot;)
 head(smoking)
 nrow(smoking)
-model1 &lt;- glm(dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop)) 
-# note that the size of the population for each combination of the covaraites is the offset here
+model1 &lt;- glm(dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
+# note that the size of the population for each combination of the covaraites
+# is the offset here
 summary(model1)</code></pre>
 <pre><code>##   dead  pop   age ageLevel smoke
 ## 1   18  656 40-44        1    no
@@ -1847,13 +1848,8 @@ tables.</li>
 </div>
 <div id="r-packages" class="section level1">
 <h1>R packages</h1>
-<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;, 
-  &quot;ggplot2&quot;, 
-  &quot;statmod&quot;,
-  &quot;corrplot&quot;, 
-  &quot;ggplot2&quot;, 
-  &quot;GGally&quot;,
-  &quot;boot&quot;))</code></pre>
+<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;, &quot;ggplot2&quot;, &quot;statmod&quot;, &quot;corrplot&quot;, &quot;ggplot2&quot;, &quot;GGally&quot;,
+    &quot;boot&quot;))</code></pre>
 </div>
 <div id="further-reading" class="section level1">
 <h1>Further reading</h1>

@@ -1370,8 +1370,10 @@ The model that we are investigated can be thought of as a _candidate_ model. The
 
 The _deviance_ is then defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
 
-$$D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))=-2(l(\hat{\pi})-l(\tilde{\pi}))=
--2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))$$
+$$
+D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))=-2(l(\hat{\pi})-l(\tilde{\pi}))=
+-2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))
+$$
 
 For our logit model this can be written as (after some maths):
 $$ D=2\sum_{j=1}^G [y_j\ln(\frac{y_j}{n_j\hat{\pi}_j})+(n_j-y_j)\ln(\frac{n_j-y_j}{n_j-n_j\hat{\pi}_j})]$$
