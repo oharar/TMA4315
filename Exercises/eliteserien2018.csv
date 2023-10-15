@@ -1,0 +1,241 @@
+"","home","away","yh","ya"
+"1","Bodø/Glimt","Lillestrøm",3,1
+"2","Molde","Sandefjord Fotball",5,0
+"3","Odd","Haugesund",1,2
+"4","Start","Tromsø",4,1
+"5","Strømsgodset","Stabæk",2,2
+"6","Sarpsborg 08","Rosenborg",1,0
+"7","Kristiansund","Vålerenga",0,1
+"8","Ranheim TF","Brann",0,2
+"9","Lillestrøm","Sarpsborg 08",2,2
+"10","Rosenborg","Kristiansund",2,2
+"11","Haugesund","Molde",0,1
+"12","Brann","Bodø/Glimt",2,0
+"13","Vålerenga","Odd",2,1
+"14","Sandefjord Fotball","Ranheim TF",1,2
+"15","Tromsø","Strømsgodset",3,1
+"16","Stabæk","Start",1,1
+"17","Bodø/Glimt","Haugesund",0,3
+"18","Kristiansund","Lillestrøm",2,1
+"19","Start","Sandefjord Fotball",1,4
+"20","Strømsgodset","Brann",1,1
+"21","Ranheim TF","Stabæk",4,1
+"22","Sarpsborg 08","Vålerenga",3,0
+"23","Molde","Tromsø",2,1
+"24","Odd","Rosenborg",1,1
+"25","Vålerenga","Strømsgodset",1,4
+"26","Haugesund","Sarpsborg 08",1,1
+"27","Tromsø","Ranheim TF",4,0
+"28","Odd","Bodø/Glimt",1,0
+"29","Brann","Kristiansund",1,0
+"30","Sandefjord Fotball","Stabæk",1,1
+"31","Rosenborg","Molde",4,0
+"32","Lillestrøm","Start",1,0
+"33","Start","Vålerenga",1,6
+"34","Strømsgodset","Odd",3,0
+"35","Ranheim TF","Haugesund",4,2
+"36","Sandefjord Fotball","Kristiansund",3,3
+"37","Molde","Lillestrøm",2,1
+"38","Stabæk","Tromsø",1,1
+"39","Sarpsborg 08","Brann",1,2
+"40","Bodø/Glimt","Rosenborg",0,1
+"41","Brann","Stabæk",3,0
+"42","Haugesund","Strømsgodset",1,0
+"43","Kristiansund","Bodø/Glimt",1,1
+"44","Lillestrøm","Ranheim TF",0,1
+"45","Rosenborg","Start",2,0
+"46","Tromsø","Sandefjord Fotball",4,1
+"47","Vålerenga","Molde",0,0
+"48","Odd","Sarpsborg 08",3,1
+"49","Ranheim TF","Vålerenga",2,2
+"50","Molde","Odd",0,1
+"51","Sandefjord Fotball","Brann",0,1
+"52","Sarpsborg 08","Bodø/Glimt",0,0
+"53","Tromsø","Kristiansund",0,0
+"54","Start","Haugesund",0,1
+"55","Strømsgodset","Rosenborg",0,1
+"56","Stabæk","Lillestrøm",3,2
+"57","Rosenborg","Ranheim TF",1,1
+"58","Vålerenga","Haugesund",2,2
+"59","Kristiansund","Stabæk",1,0
+"60","Lillestrøm","Sandefjord Fotball",1,0
+"61","Odd","Start",3,0
+"62","Bodø/Glimt","Strømsgodset",2,2
+"63","Brann","Tromsø",3,0
+"64","Sarpsborg 08","Molde",2,2
+"65","Sandefjord Fotball","Vålerenga",0,1
+"66","Start","Brann",0,1
+"67","Ranheim TF","Odd",3,1
+"68","Haugesund","Kristiansund",3,2
+"69","Molde","Bodø/Glimt",1,2
+"70","Tromsø","Lillestrøm",1,2
+"71","Strømsgodset","Sarpsborg 08",1,2
+"72","Stabæk","Rosenborg",0,1
+"73","Bodø/Glimt","Tromsø",0,1
+"74","Brann","Haugesund",1,1
+"75","Kristiansund","Ranheim TF",1,3
+"76","Molde","Strømsgodset",2,0
+"77","Odd","Sandefjord Fotball",5,0
+"78","Rosenborg","Lillestrøm",3,0
+"79","Sarpsborg 08","Start",4,0
+"80","Vålerenga","Stabæk",1,0
+"81","Haugesund","Rosenborg",1,2
+"82","Kristiansund","Strømsgodset",4,0
+"83","Tromsø","Vålerenga",3,0
+"84","Ranheim TF","Molde",3,1
+"85","Sandefjord Fotball","Sarpsborg 08",0,1
+"86","Stabæk","Odd",2,1
+"87","Start","Bodø/Glimt",1,0
+"88","Lillestrøm","Brann",1,1
+"89","Vålerenga","Lillestrøm",1,0
+"90","Strømsgodset","Sandefjord Fotball",2,0
+"91","Molde","Start",3,1
+"92","Odd","Kristiansund",1,2
+"93","Bodø/Glimt","Ranheim TF",4,0
+"94","Haugesund","Tromsø",1,0
+"95","Rosenborg","Brann",1,2
+"96","Sarpsborg 08","Stabæk",4,2
+"97","Kristiansund","Molde",1,0
+"98","Start","Strømsgodset",1,1
+"99","Lillestrøm","Odd",0,0
+"100","Ranheim TF","Sarpsborg 08",2,1
+"101","Sandefjord Fotball","Haugesund",0,2
+"102","Stabæk","Bodø/Glimt",0,0
+"103","Brann","Vålerenga",0,0
+"104","Tromsø","Rosenborg",2,1
+"105","Molde","Stabæk",3,0
+"106","Start","Kristiansund",2,0
+"107","Strømsgodset","Ranheim TF",3,0
+"108","Bodø/Glimt","Sandefjord Fotball",1,1
+"109","Haugesund","Lillestrøm",2,2
+"110","Sarpsborg 08","Tromsø",2,3
+"111","Rosenborg","Vålerenga",3,0
+"112","Odd","Brann",0,1
+"113","Vålerenga","Bodø/Glimt",2,2
+"114","Kristiansund","Sarpsborg 08",1,1
+"115","Tromsø","Odd",2,1
+"116","Ranheim TF","Start",2,0
+"117","Sandefjord Fotball","Rosenborg",0,1
+"118","Brann","Molde",0,4
+"119","Stabæk","Haugesund",2,1
+"120","Lillestrøm","Strømsgodset",1,1
+"121","Rosenborg","Tromsø",2,1
+"122","Haugesund","Sandefjord Fotball",4,2
+"123","Bodø/Glimt","Brann",2,2
+"124","Odd","Lillestrøm",3,1
+"125","Start","Stabæk",2,1
+"126","Sarpsborg 08","Ranheim TF",4,1
+"127","Molde","Vålerenga",5,1
+"128","Strømsgodset","Kristiansund",2,3
+"129","Ranheim TF","Rosenborg",1,3
+"130","Kristiansund","Odd",1,1
+"131","Stabæk","Sarpsborg 08",1,3
+"132","Strømsgodset","Bodø/Glimt",4,0
+"133","Tromsø","Haugesund",1,2
+"134","Vålerenga","Sandefjord Fotball",2,2
+"135","Lillestrøm","Molde",2,2
+"136","Brann","Start",4,1
+"137","Sandefjord Fotball","Tromsø",1,0
+"138","Bodø/Glimt","Kristiansund",3,0
+"139","Molde","Brann",5,1
+"140","Rosenborg","Stabæk",1,1
+"141","Sarpsborg 08","Lillestrøm",2,0
+"142","Start","Ranheim TF",0,0
+"143","Odd","Strømsgodset",2,2
+"144","Haugesund","Vålerenga",1,0
+"145","Brann","Sarpsborg 08",2,0
+"146","Kristiansund","Rosenborg",0,2
+"147","Lillestrøm","Haugesund",1,1
+"148","Ranheim TF","Sandefjord Fotball",1,1
+"149","Stabæk","Molde",3,1
+"150","Strømsgodset","Start",1,1
+"151","Vålerenga","Tromsø",3,0
+"152","Bodø/Glimt","Odd",1,1
+"153","Tromsø","Bodø/Glimt",1,2
+"154","Haugesund","Stabæk",2,0
+"155","Molde","Ranheim TF",2,3
+"156","Rosenborg","Strømsgodset",4,3
+"157","Sandefjord Fotball","Lillestrøm",1,3
+"158","Sarpsborg 08","Kristiansund",1,2
+"159","Vålerenga","Brann",2,0
+"160","Start","Odd",0,1
+"161","Strømsgodset","Tromsø",2,4
+"162","Stabæk","Sandefjord Fotball",3,3
+"163","Bodø/Glimt","Sarpsborg 08",3,1
+"164","Brann","Ranheim TF",1,0
+"165","Kristiansund","Start",1,1
+"166","Odd","Molde",1,1
+"167","Rosenborg","Haugesund",1,0
+"168","Lillestrøm","Vålerenga",0,1
+"169","Haugesund","Brann",1,3
+"170","Ranheim TF","Strømsgodset",1,1
+"171","Sandefjord Fotball","Bodø/Glimt",1,1
+"172","Sarpsborg 08","Odd",1,2
+"173","Start","Lillestrøm",3,0
+"174","Tromsø","Stabæk",0,0
+"175","Vålerenga","Rosenborg",2,3
+"176","Molde","Kristiansund",3,2
+"177","Odd","Vålerenga",3,2
+"178","Bodø/Glimt","Start",1,2
+"179","Brann","Sandefjord Fotball",1,1
+"180","Kristiansund","Haugesund",2,1
+"181","Stabæk","Ranheim TF",3,2
+"182","Strømsgodset","Molde",1,2
+"183","Rosenborg","Sarpsborg 08",3,1
+"184","Lillestrøm","Tromsø",1,0
+"185","Sandefjord Fotball","Odd",1,1
+"186","Haugesund","Bodø/Glimt",1,0
+"187","Lillestrøm","Stabæk",3,2
+"188","Ranheim TF","Kristiansund",2,1
+"189","Sarpsborg 08","Strømsgodset",0,1
+"190","Vålerenga","Start",3,2
+"191","Molde","Rosenborg",1,0
+"192","Tromsø","Brann",2,1
+"193","Stabæk","Vålerenga",1,1
+"194","Strømsgodset","Haugesund",0,1
+"195","Bodø/Glimt","Molde",0,1
+"196","Kristiansund","Tromsø",5,1
+"197","Odd","Ranheim TF",2,0
+"198","Rosenborg","Sandefjord Fotball",1,1
+"199","Start","Sarpsborg 08",1,0
+"200","Brann","Lillestrøm",1,1
+"201","Molde","Sarpsborg 08",2,2
+"202","Sandefjord Fotball","Strømsgodset",2,1
+"203","Haugesund","Odd",2,0
+"204","Lillestrøm","Rosenborg",0,0
+"205","Ranheim TF","Bodø/Glimt",0,0
+"206","Tromsø","Start",1,2
+"207","Vålerenga","Kristiansund",0,2
+"208","Stabæk","Brann",1,2
+"209","Strømsgodset","Vålerenga",2,0
+"210","Bodø/Glimt","Stabæk",1,1
+"211","Kristiansund","Sandefjord Fotball",3,2
+"212","Odd","Tromsø",1,0
+"213","Ranheim TF","Lillestrøm",3,2
+"214","Sarpsborg 08","Haugesund",2,1
+"215","Brann","Rosenborg",1,2
+"216","Start","Molde",1,3
+"217","Stabæk","Kristiansund",0,1
+"218","Haugesund","Ranheim TF",2,0
+"219","Rosenborg","Odd",3,1
+"220","Sandefjord Fotball","Start",4,1
+"221","Tromsø","Molde",2,4
+"222","Vålerenga","Sarpsborg 08",0,0
+"223","Brann","Strømsgodset",3,1
+"224","Lillestrøm","Bodø/Glimt",1,1
+"225","Bodø/Glimt","Vålerenga",1,1
+"226","Kristiansund","Brann",3,1
+"227","Molde","Haugesund",2,0
+"228","Odd","Stabæk",0,3
+"229","Ranheim TF","Tromsø",1,2
+"230","Sarpsborg 08","Sandefjord Fotball",1,1
+"231","Start","Rosenborg",0,1
+"232","Strømsgodset","Lillestrøm",2,2
+"233","Brann","Odd",1,0
+"234","Haugesund","Start",3,1
+"235","Lillestrøm","Kristiansund",2,0
+"236","Rosenborg","Bodø/Glimt",1,1
+"237","Sandefjord Fotball","Molde",1,3
+"238","Stabæk","Strømsgodset",2,2
+"239","Tromsø","Sarpsborg 08",0,2
+"240","Vålerenga","Ranheim TF",2,1

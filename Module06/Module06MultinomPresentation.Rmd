@@ -78,9 +78,14 @@ Assumptions:
 
 When coding the response variable we use a dummy variable coding with $c$ elements (the $c+1$ category is the reference level). This means that if we have that $\pi_{ir}=1$ then ${\bf y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $r$th element of ${\bf y}_i$. If observation $i$ comes from category $c+1$ we have ${\bf y}_i=(0,0,\ldots,0)$.
 
+---
+
 ## Categorical regression
+
 is modelling and estimating the probabilites $\pi_{ir}=P(Y_i=r)=P(Y_{ir}=1)$ as a function of the covariates ${\bf x}_i$.
 The modelling is done differently for nominal (unordered) and ordered categories, but both rely upon the multinomial distribution.
+
+For unordered categories, a Poisson distribution can also be used
 
 ---
 
@@ -214,7 +219,7 @@ $$\pi_{ir}=h_r((\eta_{i1},\eta_{i2},\ldots,\eta_{ic})=\frac{\exp(\eta_{ir})}{1+\
 
 It turns out that the reference category logits are the canonical links for the multinomial distribution GLM. 
 
-In this case, as for the univariate eksponential family GLM the loglikelihood is concave with an unique maximum (if it exists) and the expected and observed Fisher information matrices are equal. 
+In this case, as for the univariate exponential family GLM the loglikelihood is concave with an unique maximum (if it exists) and the expected and observed Fisher information matrices are equal. 
 
 As before, we find maximum likelihood parameter estimates from the Fisher scoring or Newton Raphson method.
 
@@ -309,10 +314,12 @@ dim(x.data)
 # We use library VGAM:
 library(VGAM)
 
-# We fit a multinomial logit model with fish (y1) as the reference category:
-fit.main=vglm(cbind(y2,y3,y4,y5,y1)~size+factor(lake),
+# We fit a multinomial logit model with fish (y1) as the 
+#  reference category:
+fit.main=vglm(cbind(y2,y3,y4,y5,y1)~
+                size+factor(lake),
          family=multinomial, data=ali)
-summary(fit.main)
+# summary(fit.main)
 pchisq(deviance(fit.main),df.residual(fit.main),lower.tail=FALSE)
 ```
 
@@ -339,13 +346,11 @@ Testing out other models, and comparing with LRT-test - by using deviances for d
 
 ```{r}
 # Fit model with only lake:
-fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),family=multinomial, data=ali)
-summary(fit.lake)
+fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),
+              family=multinomial, data=ali)
 # Test effect of size (no anova command is available)
-G2=deviance(fit.lake)-deviance(fit.main)
-G2
-df.diff=df.residual(fit.lake)-df.residual(fit.main)
-df.diff
+(G2=deviance(fit.lake)-deviance(fit.main))
+(df.diff=df.residual(fit.lake)-df.residual(fit.main))
 1-pchisq(G2,df.diff)
 # Size has a significant effect
 ```
@@ -355,13 +360,10 @@ df.diff
 ```{r}
 # Fit model with only size:
 fit.size=vglm(cbind(y2,y3,y4,y5,y1)~size,family=multinomial, data=ali)
-summary(fit.size)
 
 # Test effect of lake 
-G2=deviance(fit.size)-deviance(fit.main)
-G2
-df.diff=df.residual(fit.size)-df.residual(fit.main)
-df.diff
+(G2=deviance(fit.size)-deviance(fit.main))
+(df.diff=df.residual(fit.size)-df.residual(fit.main))
 1-pchisq(G2,df.diff)
 # Lake has a significant effect
 ```
@@ -556,10 +558,9 @@ coeff=coefficients(fit.imp)
 linpreds=cbind(coeff[1]+xs%*%coeff[4:5],
       coeff[2]+xs%*%coeff[4:5],
       coeff[3]+xs%*%coeff[4:5])
-cprobs=exp(linpreds)/(1+exp(linpreds))      
-cprobs
-pprobs=cbind(cprobs[,1],cprobs[,2]-cprobs[,1],cprobs[,3]-cprobs[,2],1-cprobs[,3])
-pprobs
+(cprobs=exp(linpreds)/(1+exp(linpreds)))
+(pprobs=cbind(cprobs[,1],cprobs[,2]-cprobs[,1],cprobs[,3]-cprobs[,2],1-cprobs[,3]))
+
 ```
 
 ---
@@ -577,6 +578,8 @@ vcov(fit.imp)
 fit.int=vglm(impair~life+ses+life:ses,family=cumulative(parallel=T),data=mental)
 summary(fit.int)
 ```
+
+---
 
 ```{r}
 # And test if there is a significant effect of interaction:
@@ -690,23 +693,12 @@ As in modules 1-5 we find the ML estimate by the Fisher scoring or Newton Raphso
 
 As in modules 1-5 the ML estimator $\hat{\boldsymbol \beta}$ asymptotically follows a multivariate normal distribution with unbiased mean and covariance matrix given by the inverse of the expected Fisher information matrix.
 
+---
+
 # Summing up
 
 
 ---
-
-# <a id="interactive">Interactive session </a>
-
-## Problem 1: Exam 2006, problem 1 (ordinal model)
-
-Table 1 shows the results from a study where two injection plans for the the neuroleptic preparation perphenazine decanoate have been compared (from P. Knudsen, L. B. Hansen, K. Højholdt, N. E. Larsen, Acta Psychiatrica Scandinavica, 1985).
-
-A group of 19 psycotic patients was given injections every second week, while another group of 19 patients was given injections every third week. The patients were studied for six months, and the effect of the treatment was evaluated in the end. Clinical evaluations was done using a six-point scale calles CGI (Clinical Global Impression), where a higher score means a worse state for the patient.
-
-
-# Exam questions
-
-None found at NTNU or UiO - except the IL-problem.
 
 # R packages
 

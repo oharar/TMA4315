@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Mette Langaas, Department of Mathematical Sciences, NTNU – with contributions from Ingeborg Hem" />
+<meta name="author" content="Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions from Ingeborg G. Hem" />
 
 
-<title>TMA4315 Generalized linear models H2018</title>
+<title>TMA4315 Generalized linear models H2023</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1321,24 +1321,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">```{css, echo=FALSE}
-details > summary {
-padding: 10px 6px;
-background-color: #e5f5f5;
-border: none;
-cursor: pointer;
-}
-details {
-background-color: #f5f5f5;
-border: none;
-cursor: pointer;
-}
-.question {
-font-size: 120%;
-color: blue
-}
-```
-</style>
 
 
 
@@ -1497,604 +1479,535 @@ border-radius: 0px;
 
 
 <h1 class="title toc-ignore">TMA4315 Generalized linear models
-H2018</h1>
-<h3 class="subtitle">Module 4: Count and continuous positive response
-data (Poisson and gamma regression)</h3>
+H2023</h1>
+<h3 class="subtitle">Module 6: Categorical regression, Interactive
+session</h3>
 <h4 class="author">Mette Langaas, Department of Mathematical Sciences,
-NTNU – with contributions from Ingeborg Hem</h4>
-<h4 class="date">27.09.2018 and 04.10.2018 [PL], 28.09.2018 and
-05.10.2018 [IL]</h4>
+NTNU, with contibutions from Ingeborg G. Hem</h4>
+<h4 class="date">25.10.2018 [PL], 26.10.2018 [IL]</h4>
 
 </div>
 
 
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>#<a id="interactivew2">Interactive session - second week</a></p>
-<div id="problem-1-exam-2007-problem-1-a-bit-modified---smoking-and-lung-cancer" class="section level2">
-<h2>Problem 1: Exam 2007 (Problem 1, a bit modified) - Smoking and lung
-cancer</h2>
-<p>(Permitted aids for the exam was “Tabeller og formler i statistikk”,
-Matematisk formelsamling (Rottmann), one A5 sheet with your own
-handwritten notes, and a simple calculator.)</p>
-<p>The dataset given in <code>smoking.txt</code> consists of four
-variables:</p>
+<div id="interactive-session" class="section level1">
+<h1><a id="interactive">Interactive session </a></h1>
+<div id="problem-1-exam-2006-problem-1-ordinal-model" class="section level2">
+<h2>Problem 1: Exam 2006, problem 1 (ordinal model)</h2>
+<p>Table 1 shows the results from a study where two injection plans for
+the the neuroleptic preparation perphenazine decanoate have been
+compared (from P. Knudsen, L. B. Hansen, K. Højholdt, N. E. Larsen, Acta
+Psychiatrica Scandinavica, 1985).</p>
+<p>A group of 19 psycotic patients was given injections every second
+week, while another group of 19 patients was given injections every
+third week. The patients were studied for six months, and the effect of
+the treatment was evaluated in the end. Clinical evaluations was done
+using a six-point scale calles CGI (Clinical Global Impression), where a
+higher score means a worse state for the patient.</p>
+<p>The 12 rows in Table 1 corresponds to 12 different combinations of
+the three explanatory variables <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> and <span class="math inline">\(x_3\)</span>:</p>
+<p><span class="math display">\[
+x_1 =
+\begin{cases}
+  0 \text{, if injections are given every second week} \\
+  1 \text{, if injections are given every third week}
+\end{cases} \\
+x_2 =
+\begin{cases}
+  0 \text{, if patient is female} \\
+  1 \text{, if patient is male}
+\end{cases} \\
+x_3 = \text{ CGI at beginning of treatment (initial CGI)}
+\]</span></p>
+<table>
+<caption>Table 1: Data for neuroleptic treatment</caption>
+<colgroup>
+<col width="15%" />
+<col width="9%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Interval (x1)</th>
+<th align="left">Sex (x2)</th>
+<th align="left">Initial CGI (x3)</th>
+<th align="left">Final CGI 0 (y0)</th>
+<th align="left">Final CGI 1 (y1)</th>
+<th align="left">Final CGI 2 (y2)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">F</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">F</td>
+<td align="left">3</td>
+<td align="left">3</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">F</td>
+<td align="left">4</td>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">M</td>
+<td align="left">3</td>
+<td align="left">4</td>
+<td align="left">4</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">M</td>
+<td align="left">4</td>
+<td align="left">0</td>
+<td align="left">2</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">M</td>
+<td align="left">5</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">F</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">F</td>
+<td align="left">3</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">F</td>
+<td align="left">4</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">M</td>
+<td align="left">2</td>
+<td align="left">3</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">M</td>
+<td align="left">3</td>
+<td align="left">0</td>
+<td align="left">5</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">M</td>
+<td align="left">4</td>
+<td align="left">0</td>
+<td align="left">3</td>
+<td align="left">0</td>
+</tr>
+</tbody>
+</table>
+<p>The corresponding responses are counts for each combination of
+explanatory variables:</p>
+<p><span class="math display">\[
+y_0 = \text{ number with (CGI = 0) after treatment} \\
+y_1 = \text{ number with (CGI = 1) after treatment} \\
+y_2 = \text{ number with (CGI = 2) after treatment}
+\]</span></p>
+<p>Note that no patients had final CGI above 2 after the treatment.. We
+use <span class="math inline">\(y_2\)</span> as the reference category.
+Assume that the CGI for a patient with covariate vector <span class="math inline">\(\mathbf{x} = (x_1, x_2, x_3)\)</span> has response
+value <span class="math inline">\(j\)</span>, <span class="math inline">\(j = 0, 1, 2\)</span>, with probabilities</p>
+<p><span class="math display">\[\pi_j = \text{Prob}(\text{CGI} = j |
+\mathbf{x}) \text{ for } j = 0, 1, 2.\]</span></p>
+<p>The response <span class="math inline">\(\mathbf{y} = (y_0, y_1,
+y_2)\)</span> for a row in the table is assumed to come from a
+multinomial distribution vector <span class="math inline">\(\mathbf{Y} =
+(Y_0, Y_1, Y_2)\)</span> with probability vector <span class="math inline">\(\mathbf{\pi} = (\pi_0, \pi_1, \pi_2)\)</span>, and
+<span class="math inline">\(\mathbf{\pi}\)</span> depends on <span class="math inline">\(\mathbf{x}\)</span>. Note that <span class="math inline">\(x_3\)</span> is numeric, not cathegorical.</p>
+<div id="a" class="section level3">
+<h3>a)</h3>
 <ul>
-<li><code>deaths</code>: number of lung cancer deaths over a period of
-six years [remark: incorrectly 1 year in exam question]</li>
-<li><code>population</code>: the number of people [remark: incorrectly
-in 100 000 people in exam question]</li>
-<li><code>age</code>: in five-year age groups
-(<code>40-44, 45-49, 50-54, 55-59, 60-64, 65-69, 70-74, 75-79, 80+</code>)</li>
-<li><code>ageLevel</code>: age group as numbers from 1 to 9 (1
-corresponds to 40-44, 2 to 45-59, and so on)</li>
-<li><code>smoking status</code>: doesn’t smoke (<code>no</code>), smokes
-cigars or pipe only (<code>cigarPipeOnly</code>), smokes cigarettes and
-cigar or pipe (<code>cigarettePlus</code>), and smokes cigarettes only
-(<code>cigaretteOnly</code>)</li>
+<li>Write down the proportional odds model for these data, and discuss
+it briefly. Assume there are no interactions between <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> and <span class="math inline">\(x_3\)</span>. Remember that <span class="math inline">\(y_2\)</span> is the reference category.</li>
+<li>Express <span class="math inline">\(\pi_j\)</span>, <span class="math inline">\(j = 0, 1, 2\)</span> as functions of the <span class="math inline">\(\mathbf{\theta}\)</span>’s and <span class="math inline">\(\mathbf{\beta}\)</span>’s in the model and <span class="math inline">\(\mathbf{x}\)</span>.</li>
 </ul>
-<p>You can look at the dataset here: <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt" class="uri">https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt</a>,
-and can be found here as well: <a href="http://data.princeton.edu/wws509/datasets/#smoking" class="uri">http://data.princeton.edu/wws509/datasets/#smoking</a></p>
-<p>Remark: the data set is probably taken from <a href="https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents" class="uri">https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents</a>
-and there it is said the the persons under study are males who have
-contributed in wars before 1956 and who answered a questionaire. The
-authors point out that the dataset is not representative for the whole
-population.</p>
-<p>We are interested in studying if the mortality rate due to lung
-cancer (the number of deaths due to lung cancer per individual during
-six year) controlled for age group and smoking status. Assume that the
-number of deaths for each set of covariate values, <span class="math inline">\(Y_i\)</span>, can be considered Poisson
-distributed, <span class="math inline">\(Y_i \sim
-\text{Poisson}(\lambda_i)\)</span>. We fit the following model:</p>
-<pre class="r"><code># load data:
-smoking &lt;- read.table(file = &quot;https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt&quot;)
-head(smoking)
-nrow(smoking)
-model1 &lt;- glm(dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
-# note that the size of the population for each combination of the covaraites
-# is the offset here
-summary(model1)</code></pre>
-<pre><code>##   dead  pop   age ageLevel smoke
-## 1   18  656 40-44        1    no
-## 2   22  359 45-59        2    no
-## 3   19  249 50-54        3    no
-## 4   55  632 55-59        4    no
-## 5  117 1067 60-64        5    no
-## 6  170  897 65-69        6    no
-## [1] 36
-## 
-## Call:
-## glm(formula = dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, 
-##     offset = log(pop))
-## 
-## Coefficients:
-##                     Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -3.63222    0.06783 -53.552  &lt; 2e-16 ***
-## age45-59             0.55388    0.07999   6.924 4.38e-12 ***
-## age50-54             0.98039    0.07682  12.762  &lt; 2e-16 ***
-## age55-59             1.37946    0.06526  21.138  &lt; 2e-16 ***
-## age60-64             1.65423    0.06257  26.439  &lt; 2e-16 ***
-## age65-69             1.99817    0.06279  31.824  &lt; 2e-16 ***
-## age70-74             2.27141    0.06435  35.296  &lt; 2e-16 ***
-## age75-79             2.55858    0.06778  37.746  &lt; 2e-16 ***
-## age80+               2.84692    0.07242  39.310  &lt; 2e-16 ***
-## smokecigarretteOnly  0.36915    0.03791   9.737  &lt; 2e-16 ***
-## smokecigarrettePlus  0.17015    0.03643   4.671 3.00e-06 ***
-## smokeno             -0.04781    0.04699  -1.017    0.309    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for poisson family taken to be 1)
-## 
-##     Null deviance: 4055.984  on 35  degrees of freedom
-## Residual deviance:   21.487  on 24  degrees of freedom
-## AIC: 285.51
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-<p><span class="question">a) What is an offset?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">For 53-year old non-smokers, what is the
-estimated number of deaths due to lung cancer (per person over 6 years)?
-</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Why is the number of degrees of freedom for
-the deviance of this model 24?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Does the model give a good fit?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Let <span class="math inline">\(\lambda(a,s)\)</span> denote the
-expected number of lung cancer deaths per person in age group <span class="math inline">\(a\)</span> with smoking status <span class="math inline">\(s\)</span>. For two different smoking statuses
-<span class="math inline">\(s_1\)</span> and <span class="math inline">\(s_2\)</span>, define</li>
-</ol>
-<p><span class="math display">\[r(a, s_1, s_2) = \frac{\lambda(a,
-s_1)}{\lambda(a, s_2)}.\]</span></p>
-<p><span class="question">Explain why <span class="math inline">\(r(a,
-s_1, s_2)\)</span> does <strong>not</strong> vary as a function of <span class="math inline">\(a\)</span> in <code>model1</code>. </span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">For <span class="math inline">\(s_1 =\)</span>
-<code>cigarPipeOnly</code> and <span class="math inline">\(s_2
-=\)</span> <code>cigaretteOnly</code>, find an estimate value for <span class="math inline">\(r(a, s_1, s_2)\)</span> and an approximate 90 %
-confidence interval.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Is there a significant difference in the
-expected number of lung cancer deaths for individuals that smoke
-cigarettes <code>cigaretteOnly</code> versus those that smoke cigar/pipe
-<code>cigarPipeOnly</code>?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><strong>c)</strong> We will now consider two alternative models,
-<code>model2</code> and <code>model3</code>:</p>
-<pre class="r"><code>model2 &lt;- glm(dead ~ smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
-model3 &lt;- glm(dead ~ ageLevel + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
+</div>
+<div id="b" class="section level3">
+<h3>b)</h3>
+<ul>
+<li><span class="math inline">\(\text{Prob}(\text{CGI} \leq j |
+\mathbf{x})/\text{Prob}(\text{CGI} &gt; j | \mathbf{x})\)</span> for
+<span class="math inline">\(j = 0, 1\)</span> is called the
+<em>cumulative odds ratios</em> for a patient with covariate vector
+<span class="math inline">\(\mathbf{x}\)</span>. Show that if initial
+CGI increases with 1 in the model from a), then the cumulative odds
+ratios will be multiplied by <span class="math inline">\(e^{\beta_3}\)</span>. Here <span class="math inline">\(\beta_3\)</span> is the coefficient belonging to
+<span class="math inline">\(x_3\)</span> in the linear predictor of the
+model.</li>
+<li>Interpret the value <span class="math inline">\(e^{\beta_3}\)</span>.</li>
+<li>Interpret also the values <span class="math inline">\(e^{\beta_1}\)</span> and <span class="math inline">\(e^{\beta_2}\)</span>.</li>
+</ul>
+</div>
+<div id="c" class="section level3">
+<h3>c)</h3>
+<ul>
+<li>Describe the saturated model for these data. How many free
+parameters does it have? (Remark: how many “parameters” can be
+estimated.)</li>
+<li>How would you calculate the deviance for the model from a)? (Just
+explain using words, no calculations necessary!)</li>
+<li>How many degrees of freedom does the deviance have here? Give
+reasons for your answer.</li>
+</ul>
+<p>Below you can see the deviance for all proportional odds models that
+contain the variable <span class="math inline">\(x_3\)</span> (initial
+CGI). The formulas work in the same way as for the <code>lm</code> and
+<code>glm</code> formulas.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="right">Deviance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x3</td>
+<td align="right">17.68</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 + x3</td>
+<td align="right">17.66</td>
+</tr>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x2 + x3</td>
+<td align="right">10.64</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x3</td>
+<td align="right">14.43</td>
+</tr>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x2 * x3</td>
+<td align="right">10.63</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 + x2 + x3</td>
+<td align="right">10.56</td>
+</tr>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x2 + x3</td>
+<td align="right">10.33</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x3 + x2</td>
+<td align="right">8.52</td>
+</tr>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x1 + x2 * x3</td>
+<td align="right">10.51</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3</td>
+<td align="right">8.33</td>
+</tr>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x2 + x2 * x3</td>
+<td align="right">10.31</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x3 + x2 * x3</td>
+<td align="right">8.47</td>
+</tr>
+<tr class="odd">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3 + x2 * x3</td>
+<td align="right">8.28</td>
+</tr>
+<tr class="even">
+<td align="left">cbind(y0, y1, y2) ~ x1 * x2 * x3</td>
+<td align="right">8.28</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="d" class="section level3">
+<h3>d)</h3>
+<ul>
+<li>New: What do we mean by the formula
+<code>cbind(y0, y1, y2) ~ x1 + x2*x3</code>? OBS: Ask Mette/Ingeborg if
+you are not sure before moving on!</li>
+<li>Describe the model that corresponds to <code>x1*x2 + x1*x3</code>.
+How many parameters are in this model? How many degrees of freedom for
+the deviance?</li>
+<li>A statistician has picked the models <code>x2 + x3</code>,
+<code>x1 + x2 + x3</code>, <code>x1*x2 + x3</code> and
+<code>x1*x2 + x1*x3</code> as candidates for “the best model”. Which of
+these models would you choose based on the deviances? Reason using
+hypothesis testing (you have to choose one model for the
+null-hypothesis, which?).</li>
+</ul>
+</div>
+<div id="e" class="section level3">
+<h3>e)</h3>
+<p>Below you see (a slightly edited) <code>R</code>-summary of the
+<code>x1 + x2 + x3</code> model. Assume we still use the model from
+a).</p>
+<pre><code>
+Call:
+vglm(formula = x, family = cumulative(parallel = TRUE), data = data2)
 
-summary(model2)
-summary(model3)</code></pre>
+
+Pearson residuals:
+                  Min       1Q   Median     3Q   Max
+logit(P[Y&lt;=1]) -1.294 -0.33737 -0.08605 0.1788 1.211
+logit(P[Y&lt;=2]) -1.442 -0.08222  0.12144 0.2428 1.100
+
+Coefficients: 
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept):1   8.0355     2.5079   3.204  0.00136 ** 
+(Intercept):2  12.4324     3.1752   3.916 9.02e-05 ***
+x1             -0.2199     0.7561  -0.291  0.77114    
+x2M            -2.1576     0.8875  -2.431  0.01506 *  
+x3             -2.2725     0.6985  -3.253  0.00114 ** 
+---
+
+Number of linear predictors:  2 
+
+Names of linear predictors: logit(P[Y&lt;=1]), logit(P[Y&lt;=2])
+
+Residual deviance: 10.5552 on ?? degrees of freedom
+
+Log-likelihood: -11.6754 on ?? degrees of freedom
+</code></pre>
+<p>And this is the estimated covariace matrix for the estimators:</p>
+<pre><code>##               (Intercept):1 (Intercept):2      x1     x2M      x3
+## (Intercept):1        6.2898        7.6696 -0.6459 -1.1575 -1.6602
+## (Intercept):2        7.6696       10.0816 -0.7281 -1.4997 -2.0776
+## x1                  -0.6459       -0.7281  0.5716  0.0921  0.0986
+## x2M                 -1.1575       -1.4997  0.0921  0.7877  0.1982
+## x3                  -1.6602       -2.0776  0.0986  0.1982  0.4879</code></pre>
+<ul>
+<li>Use the <code>R</code>-summary to estimate <span class="math inline">\(e^{\beta_k}\)</span> for <span class="math inline">\(k = 1, 2, 3\)</span>.</li>
+<li>Find an approximate confidence interval for <span class="math inline">\(e^{\beta_1}\)</span>. Comment on this considering
+the model choice you made in d).</li>
+<li>Estimate the probability to get final CGI equal to 0 for a female
+with injections every second week and initial CGI equal to 5.</li>
+<li>Explain how you can find an estimated standard deviation for this
+estimate (you do not need to do all calculations). Hint: You need Taylor
+expansions here!</li>
+</ul>
+</div>
+</div>
+<div id="problem-2-more-alligators-nominal-model" class="section level2">
+<h2>Problem 2: More alligators (nominal model)</h2>
+<p>We will analyses an extended version of the alligators data, where
+also the gender of the alligator is included.</p>
+<p>In the data below the following column names are given:</p>
+<ul>
+<li>lake: each of the 4 lakes in Florida (1:4)</li>
+<li>gender: gender of alligator (0:) and (1:) – not given in data file,
+what do you think?</li>
+<li>size: the size of the alligator (0: 2.3 meters or smaller) and (1:
+larger than 2.3 meters)</li>
+<li>y1: fish</li>
+<li>y2: inverterbrate</li>
+<li>y3: reptile</li>
+<li>y4: bird</li>
+<li>y5: other</li>
+</ul>
+<ol style="list-style-type: lower-alpha">
+<li>Investigate different models and select the best. Call this the best
+model.</li>
+<li>Assess the model fit of this best model.</li>
+<li>Interpret effects and perform inference for the best model.</li>
+</ol>
+<pre class="r"><code>library(VGAM)
+data2 = &quot;http://www.stat.ufl.edu/~aa/glm/data/Alligators2.dat&quot;
+ali2 = read.table(data2, header = T)
+ali2</code></pre>
+<pre><code>##    lake gender size y1 y2 y3 y4 y5
+## 1     1      1    1  7  1  0  0  5
+## 2     1      1    0  4  0  0  1  2
+## 3     1      0    1 16  3  2  2  3
+## 4     1      0    0  3  0  1  2  3
+## 5     2      1    1  2  2  0  0  1
+## 6     2      1    0 13  7  6  0  0
+## 7     2      0    1  0  1  0  1  0
+## 8     2      0    0  3  9  1  0  2
+## 9     3      1    1  3  7  1  0  1
+## 10    3      1    0  8  6  6  3  5
+## 11    3      0    1  2  4  1  1  4
+## 12    3      0    0  0  1  0  0  0
+## 13    4      1    1 13 10  0  2  2
+## 14    4      1    0  9  0  0  1  2
+## 15    4      0    1  3  9  1  0  1
+## 16    4      0    0  8  1  0  0  1</code></pre>
+<pre class="r"><code>colnames(ali2)</code></pre>
+<pre><code>## [1] &quot;lake&quot;   &quot;gender&quot; &quot;size&quot;   &quot;y1&quot;     &quot;y2&quot;     &quot;y3&quot;     &quot;y4&quot;     &quot;y5&quot;</code></pre>
+<pre class="r"><code>fit = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(size) + factor(gender),
+    family = multinomial, data = ali2)
+
+# 6 possible models to investigate: only lake, only gender, only size,
+# lake+gender, lake+size, size+gender
+fit.lake = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake), family = multinomial, data = ali2)
+fit.size = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(size), family = multinomial, data = ali2)
+fit.gender = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(gender), family = multinomial,
+    data = ali2)
+fit.lake.size = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(size), family = multinomial,
+    data = ali2)
+fit.lake.gender = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(gender),
+    family = multinomial, data = ali2)
+fit.gender.size = vglm(cbind(y2, y3, y4, y5, y1) ~ factor(size) + factor(gender),
+    family = multinomial, data = ali2)
+all = list(fit = fit, fit.lake = fit.lake, fit.size = fit.size, fit.gender = fit.gender,
+    fit.lake.size = fit.lake.size, fit.lake.gender = fit.lake.gender, fit.gender.size = fit.gender.size)
+lapply(all, AIC)</code></pre>
+<pre><code>## $fit
+## [1] 199.6089
+## 
+## $fit.lake
+## [1] 201.9464
+## 
+## $fit.size
+## [1] 221.7073
+## 
+## $fit.gender
+## [1] 227.0375
+## 
+## $fit.lake.size
+## [1] 196.089
+## 
+## $fit.lake.gender
+## [1] 204.2444
+## 
+## $fit.gender.size
+## [1] 228.4214</code></pre>
+<pre class="r"><code># you may also look at deviance tests if you prefer that to AIC
+
+# what is best? toggle to match your choice
+best = fit
+summary(best)</code></pre>
 <pre><code>## 
 ## Call:
-## glm(formula = dead ~ smoke, family = &quot;poisson&quot;, data = smoking, 
-##     offset = log(pop))
+## vglm(formula = cbind(y2, y3, y4, y5, y1) ~ factor(lake) + factor(size) + 
+##     factor(gender), family = multinomial, data = ali2)
 ## 
-## Coefficients:
-##                     Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -1.47319    0.03099 -47.532  &lt; 2e-16 ***
-## smokecigarretteOnly -0.31219    0.03576  -8.729  &lt; 2e-16 ***
-## smokecigarrettePlus -0.43013    0.03468 -12.402  &lt; 2e-16 ***
-## smokeno             -0.36678    0.04669  -7.855 3.98e-15 ***
+## Coefficients: 
+##                   Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept):1     -2.78138    0.66023  -4.213 2.52e-05 ***
+## (Intercept):2     -1.94388    0.78487  -2.477  0.01326 *  
+## (Intercept):3     -1.41471    0.69227  -2.044  0.04100 *  
+## (Intercept):4     -0.78063    0.50933  -1.533  0.12536    
+## factor(lake)2:1    3.14631    0.71871   4.378 1.20e-05 ***
+## factor(lake)2:2    1.25128    0.84769   1.476  0.13992    
+## factor(lake)2:3   -1.10312    1.20848  -0.913  0.36134    
+## factor(lake)2:4   -0.79033    0.77202  -1.024  0.30597    
+## factor(lake)3:1    3.04532    0.70100   4.344 1.40e-05 ***
+## factor(lake)3:2    1.84442    0.83227   2.216  0.02668 *  
+## factor(lake)3:3    0.76742    0.84320   0.910  0.36276    
+## factor(lake)3:4    0.76354    0.59707   1.279  0.20097    
+## factor(lake)4:1    1.87573    0.62803   2.987  0.00282 ** 
+## factor(lake)4:2   -1.15467    1.19439  -0.967  0.33367    
+## factor(lake)4:3   -0.50671    0.79598  -0.637  0.52439    
+## factor(lake)4:4   -0.76568    0.57046  -1.342  0.17953    
+## factor(size)1:1    1.24700    0.42426   2.939  0.00329 ** 
+## factor(size)1:2   -0.35772    0.65755  -0.544  0.58643    
+## factor(size)1:3   -0.28685    0.65065  -0.441  0.65931    
+## factor(size)1:4    0.09454    0.46435   0.204  0.83867    
+## factor(gender)1:1 -0.78010    0.37880  -2.059  0.03946 *  
+## factor(gender)1:2 -0.32559    0.60986  -0.534  0.59343    
+## factor(gender)1:3 -0.52430    0.66647  -0.787  0.43147    
+## factor(gender)1:4 -0.33231    0.46161  -0.720  0.47159    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## (Dispersion parameter for poisson family taken to be 1)
+## Names of linear predictors: log(mu[,1]/mu[,5]), log(mu[,2]/mu[,5]), 
+## log(mu[,3]/mu[,5]), log(mu[,4]/mu[,5])
 ## 
-##     Null deviance: 4056.0  on 35  degrees of freedom
-## Residual deviance: 3910.7  on 32  degrees of freedom
-## AIC: 4158.7
+## Residual deviance: 55.2285 on 40 degrees of freedom
 ## 
-## Number of Fisher Scoring iterations: 5
+## Log-likelihood: -75.8045 on 40 degrees of freedom
+## 
+## Number of Fisher scoring iterations: 6 
+## 
+## No Hauck-Donner effect found in any of the estimates
 ## 
 ## 
-## Call:
-## glm(formula = dead ~ ageLevel + smoke, family = &quot;poisson&quot;, data = smoking, 
-##     offset = log(pop))
-## 
-## Coefficients:
-##                      Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -3.705950   0.050717 -73.071  &lt; 2e-16 ***
-## ageLevel             0.333006   0.005591  59.559  &lt; 2e-16 ***
-## smokecigarretteOnly  0.405019   0.037463  10.811  &lt; 2e-16 ***
-## smokecigarrettePlus  0.203426   0.035996   5.651 1.59e-08 ***
-## smokeno             -0.032927   0.046894  -0.702    0.483    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for poisson family taken to be 1)
-## 
-##     Null deviance: 4055.984  on 35  degrees of freedom
-## Residual deviance:   75.734  on 31  degrees of freedom
-## AIC: 325.76
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-<p><span class="question">Why does <code>model2</code> and
-<code>model3</code> have 32 and 31 degrees of freedom,
-respectively?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">If we want to compare the three models
-<code>model1</code>, <code>model2</code> and <code>model3</code>, which
-model would you choose as the best? Justify your answer by formulating
-relevant hypotheses and perform hypothesis tests, based on the
-print-outs above.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: remember that to compare two models then one model needs to be
-nested within the other model.</p>
-<p>New: For <code>model3</code>: <span class="question">Plot the
-regression line for the expected number of lung cancer deaths per person
-as a function of <code>age</code> for each of the four different smoking
-levels in the same plot. First use all coefficients, and then only the
-ones that are significant. Use <code>ggplot</code>! Discuss what you
-see.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<!--
-**d)** The (asymptotic) covariance matrix for the regression parameters (in a GLM) are given as $({\bf X}^T{\bf W}{\bf X})^{-1}$ where ${\bf X}$ is the design matrix for the problem.
-Find the difference in the ${\bf W}$ matrix with log-link and identity (linear) link for a Poisson model. Also find the difference in the ${\bf W}$ matrix with logit link and identity (linear) link for binomial data.
-Remark: We are talking about the inverse of the expected Fisher information matrix, and what is meant is that you find the diagonal elements of ${\bf W}$ for each of the four cases. And, we have not seen the general formula for ${\bf W}$ yet - but will do in Module 5. 
--->
-<!--
-**1. Explain what is done in the `R`-print-out.
-2. What if we instead want a CI for $\beta_0+\beta_1 x_{i1}$?
-3. What if we instead want a CI for $\lambda_i=\exp(\beta_0+\beta_i x_{i1})$?
-**d)** Overdispersion
--->
+## Reference group is level  5  of the response</code></pre>
+<pre class="r"><code>pchisq(deviance(best), df.residual(best), lower.tail = FALSE)</code></pre>
+<pre><code>## [1] 0.05511724</code></pre>
+<pre class="r"><code>confint(best)</code></pre>
+<pre><code>##                        2.5 %      97.5 %
+## (Intercept):1     -4.0754134 -1.48734693
+## (Intercept):2     -3.4821892 -0.40556893
+## (Intercept):3     -2.7715358 -0.05787731
+## (Intercept):4     -1.7789047  0.21764692
+## factor(lake)2:1    1.7376626  4.55495618
+## factor(lake)2:2   -0.4101634  2.91273242
+## factor(lake)2:3   -3.4717099  1.26546012
+## factor(lake)2:4   -2.3034619  0.72280210
+## factor(lake)3:1    1.6713798  4.41925474
+## factor(lake)3:2    0.2131968  3.47564154
+## factor(lake)3:3   -0.8852275  2.42007378
+## factor(lake)3:4   -0.4067037  1.93378524
+## factor(lake)4:1    0.6448037  3.10665210
+## factor(lake)4:2   -3.4956349  1.18628645
+## factor(lake)4:3   -2.0668098  1.05338460
+## factor(lake)4:4   -1.8837510  0.35239661
+## factor(size)1:1    0.4154726  2.07853673
+## factor(size)1:2   -1.6464982  0.93105746
+## factor(size)1:3   -1.5620902  0.98839240
+## factor(size)1:4   -0.8155718  1.00464755
+## factor(gender)1:1 -1.5225425 -0.03766570
+## factor(gender)1:2 -1.5208982  0.86971475
+## factor(gender)1:3 -1.8305675  0.78196426
+## factor(gender)1:4 -1.2370402  0.57242028</code></pre>
 </div>
-<div id="problem-2-tma4315-exam-2012-problem-3-precipitation-in-trondheim-amount" class="section level2">
-<h2>Problem 2: TMA4315 Exam 2012, Problem 3: Precipitation in Trondheim,
-amount</h2>
-<p>Remark: the text is slightly modified from the original exam since we
-parameterized the gamma as in our textbook.</p>
-<p>Remark: Problems 1 (binomial) and 2 (multinomial) at the 2012 exam
-also asked about percipitation.</p>
-<p>We want to model the amount of daily precipitation given that it
-<em>is</em> precipitation, and denote this quantity <span class="math inline">\(Y\)</span>. It is common to model <span class="math inline">\(Y\)</span> as a gamma distributed random variable,
-<span class="math inline">\(Y \sim Gamma(\nu,\mu)\)</span>, with
-density</p>
-<p><span class="math display">\[ f_Y(y) = \frac{1}{\Gamma(\nu)}
-\left(\frac{\nu}{\mu}\right)^{\nu} y^{\nu-1}\exp\left(-\frac{\nu}{\mu} y
-\right) \]</span></p>
-<p>In this problem we consider <span class="math inline">\(N\)</span>
-observations, each gamma distributed with <span class="math inline">\(Y_i \sim Gamma(\nu, \mu_i)\)</span> (remark:
-common <span class="math inline">\(\nu\)</span>). Here <span class="math inline">\(\nu\)</span> is considered to be a known nuisance
-parameter, and the <span class="math inline">\(\mu_i\)</span>s are
-unknown.</p>
-<p><strong>a)</strong> <span class="question">Show that the gamma
-distribution function is member of the exponential family when <span class="math inline">\(\mu_i\)</span> is the parameter of
-interest.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Use this to find expressions for the expected
-value and the variance of <span class="math inline">\(Y_i\)</span>, in
-terms of <span class="math inline">\((\nu,\mu_i)\)</span>, and interpret
-<span class="math inline">\(\nu\)</span>.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>New: <span class="question">What is the canonical link for the Gamma
-distribution?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: if you want to focus on discussing - you may look at the
-solutions from <a href="https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf">Module
-1 together</a>.</p>
-<p><strong>b)</strong> <span class="question">Explain what a saturated
-model is.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Set up the log-likelihood function expressed
-by <span class="math inline">\(\mu_i\)</span>, and use it to find the
-maximum likelihood estimators for <span class="math inline">\(\mu_i\)</span>-s of the saturated model.
-</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Find the deviance (based on all <span class="math inline">\(N\)</span> observations).</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: Do you see directly that <span class="math inline">\(\hat{\mu}_i=y_i\)</span>? If not, you may look at
-the likelihood for one observation and solve that the derivative equals
-0.</p>
-<p><strong>c)</strong> We now want to construct a model for amount of
-precipitation (given that there are occurrence) with precipitation
-forecast as explanatory variable.<br />
-<span class="question">Let <span class="math inline">\(Y_i\)</span> be
-amount of precipitation for day <span class="math inline">\(i\)</span>,
-and let <span class="math inline">\(x_i\)</span> be the precipitation
-forecast valid for day <span class="math inline">\(i\)</span>. Set up a
-GLM for this, and argue for your choice of link function and linear
-predictor.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: explain why this fits into our GLM-gamma framework and set up
-our 3 equation model (random, systematic, link).</p>
-<hr />
 </div>
-<div id="problem-3-taken-from-uio-stk3100-2015-problem-2" class="section level2">
-<h2>Problem 3: Taken from UiO, STK3100, 2015, problem 2</h2>
-<p>(For reference: <a href="http://www.uio.no/studier/emner/matnat/math/STK3100/oppgaver/stk3100-f15eng_final.pdf">here
-is the original exam</a>).</p>
-<p>This is a problem on the logistic regression.</p>
-<p>Do not look at the dataset before the end of the exercise! You should
-solve the exercise without using <code>R</code>, just as if you were at
-an exam.</p>
-<p>In this problem you shall consider data of survivals from a study of
-treatment for breast cancer. The response is the number that survived
-for three years. The covariates were the four factors</p>
-<ul>
-<li><code>app</code>: appearance of tumor, two levels, 1 = malignant, 2
-= benign</li>
-<li><code>infl</code>: inflammatory reaction, two levels, 1 = minimal, 2
-= moderate or severe</li>
-<li><code>age</code>: age of patients, three levels, 1 = under 50, 2 =
-50 to 69, 3 = 70 or older</li>
-<li><code>country</code>: hospital of treatment, three levels, 1 =
-Japan, 2 = US, 3 = UK</li>
-</ul>
-<p>The dataset we have used differs slightly from the one they used at
-UiO (the number of survivals and non-survivals differ).</p>
-<p>The number of survivors is modelled as a binomially distributed
-variable using a canonical logit link. Dummy variable coding is used for
-all factors, with the level coded as “1” as the reference category.</p>
-<p><strong>a)</strong> The output from fitting the model where only
-appearance and country are used as covariates, i.e., a model with
-predictor on the form</p>
-<p><span class="math display">\[ \eta = \beta_0 + \beta_1 \texttt{ fapp}
-+ \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}
-\]</span></p>
-<p>is displayed below.</p>
-<p><span class="question">What is the interpretation of the estimate of
-the coefficient of appearance, <code>fapp</code> (<code>f</code> means
-factor)? Explain also how this coefficient can be expressed in terms of
-an odds ratio.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: first explain what is the predicted odds of survivial for
-country <span class="math inline">\(j\)</span> for a benign tumor, then
-the same for a malignant tumor- and then make an odds ratio.</p>
-<p>New: The main difference between our dataset and UiO’s dataset is the
-number of degrees of freedom for the null model; we have 34, they have
-35.</p>
-<p><span class="question">How many observations do we have in the
-dataset? And how many does UiO have?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: All the covariates in the dataset are categorical, two with 3
-levels, and two with 2 levels. How many possible combinations of
-observations does that make?</p>
-<pre><code>Call:
-glm(formula = cbind(surv, nsurv) ~ fapp + fcountry, family = binomial, 
-    data = brc)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.8142  -0.7279   0.2147   0.7576   1.8715  
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)   1.0803     0.1656   6.522 6.93e-11 ***
-fapp2         0.5157     0.1662   3.103 0.001913 ** 
-fcountry2    -0.6589     0.1998  -3.298 0.000972 ***
-fcountry3    -0.4945     0.2071  -2.388 0.016946 *  
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 57.588  on 34  degrees of freedom
-Residual deviance: 36.625  on 31  degrees of freedom
-</code></pre>
-<p><strong>b)</strong> The output below is an analysis of deviance for
-comparing various model spesifications. <span class="question">Fill out
-the positions indicated <code>i-iv</code>. </span> Note:
-<code>y ~ x1*x2</code> gives both the linear components and the
-interaction, i.e., it is the same as <code>y ~ x1 + x2 + x1:x2</code>
-(<code>x1:x2</code> gives interaction only).</p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Remark: remember that <code>anova</code> gives the sequential
-comparison of deviances - that is - comparing each model to the previous
-model.</p>
-<pre><code>Analysis of Deviance Table
-
-Model 1: cbind(surv, nsurv) ~ fapp + fage + fcountry
-Model 2: cbind(surv, nsurv) ~ fapp + fage + finfl + fcountry
-Model 3: cbind(surv, nsurv) ~ fapp + finfl + fage * fcountry
-Model 4: cbind(surv, nsurv) ~ fapp * finfl + fage * fcountry
-Model 5: cbind(surv, nsurv) ~ fapp * finfl + fapp * fage + fage * fcountry
-Model 6: cbind(surv, nsurv) ~ fapp * finfl * fage * fcountry
-  Resid. Df Resid. Dev Df Deviance
-1        29     33.102            
-2         i     33.095  1   0.0065
-3        24     25.674 ii   7.4210
-4        23     25.504  1      iii
-5        21     22.021  2   3.4823
-6         0      0.000 iv  22.0214</code></pre>
-<p>In the remaining parts of this problem we return to the model in part
-a) and consider the hypothesis</p>
-<p><span class="math display">\[ H_0 : \beta_2 + \beta_3 = -1 \text{
-versus } H_1 : \beta_2 + \beta_3 \neq -1 \]</span></p>
-<p>Note: what are you testing now?</p>
-<p><strong>c)</strong> The estimated covariance matrix between the
-estimators of the coefficients <span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_3\)</span> above is <span class="math inline">\(\left(\begin{matrix} 0.040 &amp; 0.021 \\ 0.021
-&amp; 0.043\end{matrix} \right)\)</span>. <span class="question">Use a
-Wald test to test the null hypothesis above.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Note: remember - this was a written exam so you do this by hand!</p>
-<p><strong>d)</strong> <span class="question">Explain how the null
-hypothesis can be tested with a likelihood ratio test by fitting two
-suitable models.</span> No numerical calculations are necessary, but it
-must be specified how the predictors should be defined.<br />
-Remark: rather technical - and hint: offset term?</p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>New: <span class="question">Do this test in
-<code>R</code>.</span></p>
-<p><a href="https://www.math.ntnu.no/emner/TMA4315/2018h/breastcancer.txt">Here
-is the data set!</a></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-</div>
-<div id="work-on-your-own-exam-questions" class="section level1">
-<h1>Work on your own: Exam questions</h1>
-<div id="december-2013-essay-exam" class="section level2">
-<h2>December 2013 (Essay exam)</h2>
-<p>We will consider the following Poisson regression <span class="math display">\[Y_i \sim \text{Poisson}(\exp(\eta_i)), \text{
-}i=1,\ldots,n\]</span> where the linear predictor is <span class="math inline">\(\eta_i={\bf x}_i^T\beta\)</span>. Here <span class="math inline">\({\bf x}_i\)</span> is a vector of the <span class="math inline">\(p\)</span> covariates for the <span class="math inline">\(i\)</span>th observation <span class="math inline">\(Y_i\)</span> and <span class="math inline">\(\beta\)</span> is unknown <span class="math inline">\(p\)</span> dimensional column vector of unknown
-regression coefficients.</p>
-<p>Write an introduction to Poisson regression and its practical usage,
-for a student with a good background in statistics, but no knowledge
-about Generalized Linear Models (GLM). Topics you may want to consider,
-are</p>
-<ul>
-<li>When to use it? Underlying assumptions.</li>
-<li>Parameter estimation, limiting results for the MLE, Fisher
-information and observed Fisher information, confidence intervals and
-hypothesis testing.</li>
-<li>Output analysis, residual plots and interpretation of results.</li>
-<li>Deviance and its usage.</li>
-<li>What do we do when a covariate is a factor, and should the results
-be interpreted?</li>
-<li>The use of Poisson regression in the analysis of contingency
-tables.</li>
-</ul>
-</div>
+<div id="exam-questions" class="section level1">
+<h1>Exam questions</h1>
+<p>None found at NTNU or UiO - except the IL-problem.</p>
 </div>
 <div id="r-packages" class="section level1">
 <h1>R packages</h1>
-<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;, &quot;ggplot2&quot;, &quot;statmod&quot;, &quot;corrplot&quot;, &quot;ggplot2&quot;, &quot;GGally&quot;,
-    &quot;boot&quot;))</code></pre>
+<pre class="r"><code>install.packages(c(&quot;VGAM&quot;, &quot;ggplot2&quot;, &quot;statmod&quot;, &quot;knitr&quot;))</code></pre>
 </div>
 <div id="further-reading" class="section level1">
 <h1>Further reading</h1>
 <ul>
-<li>A. Agresti (1996): “An Introduction to Categorical Data
-Analysis”.</li>
 <li>A. Agresti (2015): “Foundations of Linear and Generalized Linear
-Models.” Wiley.</li>
-<li>A. J. Dobson and A. G. Barnett (2008): “An Introduction to
-Generalized Linear Models”, Third edition.</li>
-<li>J. Faraway (2015): “Extending the Linear Model with R”, Second
-Edition. <a href="http://www.maths.bath.ac.uk/~jjf23/ELM/" class="uri">http://www.maths.bath.ac.uk/~jjf23/ELM/</a></li>
-<li>P. McCullagh and J. A. Nelder (1989): “Generalized Linear Models”.
-Second edition.</li>
+Models.” Chapter 6. Wiley.</li>
 </ul>
 </div>
 

@@ -1,17 +1,17 @@
 ---
-title: "TMA4315 Generalized linear models H2018"
+title: "TMA4315 Generalized linear models H2023"
 subtitle: "Module 6: Categorical regression"
 author: "Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions from Ingeborg G. Hem"
 date: "25.10.2018 [PL], 26.10.2018 [IL]"
 output: #3rd letter intentation hierarchy
-  # html_document:
-  #   toc: true
-  #   toc_float: true
-  #   toc_depth: 2
-  pdf_document:
-   toc: true
-   toc_depth: 2
-   keep_tex: yes
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+  # pdf_document:
+  #  toc: true
+  #  toc_depth: 2
+  #  keep_tex: yes
 #  beamer_presentation:
 #    keep_tex: yes
 #    fig_caption: false

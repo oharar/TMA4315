@@ -74,8 +74,10 @@ $$\log(f) = \log \binom{n}{y} + y\log(\pi) + (n-y)\log(1-\pi) = \log \binom{n}{y
 
 $$l(y, \mu) = \sum_{i=1}^n \log(f)$$
 
-$$D^*(y, \hat{\mu}) = 2 l(y, y) - 2 l(\hat{\mu}, y) = 2 \sum\left[y_i \log\left( \frac{y_i}{n_i-y_i}\right) + n_i \log\left( \frac{n_i-y_i}{n_i}\right) - y_i \log\left( \frac{\frac{\hat{\mu}_i}{n_i}}{\frac{n_i-\hat{\mu}_i}{n_i}}\right) - n_i \log\left( \frac{n_i - \hat{\mu}_i}{n_i}\right) \right] \\
-= 2 \sum\left[y_i \log\left( \frac{y_i}{\hat{\mu}_i}\right) + n_i \log\left( \frac{n_i-y_i}{n_i - \hat{\mu}_i}\right) - y_i \log\left( \frac{n_i - y_i}{n_i - \hat{\mu}_i}\right) \right]$$
+$$
+D^*(y, \hat{\mu}) = 2 l(y, y) - 2 l(\hat{\mu}, y) = 2 \sum\left[y_i \log\left( \frac{y_i}{n_i-y_i}\right) + n_i \log\left( \frac{n_i-y_i}{n_i}\right) - y_i \log\left( \frac{\frac{\hat{\mu}_i}{n_i}}{\frac{n_i-\hat{\mu}_i}{n_i}}\right) - n_i \log\left( \frac{n_i - \hat{\mu}_i}{n_i}\right) \right] \\
+= 2 \sum\left[y_i \log\left( \frac{y_i}{\hat{\mu}_i}\right) + n_i \log\left( \frac{n_i-y_i}{n_i - \hat{\mu}_i}\right) - y_i \log\left( \frac{n_i - y_i}{n_i - \hat{\mu}_i}\right) \right]
+$$
 
 
 ## 2)
@@ -91,7 +93,9 @@ $w_{ii} = \left(\frac{\partial \mu_i}{\partial \eta_i}\right)^2 \Big/\text{Var}(
 
 $$\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies w_{ii} = \frac{1}{\mu_i}$$
 
-$$\mu = e^{\eta} \implies \frac{\partial \mu}{\partial \eta} = e^{\eta} \implies w_{ii} = \frac{e^{2 \eta_i}}{e^{\eta_i}} = e^{\eta_i} = \mu_i$$
+$$
+\mu = e^{\eta} \implies \frac{\partial \mu}{\partial \eta} = e^{\eta} \implies w_{ii} = \frac{e^{2 \eta_i}}{e^{\eta_i}} = e^{\eta_i} = \mu_i
+$$
 
 
 ### c) 

@@ -1,0 +1,287 @@
+---
+title: "TMA4315 Generalized linear models H2023"
+subtitle: "Module 6: Categorical regression, Interactive session"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions from Ingeborg G. Hem"
+date: "25.10.2018 [PL], 26.10.2018 [IL]"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+  # pdf_document:
+  #  toc: true
+  #  toc_depth: 2
+  #  keep_tex: yes
+#  beamer_presentation:
+#    keep_tex: yes
+#    fig_caption: false
+#    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
+showsol<-FALSE
+```
+
+
+# <a id="interactive">Interactive session </a>
+
+## Problem 1: Exam 2006, problem 1 (ordinal model)
+
+Table 1 shows the results from a study where two injection plans for the the neuroleptic preparation perphenazine decanoate have been compared (from P. Knudsen, L. B. Hansen, K. Højholdt, N. E. Larsen, Acta Psychiatrica Scandinavica, 1985).
+
+A group of 19 psycotic patients was given injections every second week, while another group of 19 patients was given injections every third week. The patients were studied for six months, and the effect of the treatment was evaluated in the end. Clinical evaluations was done using a six-point scale calles CGI (Clinical Global Impression), where a higher score means a worse state for the patient.
+
+The 12 rows in Table 1 corresponds to 12 different combinations of the three explanatory variables $x_1$, $x_2$ and $x_3$:
+
+$$
+x_1 = 
+\begin{cases}
+  0 \text{, if injections are given every second week} \\
+  1 \text{, if injections are given every third week}
+\end{cases} \\
+x_2 =
+\begin{cases}
+  0 \text{, if patient is female} \\
+  1 \text{, if patient is male}
+\end{cases} \\
+x_3 = \text{ CGI at beginning of treatment (initial CGI)}
+$$
+
+
+
+```{r, results = "asis", echo = FALSE}
+library(knitr)
+
+data1 <- data.frame(
+  interval = rep(c(2, 3), each = 6),
+  sex = rep(rep(c("F", "M"), each = 3), times = 2),
+  initial_cgi = c(2, 3, 4, 3, 4, 5, 2, 3, 4, 2, 3, 4),
+  final_cgi_0 = c(1, 3, 0, 4, 0, 0, 1, 2, 1, 3, 0, 0),
+  final_cgi_1 = c(0, 1, 1, 4, 2, 0, 0, 1, 2, 1, 5, 3),
+  final_cgi_1 = c(0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0)
+)
+
+kable(data1, align = "l", caption = "Table 1: Data for neuroleptic treatment",
+      col.names = c("Interval (x1)", "Sex (x2)", "Initial CGI (x3)", "Final CGI 0 (y0)", "Final CGI 1 (y1)", "Final CGI 2 (y2)"))
+
+```
+
+The corresponding responses are counts for each combination of explanatory variables:
+
+$$
+y_0 = \text{ number with (CGI = 0) after treatment} \\
+y_1 = \text{ number with (CGI = 1) after treatment} \\
+y_2 = \text{ number with (CGI = 2) after treatment}
+$$
+
+Note that no patients had final CGI above 2 after the treatment.. We use $y_2$ as the reference category. Assume that the CGI for a patient with covariate vector $\mathbf{x} = (x_1, x_2, x_3)$ has response value $j$, $j = 0, 1, 2$, with probabilities
+
+$$\pi_j = \text{Prob}(\text{CGI} = j | \mathbf{x}) \text{ for } j = 0, 1, 2.$$
+
+The response $\mathbf{y} = (y_0, y_1, y_2)$ for a row in the table is assumed to come from a multinomial distribution vector $\mathbf{Y} = (Y_0, Y_1, Y_2)$ with probability vector $\mathbf{\pi} = (\pi_0, \pi_1, \pi_2)$, and $\mathbf{\pi}$ depends on $\mathbf{x}$. Note that $x_3$ is numeric, not cathegorical.
+
+
+### a) 
+
+* Write down the proportional odds model for these data, and discuss it briefly. Assume there are no interactions between $x_1$, $x_2$ and $x_3$. Remember that $y_2$ is the reference category.
+* Express $\pi_j$, $j = 0, 1, 2$ as functions of the $\mathbf{\theta}$'s and $\mathbf{\beta}$'s in the model and $\mathbf{x}$.
+
+### b) 
+
+* $\text{Prob}(\text{CGI} \leq j | \mathbf{x})/\text{Prob}(\text{CGI} > j | \mathbf{x})$ for $j = 0, 1$ is called the _cumulative odds ratios_ for a patient with covariate vector $\mathbf{x}$. Show that if initial CGI increases with 1 in the model from a), then the cumulative odds ratios will be multiplied by $e^{\beta_3}$. Here $\beta_3$ is the coefficient belonging to $x_3$ in the linear predictor of the model.
+* Interpret the value $e^{\beta_3}$.
+* Interpret also the values $e^{\beta_1}$ and $e^{\beta_2}$.
+
+### c) 
+* Describe the saturated model for these data. How many free parameters does it have? (Remark: how many "parameters" can be estimated.)
+* How would you calculate the deviance for the model from a)? (Just explain using words, no calculations necessary!)
+* How many degrees of freedom does the deviance have here? Give reasons for your answer.
+
+Below you can see the deviance for all proportional odds models that contain the variable $x_3$ (initial CGI). The formulas work in the same way as for the `lm` and `glm` formulas.
+
+```{r, echo = FALSE, message = FALSE}
+
+library(VGAM)
+
+data2 <- data.frame(
+  x1 = rep(c(0, 1), each = 6),
+  x2 = rep(rep(c("F", "M"), each = 3), times = 2),
+  x3 = c(2, 3, 4, 3, 4, 5, 2, 3, 4, 2, 3, 4),
+  y0 = c(1, 3, 0, 4, 0, 0, 1, 2, 1, 3, 0, 0),
+  y1 = c(0, 1, 1, 4, 2, 0, 0, 1, 2, 1, 5, 3),
+  y2 = c(0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0)
+)
+
+# fitting all the models:
+
+formulas <- list(
+  cbind(y0, y1, y2) ~ x3,
+  cbind(y0, y1, y2) ~ x1 + x3,
+  cbind(y0, y1, y2) ~ x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x3,
+  cbind(y0, y1, y2) ~ x2 * x3,
+  cbind(y0, y1, y2) ~ x1 + x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x3 + x2,
+  cbind(y0, y1, y2) ~ x1 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x3 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 * x3
+)
+
+# fitting all the models:
+
+allmodels <- sapply(formulas, function(x) vglm(x, data = data2, family = cumulative(parallel = TRUE)))
+
+deviances <- sapply(allmodels, function(x) deviance(x))
+
+# Note: this gives the same answers as if we had y = 0, 1 or 2. E.g., second row in data2 would give y = (0, 0, 0, 1) and (2, F, 3) four times in the covariate matrix, but this requires more space.
+
+```
+
+```{r,echo=FALSE}
+
+kable(data.frame(Model = as.character(unlist(formulas)), Deviance = round(deviances,2)))
+
+```
+
+
+
+
+```{r, echo = FALSE, eval = FALSE}
+data3 <- data.frame()
+for (i in 1:nrow(data2)){
+  tmp <- data.frame()
+  for (j in 4:6){
+    if (data2[i,j] == 0) next
+    tmp <- rbind(tmp, data.frame(y = rep(j-4, data2[i,j]), data2[i, 1:3]))
+  }
+  data3 <- rbind(data3, tmp)
+}
+b <- multinom(y ~ x1 + x2 + x3, data = data3)
+```
+
+
+
+### d) 
+
+* New: What do we mean by the formula `cbind(y0, y1, y2) ~ x1 + x2*x3`? OBS: Ask Mette/Ingeborg if you are not sure before moving on!
+* Describe the model that corresponds to `x1*x2 + x1*x3`. How many parameters are in this model? How many degrees of freedom for the deviance?
+* A statistician has picked the models `x2 + x3`, `x1 + x2 + x3`, `x1*x2 + x3` and `x1*x2 + x1*x3` as candidates for "the best model". Which of these models would you choose based on the deviances? Reason using hypothesis testing (you have to choose one model for the null-hypothesis, which?).
+
+### e)
+
+Below you see (a slightly edited) `R`-summary of the `x1 + x2 + x3` model. Assume we still use the model from a).
+
+```
+
+Call:
+vglm(formula = x, family = cumulative(parallel = TRUE), data = data2)
+
+
+Pearson residuals:
+                  Min       1Q   Median     3Q   Max
+logit(P[Y<=1]) -1.294 -0.33737 -0.08605 0.1788 1.211
+logit(P[Y<=2]) -1.442 -0.08222  0.12144 0.2428 1.100
+
+Coefficients: 
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept):1   8.0355     2.5079   3.204  0.00136 ** 
+(Intercept):2  12.4324     3.1752   3.916 9.02e-05 ***
+x1             -0.2199     0.7561  -0.291  0.77114    
+x2M            -2.1576     0.8875  -2.431  0.01506 *  
+x3             -2.2725     0.6985  -3.253  0.00114 ** 
+---
+
+Number of linear predictors:  2 
+
+Names of linear predictors: logit(P[Y<=1]), logit(P[Y<=2])
+
+Residual deviance: 10.5552 on ?? degrees of freedom
+
+Log-likelihood: -11.6754 on ?? degrees of freedom
+
+```
+
+And this is the estimated covariace matrix for the estimators:
+
+```{r, echo = FALSE}
+
+round(vcov(allmodels[[6]]), 4)
+
+```
+
+
+
+* Use the `R`-summary to estimate $e^{\beta_k}$ for $k = 1, 2, 3$.
+* Find an approximate confidence interval for $e^{\beta_1}$. Comment on this considering the model choice you made in d).
+* Estimate the probability to get final CGI equal to 0 for a female with injections every second week and initial CGI equal to 5.
+* Explain how you can find an estimated standard deviation for this estimate (you do not need to do all calculations). Hint: You need Taylor expansions here!
+
+
+## Problem 2: More alligators (nominal model)
+
+We will analyses an extended version of the alligators data, where also the gender of the alligator is included. 
+
+In the data below the following column names are given:
+
+* lake: each of the 4 lakes in Florida (1:4)
+* gender: gender of alligator (0:) and (1:) -- not given in data file, what do you think?
+* size: the size of the alligator (0: 2.3 meters or smaller) and (1: larger than 2.3 meters)
+* y1: fish
+* y2: inverterbrate
+* y3: reptile
+* y4: bird
+* y5: other
+
+a) Investigate different models and select the best. Call this the best model. 
+b) Assess the model fit of this best model. 
+c) Interpret effects and perform inference for the best model.
+
+```{r,results="markup"}
+library(VGAM)
+data2="http://www.stat.ufl.edu/~aa/glm/data/Alligators2.dat"
+ali2 = read.table(data2, header = T)
+ali2
+colnames(ali2)
+fit=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake)+factor(size)+factor(gender),family=multinomial, data=ali2)
+
+# 6 possible models to investigate: only lake, only gender, only size, lake+gender, lake+size, size+gender
+fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),family=multinomial, data=ali2)
+fit.size=vglm(cbind(y2,y3,y4,y5,y1)~factor(size),family=multinomial, data=ali2)
+fit.gender=vglm(cbind(y2,y3,y4,y5,y1)~factor(gender),family=multinomial, data=ali2)
+fit.lake.size=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake)+factor(size),family=multinomial, data=ali2)
+fit.lake.gender=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake)+factor(gender),family=multinomial, data=ali2)
+fit.gender.size=vglm(cbind(y2,y3,y4,y5,y1)~factor(size)+factor(gender),family=multinomial, data=ali2)
+all=list("fit"=fit,"fit.lake"=fit.lake,"fit.size"=fit.size,"fit.gender"=fit.gender,"fit.lake.size"=fit.lake.size,"fit.lake.gender"=fit.lake.gender,"fit.gender.size"=fit.gender.size)
+lapply(all,AIC)
+
+# you may also look at deviance tests if you prefer that to AIC
+
+# what is best? toggle to match your choice
+best=fit
+summary(best)
+pchisq(deviance(best),df.residual(best),lower.tail=FALSE)
+confint(best)
+```
+
+
+# Exam questions
+
+None found at NTNU or UiO - except the IL-problem.
+
+# R packages
+
+```{r, eval=FALSE}
+install.packages(c("VGAM", 
+  "ggplot2", 
+  "statmod",
+  "knitr"))
+```
+
+# Further reading
+
+* A. Agresti (2015): "Foundations of Linear and Generalized Linear Models." Chapter 6. Wiley.

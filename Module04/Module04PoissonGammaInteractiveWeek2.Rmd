@@ -8,6 +8,7 @@ output: #3rd letter intentation hierarchy
     toc: true
     toc_float: true
     toc_depth: 2
+    css: "../TMA4315RMarkdown.css"
  # pdf_document:
  #   toc: true
  #   toc_depth: 2

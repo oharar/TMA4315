@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.10.28)  27 SEP 2023 16:23
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.10.28)  9 OCT 2023 14:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**Module04PoissonGammaPresentationWeek2.tex
-(./Module04PoissonGammaPresentationWeek2.tex
+**Module05GLMsPresentation.tex
+(./Module05GLMsPresentation.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-02-24> (/usr/local/texlive/2022/texmf-dist/tex/latex
 /beamer/beamer.cls
@@ -799,36 +799,107 @@ Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \fb@frh=\dimen301
 \FrameRule=\dimen302
 \FrameSep=\dimen303
-) (/usr/local/texlive/2022/texmf-dist/tex/latex/bookmark/bookmark.sty
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
+\LTleft=\skip68
+\LTright=\skip69
+\LTpre=\skip70
+\LTpost=\skip71
+\LTchunksize=\count367
+\LTcapwidth=\dimen304
+\LT@head=\box80
+\LT@firsthead=\box81
+\LT@foot=\box82
+\LT@lastfoot=\box83
+\LT@gbox=\box84
+\LT@cols=\count368
+\LT@rows=\count369
+\c@LT@tables=\count370
+\c@LT@chunks=\count371
+\LT@p@ftn=\toks46
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen305
+\lightrulewidth=\dimen306
+\cmidrulewidth=\dimen307
+\belowrulesep=\dimen308
+\belowbottomsep=\dimen309
+\aboverulesep=\dimen310
+\abovetopsep=\dimen311
+\cmidrulesep=\dimen312
+\cmidrulekern=\dimen313
+\defaultaddspace=\dimen314
+\@cmidla=\count372
+\@cmidlb=\count373
+\@aboverulesep=\dimen315
+\@belowrulesep=\dimen316
+\@thisruleclass=\count374
+\@lastruleclass=\count375
+\@thisrulewidth=\dimen317
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/tools/array.sty
+Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
+\col@sep=\dimen318
+\ar@mcellbox=\box85
+\extrarowheight=\dimen319
+\NC@list=\toks47
+\extratabsurround=\skip72
+\backup@length=\skip73
+\ar@cellbox=\box86
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen320
+\captionmargin=\dimen321
+\caption@leftmargin=\dimen322
+\caption@rightmargin=\dimen323
+\caption@width=\dimen324
+\caption@indent=\dimen325
+\caption@parindent=\dimen326
+\caption@hangindent=\dimen327
+Package caption Info: beamer document class detected.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption-beamer.sto
+File: caption-beamer.sto 2022/01/06 v2.0c Adaption of the caption package to th
+e beamer document classes (AR)
+))
+\c@caption@flags=\count376
+\c@continuedfloat=\count377
+Package caption Info: hyperref package is loaded.
+Package caption Info: Hyperref support is turned off
+(caption)             because hyperref has stopped early.
+Package caption Info: longtable package is loaded.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)) (/usr/local/texlive/2022/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2020-11-06 v1.29 PDF bookmarks (HO)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2020-11-06 v1.29 bookmark driver for dvipdfm (HO)
-\BKM@id=\count367
+\BKM@id=\count378
 )) (/usr/local/texlive/2022/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
-) (./Module04PoissonGammaPresentationWeek2.aux)
-\openout1 = `Module04PoissonGammaPresentationWeek2.aux'.
+) (./Module05GLMsPresentation.aux)
+\openout1 = `Module05GLMsPresentation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 156.
-LaTeX Font Info:    ... okay on input line 156.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -863,7 +934,7 @@ LaTeX Font Info:    ... okay on input line 156.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 156.
+Package hyperref Info: Link coloring OFF on input line 148.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 (/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty
@@ -873,11 +944,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count368
+\c@section@level=\count379
 )
-LaTeX Info: Redefining \ref on input line 156.
-LaTeX Info: Redefining \pageref on input line 156.
-LaTeX Info: Redefining \nameref on input line 156.
+LaTeX Info: Redefining \ref on input line 148.
+LaTeX Info: Redefining \pageref on input line 148.
+LaTeX Info: Redefining \nameref on input line 148.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -904,19 +975,19 @@ tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 156.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 148.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 156.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 148.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 156.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 148.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 156.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 148.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 156.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 148.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 156.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 148.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 156.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 148.
 
 Package fontspec Info: latinmodern-math scale = 1.03015890977869.
 
@@ -945,7 +1016,7 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 156.
+(Font)              scaled to size 11.28015pt on input line 148.
 
 Package fontspec Info: latinmodern-math scale = 1.03015890977869.
 
@@ -984,18 +1055,18 @@ dern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 156.
+(Font)              scaled to size 11.28015pt on input line 148.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 156.
+(Font)              `operators' in the math version `normal' on input line 148.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 156.
+ line 148.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 156.
+(Font)              `operators' in the math version `bold' on input line 148.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 156.
+t line 148.
 
 Package fontspec Info: latinmodern-math scale = 1.03015890977869.
 
@@ -1082,15 +1153,15 @@ t=math;language=dflt;"
 (fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 156.
+(Font)              `symbols' in the math version `normal' on input line 148.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 156.
+t line 148.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 156.
+(Font)              `symbols' in the math version `bold' on input line 148.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 156.
+t line 148.
 
 Package fontspec Info: latinmodern-math scale = 1.03015890977869.
 
@@ -1160,22 +1231,22 @@ t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-56.
+48.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 156.
+t line 148.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 156
+(Font)              `largesymbols' in the math version `bold' on input line 148
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 156.
-LaTeX Info: Redefining \microtypecontext on input line 156.
-Package microtype Info: Applying patch `item' on input line 156.
-Package microtype Info: Applying patch `toc' on input line 156.
-Package microtype Info: Applying patch `eqnum' on input line 156.
+t line 148.
+LaTeX Info: Redefining \microtypecontext on input line 148.
+Package microtype Info: Applying patch `item' on input line 148.
+Package microtype Info: Applying patch `toc' on input line 148.
+Package microtype Info: Applying patch `eqnum' on input line 148.
 
-Package microtype Warning: Unable to apply patch `footnote' on input line 156.
+Package microtype Warning: Unable to apply patch `footnote' on input line 148.
 
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -1186,40 +1257,42 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmss' (encoding: TU).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-(./Module04PoissonGammaPresentationWeek2.nav) [1
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+(./Module05GLMsPresentation.nav) [1
 
 ] [2
 
 ]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 181.
+(Font)              scaled to size 7.8961pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 181.
+(Font)              scaled to size 5.64008pt on input line 189.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-81.
+89.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 181.
+(Font)              scaled to size 11.28131pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 181.
+(Font)              scaled to size 7.89691pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 181.
+(Font)              scaled to size 5.64066pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 181.
+(Font)              scaled to size 11.27914pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 181.
+(Font)              scaled to size 7.8954pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 181.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 181
+(Font)              scaled to size 5.63957pt on input line 189.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 189
 .
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 181
+LaTeX Font Info:    Trying to load font information for U+msb on input line 189
 .
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1227,73 +1300,217 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [3
 
-] [4
-
-] [5
-
-] [6
+]
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 10.30151pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.21106pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.15076pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.30258pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.2118pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.15129pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 10.3006pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 7.21042pt on input line 231.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 5.1503pt on input line 231.
+[4
 
 ]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 11.28015pt on input line 249.
+(Font)              scaled to size 11.28015pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 7.8961pt on input line 249.
+(Font)              scaled to size 7.8961pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 5.64008pt on input line 249.
+(Font)              scaled to size 5.64008pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 11.28131pt on input line 249.
+(Font)              scaled to size 11.28131pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 7.89691pt on input line 249.
+(Font)              scaled to size 7.89691pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 5.64066pt on input line 249.
+(Font)              scaled to size 5.64066pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 11.27914pt on input line 249.
+(Font)              scaled to size 11.27914pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 7.8954pt on input line 249.
+(Font)              scaled to size 7.8954pt on input line 267.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 5.63957pt on input line 249.
-[7
-
-] [8
-
-] [9
+(Font)              scaled to size 5.63957pt on input line 267.
+[5
 
 ]
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 294.
+
 (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
-)
-Overfull \hbox (20.20718pt too wide) detected at line 303
-[][]
+) [6
+
+] [7
+
+] [8
+
+]
+Overfull \hbox (37.849pt too wide) in paragraph at lines 362--362
+[]\TU/lmss/m/n/10.95 Distribution  
  []
 
-[10
+
+Overfull \hbox (3.13261pt too wide) in paragraph at lines 362--362
+[]$[]$  
+ []
+
+
+Overfull \hbox (7.36864pt too wide) in paragraph at lines 362--362
+[]$[][][][][]$  
+ []
+
+
+Overfull \hbox (2.53615pt too wide) in paragraph at lines 362--362
+[]$[][][][] [] 
+ []
+
+
+Overfull \hbox (2.9583pt too wide) in paragraph at lines 362--362
+[][][][][][][][]$  
+ []
+
+
+Overfull \hbox (14.9416pt too wide) in paragraph at lines 362--362
+[]|\TU/lmss/m/n/10.95 normal|  
+ []
+
+
+Overfull \hbox (0.66226pt too wide) in paragraph at lines 362--362
+[]|$[]$|  
+ []
+
+
+Overfull \hbox (24.34766pt too wide) in paragraph at lines 362--362
+[]|\TU/lmss/m/n/10.95 Bernoulli|  
+ []
+
+
+Overfull \hbox (6.6524pt too wide) in paragraph at lines 362--362
+[][][][][]$|  
+ []
+
+
+Overfull \hbox (0.66226pt too wide) in paragraph at lines 362--362
+[]|$[]$|  
+ []
+
+
+Overfull \hbox (7.1856pt too wide) in paragraph at lines 362--362
+[]|$[][][] [] 
+ []
+
+
+Overfull \hbox (18.0952pt too wide) in paragraph at lines 362--362
+[]|\TU/lmss/m/n/10.95 Poisson|  
+ []
+
+
+Overfull \hbox (2.26442pt too wide) in paragraph at lines 362--362
+[]|$[][][][]$|  
+ []
+
+
+Overfull \hbox (0.66226pt too wide) in paragraph at lines 362--362
+[]|$[]$|  
+ []
+
+
+Overfull \hbox (17.18636pt too wide) in paragraph at lines 362--362
+[]|\TU/lmss/m/n/10.95 gamma|  
+ []
+
+
+Overfull \hbox (14.09724pt too wide) in paragraph at lines 362--362
+[]|$[] [][][][][]$|  
+ []
+
+
+Overfull \hbox (0.66226pt too wide) in paragraph at lines 362--362
+[]|$[]$|  
+ []
+
+[9
+
+] [10
 
 ] [11
 
-] [12
+]
+Overfull \hbox (5.65303pt too wide) in paragraph at lines 417--417
+[]\TU/lmss/m/n/10.95 random 
+ []
+
+
+Overfull \hbox (2.30232pt too wide) in paragraph at lines 417--417
+[]|\TU/lmss/m/n/10.95 normal|  
+ []
+
+
+Overfull \hbox (9.75928pt too wide) in paragraph at lines 417--417
+[]|\TU/lmss/m/n/10.95 binomial|  
+ []
+
+
+Overfull \hbox (5.45592pt too wide) in paragraph at lines 417--417
+[]|\TU/lmss/m/n/10.95 Poisson|  
+ []
+
+
+Overfull \hbox (4.54707pt too wide) in paragraph at lines 417--417
+[]|\TU/lmss/m/n/10.95 gamma|  
+ []
+
+[12
 
 ] [13
 
 ] [14
 
-] [15
-
 ]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 12.36182pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 8.24121pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 6.18091pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 12.3631pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 8.24207pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 6.18155pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 12.36072pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 8.24048pt on input line 465.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 6.18036pt on input line 465.
+[15
 
-(./Module04PoissonGammaPresentationWeek2.vrb
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 8.
-) [16
+] [16
 
 ] [17
 
 ] [18
 
 ]
-LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 428.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 14.83417pt on input line 517.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 14.83571pt on input line 517.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 14.83284pt on input line 517.
 [19
 
 ] [20
@@ -1302,255 +1519,62 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 
 ] [22
 
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
+] [23
 
-(./Module04PoissonGammaPresentationWeek2.vrb) [23
+] [24
 
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
+] [25
 
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-4
--1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-4-
-1.pdf>
-) [24
+] [26
 
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-5
--1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-5-
-1.pdf>
-) [25
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-6
--1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-6-
-1.pdf>
-) [26
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-7
--1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-7-
-1.pdf>
-) [27
+] [27
 
 ] [28
 
 ] [29
 
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [30
+] [30
 
 ] [31
 
-] [32
-
 ]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
+\openout4 = `Module05GLMsPresentation.vrb'.
 
-(./Module04PoissonGammaPresentationWeek2.vrb) [33
+(./Module05GLMsPresentation.vrb
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 6.
+) [32
 
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
+] [33
 
-(./Module04PoissonGammaPresentationWeek2.vrb) [34
+] [34
 
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
+] [35
 
-(./Module04PoissonGammaPresentationWeek2.vrb
-Overfull \hbox (66.3788pt too wide) in paragraph at lines 21--21
-[]\TU/lmtt/m/n/10.95 ## Signif. codes:  0 []***[] 0.001 []**[] 0.01 []*[] 0.05 
-[].[] 0.1 [] [] 1[] 
- []
-
-) [35
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [36
+] [36
 
 ] [37
 
 ] [38
 
 ]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [39
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [40
-
-] [41
-
-] [42
-
-] [43
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [44
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-1
-5-1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-15
--1.pdf>
-) [45
-
-] [46
-
-] [47
-
-] [48
-
-]
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 981.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 981.
-[49
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <6> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 10.
-) [50
-
-] [51
-
-] [52
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [53
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [54
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [55
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb)
-Overfull \vbox (40.08368pt too high) detected at line 1166
- []
-
-[56
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [57
-
-] [58
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [59
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-2
-2-1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-22
--1.pdf>
-) [60
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [61
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [62
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb
-File: Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-2
-5-1.pdf Graphic file (type pdf)
-<use Module04PoissonGammaPresentationWeek2_files/figure-beamer/unnamed-chunk-25
--1.pdf>
-) [63
-
-]
-\openout4 = `Module04PoissonGammaPresentationWeek2.vrb'.
-
-(./Module04PoissonGammaPresentationWeek2.vrb) [64
-
-] [65
-
-]
 \tf@nav=\write6
-\openout6 = `Module04PoissonGammaPresentationWeek2.nav'.
+\openout6 = `Module05GLMsPresentation.nav'.
 
 \tf@toc=\write7
-\openout7 = `Module04PoissonGammaPresentationWeek2.toc'.
+\openout7 = `Module05GLMsPresentation.toc'.
 
 \tf@snm=\write8
-\openout8 = `Module04PoissonGammaPresentationWeek2.snm'.
+\openout8 = `Module05GLMsPresentation.snm'.
 
-(./Module04PoissonGammaPresentationWeek2.aux) ) 
+(./Module05GLMsPresentation.aux) ) 
 Here is how much of TeX's memory you used:
- 30366 strings out of 476179
- 624710 string characters out of 5809543
- 1057086 words of memory out of 5000000
- 50441 multiletter control sequences out of 15000+600000
- 477293 words of font info for 105 fonts, out of 8000000 for 9000
+ 31886 strings out of 476179
+ 650774 string characters out of 5809543
+ 1085857 words of memory out of 5000000
+ 51977 multiletter control sequences out of 15000+600000
+ 481192 words of font info for 135 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,12n,122p,1034b,780s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,15n,122p,1021b,704s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Module04PoissonGammaPresentationWeek2.pdf (65 pages).
+Output written on Module05GLMsPresentation.pdf (38 pages).

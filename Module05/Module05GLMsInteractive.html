@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Mette Langaas, Department of Mathematical Sciences, NTNU – with contributions from Ingeborg Hem" />
+<meta name="author" content="Mette Langaas, Department of Mathematical Sciences, NTNU - with contributions from Ingeborg Hem" />
 
 
 <title>TMA4315 Generalized linear models H2018</title>
@@ -1498,553 +1498,642 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">TMA4315 Generalized linear models
 H2018</h1>
-<h3 class="subtitle">Module 4: Count and continuous positive response
-data (Poisson and gamma regression)</h3>
+<h3 class="subtitle">Module 5: Generalized linear models - common
+core</h3>
 <h4 class="author">Mette Langaas, Department of Mathematical Sciences,
-NTNU – with contributions from Ingeborg Hem</h4>
-<h4 class="date">27.09.2018 and 04.10.2018 [PL], 28.09.2018 and
-05.10.2018 [IL]</h4>
+NTNU - with contributions from Ingeborg Hem</h4>
+<h4 class="date">11.10.2017 [PL], 12.10.2017 [IL]</h4>
 
 </div>
 
 
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>#<a id="interactivew2">Interactive session - second week</a></p>
-<div id="problem-1-exam-2007-problem-1-a-bit-modified---smoking-and-lung-cancer" class="section level2">
-<h2>Problem 1: Exam 2007 (Problem 1, a bit modified) - Smoking and lung
-cancer</h2>
-<p>(Permitted aids for the exam was “Tabeller og formler i statistikk”,
-Matematisk formelsamling (Rottmann), one A5 sheet with your own
-handwritten notes, and a simple calculator.)</p>
-<p>The dataset given in <code>smoking.txt</code> consists of four
-variables:</p>
+<div id="topics" class="section level2">
+<h2>Topics</h2>
 <ul>
-<li><code>deaths</code>: number of lung cancer deaths over a period of
-six years [remark: incorrectly 1 year in exam question]</li>
-<li><code>population</code>: the number of people [remark: incorrectly
-in 100 000 people in exam question]</li>
-<li><code>age</code>: in five-year age groups
-(<code>40-44, 45-49, 50-54, 55-59, 60-64, 65-69, 70-74, 75-79, 80+</code>)</li>
-<li><code>ageLevel</code>: age group as numbers from 1 to 9 (1
-corresponds to 40-44, 2 to 45-59, and so on)</li>
-<li><code>smoking status</code>: doesn’t smoke (<code>no</code>), smokes
-cigars or pipe only (<code>cigarPipeOnly</code>), smokes cigarettes and
-cigar or pipe (<code>cigarettePlus</code>), and smokes cigarettes only
-(<code>cigaretteOnly</code>)</li>
+<li>random component: exponential family
+<ul>
+<li>elements: <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>, <span class="math inline">\(w\)</span>, <span class="math inline">\(b(\theta)\)</span></li>
+<li>elements for normal, binomial, Poisson and gamma</li>
+<li>properties: <span class="math inline">\(\text{E}(Y)=b&#39;(\theta)\)</span> and <span class="math inline">\(\text{Var}(Y)=b&#39;&#39;(\theta)\frac{\phi}{w}\)</span>
+(and proof)</li>
+</ul></li>
+<li>systematic component= linear predictor
+<ul>
+<li>requirements: full rank of design matrix</li>
+</ul></li>
+<li>link function and response function
+<ul>
+<li>link examples for normal, binomial, Poisson and gamma</li>
+<li>requirements: one-to-one and twice differentiable</li>
+<li>canonical link</li>
+</ul></li>
+<li>likelihood inference set-up: <span class="math inline">\(\theta_i\leftrightarrow \mu_i\leftrightarrow
+\eta_i \leftrightarrow \mathbf{\beta}\)</span></li>
+<li>the loglikelihood</li>
+<li>the score function</li>
+<li>expected Fisher information matrix for the GLM and covariance for
+<span class="math inline">\(\hat{\beta}\)</span>
+<ul>
+<li>what about covariance of <span class="math inline">\(\hat{\beta}\)</span> when <span class="math inline">\(\phi\)</span> needs to be estimated?</li>
+<li>estimator for dispersion parameter</li>
+</ul></li>
+<li>Fisher scoring and iterated reweighted least squares (IRWLS)</li>
+<li>Pearson and deviance statistic</li>
+<li>AIC</li>
 </ul>
-<p>You can look at the dataset here: <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt" class="uri">https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt</a>,
-and can be found here as well: <a href="http://data.princeton.edu/wws509/datasets/#smoking" class="uri">http://data.princeton.edu/wws509/datasets/#smoking</a></p>
-<p>Remark: the data set is probably taken from <a href="https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents" class="uri">https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents</a>
-and there it is said the the persons under study are males who have
-contributed in wars before 1956 and who answered a questionaire. The
-authors point out that the dataset is not representative for the whole
-population.</p>
-<p>We are interested in studying if the mortality rate due to lung
-cancer (the number of deaths due to lung cancer per individual during
-six year) controlled for age group and smoking status. Assume that the
-number of deaths for each set of covariate values, <span class="math inline">\(Y_i\)</span>, can be considered Poisson
-distributed, <span class="math inline">\(Y_i \sim
-\text{Poisson}(\lambda_i)\)</span>. We fit the following model:</p>
-<pre class="r"><code># load data:
-smoking &lt;- read.table(file = &quot;https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt&quot;)
-head(smoking)
-nrow(smoking)
-model1 &lt;- glm(dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
-# note that the size of the population for each combination of the covaraites
-# is the offset here
-summary(model1)</code></pre>
-<pre><code>##   dead  pop   age ageLevel smoke
-## 1   18  656 40-44        1    no
-## 2   22  359 45-59        2    no
-## 3   19  249 50-54        3    no
-## 4   55  632 55-59        4    no
-## 5  117 1067 60-64        5    no
-## 6  170  897 65-69        6    no
-## [1] 36
-## 
-## Call:
-## glm(formula = dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, 
-##     offset = log(pop))
-## 
-## Coefficients:
-##                     Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -3.63222    0.06783 -53.552  &lt; 2e-16 ***
-## age45-59             0.55388    0.07999   6.924 4.38e-12 ***
-## age50-54             0.98039    0.07682  12.762  &lt; 2e-16 ***
-## age55-59             1.37946    0.06526  21.138  &lt; 2e-16 ***
-## age60-64             1.65423    0.06257  26.439  &lt; 2e-16 ***
-## age65-69             1.99817    0.06279  31.824  &lt; 2e-16 ***
-## age70-74             2.27141    0.06435  35.296  &lt; 2e-16 ***
-## age75-79             2.55858    0.06778  37.746  &lt; 2e-16 ***
-## age80+               2.84692    0.07242  39.310  &lt; 2e-16 ***
-## smokecigarretteOnly  0.36915    0.03791   9.737  &lt; 2e-16 ***
-## smokecigarrettePlus  0.17015    0.03643   4.671 3.00e-06 ***
-## smokeno             -0.04781    0.04699  -1.017    0.309    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for poisson family taken to be 1)
-## 
-##     Null deviance: 4055.984  on 35  degrees of freedom
-## Residual deviance:   21.487  on 24  degrees of freedom
-## AIC: 285.51
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-<p><span class="question">a) What is an offset?</span></p>
+<p>– so, for the first time: no practical examples or data sets to be
+analysed!</p>
+</div>
+<div id="interactive-session" class="section level1">
+<h1><a id="interactive">Interactive session </a></h1>
+<p>Work with Problem 1 and 2 in IL, and work on Problems 3-5 by
+yourself.</p>
+<p>If you have more time after Problem 1 and 2, look through the
+theoretical proofs and derivations listed under “Learning material” on
+the top of this Module page.</p>
+<div id="problem-1-exam-2011-problem-3" class="section level2">
+<h2>Problem 1: Exam 2011, problem 3</h2>
+<ol style="list-style-type: lower-alpha">
+<li><span class="question">Define the class of generalized linear models
+(GLMs), and explicitly list all requirements for each part of the
+model.</span></li>
+</ol>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+There are 3 parts to a GLM, and each has at least one requirement
 </details>
-<p><span class="question">For 53-year old non-smokers, what is the
-estimated number of deaths due to lung cancer (per person over 6 years)?
-</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
-</details>
-<p><span class="question">Why is the number of degrees of freedom for
-the deviance of this model 24?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Does the model give a good fit?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
+<p><strong>Likelihoods:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Independent observation</li>
+<li>Member of the exponential family of canonical form.</li>
+<li>Should be of same kind for all observations, but possible different
+expectation/parameter.</li>
+</ol>
+<p><strong>Link functions:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Monotone</li>
+<li>Differentiable</li>
+</ol>
+<p><strong>Linear component:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Linear in parameters</li>
+</ol>
 </details>
 <ol start="2" style="list-style-type: lower-alpha">
-<li>Let <span class="math inline">\(\lambda(a,s)\)</span> denote the
-expected number of lung cancer deaths per person in age group <span class="math inline">\(a\)</span> with smoking status <span class="math inline">\(s\)</span>. For two different smoking statuses
-<span class="math inline">\(s_1\)</span> and <span class="math inline">\(s_2\)</span>, define</li>
+<li><span class="question">Below are three likelihoods, three link
+functions, and three linear components listed. Explain which
+<em>combinations</em> that give valid GLMs (8 in total), and also
+comment on these models (you do not have to mathematically prove which
+are valid).</span></li>
 </ol>
-<p><span class="math display">\[r(a, s_1, s_2) = \frac{\lambda(a,
-s_1)}{\lambda(a, s_2)}.\]</span></p>
-<p><span class="question">Explain why <span class="math inline">\(r(a,
-s_1, s_2)\)</span> does <strong>not</strong> vary as a function of <span class="math inline">\(a\)</span> in <code>model1</code>. </span></p>
+<p><strong>Likelihoods:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Gaussian, <span class="math inline">\(Y \sim N(\mu,
+\sigma^2)\)</span></li>
+<li>Binomial, <span class="math inline">\(Y \sim Bin(n, \pi)\)</span>,
+where <span class="math inline">\(n\)</span> is not fixed (hence is
+unknown and be estimated)</li>
+<li>Poisson, <span class="math inline">\(Y \sim
+Poisson(\lambda)\)</span></li>
+</ol>
+<p><strong>Link functions:</strong></p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(\eta = \cos(\mu)\)</span></li>
+<li><span class="math inline">\(\eta = \mu\)</span></li>
+<li><span class="math inline">\(\eta = \log(\mu)\)</span></li>
+</ol>
+<p><strong>Linear components:</strong></p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(\eta = \beta_0 + \beta_1x_1 +
+\beta_2x_2\)</span></li>
+<li><span class="math inline">\(\eta = \beta_0 + \beta_1x_1 +
+\beta_2x_1^2\)</span></li>
+<li><span class="math inline">\(\eta = \beta_0 + \beta_1x_1 +
+\beta_1^2x_2\)</span></li>
+</ol>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<ol style="list-style-type: decimal">
+<li>(Gaussian) and 3. (Poisson) are ok, as they are from the exponential
+family of distributions, but 2. (Binomial with unfixed <span class="math inline">\(n\)</span>) is not, we get a problem with the
+binomial coefficient which is non-linear in <span class="math inline">\(y\)</span> (so it need to go into <span class="math inline">\(c(y, \phi, w)\)</span>), but includes the unknown
+parameter <span class="math inline">\(n\)</span> (so it cannot go into
+<span class="math inline">\(c(y, \phi, w\)</span> after all). Note that
+this problem is solved by fixing <span class="math inline">\(n\)</span>,
+which we do in logistic regression. There are methods to estimate <span class="math inline">\(n\)</span> in binomial distributions, but they
+require specific experimental designs, and tend to work badly.</li>
+</ol>
+<p>Exponential family: <span class="math inline">\(f(y) =
+\exp\left(\frac{y\theta - b(\theta)}{\phi} w + c(y, \phi,
+w)\right)\)</span> (note that <span class="math inline">\(\theta\)</span> can be a vector)</p>
+<p>Binomial distribution: <span class="math inline">\(f(y) =
+\binom{n}{y} \pi^y(1-\pi)^{n-y} = \exp\left( \ln \binom{n}{y} + y \ln
+\frac{\pi}{(1-\pi)} + n \ln \pi \right)\)</span></p>
+<p><strong>Link functions:</strong> 1. (<span class="math inline">\(cos(\mu)\)</span>) is not monotone and thus not a
+valid link function. The other two (2. (<span class="math inline">\(\mu\)</span>) and 3. (<span class="math inline">\(\log(\mu)\)</span>)) are valid.</p>
+<p><strong>Linear component:</strong> The third linear component is not
+linear in <span class="math inline">\(\beta_1\)</span> and thus not
+valid. The others are linear in <span class="math inline">\(\mathbf{\beta}\)</span> and are valid (does not
+have to be linear in the covariates <span class="math inline">\(x_i\)</span>).</p>
+<p>Thus we have two linear components that can be used with any model,
+which leaves four alternatives for link and repsponse (and in total 8
+different model combinations):</p>
+<ul>
+<li>Gaussian response with identity link: Common linear regression</li>
+<li>Gaussian response with log-link: Gives a model with only positive
+expected values (which <em>can</em> (do not have to) have negative
+observations), only in special situations</li>
+<li>Poisson response with identity link: Poisson requires positive
+expectation, and with this link we need restrictions on the parameters
+to ensure the positive expectation</li>
+<li>Poisson response with log-link: Common model</li>
+</ul>
 </details>
-<p><span class="question">For <span class="math inline">\(s_1 =\)</span>
-<code>cigarPipeOnly</code> and <span class="math inline">\(s_2
-=\)</span> <code>cigaretteOnly</code>, find an estimate value for <span class="math inline">\(r(a, s_1, s_2)\)</span> and an approximate 90 %
-confidence interval.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Is there a significant difference in the
-expected number of lung cancer deaths for individuals that smoke
-cigarettes <code>cigaretteOnly</code> versus those that smoke cigar/pipe
-<code>cigarPipeOnly</code>?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><strong>c)</strong> We will now consider two alternative models,
-<code>model2</code> and <code>model3</code>:</p>
-<pre class="r"><code>model2 &lt;- glm(dead ~ smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
-model3 &lt;- glm(dead ~ ageLevel + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
-
-summary(model2)
-summary(model3)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = dead ~ smoke, family = &quot;poisson&quot;, data = smoking, 
-##     offset = log(pop))
-## 
-## Coefficients:
-##                     Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -1.47319    0.03099 -47.532  &lt; 2e-16 ***
-## smokecigarretteOnly -0.31219    0.03576  -8.729  &lt; 2e-16 ***
-## smokecigarrettePlus -0.43013    0.03468 -12.402  &lt; 2e-16 ***
-## smokeno             -0.36678    0.04669  -7.855 3.98e-15 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for poisson family taken to be 1)
-## 
-##     Null deviance: 4056.0  on 35  degrees of freedom
-## Residual deviance: 3910.7  on 32  degrees of freedom
-## AIC: 4158.7
-## 
-## Number of Fisher Scoring iterations: 5
-## 
-## 
-## Call:
-## glm(formula = dead ~ ageLevel + smoke, family = &quot;poisson&quot;, data = smoking, 
-##     offset = log(pop))
-## 
-## Coefficients:
-##                      Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -3.705950   0.050717 -73.071  &lt; 2e-16 ***
-## ageLevel             0.333006   0.005591  59.559  &lt; 2e-16 ***
-## smokecigarretteOnly  0.405019   0.037463  10.811  &lt; 2e-16 ***
-## smokecigarrettePlus  0.203426   0.035996   5.651 1.59e-08 ***
-## smokeno             -0.032927   0.046894  -0.702    0.483    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for poisson family taken to be 1)
-## 
-##     Null deviance: 4055.984  on 35  degrees of freedom
-## Residual deviance:   75.734  on 31  degrees of freedom
-## AIC: 325.76
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-<p><span class="question">Why does <code>model2</code> and
-<code>model3</code> have 32 and 31 degrees of freedom,
-respectively?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">If we want to compare the three models
-<code>model1</code>, <code>model2</code> and <code>model3</code>, which
-model would you choose as the best? Justify your answer by formulating
-relevant hypotheses and perform hypothesis tests, based on the
-print-outs above.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: remember that to compare two models then one model needs to be
-nested within the other model.</p>
-<p>New: For <code>model3</code>: <span class="question">Plot the
-regression line for the expected number of lung cancer deaths per person
-as a function of <code>age</code> for each of the four different smoking
-levels in the same plot. First use all coefficients, and then only the
-ones that are significant. Use <code>ggplot</code>! Discuss what you
-see.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<!--
-**d)** The (asymptotic) covariance matrix for the regression parameters (in a GLM) are given as $({\bf X}^T{\bf W}{\bf X})^{-1}$ where ${\bf X}$ is the design matrix for the problem.
-Find the difference in the ${\bf W}$ matrix with log-link and identity (linear) link for a Poisson model. Also find the difference in the ${\bf W}$ matrix with logit link and identity (linear) link for binomial data.
-Remark: We are talking about the inverse of the expected Fisher information matrix, and what is meant is that you find the diagonal elements of ${\bf W}$ for each of the four cases. And, we have not seen the general formula for ${\bf W}$ yet - but will do in Module 5. 
--->
-<!--
-**1. Explain what is done in the `R`-print-out.
-2. What if we instead want a CI for $\beta_0+\beta_1 x_{i1}$?
-3. What if we instead want a CI for $\lambda_i=\exp(\beta_0+\beta_i x_{i1})$?
-**d)** Overdispersion
--->
-</div>
-<div id="problem-2-tma4315-exam-2012-problem-3-precipitation-in-trondheim-amount" class="section level2">
-<h2>Problem 2: TMA4315 Exam 2012, Problem 3: Precipitation in Trondheim,
-amount</h2>
-<p>Remark: the text is slightly modified from the original exam since we
-parameterized the gamma as in our textbook.</p>
-<p>Remark: Problems 1 (binomial) and 2 (multinomial) at the 2012 exam
-also asked about percipitation.</p>
-<p>We want to model the amount of daily precipitation given that it
-<em>is</em> precipitation, and denote this quantity <span class="math inline">\(Y\)</span>. It is common to model <span class="math inline">\(Y\)</span> as a gamma distributed random variable,
-<span class="math inline">\(Y \sim Gamma(\nu,\mu)\)</span>, with
-density</p>
-<p><span class="math display">\[ f_Y(y) = \frac{1}{\Gamma(\nu)}
-\left(\frac{\nu}{\mu}\right)^{\nu} y^{\nu-1}\exp\left(-\frac{\nu}{\mu} y
-\right) \]</span></p>
-<p>In this problem we consider <span class="math inline">\(N\)</span>
-observations, each gamma distributed with <span class="math inline">\(Y_i \sim Gamma(\nu, \mu_i)\)</span> (remark:
-common <span class="math inline">\(\nu\)</span>). Here <span class="math inline">\(\nu\)</span> is considered to be a known nuisance
-parameter, and the <span class="math inline">\(\mu_i\)</span>s are
-unknown.</p>
-<p><strong>a)</strong> <span class="question">Show that the gamma
-distribution function is member of the exponential family when <span class="math inline">\(\mu_i\)</span> is the parameter of
-interest.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Use this to find expressions for the expected
-value and the variance of <span class="math inline">\(Y_i\)</span>, in
-terms of <span class="math inline">\((\nu,\mu_i)\)</span>, and interpret
-<span class="math inline">\(\nu\)</span>.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>New: <span class="question">What is the canonical link for the Gamma
-distribution?</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: if you want to focus on discussing - you may look at the
-solutions from <a href="https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf">Module
-1 together</a>.</p>
-<p><strong>b)</strong> <span class="question">Explain what a saturated
-model is.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Set up the log-likelihood function expressed
-by <span class="math inline">\(\mu_i\)</span>, and use it to find the
-maximum likelihood estimators for <span class="math inline">\(\mu_i\)</span>-s of the saturated model.
-</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p><span class="question">Find the deviance (based on all <span class="math inline">\(N\)</span> observations).</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: Do you see directly that <span class="math inline">\(\hat{\mu}_i=y_i\)</span>? If not, you may look at
-the likelihood for one observation and solve that the derivative equals
-0.</p>
-<p><strong>c)</strong> We now want to construct a model for amount of
-precipitation (given that there are occurrence) with precipitation
-forecast as explanatory variable.<br />
-<span class="question">Let <span class="math inline">\(Y_i\)</span> be
-amount of precipitation for day <span class="math inline">\(i\)</span>,
-and let <span class="math inline">\(x_i\)</span> be the precipitation
-forecast valid for day <span class="math inline">\(i\)</span>. Set up a
-GLM for this, and argue for your choice of link function and linear
-predictor.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: explain why this fits into our GLM-gamma framework and set up
-our 3 equation model (random, systematic, link).</p>
 <hr />
 </div>
-<div id="problem-3-taken-from-uio-stk3100-2015-problem-2" class="section level2">
-<h2>Problem 3: Taken from UiO, STK3100, 2015, problem 2</h2>
-<p>(For reference: <a href="http://www.uio.no/studier/emner/matnat/math/STK3100/oppgaver/stk3100-f15eng_final.pdf">here
-is the original exam</a>).</p>
-<p>This is a problem on the logistic regression.</p>
-<p>Do not look at the dataset before the end of the exercise! You should
-solve the exercise without using <code>R</code>, just as if you were at
-an exam.</p>
-<p>In this problem you shall consider data of survivals from a study of
-treatment for breast cancer. The response is the number that survived
-for three years. The covariates were the four factors</p>
-<ul>
-<li><code>app</code>: appearance of tumor, two levels, 1 = malignant, 2
-= benign</li>
-<li><code>infl</code>: inflammatory reaction, two levels, 1 = minimal, 2
-= moderate or severe</li>
-<li><code>age</code>: age of patients, three levels, 1 = under 50, 2 =
-50 to 69, 3 = 70 or older</li>
-<li><code>country</code>: hospital of treatment, three levels, 1 =
-Japan, 2 = US, 3 = UK</li>
-</ul>
-<p>The dataset we have used differs slightly from the one they used at
-UiO (the number of survivals and non-survivals differ).</p>
-<p>The number of survivors is modelled as a binomially distributed
-variable using a canonical logit link. Dummy variable coding is used for
-all factors, with the level coded as “1” as the reference category.</p>
-<p><strong>a)</strong> The output from fitting the model where only
-appearance and country are used as covariates, i.e., a model with
-predictor on the form</p>
-<p><span class="math display">\[ \eta = \beta_0 + \beta_1 \texttt{ fapp}
-+ \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}
+<div id="problem-2-december-2005-problem-2-modified" class="section level2">
+<h2>Problem 2: December 2005, Problem 2 (modified)</h2>
+<ol style="list-style-type: decimal">
+<li><span class="question">Derive the formula for the (scaled) deviance
+for the binomial distribution.</span></li>
+</ol>
+<!-- New: is the deviance dependent on which link function we choose? Can we use the deviance to compare two models with different link functions? -->
+<details>
+<summary>
+Answer
+</summary>
+<p>The likelihood for a singlw datum is</p>
+<p><span class="math display">\[
+f(y) = \text{P}(Y=y) = \binom{n}{y} \pi^y (1-\pi)^{n-y}
 \]</span></p>
-<p>is displayed below.</p>
-<p><span class="question">What is the interpretation of the estimate of
-the coefficient of appearance, <code>fapp</code> (<code>f</code> means
-factor)? Explain also how this coefficient can be expressed in terms of
-an odds ratio.</span></p>
+<p>So the log likelihood is</p>
+<p><span class="math display">\[
+\log(f) = \log \binom{n}{y} + y\log(\pi) + (n-y)\log(1-\pi) = \log
+\binom{n}{y} + y \log\left(\frac{\pi}{1-\pi}\right) + n\log(1-\pi)
+\]</span></p>
+<p>For <span class="math inline">\(n\)</span> data points <span class="math inline">\(l(y, \mu) = \sum_{i=1}^n \log(f)\)</span>, and the
+deviance, <span class="math inline">\(D(y, \hat{\mu}) =
+-2\left(l(\hat{\mu}, y) - l(y, y)\right)\)</span>, so</p>
+<p><span class="math display">\[
+\begin{aligned}
+D^*(y, \hat{\mu}) &amp;= 2 l(y, y) - 2 l(\hat{\mu}, y) \\
+&amp;= 2 \sum\left[y_i \log\left( \frac{y_i}{n_i-y_i}\right) + n_i
+\log\left( \frac{n_i-y_i}{n_i}\right) - y_i \log\left(
+\frac{\frac{\hat{\mu}_i}{n_i}}{\frac{n_i-\hat{\mu}_i}{n_i}}\right) - n_i
+\log\left( \frac{n_i - \hat{\mu}_i}{n_i}\right) \right] \\
+&amp;= 2 \sum\left[y_i \log\left( \frac{y_i}{\hat{\mu}_i}\right) + n_i
+\log\left( \frac{n_i-y_i}{n_i - \hat{\mu}_i}\right) - y_i \log\left(
+\frac{n_i - y_i}{n_i - \hat{\mu}_i}\right) \right]
+\end{aligned}
+\]</span></p>
+</details>
+<ol start="2" style="list-style-type: decimal">
+<li>The covariance matrix for the estimated coefficients are given as
+<span class="math inline">\(\text{Cov}(\hat{\beta})=({\bf X}^T{\bf
+W}{\bf X})^{-1}\)</span> where <span class="math inline">\({\bf
+X}\)</span> is the design matrix.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>(New) The matrix <span class="math inline">\({\bf W}\)</span> is a
+diagonal matrix. What is on the diagonal?</span></li>
+</ol>
+<details>
+<summary>
+Answer
+</summary>
+<p><span class="math display">\[
+w_{ii} = \left(\frac{\partial \mu_i}{\partial \eta_i}\right)^2
+\Big/\text{Var}(y_i)
+\]</span></p>
+</details>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><span class="question">Calculate the elements of <span class="math inline">\({\bf W}\)</span> for a Poisson regression- both
+with log and identity link. Compare.</span></li>
+</ol>
+<details>
+<summary>
+Hint
+</summary>
+For a canonical link, <span class="math inline">\(\mu = \eta\)</span>
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>log link:</p>
+<p><span class="math display">\[
+\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies
+w_{ii} = \frac{1}{\mu_i}
+\]</span></p>
+<p>Identity link;</p>
+<p><span class="math display">\[
+\mu = e^{\eta} \implies \frac{\partial \mu}{\partial \eta} = e^{\eta}
+\implies w_{ii} = \frac{e^{2 \eta_i}}{e^{\eta_i}} = e^{\eta_i} = \mu_i
+\]</span></p>
+<p>Each is the inverse of the other.</p>
+</details>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><span class="question">Calculate the elements of <span class="math inline">\({\bf W}\)</span> for a binary regression - both
+with logit and identity link. Compare.</span></li>
+</ol>
+<details>
+<summary>
+Answer
+</summary>
+<p>logit:</p>
+<p><span class="math display">\[
+\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies
+w_{ii} = \frac{1}{n_i \pi_i (1-\pi_i)}
+\]</span></p>
+<p>Identity:</p>
+<p><span class="math display">\[
+\mu = n\frac{e^{\eta}}{1+e^{\eta}} \implies \frac{\partial \mu}{\partial
+\eta} = n\frac{e^{\eta}}{(1+e^{\eta})^2} = n \pi (1-\pi) \implies w_{ii}
+= \frac{(n_i \pi_i (1-\pi_i))^2}{n_i \pi_i (1-\pi_i)} = n_i \pi_i
+(1-\pi_i)
+\]</span></p>
+Again, each is the inverse of the other.
+</details>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>(New) <span class="question">Which insight did this give you into
+the role of the link function and its effect on the covariance for the
+parameter estimates?</span></li>
+</ol>
+<details>
+<summary>
+Answer
+</summary>
+Different link functions change the covariance: in particular they
+change the mean-variance relationship.
+</details>
+<hr />
+</div>
+<div id="problem-3-exam-2006-problem-2-a-b-d" class="section level2">
+<h2>Problem 3: Exam 2006, problem 2 (a, b, d)</h2>
+<p>Let <span class="math inline">\(Y_1,Y_2,\ldots,Y_N\)</span> be
+independent and exponentially distributed random variables, where <span class="math inline">\(Y_i\)</span> has the density</p>
+<p><span class="math display">\[f(y_i ; \alpha_i)=\alpha_i
+e^{-\alpha_iy_i} \text{ for } y_i&gt;0, \alpha_i&gt;0,
+i=1,2,\ldots,N.\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li><span class="question">Show that the distribution of <span class="math inline">\(Y_i\)</span> comes from the exponential family.
+Use the general formulas to find E(<span class="math inline">\(Y_i\)</span>) and <span class="math inline">\(\text{Var}(Y_i)\)</span> as functions of <span class="math inline">\(\alpha_i\)</span>.</span></li>
+</ol>
+<details>
+<summary>
+Answer
+</summary>
+<p><span class="math display">\[f(y_i ; \alpha_i)=\alpha_i
+e^{-\alpha_iy_i} = e^{-\alpha_i y_i + \ln \alpha_i} \]</span></p>
+<p>which comes from the exponential family:</p>
+<p><span class="math display">\[ f(y) = \exp\left(\frac{y\theta -
+b(\theta)}{\phi} w + c(y, \phi, w)\right) = \exp\Big(\theta y_i
+-\ln(-1/\theta)\Big) \]</span></p>
+with <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(w = 1\)</span>, <span class="math inline">\(c(y,
+\phi, w) = 0\)</span>, <span class="math inline">\(\theta = -
+\alpha_i\)</span>, and <span class="math inline">\(b(\theta) = - \ln
+(\alpha_i) = - \ln(-\theta)\)</span>.
+</details>
+<details>
+<summary>
+Answer for E(<span class="math inline">\(Y_i\)</span>) and <span class="math inline">\(\text{Var}(Y_i)\)</span>
+</summary>
+<p>Expected value: E<span class="math inline">\((Y_i) = b&#39;(\theta) =
+- \frac{1}{\theta} = \frac{1}{\alpha_i}\)</span></p>
+<p>The variance: Var<span class="math inline">\((Y_i) =
+b&#39;&#39;(\theta) \frac{\phi}{w} = \frac{-1}{\theta^2} =
+\frac{1}{\alpha_i^2}\)</span></p>
+<p>Note that you could also use <span class="math inline">\(\theta =
+\alpha_i\)</span>, <span class="math inline">\(b(\theta) = \ln(\theta) =
+\ln(\alpha)\)</span>, <span class="math inline">\(c(y, \phi, w) =
+0\)</span>, and either <span class="math inline">\(\phi\)</span>
+<strong>or</strong> <span class="math inline">\(w\)</span> equal to -1,
+the other equal to 1, so <span class="math inline">\(\frac{\phi}{w} =
+-1\)</span>. Then E<span class="math inline">\((Y_i) = b&#39;(\theta) =
+\frac{1}{\theta_i} = \frac{1}{\alpha_i}\)</span> and Var<span class="math inline">\((Y_i) = -b&#39;&#39;(\theta) =
+-\frac{-1}{\theta^2} = \frac{1}{\alpha_i^2}\)</span>. These two
+parameterizations are equivalent, which shows that they are not
+necessarily unique! It is however some parameterizations that is the
+standard. For the Gamma (and thus the special case exponential) we use
+the first one, where <span class="math inline">\(\phi = w =
+1\)</span>.</p>
+</details>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><span class="question">Show that the log-likelihood for the data
+<span class="math inline">\(y_1, \dots, y_n\)</span> can be written
+as</li>
+</ol>
+<p><span class="math display">\[ l = \sum_{i=1}^N \{-\alpha_i y_i + \ln
+\alpha_i\} \]</span></span></p>
+<details>
+<summary>
+Answer/Hint (not yet added)
+</summary>
+<p>Per definition:</p>
+<p><span class="math display">\[
+l = \sum_{i=1}^N \ln f(y_i;\alpha_i) = \sum_{i=1}^N(-\alpha_iy_i +
+\ln\alpha_i)
+\]</span></p>
+</details>
+<p><span class="question">Use this to show that the deviance for a
+generalized linear model with estimated expectations <span class="math inline">\(\hat{\mu_i} = \hat{y_i}\)</span> is</p>
+<p><span class="math display">\[
+D = 2  \sum _{i=1}^N \left\{  \frac{y_i-\hat y_i}{\hat y_i}  - \ln
+\left(\frac{y_i}{\hat y_i} \right) \right\}
+\]</span> </span></p>
+<details>
+<summary>
+Hint
+</summary>
+The deviance is <span class="math inline">\(D =
+2(l_{saturated}-l_{model})\)</span>, where a saturated model has one
+parameter for each data point.
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>The deviance is</p>
+<p><span class="math display">\[
+D = 2(l_{saturated}-l_{model})
+\]</span></p>
+<p>Saturated model: All <span class="math inline">\(\alpha_i\)</span>
+are different, so <span class="math inline">\(\frac{\partial l}{\partial
+\alpha_i} = -y_i + 1/\alpha_i\)</span>. MLE: <span class="math inline">\(-y_i + 1/\alpha_i = 0 \ \implies \ \hat{\alpha_i}
+= 1/y_i\)</span> and thus</p>
+<p><span class="math display">\[
+l_{saturated} = \sum_{i=1}^N(-1 + \ln(1/y_i))
+\]</span></p>
+<p>In GLM-models we estimate the mean <span class="math inline">\(\mu_i\)</span> using <span class="math inline">\(\hat{\mu_i}\)</span> (do not need the expression
+for this), which we call <span class="math inline">\(\hat{y_i}\)</span>,
+and we have</p>
+<p><span class="math display">\[
+l_{model} = \sum_{i=1}^N \left( -\frac{y_i}{\hat{y_i}} +\ln
+\frac{1}{\hat{y_i}} \right) = \sum_{i=1}^N \left( -\frac{y_i}{\hat{y_i}}
+-\ln \hat{y_i} \right)
+\]</span></p>
+<p>Then we get the deviance</p>
+<p><span class="math display">\[
+D = \sum_{i=1}^N \left(-1-\ln(y_i) + \frac{y_i}{\hat{y_i}} + \ln
+\hat{y_i} \right) = D = \sum_{i=1}^N \left(
+\frac{y_i-\hat{y_i}}{\hat{y_i}} - \ln\frac{y_i}{\hat{y_i}} \right)
+\]</span></p>
+</details>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>We want to test the null hypothesis</li>
+</ol>
+<p><span class="math display">\[H_0: \ \alpha_1 = \alpha_2 = \cdots =
+\alpha_N = \alpha \]</span></p>
+<p>against the alternative hypothesis that at least one <span class="math inline">\(\alpha_i\)</span> is different from the
+others.<br />
+<span class="question">Use b) to find a test statistic for this
+problem.<br />
+What distribution does this test statistic have under <span class="math inline">\(H_0\)</span>?</span></p>
+<details>
+<summary>
+Hint
+</summary>
+You will need to estimate <span class="math inline">\(\alpha\)</span>,
+but it does have a simple cosed-form solution.
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p><span class="math inline">\(H_0\)</span> corresponds to a GLM where
+all <span class="math inline">\(\alpha_i\)</span> are equal to the same
+value, here denoted <span class="math inline">\(\alpha\)</span>.
+Then</p>
+<p><span class="math display">\[
+l = - \alpha \sum_{i=1}^N y_i + N \ln \alpha
+\]</span></p>
+<p>Take the derivative and set equal to zero gives</p>
+<p><span class="math display">\[
+\frac{dl}{d\alpha} = \sum_{i=1}^N y_i + \frac{N}{\alpha} \implies
+\hat{\alpha} = \frac{1}{\frac{1}{N}\sum_{i=1}^N y_i}  =
+\frac{1}{\bar{y}}
+\]</span></p>
+<p>Thus, <span class="math inline">\(\alpha_i =
+\frac{1}{\bar{y}}\)</span> for each i, which means that <span class="math inline">\(\hat{\mu_i} = \hat{y_i} = \bar{y}\)</span>. Then
+the deviance becomes</p>
+<p><span class="math display">\[ D = 2 \sum_{i=1}^N \left( {\frac{y_i -
+\bar{y}}{\bar{y}} - \ln \frac{y_i}{\bar{y}}} \right) \]</span> which is
+approximately <span class="math inline">\(\chi_{N-1}^2\)</span>
+distributed under <span class="math inline">\(H_0\)</span>. <span class="math inline">\(N-1\)</span> = no. of parameters in the saturated
+model minus no. of parameters in the model under <span class="math inline">\(H_0\)</span>. We reject <span class="math inline">\(H_0\)</span> if the deviance <span class="math inline">\(D\)</span> is large.</p>
+</details>
+<p>New: <span class="question">could you also use the Wald test? Explain
+how to do that (no need to calculated the mathematically explicit test
+statistic).</span></p>
+<details>
+<summary>
+Answer
+</summary>
+Yes you could. You would need to fit the model where <span class="math inline">\(\alpha_1 \ne \alpha_2 \ne \cdots \ne
+\alpha_N\)</span>, and insert the formula for the covariance matrix of
+<span class="math inline">\(\hat{\alpha}\)</span>.
+</details>
+<hr />
+</div>
+<div id="problem-4-exam-2007-problem-2-a-b-c" class="section level2">
+<h2>Problem 4: Exam 2007, problem 2 a, b, c</h2>
+<p>Assume that <span class="math inline">\(Y_1, \dots, Y_N\)</span> are
+independent continuous distributed random variables, where the density
+of <span class="math inline">\(Y_i\)</span> is given by</p>
+<p><span class="math display">\[ f(y_i; \gamma_i) = \begin{cases}
+\frac{\gamma_i^2}{2}y_ie^{-\gamma_iy_i} &amp;\text{ for } y_i \geq 0 \\
+0 &amp;\text{ else} \end{cases}\]</span></p>
+<p>where <span class="math inline">\(\gamma_i\)</span> is a scalar
+parameter.</p>
+<ol style="list-style-type: lower-alpha">
+<li><span class="question">Show that the distribution of <span class="math inline">\(Y_i\)</span> comes from the exponential family.
+</span></li>
+</ol>
+<details>
+<summary>
+Hint
+</summary>
+Usually we choose to let <span class="math inline">\(\phi=\frac{1}{2}\)</span>.
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>This is the Gamma distribution with <span class="math inline">\(\nu =
+2\)</span> and <span class="math inline">\(\mu = 2/\gamma\)</span>.</p>
+<p><span class="math display">\[ f(y_i; \gamma_i) =
+\frac{\gamma_i^2}{2}y_ie^{-\gamma_iy_i} = \exp\Big( -\gamma_i y_i +
+2\ln\gamma_i + \ln y_i - \ln2 \Big) = \exp \left(
+-\frac{-\frac{-y\gamma_i}{2}+\ln(-\gamma_i/2)}{1/2} + \ln y_i - \ln2
+\right)\]</span></p>
+<p><span class="math display">\[ f(y) = \exp\left(\frac{y\theta -
+b(\theta)}{\phi} w + c(y, \phi, w)\right) = \exp\Big(
+\frac{y_i(-\gamma_i) - (-2\ln\gamma_i)}{1}1 + (\ln y_i - \ln2) \Big) \\
+= \exp\Big( \frac{y_i(\gamma_i) - (2\ln\gamma_i)}{-1}1 + (\ln y_i -
+\ln2) \Big) \]</span> Also here we have several choices for
+parameterization. We choose the following (which is the standard for the
+Gamma distribution): <span class="math inline">\(w = 1\)</span>, <span class="math inline">\(\phi = 1/2\)</span>, <span class="math inline">\(c(y, \phi, w) = \ln y_i - \ln2\)</span>, <span class="math inline">\(\theta = -\gamma_i/2\)</span> and <span class="math inline">\(b(\theta) = -\ln(-\theta)\)</span>.</p>
+<p>(An alternative that might be simpler is: <span class="math inline">\(w = 1\)</span>, <span class="math inline">\(\phi =
+-1\)</span>, <span class="math inline">\(c(y, \phi, w) = \ln y_i -
+\ln2\)</span>, <span class="math inline">\(\theta = \gamma_i\)</span>,
+and <span class="math inline">\(b(\theta) = 2 \ln \theta\)</span>. The
+results will be the same, but this is not the standard way and we do not
+use this parameterization.)</p>
+</details>
+<p><span class="question">Use the general formulas to show that E<span class="math inline">\((Y_i) = 2/\gamma_i\)</span> and Var<span class="math inline">\((Y_i) = 2/\gamma_i^2\)</span>.</span></p>
+<details>
+<summary>
+Answer
+</summary>
+<p>Expected value: E<span class="math inline">\((Y_i) = b&#39;(\theta) =
+\frac{-1}{\theta} = \frac{2}{\gamma_i}\)</span></p>
+<p>The variance: Var<span class="math inline">\((Y_i) =
+b&#39;&#39;(\theta) \frac{\phi}{w} = \frac{2}{\theta^2} =
+\frac{2}{\gamma_i^2}\)</span></p>
+</details>
+<p>Assume a GLM for <span class="math inline">\(Y_1, \dots, Y_N\)</span>
+where the distribution of <span class="math inline">\(Y_i\)</span> is as
+above for all <span class="math inline">\(i\)</span>, with the following
+link function:</p>
+<p><span class="math display">\[\eta = g(\mu) = \ln(\mu) =
+x^T\beta\]</span></p>
+<p>where <span class="math inline">\(x, \ \beta \in {\rm
+I\!R}^p\)</span> and <span class="math inline">\(\mu\)</span> is the
+expected value of <span class="math inline">\(y\)</span>.</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><span class="question">Use general formulas to find the score vector
+<span class="math inline">\(s(\beta) = [s_1(\beta), \dots,
+s_p(\beta)]^T\)</span> and the expected Fisher information matrix <span class="math inline">\(F(\beta) = [F_{ij}(\beta)]_{i,j = 1}^p\)</span>,
+expressed using <span class="math inline">\(y_1, \dots, y_N, \beta,
+N\)</span> and the covariates <span class="math inline">\(x\)</span>.</span></li>
+</ol>
+<details>
+<summary>
+Answer for score vector
+</summary>
+<p>Score: <span class="math inline">\(s(\beta) = [s_1(\beta), \dots,
+s_p(\beta)]^T\)</span></p>
+<p><span class="math display">\[ s_j(\beta) = \sum_{i=1}^N \Big(
+\frac{y_i-\mu_i}{Var(Y_i)} x_{ij} \frac{\partial \mu_i}{\partial \eta_i}
+\Big) \]</span></p>
+<p><span class="math display">\[\frac{\partial \eta}{\partial \mu} =
+1/\mu \implies \frac{\partial \mu}{\partial \eta} = \mu = e^{x^T\beta}
+\]</span></p>
+<p>Using that <span class="math inline">\(\ln \mu = x^T\beta\)</span>
+and <span class="math inline">\(\mu = 2/\theta\)</span> we get <span class="math inline">\(\mu = 2/\theta = e^{x^T\beta} \implies \theta =
+2e^{-x^T\beta}\)</span>. Using this and the expected value and variance
+from a), the score <span class="math inline">\(s_j(\beta)\)</span>
+becomes</p>
+<span class="math display">\[ s_j(\beta) = \sum_{i=1}^N \left[ \frac{y_i
+- 2/\theta_i}{2/\theta_i^2}x_{ij}e^{x_i^T\beta} \right] = \sum_{i=1}^N
+\left[ \frac{y_i -
+e^{x_i^T\beta}}{\frac{1}{2}e^{2x_i^T\beta}}x_{ij}e^{x_i^T\beta} \right]
+= 2\sum_{i=1}^N \left[ \frac{y_i - e^{x_i^T\beta}}{e^{x_i^T\beta}}x_{ij}
+\right] \]</span>
+</details>
+<details>
+<summary>
+Answer for Fisher Information
+</summary>
+<p>Fisher: <span class="math inline">\(F(\beta) = [F_{ij}(\beta)]_{i,j =
+1}^p\)</span></p>
+<p>The general formula for the expected Fisher information is:</p>
+<p><span class="math display">\[ F_{jk}(\beta) = \sum_{i=1}^N
+\left[\frac{x_{ij} x_{ik}}{Var(Y_i)} \left(\frac{\partial
+\mu_i}{\partial \eta_i}\right)^2 \right] \]</span></p>
+<p>Thus we get</p>
+<p><span class="math display">\[ F_{jk}(\beta) = \sum_{i=1}^N
+\left[\frac{x_{ij} x_{ik}}{2/\theta_i^2} \left(e^{x_i^T\beta}\right)^2
+\right] = \sum_{i=1}^N \left[\frac{x_{ij}
+x_{ik}}{\frac{1}{2}e^{2x_i^T\beta}} \left(e^{x_i^T\beta}\right)^2
+e^{2x_i^T\beta} \right] = 2\sum_{i=1}^Nx_{ij}x_{ik} \]</span></p>
+<p>which means that the full matrix can be written as <span class="math inline">\(F(\beta) = 2X^TX\)</span>. Note that it is not a
+function of <span class="math inline">\(\beta\)</span>.</p>
+</details>
+<p><span class="question">Write down the equation that can be used to
+find the MLE for <span class="math inline">\(\beta\)</span>. Note that
+this is a recursive equation.</span></p>
+<details>
+<summary>
+Answer/Hint (not yet added)
+</summary>
+<p>The recursive equation we use to find the MLE is</p>
+<p><span class="math display">\[ \beta^{(m)} = \beta^{(m-1)} +
+F^{-1}s(\beta^{(m-1)}) \]</span></p>
+</details>
+<p>c)<span class="question">Write down the log-likelihood for the model
+above. Use this to find the deviance <span class="math inline">\(D\)</span> for the model as a function of <span class="math inline">\(y_1, \dots, y_N\)</span> and <span class="math inline">\(\hat{y_1}, \dots, \hat{y_N}\)</span>, where <span class="math inline">\(\hat{y_i}\)</span> is the estimated expected value
+of <span class="math inline">\(y_i\)</span>.</span></p>
+<p><span class="question">Find an expression for the deviance residuals
+<span class="math inline">\(d_i\)</span> using <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\hat{y_i}\)</span>.</span></p>
 <details>
 <summary>
 Answer/Hint (not yet added)
 </summary>
 42
 </details>
+<hr />
+</div>
+<div id="problem-5-exam-uio-december-2017-problem-2" class="section level2">
+<h2>Problem 5: Exam UiO December 2017, Problem 2</h2>
+<p>We assume that the random variable <span class="math inline">\(\Lambda\)</span> is gamma distributed with pdf</p>
+<p><span class="math display">\[f(\lambda; \nu, \mu) =
+\frac{(\nu/\mu)^\nu}{\Gamma(\nu)} \lambda^{\nu-1} e^{-\lambda/\mu}; \
+\lambda &gt; 0\]</span></p>
+<p>and further that given <span class="math inline">\(\Lambda =
+\lambda\)</span>, the random variable <span class="math inline">\(Y\)</span> is Poisson distributed with parameter
+<span class="math inline">\(\lambda\)</span>. Thus the conditional pmf
+of <span class="math inline">\(Y\)</span> given <span class="math inline">\(\Lambda = \lambda\)</span> takes the form</p>
+<p><span class="math display">\[\text{P}(Y = y | \lambda)=
+\frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2, \dots.\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li><span class="question">Show that the marginal pmf of <span class="math inline">\(Y\)</span> is given by <span class="math display">\[p(y; \mu, \nu) =
+\frac{\Gamma(y+\nu)}{\Gamma(\nu)\Gamma(y+1)}
+\left(\frac{\mu}{\mu+\nu}\right)^y \left(\frac{\nu}{\mu+\nu}\right)^\nu;
+\ y = 0, 1, 2, \dots\]</span></span> This is the negative binomial
+distribution.</li>
+</ol>
 <details>
 <summary>
 Answer/Hint (not yet added)
 </summary>
 42
 </details>
-<p>Hint: first explain what is the predicted odds of survivial for
-country <span class="math inline">\(j\)</span> for a benign tumor, then
-the same for a malignant tumor- and then make an odds ratio.</p>
-<p>New: The main difference between our dataset and UiO’s dataset is the
-number of degrees of freedom for the null model; we have 34, they have
-35.</p>
-<p><span class="question">How many observations do we have in the
-dataset? And how many does UiO have?</span></p>
+<p>We then assume that the parameter <span class="math inline">\(\nu\)</span> is fixed, and consider the random
+variable <span class="math inline">\(Y^* = Y/\nu\)</span>. Note that</p>
+<p><span class="math display">\[\text{P}(Y^* = y^*) = \text{P}(Y = ky^*)
+\ \text{for} \ y^* = 0, \frac{1}{k}, \frac{2}{k}, \dots\]</span></p>
+<p>so <span class="math inline">\(Y^*\)</span> has pmf</p>
+<p><span class="math display">\[p^*(y^*; \mu, \nu) = \frac{\Gamma(\nu
+y^* + \nu)}{\Gamma(\nu)\Gamma(\nu y^* + 1)}
+\left(\frac{\mu}{\mu+\nu}\right)^{\nu y^*}
+\left(\frac{\nu}{\mu+\nu}\right)^\nu; \ y^* = 0, \frac{1}{k},
+\frac{2}{k}, \dots\]</span></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><span class="question">Show that the pmf of <span class="math inline">\(Y^*\)</span> is an exponential family <span class="math display">\[\exp\left\{\frac{y \theta - b(\theta)}{\phi}w +
+c(y, \phi, w)\right\},\]</span> with <span class="math inline">\(\theta
+= \log(\mu/(\mu+\nu))\)</span>, <span class="math inline">\(b(\theta) =
+-\log(1 - e^{\theta})\)</span>, <span class="math inline">\(w =
+1\)</span> and <span class="math inline">\(\phi =
+1/\nu\)</span></span></li>
+</ol>
 <details>
 <summary>
 Answer/Hint (not yet added)
 </summary>
 42
 </details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: All the covariates in the dataset are categorical, two with 3
-levels, and two with 2 levels. How many possible combinations of
-observations does that make?</p>
-<pre><code>Call:
-glm(formula = cbind(surv, nsurv) ~ fapp + fcountry, family = binomial, 
-    data = brc)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.8142  -0.7279   0.2147   0.7576   1.8715  
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)   1.0803     0.1656   6.522 6.93e-11 ***
-fapp2         0.5157     0.1662   3.103 0.001913 ** 
-fcountry2    -0.6589     0.1998  -3.298 0.000972 ***
-fcountry3    -0.4945     0.2071  -2.388 0.016946 *  
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 57.588  on 34  degrees of freedom
-Residual deviance: 36.625  on 31  degrees of freedom
-</code></pre>
-<p><strong>b)</strong> The output below is an analysis of deviance for
-comparing various model spesifications. <span class="question">Fill out
-the positions indicated <code>i-iv</code>. </span> Note:
-<code>y ~ x1*x2</code> gives both the linear components and the
-interaction, i.e., it is the same as <code>y ~ x1 + x2 + x1:x2</code>
-(<code>x1:x2</code> gives interaction only).</p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Remark: remember that <code>anova</code> gives the sequential
-comparison of deviances - that is - comparing each model to the previous
-model.</p>
-<pre><code>Analysis of Deviance Table
-
-Model 1: cbind(surv, nsurv) ~ fapp + fage + fcountry
-Model 2: cbind(surv, nsurv) ~ fapp + fage + finfl + fcountry
-Model 3: cbind(surv, nsurv) ~ fapp + finfl + fage * fcountry
-Model 4: cbind(surv, nsurv) ~ fapp * finfl + fage * fcountry
-Model 5: cbind(surv, nsurv) ~ fapp * finfl + fapp * fage + fage * fcountry
-Model 6: cbind(surv, nsurv) ~ fapp * finfl * fage * fcountry
-  Resid. Df Resid. Dev Df Deviance
-1        29     33.102            
-2         i     33.095  1   0.0065
-3        24     25.674 ii   7.4210
-4        23     25.504  1      iii
-5        21     22.021  2   3.4823
-6         0      0.000 iv  22.0214</code></pre>
-<p>In the remaining parts of this problem we return to the model in part
-a) and consider the hypothesis</p>
-<p><span class="math display">\[ H_0 : \beta_2 + \beta_3 = -1 \text{
-versus } H_1 : \beta_2 + \beta_3 \neq -1 \]</span></p>
-<p>Note: what are you testing now?</p>
-<p><strong>c)</strong> The estimated covariance matrix between the
-estimators of the coefficients <span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_3\)</span> above is <span class="math inline">\(\left(\begin{matrix} 0.040 &amp; 0.021 \\ 0.021
-&amp; 0.043\end{matrix} \right)\)</span>. <span class="question">Use a
-Wald test to test the null hypothesis above.</span></p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Note: remember - this was a written exam so you do this by hand!</p>
-<p><strong>d)</strong> <span class="question">Explain how the null
-hypothesis can be tested with a likelihood ratio test by fitting two
-suitable models.</span> No numerical calculations are necessary, but it
-must be specified how the predictors should be defined.<br />
-Remark: rather technical - and hint: offset term?</p>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>New: <span class="question">Do this test in
-<code>R</code>.</span></p>
-<p><a href="https://www.math.ntnu.no/emner/TMA4315/2018h/breastcancer.txt">Here
-is the data set!</a></p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><span class="question">Use the expressions for <span class="math inline">\(b(\theta)\)</span> and <span class="math inline">\(\phi\)</span> to determine <span class="math inline">\(\text{E}(Y^*)\)</span> and <span class="math inline">\(\text{Var}(Y^*)\)</span>. Show that <span class="math inline">\(\text{E}(Y) = \mu\)</span> and find <span class="math inline">\(\text{Var}(Y)\)</span>.</span></li>
+</ol>
 <details>
 <summary>
 Answer/Hint (not yet added)
@@ -2052,49 +2141,33 @@ Answer/Hint (not yet added)
 42
 </details>
 </div>
-<div id="work-on-your-own-exam-questions" class="section level1">
-<h1>Work on your own: Exam questions</h1>
-<div id="december-2013-essay-exam" class="section level2">
-<h2>December 2013 (Essay exam)</h2>
-<p>We will consider the following Poisson regression <span class="math display">\[Y_i \sim \text{Poisson}(\exp(\eta_i)), \text{
-}i=1,\ldots,n\]</span> where the linear predictor is <span class="math inline">\(\eta_i={\bf x}_i^T\beta\)</span>. Here <span class="math inline">\({\bf x}_i\)</span> is a vector of the <span class="math inline">\(p\)</span> covariates for the <span class="math inline">\(i\)</span>th observation <span class="math inline">\(Y_i\)</span> and <span class="math inline">\(\beta\)</span> is unknown <span class="math inline">\(p\)</span> dimensional column vector of unknown
-regression coefficients.</p>
-<p>Write an introduction to Poisson regression and its practical usage,
-for a student with a good background in statistics, but no knowledge
-about Generalized Linear Models (GLM). Topics you may want to consider,
-are</p>
-<ul>
-<li>When to use it? Underlying assumptions.</li>
-<li>Parameter estimation, limiting results for the MLE, Fisher
-information and observed Fisher information, confidence intervals and
-hypothesis testing.</li>
-<li>Output analysis, residual plots and interpretation of results.</li>
-<li>Deviance and its usage.</li>
-<li>What do we do when a covariate is a factor, and should the results
-be interpreted?</li>
-<li>The use of Poisson regression in the analysis of contingency
-tables.</li>
-</ul>
 </div>
+<div id="exam-questions" class="section level1">
+<h1>Exam questions</h1>
+<div id="december-2015" class="section level2">
+<h2>December 2015</h2>
+<p>One of the important concepts we have discussed in this course, is
+deviance (for Gaussian regression, Poisson regression and logistic
+regression).</p>
+<ol style="list-style-type: decimal">
+<li><p>Explain what deviance is, and how it relates to residual sum of
+squares (RSS) for Gaussian regression. Remark 2017/2018: we have called
+this “sums of squares of errors - SSE”</p></li>
+<li><p>Discuss how it relates to a likelihood ratio test (LRT) for
+comparing two nested regression models.</p></li>
+<li><p>Discuss how deviance can be used to construct “ANOVA” tables for
+Poisson regression and logistic regression. Remark 2017/2018: these are
+called analysis of deviance tables.</p></li>
+<li><p>Discuss how deviance can be used to define residuals, for Poisson
+regression and logistic regression.</p></li>
+</ol>
 </div>
-<div id="r-packages" class="section level1">
-<h1>R packages</h1>
-<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;, &quot;ggplot2&quot;, &quot;statmod&quot;, &quot;corrplot&quot;, &quot;ggplot2&quot;, &quot;GGally&quot;,
-    &quot;boot&quot;))</code></pre>
 </div>
 <div id="further-reading" class="section level1">
 <h1>Further reading</h1>
 <ul>
-<li>A. Agresti (1996): “An Introduction to Categorical Data
-Analysis”.</li>
 <li>A. Agresti (2015): “Foundations of Linear and Generalized Linear
 Models.” Wiley.</li>
-<li>A. J. Dobson and A. G. Barnett (2008): “An Introduction to
-Generalized Linear Models”, Third edition.</li>
-<li>J. Faraway (2015): “Extending the Linear Model with R”, Second
-Edition. <a href="http://www.maths.bath.ac.uk/~jjf23/ELM/" class="uri">http://www.maths.bath.ac.uk/~jjf23/ELM/</a></li>
-<li>P. McCullagh and J. A. Nelder (1989): “Generalized Linear Models”.
-Second edition.</li>
 </ul>
 </div>
 
