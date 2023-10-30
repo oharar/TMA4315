@@ -1,0 +1,701 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+author: Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions
+  from Ingeborg G. Hem
+date: "01.11 and 08.11 [PL], 02.11 and 09.11 [IL]"
+output: #3rd letter intentation hierarchy
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+subtitle: 'Module 7: Linear mixed effects models, Week 1'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
+showsol<-FALSE
+```
+
+(Latest changes: 08.11.2018 - typos).
+
+(Warning: some changes may occur before the second week.)
+
+# Overview
+
+**Aim**: Present methods for analysing correlated responses in a (normal/Gaussian) regression setting.
+
+We will only consider _two-level models_ and in particular focus on _random intercept and random slope models._
+
+---
+
+## Learning material
+
+* Textbook: Fahrmeir et al (2013): Chapter 2.4, 7.1-7.3, 7.7. In greater detail: pages 349-354 (not "Alternative view on the random intercept model"), 356-365 (not 7.1.5 "Stochastic Covariates""), 368-377 (not "Bayesian Covariance Matrix""), 379-380 (not "Testing Random Effects or Variance Parameters"", only last part on page 383), 383 (middle), 401-409 (orange juice). Note: Bayesian solutions not on the reading list.
+
+* Alternative readings: Zuur et al. (2009): "Mixed Effects Models and Extensions in Ecology with R", chapter 5 (pages 101-142). Available as free ebook from Springer for NTNU students. More explanations and less mathematics than Fahrmeir et al (2013), more focus on understanding. [Link to ebook Chapter 5](https://link.springer.com/chapter/10.1007/978-0-387-87458-6_5)
+
+* [Classnotes 01.11.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w12018.pdf) 
+* [Classnotes 08.11.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w22018.pdf) 
+
+---
+
+## Topics
+
+### [First week](#firstweek)
+
+* correlated responses - when and why?
+    + repeated measurements: clustered and longitudinal
+    + example of clustered data from ecology: species richness
+* notation 
+* random intercept models
+    + intra class correlation (ICC)
+* linear mixed effects models
+    + measurement model and distributional assumptions
+    + conditional and marginal formulation
+* parameter estimation
+    + with maximum likelihood for fixed effects
+    + distribution of fixed parameter estimators
+
+Jump to [interactive (week 1)](#interactivew1)
+
+---
+
+### [Second week](#secondweek)
+
+* what did we do last week: beaches example
+* parameter estimation (cont.)
+    + (restricted) maximum likelihood for random effects
+* predicting 
+    + random effects: method, formula, plots
+    + random errors: two types of residuals
+* random slope models
+    + sleep study
+    + interpretation of random effects
+* hypothesis tests
+* model selection
+* fitting LMM with function `lmer` in package `lme4`
+* what have we not covered?
+
+Jump to [interactive (week 2)](#interactivew2)
+
+---
+
+**<a id="firstweek">FIRST WEEK</a>**
+
+# Correlated responses
+
+We may get correlated responses when we work with repeated measurements on a set of units.
+The units may be:
+
+* subjects, patients, participants
+* animal, plants
+* families, towns, schools, classes, beaches
+
+We will consider two types of repeated measurements: clustered and longitudinal
+
+---
+
+## Repeated measurements
+
+### Clustered data
+The data are nested in the sense that a lower level unit can only belong to one higher level unit (cluster), and there is in general no natural ordering of the units within each cluster.
+
+**Two-level clustered - examples**
+
+* patients in hospitals
+* siblings in families
+* pupils in schools
+
+---
+
+### Longitudinal data
+The data for each individual are observed at multiple points in time
+
+**Two-level longitudinal data - examples**
+
+* patients with drug A and drug B monitored over time
+* metabolic rate for patients at fasting, then 15, 45, 75 and 135 minutes after a heavy meal
+    
+**Q**: Why not only analyse using linear models? 
+
+---
+
+**A**: Assuming independent responses when they are correlated does not give the correct estimate for the standard error of the estimated parameters of interest.
+
+---
+
+## Example from ecology: beaches and species
+
+This example is taken from Zuur et al. (2009, chapter 5, pages 101-142), and data are referred to as RIKZ because they were collected by a Dutch institute with that name.
+
+Data were collected on nine different beaches in the Netherlands
+with the aim to investigate if there is a relationship between the 
+
+* species richness (number of species observed) and 
+* NAP: the height of the sampling station compared to mean tidal level.
+
+Data: 45 observations, taken at 9 beaches:
+
+* beach: the beach that the samples were taken, for each beach 5 different samples were taken.
+* exposure: an index describing how much the beach is exposed to the sea
+was measured, but we will not be used now.
+
+---
+
+We want to use the richness of species as the response in a regression model.
+
+This is a count, so we should use _Poisson regression_, but to make things simpler we assume that the counts are such that we instead can assume a _normal distribution_.
+
+(in the next module on generalized linear mixed effects models we will use the Poisson distribution).
+
+---
+
+\footnotesize
+```{r}
+# library("AED")
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+summary(RIKZ)
+```
+\normalsize
+
+---
+
+We first consider models with reponse `Richness` and one covariate `NAP`, and analyse data from each beach separately.
+
+```{r,echo=FALSE}
+library(lme4)
+library(ggplot2)
+gg <- ggplot(RIKZ, aes(x = NAP, y = Richness))
+gg <- gg + geom_point(color = "blue", alpha = 0.7)
+gg <- gg + geom_smooth(method = "lm", color = "black")
+gg <- gg + theme_bw()
+gg <- gg + facet_wrap(~Beach)
+gg
+```
+
+---
+
+\footnotesize
+```{r, echo=FALSE,fig.width=16, fig.height=5}
+library(lme4);library(ggplot2);library(ggpubr);
+# data(RIKZ)
+manylms=lmList(Richness~NAP|Beach,RIKZ)
+#manylms2=update(manylms,pool=FALSE)
+t(coef(manylms))
+#coef(manylms2)
+
+ci=confint(manylms)
+lme4:::plot.lmList4.confint(ci)
+```
+\normalsize
+
+The intercepts differ but the slopes are not that different.
+
+---
+
+
+**Q:** What if we now want to combine the regression models for the nine beaches into one model (for the population of beaches), so we can answer the question about relationship between species richness and NAP on the population level. What can we do then?
+
+---
+
+## Possible solutions
+
+1. Use all 45 observations in a regression - with a common intercept and linear effect in NAP.
+
+**Problem:** violation of assumption of independent observations lead to wrong estimates for variances of parameter estimates.
+
+2. Add beach as covariate to regression - then we estimate one regression coefficient for each beach (intercepts) in addition to the linear effect in NAP.
+
+**Problem:** why do we want to add 8 extra parameters to estimate (why 8?) values for the 9 beaches? Loss of power and what would we use the beach estimates for?
+
+---
+
+3. Add beach as a _random_ covariate to the regression: this is called _random intercept models_.
+
+**Problem:** new stuff - slightly complicated. We do this because beaches not of interest in themselves, only random sample from population of beaches, and therefore we only need to account for beaches, not estimate separate parameters.
+
+---
+
+**Solution 1:** all observations together - standard errors not correct
+
+\footnotesize
+```{r}
+fitall=lm(Richness~NAP,data=RIKZ)
+summary(fitall)
+```
+\normalsize
+
+---
+
+**Solution 2:** fixed effects for each beach - many estimates not so much of interest when population is in focus.
+
+\footnotesize
+```{r}
+RIKZ$beachfactor=as.factor(RIKZ$Beach)
+fitbeach=lm(Richness~NAP+beachfactor,data=RIKZ,contrasts=list(beachfactor="contr.sum"))
+summary(fitbeach)
+```
+\normalsize
+
+For the rest of this module — we focus on solution 3!
+
+---
+
+# Notation 
+
+We have $n_i$ repeated observations ($j=1,\ldots, n_i$) from each of $i=1,\ldots,m$ clusters (or individuals).
+
+* Responses: $Y_{i1},Y_{i2},\ldots, Y_{in_i}$ (e.g. species richness at beach $i$ sample $j$)
+* Covariates: ${\bf x}_{i1},{\bf x}_{i1}, \ldots, {\bf x}_{in_i}$ (e.g. NAP for beach $i$ sample $j$)
+
+The covariates ${\bf x}_{ij}$ are $p\times 1$ vectors (as before, $k$ covariates and one intercept so $p=k+1$).
+
+# Random intercept models
+
+## Model
+
+### Simple linear regression
+
+We start with a simple linear regression (one fixed effect).
+
+First, only one covariate (in addition to the intercept), observed for cluster (beach) $i$ on occation $j$ we have $x_{ij}$
+
+$$ Y_{ij}=\beta_0+\beta_1 x_{ij}+\varepsilon_{ij} \text{ where } \varepsilon_{ij} \text{ i.i.d. } N(0,\sigma^2)$$
+
+but, we know that $Y_{i1}$ and $Y_{i2}$ are observed for the same cluster and should not be independent (i.e. from same beach), to fix that we insert a _random intercept_.
+
+---
+
+### Cluster-specific parameters $\gamma_{0i}$
+
+$$Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\varepsilon_{ij} \text{ where } \varepsilon_{ij} \text{i.i.d.} N(0,\sigma^2)$$
+
+* $\beta_0$: population intercept (fixed)
+* $\gamma_{0i}$: deviation (for members of cluster $i$) from the population intercept $\beta_0$ - not a parameter but a random variable!
+* $\beta_0+\gamma_{0i}$: random intercept for cluster $i$
+* $\beta_1$: population slope (fixed), common to all clusters
+
+The clusters are assumed to be random samples from a large population, and for the cluster deviation intercept we assume
+$$ \gamma_{0i}\sim N(0,\tau_0^2)$$
+and that the $\gamma_{0i}$s and the $\varepsilon_{ij}$s are mutually independent random variables. So, we have now two error terms. 
+
+---
+
+### Beach-example: Parameter estimates
+(will talk about parameter estimation with ML and REML later) 
+
+**Q:** Try to identify $\hat{\beta_0}, \hat{\beta_1}, \hat{\sigma}^2, \hat{\tau}_0^2$ in the print-out.
+
+\tiny
+```{r,echo=FALSE}
+# library("AED")
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+summary(fit)
+```
+\normalsize
+
+---
+
+**A:** $\hat{\beta_0}=$ `r fixef(fit)[1]`, $\hat{\beta_1}=$ `r fixef(fit)[2]` , $\hat{\sigma}^2=$ `r sigma(fit)^2`, and $\hat{\tau}_0^2=$ `r as.data.frame(VarCorr(fit))[1,4]`
+
+---
+
+## Intra class correlation (ICC)
+
+The _conditional distribution_ of $Y_{ij}$ given the value of $\gamma_{0i}$ (=regarding $\gamma_{0i}$ as known) is
+$$Y_{ij}\mid \gamma_{0i} \sim N(\beta_0+\beta_1x_{ij}+\gamma_{0i},\sigma^2)$$
+
+One motivation for inserting this new random intercept was to make sure that observations from the same cluster are dependent, but between clusters are independent. This means that we need to look at $\text{Cov}(Y_{ij},Y_{kl})$ when $i=k$ and when $i\neq k$. To do that we need the (joint) _marginal distribution_ of the responses.
+
+---
+
+# What is the marginal distribution for $Y_{ij}$?
+
+$$ Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\varepsilon_{ij}$$
+
+---
+
+# What is the marginal distribution for $Y_{ij}$?
+
+$$ Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\varepsilon_{ij}$$
+
+$$ Y_{ij} \sim N(\beta_0+\beta_1 x_{ij},\sigma^2+\tau_0^2)$$
+
+We will consider $Y_{ij}$, and $Y_{kl}$, where 
+
+$$ Y_{kl}=\beta_0+\beta_1x_{kl}+\gamma_{0k}+\varepsilon_{kl}\sim N(\beta_0+\beta_1 x_{kl},\sigma^2+\tau_0^2)$$
+
+---
+
+Now to the covariance between $Y_{ij}$ and $Y_{kl}$.
+
+$$
+\text{Cov}(Y_{ij},Y_{kl})=\text{E}[(Y_{ij}-\mu_{ij})(Y_{kl}-\mu_{kl})]
+$$
+
+And 
+
+$$
+\begin{aligned}
+Y_{ij}-\mu_{ij} &= (\beta_0+\beta_1x_{ij}+\gamma_{0i}+\varepsilon_{ij}) - (\beta_0+\beta_1 x_{ij}) \\
+&= \gamma_{0i}+\varepsilon_{ij}
+\end{aligned}
+$$
+
+Note that we assume independence, so $Cov(\gamma_{0i}, \gamma_{0k})=0$ etc.
+
+
+---
+
+$$\text{Cov}(Y_{ij},Y_{kl})=\left\{\begin{array}{lr}
+        \tau_0^2+\sigma^2=\text{Var}(Y_{ij}) & \text{for } i=k, j=l\\
+        \tau_0^2 & \text{for } i=k, j\neq l\\
+        0 & \text{for } i\neq k, j\neq l
+        \end{array}\right\} $$
+
+$\oplus$ derivations on the board in class
+
+---
+
+If we put this into a covariance matrix for the vector of responses for cluster $i$ this type of structure is called _compound symmetry_.
+
+$\oplus$ write this out on the board in class
+$$\text{Cov}({\bf Y}_i)=\tau_0^2 \mathbf{11}^T + \sigma^2 \mathbf{I}$$
+
+where as before ${\bf 1}$ is a $n_i\times 1$ vector of 1s and $\mathbf{I}$ is a $n_i\times n_i$ identity matrix.
+
+---
+
+The correlation between $Y_{ij}$ and $Y_{il}$ (two observations in the same cluster that is - same beach) is called the _within subject_ or _within cluster_ correlation coefficient, and is for our random intercept model
+
+$$\text{Corr}(Y_{ij},Y_{il})=\frac{\text{Cov}(Y_{ij},Y_{il})}{\sqrt{\text{Var}(Y_{ij})\text{Var}(Y_{il})}}=\frac{\tau_0^2}{\tau_0^2+\sigma^2} \text{ for }j\neq l$$
+
+Inserted parameter estimates this is called the _intra class correlation (ICC)_ for the random intercept model.
+
+---
+
+### Beach-example: ICC
+
+\tiny
+```{r,echo=FALSE}
+# library("AED")
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+summary(fit)
+```
+\normalsize
+
+**Q:** What is the ICC for our fit?
+Hint: $\text{Corr}(Y_{ij},Y_{il})=\frac{\tau_0^2}{\tau_0^2+\sigma^2} \text{ for }j\neq l$.
+
+---
+
+**A:** 8.688/(8.688+9.362)=0.48.
+
+---
+
+## Summing up - so far
+
+We have now looked at models with a random intercept, which is a special case of linear mixed models (LMM). We have now see that we have used two components in our model:
+
+* fixed effects - like we have used so far in our GLM-course. This can be gender, age, time, experimental condition.
+* random effects - used to model correlated responses. Remember the correlation (ICC) in the previous example.
+
+---
+
+But, what if we also need the different clusters to have different slopes? The generalization of the random intercept model is the _random slope_ model which can be written as:
+
+$$Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\gamma_{1i}x_{ij}+\varepsilon_{ij}$$
+
+and where the new parts are
+
+* $\beta_1$: population slope (fixed), common to all clusters
+* $\gamma_{1i}$: deviation (for members of cluster $i$) from the population slope $\beta_0$ - not a parameter but a random variable!
+* $\beta_1+\gamma_{1i}$: random slope for cluster $i$.
+
+More about this model in week 2. 
+
+---
+
+#  Linear mixed effects model (LMM)
+
+We now define the LMM from a measurement model and distributional assumption for clusters $i=1,\ldots, m$.
+
+## Measurement model
+
+for the $i$th cluster:
+
+$${\bf Y}_i= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} + {\boldsymbol \varepsilon}_i$$
+
+* ${\bf Y}_i$: $n_i \times 1$ random vector of responses 
+* ${\bf X}_i$: $n_i\times p$ design matrix
+* ${\bf U}_i$: $n_i\times (q+1)$ design matrix for random effects
+* ${\boldsymbol \beta}$: $p \times 1$ vector of fixed coefficients (common for all clusters)
+* ${\boldsymbol \gamma}_i$: $(q+1) \times 1$ random vector
+* ${\boldsymbol \varepsilon}_i$: $n_i \times 1$ random vector
+
+---
+
+## Distributional assumptions
+
+for the $i$th cluster:
+
+$${\boldsymbol \gamma}_i \sim N({\bf 0},{\bf Q})$$
+$${\boldsymbol \varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
+
+All elements of ${\boldsymbol \gamma}_1, {\boldsymbol \gamma}_2, \ldots, {\boldsymbol \gamma}_m$ and ${\boldsymbol\varepsilon}_1,{\boldsymbol\varepsilon}_2,\ldots, {\boldsymbol\varepsilon}_m$ are mutually independent. The dimension of ${\bf I}$ is $n_i\times n_i$, and ${\bf Q}$ is $(q+1)\times (q+1)$.
+
+Remark: one possible generalization is to assume ${\boldsymbol\varepsilon}_i \sim N({\bf 0},\Sigma)$ where $\Sigma$ is general, but we will not look into that in our course. This can be needed for example if time series structure (like AR1) is present.
+
+---
+
+## Questions
+
+$${\bf Y}_i= {\bf X}_i {\boldsymbol\beta} + {\bf U}_i {\boldsymbol\gamma}_{i} + {\boldsymbol\varepsilon}_i$$
+$${\boldsymbol\gamma}_i \sim N({\bf 0},{\bf Q})$$
+$${\boldsymbol\varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
+
+**Q**: 
+
+* What is ${\bf U}_i$, ${\boldsymbol\gamma}_i$ and ${\bf Q}$ for the random intercept model?
+* General: what is the marginal distribution of ${\bf Y}_i$?
+
+---
+
+**A:** 
+
+* We had ${\bf U}_i={\bf 1}$ ($n_i\times 1$) and scalar ${\boldsymbol\gamma}_i=\gamma_{0i}$, and ${\bf Q}=\tau_{0}^2$.
+* ${\bf Y}_i \sim N({\bf X}_i {\boldsymbol\beta},{\bf U}_i{\bf Q}{\bf U}_i^T+ \sigma^2 {\bf I})$.
+
+---
+
+# Marginal and Conditional Formulatios
+
+We can write a conditional formulation if we condition on $\gamma_i$, or a margunal if we do not (in which case we marginalise over the distribution of$\gamma_i$
+
+## Conditional formulation
+
+Conditional Gaussian model for the response ${\bf Y}_i$ given the random effect ${\boldsymbol\gamma}_i$:
+$${\bf Y}_i\mid {\boldsymbol \gamma}_i \sim N({\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i}, \sigma^2{\bf I})$$
+
+---
+
+## Marginal Gaussian model 
+
+for the response for cluster $8$, ${\bf Y}_i$ (Laird and Ware (1982) formulation)
+\begin{align*}
+{\bf Y}_i&= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} + {\boldsymbol \varepsilon}_i={\bf X}_i {\boldsymbol \beta} + {\boldsymbol \varepsilon}^{*}_i\\
+{\boldsymbol \varepsilon}^{*}_i &= {\bf U}_i {\boldsymbol \gamma}_{i} + {\boldsymbol \varepsilon}_i\\
+\text{E}({\boldsymbol \varepsilon}^{*}_i)&={\bf 0}\\
+{\bf V}_i&=\text{Cov}({\boldsymbol \varepsilon}^{*}_i)=\text{Cov}({\bf U}_i{\boldsymbol \gamma}_i)+\text{Cov}({\boldsymbol \varepsilon}_i)={\bf U}_i {\bf Q} {\bf U}_i^T+\sigma^2 {\bf I}\\
+{\boldsymbol \varepsilon}^{*}_i &\sim N({\bf 0},{\bf V}_i)\\
+\end{align*}
+which gives
+$${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
+
+---
+
+## Global model 
+
+<!--$$ {\bf Y}={\bf X}{\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} +{\boldsymbol \varepsilon}$$
+$$ \begin{pmatrix}{\boldsymbol \gamma} \\ {\boldsymbol \varepsilon} \end{pmatrix} \sim N \left(
+\begin{pmatrix} {\bf 0}\\ {\bf 0}\end{pmatrix},
+\begin{pmatrix} {\bf G} & {\bf 0}\\ {\bf 0} & {\bf R}\end{pmatrix}\right) $$
+-->
+From the cluster specific model:
+$${\bf Y}_i= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} + {\boldsymbol \varepsilon}_i$$
+into the global model for all clusters: 
+$${\bf Y}={\bf X}{\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} +{\boldsymbol \varepsilon}$$
+where
+\footnotesize
+$$
+{\bf Y}=\begin{pmatrix} {\bf Y}_1\\ {\bf Y}_2\\ \vdots \\ {\bf Y}_m \end{pmatrix},
+{\bf X}=\begin{pmatrix} {\bf X}_1\\ {\bf X}_2 \\ \vdots \\ {\bf X}_m \end{pmatrix},
+{\bf U}=\begin{pmatrix} {\bf U}_1 & {\bf 0} & \ldots &{\bf 0}\\ 
+{\bf 0 } & {\bf U}_2 & \ldots &{\bf 0}\\ 
+{\bf 0 } & {\bf 0} & \ddots &{\bf 0}\\ 
+{\bf 0 } & {\bf 0} & \ldots &{\bf U}_m\\ 
+\end{pmatrix}, 
+{\boldsymbol \gamma}=\begin{pmatrix} {\boldsymbol \gamma}_1\\ {\boldsymbol \gamma}_2\\ \vdots \\ {\boldsymbol \gamma}_m \end{pmatrix}, 
+{\boldsymbol \varepsilon}=\begin{pmatrix} {\boldsymbol \varepsilon}_1\\ {\boldsymbol \varepsilon}_2 \\ \vdots \\  {\boldsymbol \varepsilon}_m \end{pmatrix}  
+$$
+\normalsize
+
+---
+
+Let $N=\sum_{i=1}^m n_i$, then dimensions are:
+
+* ${\bf Y}, {\boldsymbol \varepsilon}$: $N \times 1$
+* ${\bf X}$: $N\times p$
+* ${\boldsymbol \beta}$: $p\times 1$
+* ${\bf U}$_: $N \times m(q+1)$
+* ${\boldsymbol \gamma}$: $m(q+1)\times 1$
+
+---
+
+### Conditional Gaussian model 
+
+for the response ${\bf Y}$ given the random effect ${\boldsymbol \gamma}$:
+$${\bf Y}\mid {\boldsymbol \gamma} \sim N({\bf X} {\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma}, \sigma^2{\bf I})$$
+Now ${\bf I}$ is $N \times N$ where $N=\sum_{i=1}^m n_i$.
+
+---
+
+### Marginal Gaussian model 
+
+for the response ${\bf Y}$
+\begin{align*}
+{\bf Y}&= {\bf X} {\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} + {\boldsymbol \varepsilon}={\bf X}{\boldsymbol \beta} + {\boldsymbol \varepsilon}^{*}\\
+{\boldsymbol \varepsilon}^{*} &= {\bf U} {\boldsymbol \gamma} + {\boldsymbol \varepsilon}\\
+{\bf V}&=\text{Cov}({\boldsymbol \varepsilon}^{*})=\text{Cov}({\boldsymbol \varepsilon})+\text{Cov}({\bf U}{\boldsymbol \gamma})=\sigma^2 {\bf I}+{\bf U} {\bf G} {\bf U}^T\\
+{\boldsymbol \varepsilon}^{*} &\sim N({\bf 0},{\bf V})\\
+\end{align*}
+Here ${\bf G}$ is a $m\dot (q+1)$ block-diagonal matrix with ${\bf Q}$ $m$ times on the diagonal (see below). This gives
+
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+
+---
+
+$$
+{\bf G}=\begin{pmatrix} {\bf Q} & {\bf 0} & \ldots &{\bf 0}\\ 
+{\bf 0 } & {\bf Q} & \ldots &{\bf 0}\\ 
+{\bf 0 } & {\bf 0} & \ddots &{\bf 0}\\ 
+{\bf 0 } & {\bf 0} & \ldots &{\bf Q}\\ 
+\end{pmatrix}
+$$
+
+---
+
+# Parameter estimation
+
+* Fixed effects ${\boldsymbol \beta}$: estimated using maximum likelihood
+* Random effects parameters $\sigma^2$ and ${\bf Q}$ (in ${\bf V})$: estimated using restricted maximum likelihood (REML).
+
+For the random effects ${\boldsymbol \gamma}_i$ and ${\boldsymbol \varepsilon}_i$ we also provide predictions
+
+* Predicted values for the random effects ${\boldsymbol \gamma}_i$ using _best linear unbiased predictors_ (BLUP).
+* Prediction values for the random effects ${\boldsymbol \varepsilon}_i$ are our _residuals_. Two types of residuals possible "response minus fixed effects"", or "response minus fixed and predicted random effects".
+
+<!-- REML, predicted random effects and residuals: week 2. -->
+
+---
+
+## Parameter estimation with maximum likelihood for fixed effects
+
+Cluster specific model:
+$${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
+Global model:
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+
+The log-likelihood function is then ($\pm$ some constants)
+$$l({\boldsymbol \beta},{\bf V})=-\frac{1}{2}\ln \lvert {\bf V}\rvert -\frac{1}{2}({\bf y}-{\bf X}{\boldsymbol \beta})^T {\bf V}^{-1}({\bf y}-{\bf X}{\boldsymbol \beta})$$
+
+We assume that the parameters in ${\bf V}$ are **known**, and transform our problem with ${\bf V}^{-1/2}$ to get the standard multiple linear regression model. 
+
+---
+
+In TMA4267 Exam 2014 Problem 4, the weighted least squares estimator was derived from a similar situation. Now we have
+
+$${\bf Y}={\bf X} {\boldsymbol \beta}+{\boldsymbol \varepsilon}^*$$
+
+where
+$${\boldsymbol \varepsilon}^{*} \sim N({\bf 0},{\bf V})$$
+We then define ${\bf V}^{-1/2}$ based on eigenvalue-vector decomposition of ${\bf V}$, and premultiply the above equation to get:
+$${\bf V}^{-1/2}{\bf Y}={\bf V}^{-1/2}{\bf X} {\boldsymbol \beta}+{\bf V}^{-1/2}{\boldsymbol \varepsilon}^*$$
+$${\bf Y}^{\bullet}={\bf X}^{\bullet} {\boldsymbol \beta}+{\boldsymbol \varepsilon}^{\bullet}$$
+where ${\boldsymbol \varepsilon}^{\bullet}\sim N({\bf 0}, {\bf I})$. We then know that the ML estimator for ${\boldsymbol \beta}$ is given as
+
+$$\hat{\boldsymbol \beta}=({\bf X}^{\bullet T}{\bf X}^{\bullet})^{-1}{\bf X}^{\bullet T}{\bf Y}^{\bullet}$$
+
+---
+
+Inserting then for ${\bf X}^{\bullet T}$ and ${\bf Y}^{\bullet}$ leads to the weighted least squares solution for ${\boldsymbol \beta}$
+
+$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
+
+Since we have independence between clusters, we had block-diagonal ${\bf V}$ and then 
+$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
+
+But, we really don't know ${\bf V}$ so an estimate must be inserted (week 2 with REML).
+
+---
+
+### Beach-example: parameter estimation for fixed effects
+
+\tiny
+
+```{r,echo=FALSE}
+#library("AED")
+#data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+summary(fit)
+```
+\normalsize
+
+**Q:** Where is the parameter estimat for effect of NAP, with standard deviation? What is the interpretation of "Correlation of Fixed Effects"? 
+
+---
+
+**A:**"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{{\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
+
+---
+
+## Properties of parameters estimators
+
+Since $\hat{{\boldsymbol \beta}}$ is a linear function of ${\bf Y}_i$, it has a multivariate normal distribution -
+let us write with
+$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}={\bf A} {\bf Y}$$
+
+Mean:
+$$\text{E}(\hat{{\boldsymbol \beta}})={\bf A}\text{E}({\bf Y})=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf X}{\boldsymbol\beta}={\boldsymbol \beta}$$
+
+so $\hat{{\boldsymbol \beta}}$ is unbiased.
+
+---
+
+Variance-covariance matrix:
+$$\text{Cov}(\hat{{\boldsymbol \beta}}={\bf A}\text{Cov}({\bf Y}){\bf A}^T={\bf A}{\bf V}{\bf A}^T$$
+$$=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf V}{\bf V}^{-1}{\bf X}({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}$$
+
+Since ${\bf V}$ is block diagonal this can be written as a sum with the clusters:
+$$ \text{Cov}(\hat{\boldsymbol \beta})= (\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1}$$
+
+---
+
+Also, if we insert $\hat{\bf V}$ as an estimate for ${\bf V}$ then 
+$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+
+is asymptotic multivariate normal (under regularity conditions).
+
+---
+
+**Remark**: this is only asymptotically, so we need large samples for this to hold. And, we do not arrive at a $t$-distribution here - however approximations for $t$ (and F) exists, but the problem is the number of degrees of freedom (in particular when we have time varying fixed effects). 
+
+In this course we will only use the asymptotic normality for confidence intervals (and when a Wald type test is desired). We will consider hypothesis testing with likelihood ratio test under "Model selection" in the end of this module.
+
+---
+
+### Beach-example: confidence interval for fixed effects
+
+```{r,echo=FALSE}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+confint(fit)
+```
+\normalsize
+
+**Q:** Interpret! First the last two rows. The first two we have not covered yet - since we don't know how to estimate the parameters in ${\bf V}$  but what do you think this is? 
+
+---
+
+**A**: Estimate $\pm$ 1.96 times standard error of estimate. 
+
+---

@@ -8,6 +8,7 @@ output: #3rd letter intentation hierarchy
     toc: true
     toc_float: true
     toc_depth: 2
+    css: "../TMA4315RMarkdown.css"
   # pdf_document:
   #  toc: true
   #  toc_depth: 2
@@ -84,19 +85,89 @@ The response $\mathbf{y} = (y_0, y_1, y_2)$ for a row in the table is assumed to
 
 ### a) 
 
-* Write down the proportional odds model for these data, and discuss it briefly. Assume there are no interactions between $x_1$, $x_2$ and $x_3$. Remember that $y_2$ is the reference category.
-* Express $\pi_j$, $j = 0, 1, 2$ as functions of the $\mathbf{\theta}$'s and $\mathbf{\beta}$'s in the model and $\mathbf{x}$.
+* <span class="question">Write down the proportional odds model for these data, and discuss it briefly. Assume there are no interactions between $x_1$, $x_2$ and $x_3$. Remember that $y_2$ is the reference category.</span>
+
+<details><summary>Answer</summary>
+The response is ordinal, multinomial. The proportional odds model assumes a latent continuous variable that measures the CGI.
+
+$$\log \left( \frac{\pi_0}{\pi_1 + \pi_2} \right) = \theta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$$
+$$\log \left( \frac{\pi_0 + \pi_1}{\pi_2} \right) = \theta_1 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$$
+
+</details>
+
+
+* <span class="question">Express $\pi_j$, $j = 0, 1, 2$ as functions of the $\mathbf{\theta}$'s and $\mathbf{\beta}$'s in the model and $\mathbf{x}$.</span>
+
+<details><summary>Answer</summary>
+
+Since the inverse of the logit-functiuon is the logitstic function (sometimes called the expit function), we have:
+
+$$\pi_0 = \frac{e^{\theta_0 + \pmb{x}^T \pmb{\beta}}}{1 + e^{\theta_0 + \pmb{x}^T \pmb{\beta}}}$$
+
+$$\pi_0 + \pi_1 = \frac{e^{\theta_1 + \pmb{x}^T \pmb{\beta}}}{1 + e^{\theta_1 + \pmb{x}^T \pmb{\beta}}}$$
+
+$$\implies \pi_1 = \frac{e^{\beta_{01} + \pmb{x}^T \pmb{\beta}}}{1 + e^{\beta_{01} + \pmb{x}^T \pmb{\beta}}} - \pi_0$$
+
+$$\pi_2 = 1 - \pi_0 - \pi_1$$
+</details>
+
 
 ### b) 
 
-* $\text{Prob}(\text{CGI} \leq j | \mathbf{x})/\text{Prob}(\text{CGI} > j | \mathbf{x})$ for $j = 0, 1$ is called the _cumulative odds ratios_ for a patient with covariate vector $\mathbf{x}$. Show that if initial CGI increases with 1 in the model from a), then the cumulative odds ratios will be multiplied by $e^{\beta_3}$. Here $\beta_3$ is the coefficient belonging to $x_3$ in the linear predictor of the model.
-* Interpret the value $e^{\beta_3}$.
-* Interpret also the values $e^{\beta_1}$ and $e^{\beta_2}$.
+* <span class="question">$\text{Prob}(\text{CGI} \leq j | \mathbf{x})/\text{Prob}(\text{CGI} > j | \mathbf{x})$ for $j = 0, 1$ is called the _cumulative odds ratios_ for a patient with covariate vector $\mathbf{x}$. Show that if initial CGI increases with 1 in the model from a), then the cumulative odds ratios will be multiplied by $e^{\beta_3}$. Here $\beta_3$ is the coefficient belonging to $x_3$ in the linear predictor of the model.</span>
+
+<details><summary>Answer</summary>
+$$\frac{\text{Prob}(\text{CGI} \leq 0 | \mathbf{x})}{\text{Prob}(\text{CGI} > 0 | \mathbf{x})} = \frac{\pi_0}{\pi_1 + \pi_2} = e^{\theta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3}$$
+
+$$\frac{\text{Prob}(\text{CGI} \leq 1 | \mathbf{x})}{\text{Prob}(\text{CGI} > 1 | \mathbf{x})} = \frac{\pi_0 + \pi_1}{\pi_2} = e^{\theta_1 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3}$$
+
+We can see that if $x_3$ increases with 1 (and $x_1$ and $x_2$ are unchanged), we will have $+ \beta_3$ in the exponent, which means that the cumulative odds ratio is multiplied by $e^{\beta_3}$.
+
+</details>
+
+* <span class="question">Interpret the value $e^{\beta_3}$.</span>
+
+<details><summary>Answer</summary>
+If $e^{\beta} < 1$ (i.e. $\beta_3 < 0$), increasing the initial CGI will give a reduction in the odds of being in state 0 or 1 after the treatment (and increase the odds if $\beta_3 > 0$).
+</details>
+
+* <span class="question">Interpret also the values $e^{\beta_1}$ and $e^{\beta_2}$.</span>
+
+<details><summary>Answer</summary>
+From $\text{Prob}(\text{CGI} \leq 0 | \mathbf{x})/\text{Prob}(\text{CGI} > 0 | \mathbf{x})$ we see that increasing $x_1$ and $x_2$ will in the same way lead to multilpying with $e^{\beta_1}$ and $e^{\beta_2}$, respectively. If $e^{\beta_1} < 1$, going from treatment every second week ($x_1 = 0$) to every third week ($x_1 = 1$) gives a reduction in the odds for the "good" states 0 and 1. If $e^{\beta_2} < 0$, males will have lower odds of having states 0 and 1.
+
+Note that we want as low state (i.e., $y$) as possible.
+
+</details>
 
 ### c) 
-* Describe the saturated model for these data. How many free parameters does it have? (Remark: how many "parameters" can be estimated.)
-* How would you calculate the deviance for the model from a)? (Just explain using words, no calculations necessary!)
-* How many degrees of freedom does the deviance have here? Give reasons for your answer.
+* <span class="question">Describe the saturated model for these data. How many free parameters does it have? (Remark: how many "parameters" can be estimated.)</span>
+
+<details><summary>Answer</summary>
+Saturated model: Each row in the table has its own $\pmb{\pi}$-vector $[\pi_{i0}, \pi_{i1}, \pi_{i2}]$. The model will thus have $12 \cdot 2 = 24$ free parameters since we have $\pi_{i0} + \pi_{i1} + \pi_{i2} = 1$.
+
+</details>
+
+* <span class="question">How would you calculate the deviance for the model from a)? (Just explain using words, no calculations necessary!)</span>
+
+<details><summary>Answer</summary>
+The deviance is given by
+
+$$D = -2(l(\text{candidate model}) - l(\text{saturated model})).$$
+
+From the module pages:
+
+$$D = 2 \sum_{i=1}^{12} \sum_{j=0}^2 y_{ij} \log\left(\frac{y_{ij}}{\hat{y}_{ij}}\right)$$
+where $\hat{y}_{ij} = n_i \hat{\pi_{ij}}$, and $\pmb{y}_i = [y_{i0}, y_{i1}, y_{i2}]$ is the response for the $i$th line in the table. $\hat{\pi}_{ij}$ is the estimated probability $\pi_{ij}$ for the candidate model.
+
+</details>
+
+* <span class="question">How many degrees of freedom does the deviance have here? Give reasons for your answer.</span>
+
+<details><summary>Answer</summary>
+Degrees of freedom for the deviance = number of free parameters in the saturated model minus number of free parameters in the candidate model = $24 - 5 = 19$.
+
+</details>
 
 Below you can see the deviance for all proportional odds models that contain the variable $x_3$ (initial CGI). The formulas work in the same way as for the `lm` and `glm` formulas.
 
@@ -168,9 +239,55 @@ b <- multinom(y ~ x1 + x2 + x3, data = data3)
 
 ### d) 
 
-* New: What do we mean by the formula `cbind(y0, y1, y2) ~ x1 + x2*x3`? OBS: Ask Mette/Ingeborg if you are not sure before moving on!
-* Describe the model that corresponds to `x1*x2 + x1*x3`. How many parameters are in this model? How many degrees of freedom for the deviance?
-* A statistician has picked the models `x2 + x3`, `x1 + x2 + x3`, `x1*x2 + x3` and `x1*x2 + x1*x3` as candidates for "the best model". Which of these models would you choose based on the deviances? Reason using hypothesis testing (you have to choose one model for the null-hypothesis, which?).
+* <span class="question">New: What do we mean by the formula `cbind(y0, y1, y2) ~ x1 + x2*x3`? OBS: Ask if you are not sure before moving on!</span>
+
+<details><summary>Answer</summary>
+`cbind(y0, y1, y2) ~ x1 + x2*x3` means that we have a model with the covariates `x1`, `x2`, `x3` and `x2x3` (`x2` times `x3`).
+
+</details>
+
+* <span class="question">Describe the model that corresponds to `x1*x2 + x1*x3`. How many parameters are in this model? How many degrees of freedom for the deviance?</span>
+
+<details><summary>Answer</summary>
+`x1*x2 + x1*x3` has the linear predictor (all $x$'s are vectors here)
+
+$$\theta_j + \beta_1 x1 + \beta_2 x2 + \beta_3 x3 + \beta_4 x1x2 + \beta_5 x2x3$$
+
+Note that this is what we put om the right side of $\log \left( \frac{\pi_0}{\pi_1 + \pi_2} \right)$ and $\log \left( \frac{\pi_0 + \pi_1}{\pi_2} \right)$ from a). This model has 7 parameters ($\beta_{1:5}$ and two intercept parameters), i.e. 24-7=17 degrees of freedom for the deviance.
+
+</details>
+
+* <span class="question">A statistician has picked the models `x2 + x3`, `x1 + x2 + x3`, `x1*x2 + x3` and `x1*x2 + x1*x3` as candidates for "the best model". Which of these models would you choose based on the deviances? Reason using hypothesis testing (you have to choose one model for the null-hypothesis, which?).</span>
+
+<details><summary>Answer</summary>
+The number of parameters and degrees of freedom in each of the four models (`x2 + x3`, `x1 + x2 + x3`, `x1*x2 + x3` and `x1*x2 + x1*x3`) are listed below:
+
+```{r, echo = FALSE}
+
+tab1 <- data.frame(model = c("x2 + x3", "x1 + x2 + x3", "x1*x2 + x3", "x1*x2 + x1*x3"),
+           no = c(4, 5, 6, 7),
+           df = c(20, 19, 18, 17))
+
+kable(tab1)
+
+```
+
+We are testing $H_0$: `x2 + x3` vs the three other models:
+
+* vs `x1 + x2 + x3`: $\Delta D = 10.64 - 10.56 = 0.08$
+* vs `x1*x2 + x3`: $\Delta D = 10.64 - 8.52 = 2.12$
+* vs `x1*x2 + x2*x3`: $\Delta D = 10.64 - 8.33 = 2.23$
+
+The deviance is assumed to be $\chi^2$-distributed, so the critical value at a 95 % significance level is 3.841 for 1 df, and even larger for more df (see below), which means that we choose the model `x2 + x3`. This means that `x1` does not have anything to say in the model, i.e., the interval of treatment does not matter.
+
+```{r}
+
+# critical value at 95 % significance level for chi squared distribution for various degrees of freedom
+qchisq(0.95, 1:4)
+
+```
+
+</details>
 
 ### e)
 
@@ -216,11 +333,122 @@ round(vcov(allmodels[[6]]), 4)
 
 
 
-* Use the `R`-summary to estimate $e^{\beta_k}$ for $k = 1, 2, 3$.
-* Find an approximate confidence interval for $e^{\beta_1}$. Comment on this considering the model choice you made in d).
-* Estimate the probability to get final CGI equal to 0 for a female with injections every second week and initial CGI equal to 5.
-* Explain how you can find an estimated standard deviation for this estimate (you do not need to do all calculations). Hint: You need Taylor expansions here!
+* <span class="question">Use the `R`-summary to estimate $e^{\beta_k}$ for $k = 1, 2, 3$.</span>
 
+<details><summary>Answer</summary>
+```{r, echo = FALSE}
+
+library(VGAM)
+
+data2 <- data.frame(
+  x1 = rep(c(0, 1), each = 6),
+  x2 = rep(rep(c("F", "M"), each = 3), times = 2),
+  x3 = c(2, 3, 4, 3, 4, 5, 2, 3, 4, 2, 3, 4),
+  y0 = c(1, 3, 0, 4, 0, 0, 1, 2, 1, 3, 0, 0),
+  y1 = c(0, 1, 1, 4, 2, 0, 0, 1, 2, 1, 5, 3),
+  y2 = c(0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0)
+)
+
+# fitting all the models:
+
+formulas <- list(
+  cbind(y0, y1, y2) ~ x3,
+  cbind(y0, y1, y2) ~ x1 + x3,
+  cbind(y0, y1, y2) ~ x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x3,
+  cbind(y0, y1, y2) ~ x2 * x3,
+  cbind(y0, y1, y2) ~ x1 + x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x3,
+  cbind(y0, y1, y2) ~ x1 * x3 + x2,
+  cbind(y0, y1, y2) ~ x1 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x3 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 + x1 * x3 + x2 * x3,
+  cbind(y0, y1, y2) ~ x1 * x2 * x3
+)
+
+# fitting all the models:
+
+allmodels <- sapply(formulas, function(x) vglm(x, data = data2, family = cumulative(parallel = TRUE)))
+
+
+```
+
+Estimates:
+```{r}
+
+exp(coefficients(allmodels[[6]])[3:5])
+
+```
+
+</details>
+
+* <span class="question">Find an approximate confidence interval for $e^{\beta_1}$. Comment on this considering the model choice you made in d).</span>
+
+<details><summary>Answer</summary>
+Approximate (because we assume normality of the $\beta$'s, it is just an approximate confidence interval) confidence interval, we choose 96 % significance level:
+
+$$\hat{\beta}_1 \pm 1.96 \cdot \sqrt{\text{SD}(\hat{\beta}_1)}$$
+
+```{r}
+
+exp(coefficients(allmodels[[6]])[3] + qnorm(0.975)*sqrt(vcov(allmodels[[6]])[3,3])*c(-1,1))
+
+```
+
+This confidence interval contains 1, so we cannot reject $H_0$: $e^{\beta_1} = 1$ (i.e., $\beta_1 = 0$). This means that the interval of treatment does not matter for the final CGI levels. This is the same conclusion as the one from d).
+
+</details>
+
+* <span class="question">Estimate the probability to get final CGI equal to 0 for a female with injections every second week and initial CGI equal to 5.</span>
+
+<details><summary>Answer</summary>
+Final CGI equal to 0 for
+
+* injections every second week $\implies \ x_1 = 0$,
+* female $\implies \ x_2 = 0$
+* initial CGI = 5 $\implies \ x_3 = 5$
+
+From a):
+
+$$\hat{\pi}_0 = \frac{e^{\hat{\theta}_0 + 0 \hat{\beta}_1 + 0\hat{\beta}_2 + 5\hat{\beta}_3}}{1 + e^{\hat{\theta}_0 + 0 \hat{\beta}_1 + 0\hat{\beta}_2 + 5\hat{\beta}_3}} = \frac{e^{\hat{\theta}_0 + 5\hat{\beta}_3}}{1 + e^{\hat{\theta}_0 + 5\hat{\beta}_3}}$$
+
+Numbers:
+
+```{r}
+
+pi0hat <- exp(sum(coefficients(allmodels[[6]])*c(1, 0, 0, 0, 5)))/(1+exp(sum(coefficients(allmodels[[6]])*c(1, 0, 0, 0, 5)))); pi0hat
+
+```
+
+Standard deviations are found by Taylor expanding $\hat{\pi}_0$ around $\theta_0, \beta_3$ (see e.g. <https://en.wikipedia.org/wiki/Taylor_series#Taylor_series_in_several_variables>). Let 
+
+$$f(x, y) = \frac{e^{x + 5y}}{1 + e^{x + 5y}}$$
+
+Then 
+$$ \frac{\partial f}{\partial x} = \frac{e^{x + 5y}}{(1 + e^{x + 5y})^2} = f(1-f) \text{  and  } 
+\frac{\partial f}{\partial x} = \frac{5e^{x + 5y}}{(1 + e^{x + 5y})^2} = 5f(1-f)$$
+
+Thus $\hat{\pi}_0 = \pi_0 + \pi_0(1 - \pi_0)(\hat{\theta}_0 - \theta_0) + 5\pi_0(1 - \pi_0)(\hat{\beta}_3 - \beta_3)$ such that the variance is
+
+$$\text{Var}(\hat{\pi}_0) = \pi_0^2 (1-\pi_0)^2 \left[ \text{Var}(\hat{\theta}_0) + 25 \text{Var}(\hat{\beta}_3) + 10 \text{Cov}(\hat{\theta}_0, \hat{\beta}_3) \right]$$
+
+We find the estimate by using $\hat{\pi}_0$ for $\pi_0$, and by finding the variances and covariances in the `R`-print. Then we will get:
+
+```{r, results = "asis"}
+
+pi0hat * (1-pi0hat) * sqrt(vcov(allmodels[[6]])[1,1] + 25 * vcov(allmodels[[6]])[5,5] + 10 * vcov(allmodels[[6]])[1,5])
+
+```
+
+</details>
+
+* <span class="question">Explain how you can find an estimated standard deviation for this estimate (you do not need to do all calculations). Hint: You need Taylor expansions here!</span>
+
+<details><summary>Answer</summary>
+This is a random intercept model. Such models are useful if you want to model correlations between variables from the same group (clustered data) or the same invidual (longitudinal data).
+</details>
 
 ## Problem 2: More alligators (nominal model)
 
@@ -237,36 +465,113 @@ In the data below the following column names are given:
 * y4: bird
 * y5: other
 
-a) Investigate different models and select the best. Call this the best model. 
-b) Assess the model fit of this best model. 
-c) Interpret effects and perform inference for the best model.
+a) <span class="question">Investigate different models and select the best. Call this the best model. </span>
 
+<details><summary>Answer</summary>
+
+First get the data:
 ```{r,results="markup"}
 library(VGAM)
 data2="http://www.stat.ufl.edu/~aa/glm/data/Alligators2.dat"
 ali2 = read.table(data2, header = T)
-ali2
-colnames(ali2)
-fit=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake)+factor(size)+factor(gender),family=multinomial, data=ali2)
-
-# 6 possible models to investigate: only lake, only gender, only size, lake+gender, lake+size, size+gender
-fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),family=multinomial, data=ali2)
-fit.size=vglm(cbind(y2,y3,y4,y5,y1)~factor(size),family=multinomial, data=ali2)
-fit.gender=vglm(cbind(y2,y3,y4,y5,y1)~factor(gender),family=multinomial, data=ali2)
-fit.lake.size=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake)+factor(size),family=multinomial, data=ali2)
-fit.lake.gender=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake)+factor(gender),family=multinomial, data=ali2)
-fit.gender.size=vglm(cbind(y2,y3,y4,y5,y1)~factor(size)+factor(gender),family=multinomial, data=ali2)
-all=list("fit"=fit,"fit.lake"=fit.lake,"fit.size"=fit.size,"fit.gender"=fit.gender,"fit.lake.size"=fit.lake.size,"fit.lake.gender"=fit.lake.gender,"fit.gender.size"=fit.gender.size)
-lapply(all,AIC)
-
-# you may also look at deviance tests if you prefer that to AIC
-
-# what is best? toggle to match your choice
-best=fit
-summary(best)
-pchisq(deviance(best),df.residual(best),lower.tail=FALSE)
-confint(best)
+head(ali2)
+ali2$lake <- factor(ali2$lake)
+ali2$size <- factor(ali2$size)
+ali2$gender <- factor(ali2$gender)
+fit=vglm(cbind(y2,y3,y4,y5,y1)~ lake + size + gender,family=multinomial, data=ali2)
 ```
+
+Now fit 6 possible models to investigate: 
+
+- only lake, 
+- only gender, 
+- only size, 
+- lake+gender, 
+- lake+size, 
+- size+gender
+
+
+```{r,results="markup"}
+all <- list(
+  fit=vglm(cbind(y2,y3,y4,y5,y1)~ lake + size + gender,family=multinomial, data=ali2), 
+  fit.lake=vglm(cbind(y2,y3,y4,y5,y1) ~ lake, family=multinomial, data=ali2),
+  fit.size=vglm(cbind(y2,y3,y4,y5,y1) ~ size, family=multinomial, data=ali2),
+  fit.gender=vglm(cbind(y2,y3,y4,y5,y1) ~ gender, family=multinomial, data=ali2),
+  fit.lake.size=vglm(cbind(y2,y3,y4,y5,y1) ~ lake + size, family=multinomial, data=ali2),
+  fit.lake.gender=vglm(cbind(y2,y3,y4,y5,y1) ~ lake + gender, family=multinomial, data=ali2),
+  fit.gender.size=vglm(cbind(y2,y3,y4,y5,y1) ~ size + gender, family=multinomial, data=ali2)  
+)
+
+(AICall <- lapply(all,AIC))
+```
+
+the best model has the lowest AIC, so is the model with both lake and size
+
+
+</details>
+
+b) <span class="question">Assess the model fit of this best model. </span>
+
+<details><summary>Answer</summary>
+
+We can test if the residual deviance is larger than would be expected if the model fitted well:
+
+```{r}
+best=all[[which(AICall==min(unlist(AICall)))]]
+pchisq(deviance(best),df.residual(best),lower.tail=FALSE)
+
+
+```
+
+The p-value is just above 0.05, so any evidence for model mis-fit is (at best) weak. The deviance is about `r round(deviance(best)/df.residual(best), 2)` times larger than would be expected, so is not large.
+
+(question for you: how much would the standard errors change if we use this extra variation)
+
+
+</details>
+
+c) <span class="question">Interpret effects and perform inference for the best model.</span>
+
+<details><summary>Answer</summary>
+
+Have fun...
+
+```{r}
+best=all[[which(AICall==min(unlist(AICall)))]]
+(Summ <- summary(best))
+
+```
+
+There are a lot of parameters, so we can plot the intersting ones:
+
+```{r}
+best=all[[which(AICall==min(unlist(AICall)))]]
+
+Summ1 <- Summ@coef3[!grepl("\\(", rownames(Summ@coef3)),]
+Ests <- data.frame(Estimate=Summ1[,"Estimate"], 
+              L95 = Summ1[,"Estimate"]-1.96*Summ1[,"Std. Error"],
+              U95 = Summ1[,"Estimate"]+1.96*Summ1[,"Std. Error"],
+              Variable = gsub(":.*", "", rownames(Summ1)),
+              Level = gsub(".*:", "", rownames(Summ1)))
+Ests$At.x = 1:nrow(Summ1)+as.numeric(as.factor(Ests$Variable))
+
+Vars <- tapply(Ests$At.x, list(Ests$Variable), mean)
+Levels <- c("inverterbrate", "reptile", "bird", "other")
+
+plot(Ests[,"Estimate"], Ests$At.x, xlim=range(Ests[,c("L95", "U95")]), ann=FALSE,
+     col=Ests$Level, yaxt="n")
+segments(Ests[,"L95"], Ests$At.x, Ests[,"U95"], Ests$At.x, col=Ests$Level)
+axis(1)
+axis(2, labels = names(Vars), at=Vars)
+mtext("Coefficient", 1, line=3)
+legend(2.4,20, legend = Levels, fill=1:4)
+abline(v=0, col="grey", lty=3)
+```
+
+Remember, Fish is the base level, so (for example) there are more invertebrates than fish eaten in lakes 2 - 4 compared to lake 1. Similarly adults (size=1) seem to each more invertebrates than fish, compared to juvemiles.
+
+</details>
+
 
 
 # Exam questions

@@ -1,0 +1,405 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+author: Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions
+  from Ingeborg G. Hem
+date: "01.11 and 08.11 [PL], 02.11 and 09.11 [IL]"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    toc_depth: 2
+    css: "../TMA4315RMarkdown.css"
+  '# html_document': default
+subtitle: 'Module 7: Linear mixed effects models'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
+showsol<-FALSE
+```
+
+
+# <a id="interactivew2">Interactive session week 2 </a>
+
+**Plan:**
+
+* First hour: Problem 1, go back to ILw1 to check what you skipped then.
+* Second hour: Problem 2 (and Team Kahoot! if not done in PL).
+
+---
+
+## Exercise 1: Taken from UiO, STK3100, 2016, problem 3
+
+The data in this problem is based on four measurements of a particular bone for 20 boys. The meaurements were taken at 8, 8.5, 9 and 9.5 years of age. The variables in the dataset are
+
+* `bone`: length of bone in millimeters
+* `redage`: centered age (i.e. age - 8.75)
+
+Below is an excerpt from the output from fitting a linear mixed model (LMM) with the procedure `lmer` in `R` where the length of the bone, `bone`, is the response,
+
+$$ \texttt{bone}_{ij} = \beta_0 + \beta_1 \texttt{redage}_{ij} + \gamma_{0i} + \gamma_{1i}\texttt{redage}_{ij} + \varepsilon_{ij} \ i = 1, \dots, 20, \ j = 1,2,3,4 $$
+
+where $\mathbf{{\boldsymbol \gamma}}_i = (\gamma_{0i}, \gamma_{1i})^T$, $i = 1, \dots, 20$ represent the random effects.
+
+```{r,eval=TRUE}
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/bonedata.txt"
+bone <- read.table(filepath, header = TRUE)
+
+library(lme4)
+fit2 <- lmer(bone ~ redage + (1 + redage | boy), data = bone)
+summary(fit2)
+```
+
+
+<span class="question">a) Formulate the model on matrix form and explain the meaning and interpretation of the different parts. State the usual model assumptions carefully.</span>
+
+<details><summary>Answer</summary>
+Define 
+
+$$ \mathbf{y}_i = \begin{pmatrix} y_{i1} \\ y_{i2} \\ y_{i3} \\ y_{i4} \end{pmatrix} = \begin{pmatrix} \texttt{bone}_{i1} \\ \texttt{bone}_{i2} \\ \texttt{bone}_{i3} \\ \texttt{bone}_{i4} \\ \end{pmatrix}, \ X_i = \begin{pmatrix} 1 & \texttt{redage}_{i1} \\ 1 & \texttt{redage}_{i2} \\ 1 & \texttt{redage}_{i3} \\ 1 & \texttt{redage}_{i4} \\ \end{pmatrix}, \ \pmb{\beta} = \begin{pmatrix} \beta_0 \\ \beta_1 \end{pmatrix}, \ U_i = X_i, \ \pmb{\gamma}_i = \begin{pmatrix} \gamma_{0i} \\ \gamma_{1i} \end{pmatrix}, \ \varepsilon_i = \begin{pmatrix} \varepsilon_{i1} \\ \varepsilon_{i2} \\ \varepsilon_{i3} \\ \varepsilon_{i4} \\ \end{pmatrix} $$
+
+$\mathbf{y}_i$ is the response for person $i$, $X_i$ is the design matrix for the fixed part, $U_i$ for the random part. We get the model on matrix form:
+
+$$\mathbf{y}_i = X_i \begin{pmatrix} \beta_0 \\ \beta_1 \end{pmatrix} + U_i \begin{pmatrix} \gamma_{0i} \\ \gamma_{1i} \end{pmatrix} + \varepsilon_i$$
+
+The fitted values are in this model 20 non-parallel lines (as we have both random intercept *and* random slope).
+
+```{r, tidy = FALSE}
+
+library(reshape2); library(ggplot2)
+
+fit2df <- data.frame(boy = paste0("boy", 1:20),
+                     low = coef(fit2)$boy[,1] + coef(fit2)$boy[,2]*min(bone$redage),
+                     high = coef(fit2)$boy[,1] + coef(fit2)$boy[,2]*max(bone$redage))
+fit2df <- melt(fit2df, id.vars = "boy", value.name = "bone", variable.name = "redage")
+fit2df$redage <- (as.numeric(fit2df$redage)-1)*(max(bone$redage)-min(bone$redage)) + min(bone$redage)
+ggplot(data = fit2df, mapping = aes(x = redage, y = bone, colour = boy)) + geom_line()
+
+```
+
+
+Such model is appropriate when it is the distribution of the intercepts and slopes which is of primary interest, not the intercept and slope for particular units.
+
+The model assumptions are that the random vectors $\pmb{\gamma}_i$ and $\varepsilon_i$ are independent and multivariate normal with expectation zero:
+
+$$ \pmb{\gamma}_i \sim N_q(0, \mathbf{Q}) = N_q \left(\begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \tau_0^2 & \tau_{01} \\ \tau_{10} & \tau_1^2 \end{pmatrix} \right) $$
+
+$$\varepsilon_i \sim N(0, \Sigma_i) $$
+
+where $\Sigma_i$ can be general, but is often on the form $\sigma^2I$ where $I$ is the identity matrix.
+</details>
+
+New: explain what you see in the code and output below:
+
+```{r}
+library(reshape2); library(ggplot2)
+fit2df <- data.frame(boy = paste0("boy", 1:20),
+                     low = coef(fit2)$boy[,1] + coef(fit2)$boy[,2]*min(bone$redage),
+                     high = coef(fit2)$boy[,1] + coef(fit2)$boy[,2]*max(bone$redage))
+fit2df <- melt(fit2df, id.vars = "boy", value.name = "bone", variable.name = "redage")
+fit2df$redage <- (as.numeric(fit2df$redage)-1)*(max(bone$redage)-min(bone$redage)) + min(bone$redage)
+ggplot(data = fit2df, mapping = aes(x = redage, y = bone, colour = boy)) + geom_line()
+```
+
+<span class="question">b) Describe the distribution of the response $\mathbf{y}_i = (y_{i1}, y_{i2}, y_{i3}, y_{i4})^T$, $i = 1, \dots, 20$, and explain how you can find numerical values using the `R`-output.</span>
+
+<details><summary>Answer</summary>
+Since $\mathbf{b}_i$ and $\varepsilon_i$ are independent and both are multivariate normal, $\mathbf{y}_i$ is also multivariate normal.
+
+The expected value of $\mathbf{y}_i$ is E$(X_i\beta + U_i \pmb{\gamma}_i + \varepsilon_i) =$ E$(X_i\beta) + Z_i \cdot 0 + 0 = X_i\beta$. $X_i$ is the design matrix for person $i$.
+
+As $\pmb{\gamma}_i$ and $\varepsilon_i$ are independent, the covariance matrix of the response is 
+
+$$V_i = Cov(\mathbf{y}_i) = Cov(U_i \pmb{\gamma}_i) + Cov(\varepsilon_i) = U_i Cov(\pmb{\gamma}_i)U_i^T + Cov(\varepsilon_i) = U_i\mathbf{Q}U_i^T + \Sigma_i$$
+
+$U_i = X_i$ is already defined and known, the values of $\hat{\beta}$ are known, $\hat{\Sigma_i}$ is $I_4$ times the residual variance (0.1794), and $\hat{\mathbf{Q}}$ is found by using the correlation of the random effects and their standard deviations under "Random effects" in the summary.
+
+```{r}
+
+X_i <- U_i <- matrix(c(1,1,1,1,-0.75,-0.25,0.25,0.75), ncol = 2)
+beta <- matrix(fixef(fit2), ncol = 1)
+Q <- matrix(summary(fit2)$varcor$boy, ncol = 2)
+sigma_i <- sigma(fit2)^2*diag(4)
+
+y_mean <- X_i %*% beta
+
+y_cov <- U_i %*% Q %*% t(U_i) + sigma_i
+
+```
+
+</details>
+
+<span class="question">c) New: derive the joint distribution of $(\pmb{\gamma}_i,\mathbf{y}_i)$?</span>
+
+<details><summary>Answer</summary>
+Since $\mathbf{y}_1, \dots, \mathbf{y}_{20}$ are independent and only $\mathbf{y}_i$ is correlated with $\pmb{\gamma}_i$, E$(\pmb{\gamma}_i | \mathbf{y}_1, \dots, \mathbf{y}_{20}) =$ E$(\pmb{\gamma}_i | \mathbf{y}_i)$.
+
+But $(\pmb{\gamma}_i, \mathbf{y}_i)^T$ is multivariate normal with expectation $(0, X_i\beta)^T$ and covariance matrix
+
+$$\begin{pmatrix} Q & QU_i^T \\ U_iQ & U_iQU_i^T + \Sigma_i \end{pmatrix}$$
+
+Hence
+
+$$E(\pmb{\gamma}_i | \mathbf{y}_i) = 0 + QU_i^T(U_iQU_i^T + \Sigma_i)^{-1}(\mathbf{Y}_i - X_i\beta) $$
+
+and thus $\pmb{\gamma}_i$ is estimated by plugging the REML estimates into
+
+$$\hat{Q}U_i^T(U_i\hat{Q}U_i^T + \hat{\Sigma}_i)^{-1}(\mathbf{Y}_i - X_i\hat{\beta})$$
+
+
+
+</details>
+
+
+Find the conditional expectation of a random effect $\pmb{\gamma}_i$, $i = 1, \dots, 20$ given the observations, i.e. E$(\pmb{\gamma}_i|\mathbf{y}_1, \dots, \mathbf{y}_{20})$. Describe how the random effects, $\pmb{\gamma}_i$, $i = 1, \dots, 20$, can be predicted/estimated.
+
+In the exam, no numerical calculations were necessary in b) and c).
+
+<span class="question">d) New: do b) and c) in `R` (i.e. do numerical calculations). The R markdown file of this module contains necessary code to download the dataset, and fit the full model. In addition, plot the distribution of $(\gamma_{0i}, \gamma_{1i})^T$ (this is a multivariate distribution).</span>
+
+<details><summary>Answer</summary>
+
+Part (b)
+
+We need to (1) define X_i and U_i (the design matrices), (2) extract the parameters, $\boldsymbol{\hat{\beta}}$ and $Q$, (3) calculate the mean, and (4) calculate the covariance matrix:
+
+```{r}
+
+X_i <- U_i <- matrix(c(1,1,1,1,-0.75,-0.25,0.25,0.75), ncol = 2)
+beta <- matrix(fixef(fit2), ncol = 1)
+Q <- matrix(summary(fit2)$varcor$boy, ncol = 2)
+sigma_i <- sigma(fit2)^2*diag(4)
+
+(y_mean <- X_i %*% beta)
+
+(y_cov <- U_i %*% Q %*% t(U_i) + sigma_i)
+
+```
+
+Part (c)
+
+This is just (!) a line of code:
+
+```{r}
+
+# choosing i = 2
+i <- 2
+Y_i <- as.matrix(subset(bone, boy == i)$bone)
+
+
+Q%*%t(U_i)%*%solve(U_i%*%Q%*%t(U_i) + sigma_i)%*%(Y_i - X_i%*%beta)
+# can check and see if the estimate coincides with the estimate from lmer
+ranef(fit2)$boy[which(row.names(ranef(fit2)$boy) == i),] # and it does
+
+```
+
+We can also plot the density:
+
+```{r}
+
+library(mvtnorm)
+x1 <- seq(-6, 6, length.out = 100)
+x2 <- seq(-3, 3, length.out = 100)
+x <- expand.grid(x1,x2)
+y <- dmvnorm(x, mean = c(0,0), sigma = Q)
+
+df <- data.frame(x1 = x[,1], x2 = x[,2], y = y)
+
+ggplot(data = df, aes(x = x1, y = x2)) + 
+  geom_raster(aes(fill = y)) + scale_fill_gradientn(colours = terrain.colors(10)) +
+  geom_contour(aes(z = y), color = "black") +
+  geom_point(aes(x = 0, y = 0), pch = 4, col = "red", size = 3)
+
+
+```
+
+</details>
+
+---
+
+## Exercise 2: Taken from UiO, STK3100, 2015, problem 3
+
+The data used in this problem conserns expenses in the the social security system Medicare in US. Average expenses per hospitalization, denoted as `ccpd`, were in six years recorded for 54 regions: the fifty US states, Puerto Rico, Virgin Islands, District of Columbia and an unspecified other. Thus there are $6\times54 = 324$ observations. The expenses are treated as response. The covariates are `j = YEAR` which can take values $1, \dots, 6$ and a factor indicating the average length of stay at hospital, `AVETD`, in each region and year. This factor has tree levels, `1` = six days or less, `2` = 7-9 days, `3` = 10 days or more. "Six days or less"" is the reference level and the others are denoted as `AVETD2` and `AVETD3`.
+
+Below you find the output from fitting the linear mixed effects model
+
+$$y_{ij} = \beta_0 + j \times \beta_1 + \beta_2 \texttt{AVETD2}_{ij} + \beta_3 \texttt{AVETD3}_{ij} + \gamma_{0i} + j \times \gamma_{1i} + \varepsilon_{ij} $$
+
+$j = 1, \dots, n_i$, $i = 1, \dots, 54 $ and $N=\sum_{i=1}^m n_i=324$.
+
+
+```{r, eval = TRUE}
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/medicare.dat"
+medicare <- read.table(filepath, header = TRUE, colClasses = c("numeric", "numeric", "factor", "factor"))
+
+library(lme4)
+fit1 <- lmer(ccpd ~ YEAR + AVETD + (1 + YEAR | fstate), data = medicare)
+
+summary(fit1)
+```
+
+<span class="question">a) Formulate the model in matrix form and explain the what the usual assumptions are.</span>
+
+<details><summary>Answer</summary>
+$$y_i = X_i\beta + U_i\gamma_i + \varepsilon_i, \ i = 1, \dots, 54 $$
+
+where
+
+$$X_i = \begin{pmatrix} 
+  1 & 1 & \mathbf{1}_{AVETD \in \{7, 8, 9\}} & \mathbf{1}_{AVETD \in \{10, 11, \dots\}} \\
+  1 & 2 & \mathbf{1}_{AVETD \in \{7, 8, 9\}} & \mathbf{1}_{AVETD \in \{10, 11, \dots\}} \\
+  \vdots & \vdots & \vdots & \vdots \\
+  1 & 6 & \mathbf{1}_{AVETD \in \{7, 8, 9\}} & \mathbf{1}_{AVETD \in \{10, 11, \dots\}} \\
+\end{pmatrix}$$
+
+and
+
+$$U_i = \begin{pmatrix}
+  1 & 1 \\
+  1 & 2 \\
+  \vdots & \vdots \\
+  1 & 6
+\end{pmatrix}$$
+
+and has dimenstions $6 \times 4$ and $6 \times 2$, respectively. The indicator function $\mathbf{1}_A$ is defines as 1 when $A$ is true, and 0 else. The fixed effects parameters are collected in the $4 \times 1$ vector $\beta = (\beta_0, \beta_1, \beta_2, \beta_3)^T$, and the random effects in the $2 \times 1$ vector $\gamma_i = (\gamma_{0i}, \gamma_{1i})^T$, $i = 1, \dots, 54$. $\gamma_i$ is multinormal (2-dimensional) with expectation $(0,0)^T$ and covariance matrix $Q$, and is independent of the errors $\varepsilon_i = (\varepsilon_{i1}, \dots, \varepsilon_{i6}$ where all elements are $N(0, \sigma^2)$.
+
+</details>
+
+
+<span class="question">b) Compute a 95 % confidence interval for the fixed effect coefficient for `YEAR`.</span>
+
+<details><summary>Answer</summary>
+$$ \frac{\hat{\beta}_1-\beta_1}{\widehat{SD(\hat{\beta_1})}} \approx N(0, 1) $$
+
+Hence, we get $706.04 \pm 1.96 \cdot 39.55 = [628.522, 783.558]$.
+
+</details>
+
+Remark: for c we have not focus on testing random effects in our course.
+
+<span class="question">c) Explain how we can find out if we can simplify the model by removing the random effect $\gamma_{1i}$.</span>
+
+<details><summary>Answer</summary>
+A model not containing the random effect `YEAR` is a simplification of the covariance structure. This can be performed by fitting models containing `YEAR` and not containing `YEAR` and comparing the values of $-2 \log(L)$. But the approximating distribution is a linear combination of $\chi^2$-distributions, in this case $\frac{1}{2}\chi_1^2 + \frac{1}{2}\chi_2^2$. We can calculate the p-values for each distribution individually and then sum them and divide by 2. Note that with very small p-values we do not have these problems with incorrect p-values; we reject $H_0$ either way. *NOTE:* We ask about this so you are aware that we cannot blindly use p-values like in linear models, but the details with the $\chi^2$-distributions are outside the scope of the course.
+
+
+</details>
+
+
+<span class="question">d) What is the expectation and covariate matrix in the marginal model of the response $(Y_{i1}, Y_{i2}, Y_{i3}, Y_{i4}, Y_{i5}, Y_{i6})^T$?</span>
+
+<details><summary>Answer</summary>
+The covariance matrix of $y_i$ is Cov$(U_i\gamma_i + \varepsilon_i) = U_i Cov(\gamma_i)U_i^T + \sigma^2 I_6 = U_iQU_i^T + \sigma^2I_6$ which becomes
+
+$$ \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ \vdots & \vdots \\ 1 & 6 \\ \end{pmatrix} \begin{pmatrix} \tau_0^2 & \tau_{01} \\ \tau_{10} & \tau_1^2 \end{pmatrix} \begin{pmatrix} 1 & 1 & \cdots & 1 \\ 1 & 2 & \cdots & 6 \end{pmatrix} + \sigma^2I_6 $$
+
+</details>
+
+
+<span class="question">e) Explain how the null hypothesis $H_0: \beta_3 = 2\times\beta_2$ versus the alternative hypothesis $H_1: \beta_3 \neq 2\times\beta_2$ can be tested? In this part no numerical calculations are expected.</span>
+
+<details><summary>Answer</summary>
+The hypothesis implies a simplification of the fixed effect structure. This can be performed by fitting the model from part a) by maximum likelihood, and also the simplified model
+
+$$ y_{ij} = \beta_0 + j \times \beta_1 + \beta_2(\texttt{AVETD2} + 2\texttt{AVETD3}) + \gamma_{0i} + j \times \gamma_{1i} + \varepsilon_{ij}, $$
+
+$$ j = 1, \dots, 324, \ i = 1, \dots, 54 $$
+
+also by maximum likelihood. Then you compare the values of $-2 \log(L)$. The approximating distribution is a $\chi_1^2$-distribution, since the hypothesis represents one restriction (i.e., restrictions on only one parameter, in this case $\beta_3$ (or $\beta_2$)).
+
+A Wald test is also possible, with $d = 0$, $\beta = (\beta_1, \beta_2)^T$ and $C = (-2, 1)$, and the statistic is assumed $\chi_1^2$-distributed.
+
+
+</details>
+
+
+<span class="question">f) New: Do c) and e) in `R`. The R Markdown file of this module contains necessary code to download the dataset, and fit the full model.</span>
+
+
+
+<details><summary>Answer</summary>
+(c)
+
+```{r, results = "hold"}
+
+# In R:
+fit1h0 <- lmer(ccpd ~ YEAR + AVETD + (1 | fstate), data = medicare)
+fit1h1 <- lmer(ccpd ~ YEAR + AVETD + (1 + YEAR | fstate), data = medicare)
+
+cat("H0: ", -2*c(logLik(fit1h0)), ", H1: ", -2*c(logLik(fit1h1)), sep = "")
+
+statistic <- -2*c(logLik(fit1h0)) + 2*c(logLik(fit1h1))
+
+cat("Statistic = ", statistic, 
+    ", p-value = 0.5*", pchisq(statistic, 1, lower.tail = FALSE), " + 0.5*", pchisq(statistic, 2, lower.tail = FALSE),
+    " = ", 0.5*pchisq(statistic, 1, lower.tail = FALSE) + 0.5*pchisq(statistic, 2, lower.tail = FALSE), 
+    sep = "")
+
+```
+
+(e)
+
+```{r}
+
+medicare$AVETD_H0 <- with(medicare, as.numeric(AVETD == 2) + 2*as.numeric(AVETD == 3))
+fit1h0 <- lmer(ccpd ~ YEAR + AVETD_H0 + (1 + YEAR | fstate), data = medicare)
+fit1h1 <- lmer(ccpd ~ YEAR + AVETD + (1 + YEAR | fstate), data = medicare)
+
+anova(fit1h0, fit1h1) # default is to refit model(s) using ML, not REML
+
+d <- 0
+C <- c(-2, 1)
+beta <- fixef(fit1)[3:4]
+Sigma <- vcov(fit1)[3:4, 3:4]
+
+wald <- as.numeric(t(C%*%beta-d)%*%solve(C%*%Sigma%*%C)%*%(C%*%beta-d))
+pval <- pchisq(wald, 1, lower.tail = FALSE)
+
+cat("Wald = ", wald, ", p-value = ", pval, sep = "")
+
+```
+
+Both tests give p-values indicating that we keep the null-hypothesis, i.e., replace $\beta_3$ by $2\beta_2$.
+
+
+</details>
+
+# Previous exams
+
+## <a id="exam2017">TMA4315 December 2017, Problem 3: Random intercept linear mixed effects model </a>
+[20 points]
+
+New on the reading list this year is how to handle correlated data in a regression setting, with the aid of the linear mixed effects model. The simplest version of such a model is the _random intercept model_.
+
+Write a short introduction to the random intercept linear mixed effects model and its practical usage, for a student with a good background in multiple linear regression. The introduction should include an example and emphasis should be on:
+
+* Model assumptions.
+* The conditional and marginal model. 
+* What is the intra class correlation and how can it be calculated from a given model fit?
+* How are the regression coefficients estimated?
+
+Topics you do _not_ need to address are: REML, hypothesis testing, AIC.
+
+# R packages
+
+```{r, eval=FALSE}
+#packages needed to run this module page
+install.packages("lme4")
+install.packages("devtools")
+library(devtools)
+# install_github("romunov/AED")
+install.packages("lattice")
+install.packages("MEMSS")
+install.packages("sjPlot")
+install.packages("sjmisc")
+install.packages("ggpubr")
+install.packages("faraway")
+install.packages("kableExtra")
+install.packages("spcadjust")
+```
+
+# Further reading
+
+* [Theoretical explanation for REML (beyond the scope of this course) by Inge Helland, UiO](http://www.uio.no/studier/emner/matnat/math/STK4070/v05/reml.pdf) 
+* [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.com/book/10.1007%2F978-1-4419-0300-6) (free ebook from Springer for NTNU students).
+* [_Fitting Linear Mixed-Effects Models Using *lme4*_ by Bates, Bolker, Mächler and Walker (2015) in _Journal of Statistical Software_](https://www.jstatsoft.org/index.php/jss/article/view/v067i01/v67i01.pdf)

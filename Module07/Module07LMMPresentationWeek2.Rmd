@@ -1,0 +1,1177 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+author: Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions
+  from Ingeborg G. Hem
+date: "01.11 and 08.11 [PL], 02.11 and 09.11 [IL]"
+output: #3rd letter intentation hierarchy
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
+showsol<-FALSE
+```
+
+(Latest changes: 08.11.2018 - typos).
+
+(Warning: some changes may occur before the second week.)
+
+# Overview
+
+**Aim**: Present methods for analysing correlated responses in a (normal/Gaussian) regression setting.
+
+We will only consider _two-level models_ and in particular focus on _random intercept and random slope models._
+
+---
+
+## Learning material
+
+* Textbook: Fahrmeir et al (2013): Chapter 2.4, 7.1-7.3, 7.7. In greater detail: pages 349-354 (not "Alternative view on the random intercept model"), 356-365 (not 7.1.5 "Stochastic Covariates""), 368-377 (not "Bayesian Covariance Matrix""), 379-380 (not "Testing Random Effects or Variance Parameters"", only last part on page 383), 383 (middle), 401-409 (orange juice). Note: Bayesian solutions not on the reading list.
+
+* Alternative readings: Zuur et al. (2009): "Mixed Effects Models and Extensions in Ecology with R", chapter 5 (pages 101-142). Available as free ebook from Springer for NTNU students. More explanations and less mathematics than Fahrmeir et al (2013), more focus on understanding. [Link to ebook Chapter 5](https://link.springer.com/chapter/10.1007/978-0-387-87458-6_5)
+
+* [Classnotes 01.11.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w12018.pdf) 
+* [Classnotes 08.11.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w22018.pdf) 
+
+---
+
+## Topics
+
+### [First week](#firstweek)
+
+* correlated responses - when and why?
+    + repeated measurements: clustered and longitudinal
+    + example of clustered data from ecology: species richness
+* notation 
+* random intercept models
+    + intra class correlation (ICC)
+* linear mixed effects models
+    + measurement model and distributional assumptions
+    + conditional and marginal formulation
+* parameter estimation
+    + with maximum likelihood for fixed effects
+    + distribution of fixed parameter estimators
+
+Jump to [interactive (week 1)](#interactivew1)
+
+---
+
+### [Second week](#secondweek)
+
+* what did we do last week: beaches example
+* parameter estimation (cont.)
+    + (restricted) maximum likelihood for random effects
+* predicting 
+    + random effects: method, formula, plots
+    + random errors: two types of residuals
+* random slope models
+    + sleep study
+    + interpretation of random effects
+* hypothesis tests
+* model selection
+* fitting LMM with function `lmer` in package `lme4`
+* what have we not covered?
+
+
+**<a id="secondweek">SECOND WEEK</a>**
+
+---
+
+# Notation and LMM
+
+* In the first week we started with models with a random intercept, using the `beach`-example - which we saw was a special case of linear mixed models (LMM). 
+* We looked at observations from clusters (family, beach) and will now also look at longitudinal data (repeated measurements on the same units).
+* For cluster $i$ we wrote the LMM model in a _measurement model_ part and a _distributional assumptions_ part:
+
+Words to know: measurement model, distributional model, conditional model, marginal model, global model.
+
+---
+
+**Measurement model**
+
+$${\bf Y}_i= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} + {\boldsymbol \varepsilon}_i$$
+
+**Distributional model**
+
+  $${\boldsymbol \gamma}_i \sim N({\bf 0},{\bf Q})$$
+  $${\boldsymbol \varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
+This gave the **marginal model for each cluster**:
+
+$${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I}+{\bf U}_i {\bf Q}{\bf U}_i^T)$$
+
+**Q**: explain what the different parameters and random variables are, and what are their dimensions.
+
+---
+
+**A**:
+
+* design matrix for fixed effects for cluster $i$: ${\bf X}_i$ is $n_i \times p$ (intercept included)
+* parametervector for fixed effects: ${\boldsymbol \beta}$ $p\times 1$
+* design matrix for random effects for cluster $i$: ${\bf U}_i$ is $n_i\times (q+1)$ (intercept included)
+* random effects - used to model correlated responses: ${\boldsymbol \gamma}_i$ ,$(q+1)\times 1$
+* random errors: ${\boldsymbol \varepsilon}_i$ $n_i\times 1$
+* covariance matrix for the random effects: ${\bf Q}$, $(q+1)\times (q+1)$
+* parameter $\sigma^2$ for variance of the random errors $\text{Cov}({\boldsymbol \varepsilon}_i)=\sigma^2 {\bf I}$ with dimension $n_i \times n_i$.
+
+---
+
+### Beach-example: Parameter estimation
+
+\tiny
+```{r,echo=FALSE}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+summary(fit)
+```
+\normalsize
+
+---
+
+### Global model 
+
+For all cluster together (even more letters now)
+$${\bf Y}={\bf X}{\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} +{\boldsymbol \varepsilon}$$
+
+$$
+{\bf Y}=\begin{pmatrix} {\bf Y}_1\\ {\bf Y}_2\\ \vdots \\ {\bf Y}_m \end{pmatrix},
+{\bf X}=\begin{pmatrix} {\bf X}_1\\ {\bf X}_2 \\ \vdots \\ {\bf X}_m \end{pmatrix},
+{\bf U}=\begin{pmatrix} {\bf U}_1 & {\bf 0} & \ldots &{\bf 0}\\ 
+{\bf 0 } & {\bf U}_2 & \ldots &{\bf 0}\\ 
+{\bf 0 } & {\bf 0} & \ddots &{\bf 0}\\ 
+{\bf 0 } & {\bf 0} & \ldots &{\bf U}_m\\ 
+\end{pmatrix}
+$$
+
+---
+
+$$
+{\boldsymbol \gamma}=\begin{pmatrix} {\boldsymbol \gamma}_1\\ {\boldsymbol \gamma}_2\\ \vdots \\ {\boldsymbol \gamma}_m \end{pmatrix}, 
+{\boldsymbol \varepsilon}=\begin{pmatrix} {\boldsymbol \varepsilon}_1\\ {\boldsymbol \varepsilon}_2 \\ \vdots \\  {\boldsymbol \varepsilon}_m \end{pmatrix}  
+$$
+
+\begin{align*}
+{\bf Y}&= {\bf X} {\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} + {\boldsymbol \varepsilon}={\bf X}{\boldsymbol \beta} + {\boldsymbol \varepsilon}^{*}\\
+{\boldsymbol \varepsilon}^{*} &= {\bf U} {\boldsymbol \gamma} + {\boldsymbol \varepsilon}\\
+{\bf V}&=\text{Cov}({\boldsymbol \varepsilon}^{*})=\text{Cov}({\boldsymbol \varepsilon})+\text{Cov}({\bf U}{\boldsymbol \gamma})=\sigma^2 {\bf I}+{\bf U} {\bf G} {\bf U}^T\\
+{\boldsymbol \varepsilon}^{*} &\sim N({\bf 0},{\bf V})\\
+\end{align*}
+
+Here ${\bf G}$ is a $m\dot (q+1)$ block-diagonal matrix with ${\bf Q}$ $m$ times on the diagonal, which gives
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+
+# Parameter estimation
+
+## Fixed effects ${\boldsymbol \beta}$ (repetition)
+
+estimated using maximum likelihood, with the marginal distribution as starting point:
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+
+We assume that the parameters in ${\bf V}$ are **known**, then we get the weighted least squares solution for ${\boldsymbol \beta}$.
+$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{{\boldsymbol \beta}}\sim N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
+
+---
+
+We insert estimates for ${\bf V}_i$ (which we will find next), and the same distribution - but only asymptotically - to be used for inference for the fixed effects.
+
+$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+
+$$ \approx N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
+
+---
+
+**Now follows:**
+
+* Random effects parameters $\sigma^2$ and ${\bf Q}$ (in ${\bf V})$: estimated using restricted maximum likelihood (REML). We denote all parameters for random effect for $\vartheta$. For the random intercept model this is $\vartheta=(\sigma^2, \tau_0^2)$.
+
+Then, for the random effects ${\boldsymbol \gamma}_i$ and ${\boldsymbol \varepsilon}_i$ we also provide predictions
+
+* Predicted values for the random effects ${\boldsymbol \gamma}_i$ using _best linear unbiased predictors_ (BLUP).
+* Prediction values for the random effects ${\boldsymbol \varepsilon}_i$ are our _residuals_. 
+
+---
+
+## Parameter estimation with restricted maximum likelihood (REML) for random effects
+
+There are two ways to explain the REML - a transformation method (we start with this), and an integration method (to come next).
+
+### Transformation method
+
+To aid in our understanding we start by looking at the REML solution for **multiple linear regression (Module 2)**,
+$${\bf Y=X {\boldsymbol \beta}}+{{\boldsymbol \varepsilon}} \text{ with } {\boldsymbol \varepsilon} \sim N({\bf 0},\sigma^2 {\bf I})$$
+where ${\bf X}$ is a $n\times p$ design matrix.
+Remember that $\text{SSE}={\bf Y}^T({\bf I}-{\bf H}){\bf{Y}}$ where the hat matrix is ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
+
+* We found that the maximum likelihood estimator for $\sigma^2$ was $\hat{\sigma}^2=\frac{\text{SSE}}{n}$, which is found from maximizing the likelihood inserted our estimate of $\hat{{\boldsymbol \beta}}$ (i.e. disregarding the uncertainty in the estimation). 
+
+---
+
+* This estimator is biased, and has mean $\text{E}(\hat{\sigma}^2)=\frac{n-p}{n}\sigma^2$ (too small= biased downwards), where $n$ is the number of observations and $p$ the number of parameters estimated.
+* It is possible to find an $n \times (n-p)$ matrix ${\bf A}$ such that ${\bf A}^T{\bf Y}$ follows a $n-p$-dimensional multivariate normal distribution with mean vector ${\bf 0}$ and covariance matrix ${\bf A}^T{\bf A}\sigma^2$. 
+* This means that we have eliminated ${\boldsymbol \beta}$ as unknown parameter and we can proceed to use maximum likelihood on the $n-p$-dimensional vector ${\bf A}^T{\bf Y}$ with $\sigma^2$ as the only unknown parameter, which will give the parameter estimator
+$$ \hat{\sigma}^2=\text{SSE}/(n-p)={\bf Y}^T({\bf I}-{\bf H}){\bf{Y}}/(n-p)$$
+
+This is called the REML estimate for $\sigma^2$.
+
+---
+
+Remark: There are many solutions to ${\bf A}$ but to get $\text{E}({\bf A}^T{\bf Y})={\bf A}^T{\bf X}{\boldsymbol \beta}={\bf 0}$ then ${\bf A}$ can be chosen to have linearly independent columns orthogonal to columns space of the design matrix. 
+
+Remark: We can not choose ${\bf A}={\bf I}-{\bf H}$ since we need ${\bf A}$ to have dimension $n \times n-p$. But we can for example choose an (othogonal) basis with $n-p$ vectors for the column space of ${\bf I}-{\bf H}$.
+
+---
+
+Now, move to our **linear mixed effects model**. We have the model
+$${\bf Y}={\bf X}{\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} +{\boldsymbol \varepsilon}$$
+with the marginal distribution
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+
+* The REML estimator for the parameters in ${\bf V}$ (called $\vartheta$, and for the random intercept model that is $\sigma^2$ and $\tau_0^2$) - and also then ${\bf V}(\vartheta)$ - are now 
+* found by maximizing the likelihood for ${\bf A}^T{\bf Y}$ 
+* where ${\bf A}$ is any $N \times (N-p)$ full-rank matrix with columns orthogonal to the columns of the design matrix ${\bf X}$. 
+* Again ${\bf A}^T{\bf Y}$ follows a multivariate normal distribution with mean vector ${\bf 0}$ and now covariance matrix ${\bf A}^T{\bf V}(\vartheta){\bf A}$, which is independent of ${\boldsymbol \beta}$.
+
+---
+
+* The maximization does not give a closed form solution, but we get a new $\hat{\bf V}$ - which now will be less biased (sadly only unbiased in "simple and balanced cases").
+* Even if ${\boldsymbol \beta}$ is not estimated in this optimization we already know that
+$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
+and now we have a new $\hat{\bf V}$ which we insert in this equation, and thus get a new REML-estimator for ${\boldsymbol \beta}$:
+$$\hat{{\boldsymbol \beta}}=({\bf X}^T\hat{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T \hat{\bf V}^{-1}{\bf Y}$$
+
+* This means, that when using REML-estimation for our linear mixed effects model this will influence both the fixed effects and the random effects parameters. However, asymptotically we will still have the same asymptotic distribution for the fixed effects as with ML estimation.
+
+---
+
+In addition the main justification for using REML is that in the absence of information on ${\boldsymbol \beta}$ then no information about the parameters in $\vartheta$ is lost when likelihood estimation is based on ${\bf A}^T {\bf Y}$ instead of on ${\bf Y}$. In statistical inference this is referred to as _${\bf A}^T{\bf Y}$ is marginally sufficient for $\vartheta$_ (but this is way beyond the scope of this course).
+
+In addition, according to Verbeke and Molenbergs (2000, page 46, Equation 5.8), the likelihood function of ${\bf A}^T{\bf Y}$ is 
+$$L(\vartheta)= C \lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert^{-1/2} L_{ML}(\hat{\boldsymbol \beta}({\vartheta}),\vartheta) $$
+where $C$ is a constant not depending on $\vartheta$, and $L_{ML}$ is the marginal likelihood of $({\boldsymbol \beta}, \boldsymbol{\gamma})$. Also, the term $\lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert$ does not depend on ${\boldsymbol \beta}$.
+
+---
+
+Therefore both ${\boldsymbol \beta}$ and $\vartheta$ can be found by maximizing what is referred to as the _REML likelihood function_:
+$$L_{REML}(\vartheta,{\boldsymbol \beta})= \lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert^{-1/2} L_{ML}({\boldsymbol \beta},\vartheta) $$
+
+**Further reading:** [Theoretical explanation for REML (beyond the scope of this course) by Inge Helland, UiO](http://www.uio.no/studier/emner/matnat/math/STK4070/v05/reml.pdf) 
+and also by [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.com/book/10.1007%2F978-1-4419-0300-6) (free ebook from Springer for NTNU students).
+
+---
+
+### Comparing ML and REML estimation for the beaches example
+
+\footnotesize
+```{r,echo=-(1:5)}
+# library("AED")
+# data(RIKZ)
+# library(lme4)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(knitr)
+library(kableExtra)
+fitREML=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+fitML=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
+REMLest=c(fixef(fitREML),as.data.frame(VarCorr(fitREML))[,4])
+MLest=c(fixef(fitML),as.data.frame(VarCorr(fitML))[,4])
+df=data.frame("REML"=REMLest,"ML"=MLest)
+rownames(df)=c("$\\beta_0$","$\\beta_1$","$\\tau_0$","$\\sigma$")
+kable(df, digits = 4)
+```
+\normalsize
+
+**Q**: Comment on what you see.
+
+Remark: the default for `lmer` is REML, and we need to write `REML=FALSE` to get ML.
+
+---
+
+### Integration method: Another Justification For REML
+
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}(\vartheta)=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+
+For the fixed effects we started with the log-likelihood function and maximized to get estimator for ${\boldsymbol \beta}$ dependent on $\vartheta$. If we now assume that we have found ${\boldsymbol \beta}(\vartheta)$ and insert this estimate into the loglikelihood then the _profile log-likelihood_ is (discregarding an additive constant)
+
+$$l_{P}(\vartheta)=-\frac{1}{2}\ln \lvert {\boldsymbol V(\vartheta)}\rvert -\frac{1}{2}({\bf y}-{\bf X}\hat{\boldsymbol \beta}(\vartheta))^T {\boldsymbol V(\vartheta)}^{-1}({\bf y}-{\bf X}\hat{\boldsymbol \beta}(\vartheta))$$
+
+---
+
+The integration method (can be motivated from the Bayesian perspective by assuming a flat prior on ${\boldsymbol \beta}$) constructs a _marginal or restricted log-likelihood_ by integrating ${\boldsymbol \beta}$ out of the likelihood
+$$ l_{\text{REML}}(\vartheta)=\ln \int L({\boldsymbol \beta},\vartheta)d{\boldsymbol \beta}$$
+
+---
+
+It can be shown that the REML log-likelihood is
+$$l_{\text{REML}}(\vartheta)= l_{P}(\vartheta)-\frac{1}{2}\ln \lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert $$
+
+Maximizing of $l_{\text{REML}}(\vartheta)$ provides the REML estimator for $\vartheta$.
+
+---
+
+### What do you need to know about REML?
+
+* That REML is used to get a better estimator (less downwards biased) for the random effects parameters than using ML, 
+* so REML is the default choice in the `lmer` function for fitting LMMs in the `lme4`-package in `R`.
+* Two ways of motivating this: by transformation or by integration.
+* But sadly, for LMM this does not in general give unbiased estimates for the parameters $\vartheta$ in ${\bf V}$ - but less biased.
+
+---
+
+### REML estimation for the beaches example
+\tiny
+
+```{r,echo=FALSE}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+library(knitr)
+library(kableExtra)
+fitREML=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+summary(fitREML)
+```
+\normalsize
+
+**Q**: What have we covered so far, and what is missing? Explain the elements of the print-out! 
+
+---
+
+### ML estimation for the beaches example
+\tiny
+
+```{r,echo=FALSE}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+library(knitr)
+library(kableExtra)
+fitML=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
+summary(fitML)
+```
+\normalsize
+
+**Q**: Look for differences between the REML and ML output.
+
+---
+
+# Prediction of random effects and random errors
+
+## Predicted values for random effects ${\boldsymbol \gamma}$
+
+**Why** do we want a prediction? To rank the beaches (or schools, patients?). In breeding: estimate the genetic worth of an animal/plant (="breeding value").
+
+**Model check** can also use this to check that ${\boldsymbol \gamma}$ is normal is in agreement with our fitted model (same as when using residuals to check distribution of errors).
+
+---
+
+### Best Linear Unbiased Predictor (BLUP) $\hat{{\boldsymbol \gamma}_i}$ 
+
+* linear function in ${\bf Y}$ (linear)
+* $\text{E}(\hat{{\boldsymbol \gamma}}_i)={\bf 0}$ (unbiased)
+* for any linear combination ${\bf a}^T{\boldsymbol \gamma}_i$ of random effects 
+$[\text{E}({\bf a}^T\hat{{\boldsymbol \gamma}}_i-{\bf a}^T{\boldsymbol \gamma}_i)]^2$ is minimized among all such linear unbiased predictors (best)
+
+---
+
+### Beaches random intercept - predicted intercept and estimated fixed effects
+
+\footnotesize
+```{r,fig.width=16, fig.height=10,echo=-(1:7)}
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
+#library("AED")
+library(spcadjust)
+# data(RIKZ)
+# library(lme4)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+plot_model(fit, type="re")
+```
+\normalsize
+
+---
+
+##  Joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$
+
+The joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$ is:
+$$\begin{pmatrix} {\bf Y}\\ {\boldsymbol \gamma} \end{pmatrix} \sim
+N(\begin{pmatrix} {\bf X}{\boldsymbol \beta} \\ {\bf 0}\end{pmatrix},
+\begin{pmatrix}{\bf V}={\bf U}{\bf G}{\bf U}^T+\sigma^2{\bf I} & {\bf U}{\bf G}\\
+{\bf G}{\bf U}^T & {\bf G}\end{pmatrix}) $$
+
+---
+
+### Maximizing the likelihood based on the joint distribution
+
+This is maximized with respect to ${\boldsymbol \beta}$ and ${\boldsymbol \gamma}$, to give
+$$\hat{{\boldsymbol \gamma}}={\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{{\boldsymbol \beta}})$$
+
+
+But, here the elements of ${\bf G}$ and ${\bf V}$ needs to be estimated, and we get:
+$$\hat{{\boldsymbol \gamma}}=\hat{\bf G}{\bf U}^T\hat{\bf V}^{-1}({\bf Y}-{\bf X}\hat{{\boldsymbol \beta}})$$
+$$\hat{{\boldsymbol \gamma}}_i=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}({\bf Y}_i-{\bf X}_i\hat{{\boldsymbol \beta}})$$
+
+Remark: For details on this calculation - involving the Henderson's mixed model equations, see pages 371-372 of Fahrmeir et al (2013), or pages 98-99 in 
+[Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.com/book/10.1007%2F978-1-4419-0300-6) (free ebook from Springer for NTNU students).
+
+---
+
+### Conditional mean
+
+Remember:
+$$\begin{pmatrix} {\bf Y}\\ {\boldsymbol \gamma} \end{pmatrix} \sim
+N(\begin{pmatrix} {\bf X}{\boldsymbol \beta} \\ {\bf 0}\end{pmatrix},
+\begin{pmatrix}{\bf V}={\bf U}{\bf G}{\bf U}^T+\sigma^2{\bf I} & {\bf U}{\bf G}\\
+{\bf G}{\bf U}^T & {\bf G}\end{pmatrix}) $$
+
+(Alternatively) The predicted random effects can be found as the mean of the conditional distribution of ${\boldsymbol \gamma}$ given ${\bf Y}$. If we also calculate the covariance of the estimated ${\boldsymbol \gamma}$ we can make approximate prediction intervals for the predicted random effects.
+
+The general formula for the conditional multivariate normal ${\bf X}$ (known from TMA4267) is:
+ $${\bf X} \sim N(\mu,\Sigma)$$
+ $${\bf X}_2 \mid ({\bf X}_1={\bf x}_1) \sim 
+ N(\mu_2+\Sigma_{21}\Sigma_{11}^{-1} 
+ ({\bf x}_1-\mu_1),\Sigma_{22}-\Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12})$$
+ 
+---
+
+If we use the formula for the mean with ${\bf X}_1={\bf Y}$ and ${\bf X}_2={\boldsymbol \gamma}$, then
+$$\text{E}({\boldsymbol \gamma} \mid {\bf Y})={\bf 0}+{\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}{\boldsymbol \beta})$$
+which can be used (inserted parameter estimates) to give our estimated random effects. 
+
+---
+
+We may find the covariance matrix of ${\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{{\boldsymbol \beta}})$ (directly), and for each $\hat{{\boldsymbol \gamma}}_i$ this is given as
+$$ {\bf Q}{\bf U}_i^T\left( {\bf V}_i^{-1}-{\bf V}_i^{-1}{\bf X}_i (\sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1} {\bf X}_i)^{-1} {\bf X}_i^T {\bf V}_i^{-1} \right) {\bf U}_i {\bf Q} $$
+(according to Verbeke and Molenberghs (2000), page 78).
+We insert estimates ${\bf Q}$ and ${\bf V}_i$ (thus underestimating the variability)
+and get the estimated covariance matrix for the random effect. Such an estimate is used in the catepillar plot.
+
+---
+
+## Random intercept models: $\hat{{\boldsymbol \gamma}}_i$
+
+For $i=1, \ldots, m$:
+$$ {\bf Y}_i = {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{0i}+{\boldsymbol \varepsilon}_i $$
+where 
+$$ {\boldsymbol \varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I}) \text{ and } \gamma_{0i}\sim N(0,\tau_0^2)$$
+and ${\bf U}_i$ is a $n_i \times 1$ vector of ones.
+Further, the $n_i \times n_i$ marginal covariance matrix for ${\bf Y}_i$ is
+$$ {\bf V}_i = \sigma^2 {\bf I}+ \tau_0^2 {\bf 1}{\bf 1}^T \text{ with inverse }
+ {\bf V}_i^{-1} = \frac{1}{\sigma^2} ({\bf I}- \frac{\tau_0^2}{\sigma^2+n_i \tau_0^2} {\bf 1}{\bf 1}^T)$$
+which means that the elements on the main diagonal for ${\bf V}^{-1}$ are 
+$$\frac{1}{\sigma^2(\sigma^2+n_i \tau_0^2)}$$
+and the off-diagonal entries are $-\tau_0^2$.
+
+---
+
+The fixed effect estimate use this inverse matrix as the weighting matrix ${\bf V}_i^{-1}$ in
+$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+
+The predicted random intercepts are
+$$\hat{\gamma}_{0i}=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}
+({\bf Y}_i-{\bf X}_i\hat{{\boldsymbol \beta}})=\cdots =\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}e_i$$
+where $e_i$ is the average (raw, level 0 - see below) residual
+$$ e_i=\frac{1}{n_i} \sum_{j=1}^{n_i} (Y_{ij}-{\bf x}_{ij}^T\hat{{\boldsymbol \beta}})$$
+
+---
+
+### Interpretation
+
+$$\hat{\gamma}_{0i}=\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}e_i$$
+
+Remember 
+$$\text{E}({\boldsymbol \gamma} \mid {\bf Y})={\bf 0}+{\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}{\boldsymbol \beta})$$
+
+The formula for $\hat{\gamma}_{i0}$ can be seen as a weighted sum between the conditional expectation $0$ and the average residual $e_i$, with weighting factor 
+$\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}$ for the average residual (and 1-this for 0).
+The larger the $n_i$ the closer the weight is to $1$ and the smaller the shrinkage. Shrinkage is also high if the error variance $\sigma^2$ is large compared to the random effect variance $\tau_{0}^2$. The latter gives a very small ICC, so then it makes sense to have random effects close to $0$.
+
+---
+
+
+## Plotting predictions of random effects
+
+We can also use the R package `sjPlot` to produce plots and outputs from fitting linear mixed effects models with function `lmer` in the R package `lme4`. This plotting package can also be used to produce nice plots for `lm` and `glm`. The package uses `ggplot2` and other `tidyverse` packages.
+
+For details see 
+
+* [sjPlot](http://cran.revolutionanalytics.com/web/packages/sjPlot/sjPlot.pdf) and more specifically 
+* [sjPlot on CRAN - for vignettes](https://cran.r-project.org/web/packages/sjPlot/index.html) and 
+* [vignette on plotting random effects in LMM](https://cran.r-project.org/web/packages/sjPlot/vignettes/sjplmer.html)
+
+For our beach-example: First the predicted values for the estimated random effect for each Beach - with confidence intervals. Unsorted and sorted version.
+(horisontal version of catepillar plot). Then QQ-plots for the estimated random effects.
+
+---
+
+\small
+```{r,fig.width=16, fig.height=10,echo=-(1:7)}
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+plot_model(fit,type="re",y.offset=0.4)
+```
+
+---
+
+\small
+```{r,fig.width=16, fig.height=10,echo=-(1:3)}
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
+plot_model(fit,type="re",sort.est="(Intercept)",y.offset=0.4)
+```
+
+**Q**: comment on what you see.
+
+---
+
+\small
+```{r,fig.width=16, fig.height=10,echo=-(1:3)}
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
+```
+
+<!--https://rstudio-pubs-static.s3.amazonaws.com/78961_fe5b5c6a77f446eca899afbb32bd1dc7.html-->
+
+<!-- \normalsize -->
+
+<!-- **Q**: which assumption can be assessed with this plot, and what is the conclusion? -->
+
+
+## Predicted values for random errors ${\boldsymbol \varepsilon}_i$ (residuals)
+Let $\mu_i$ denote $\text{E}({\bf Y}_i)$. Fitted values for the LMM can be made on two levels:
+
+\begin{align*}
+\text{Level 0, marginal} &: \hat{\mu}_i={\bf X}_i \hat{{\boldsymbol \beta}}\\
+& e_i={\bf Y}_i-{\bf X}_i {\boldsymbol \beta}\\
+\text{Level 1, conditional} &: \tilde{\mu}_i={\bf X}_i \hat{{\boldsymbol \beta}}+{\bf U}_i\hat{{\boldsymbol \gamma}}_i\\
+& e_i={\bf Y}_i-{\bf X}_i {\boldsymbol \beta}-{\bf U}_i\hat{{\boldsymbol \gamma}}_i
+\end{align*}
+
+For `lmer` the function  `fitted` gives the level 1 fitted values (for our two-level models).
+This means that raw residuals can also be made on two levels, and the default is level 1 for `lmer`.
+
+In addition to raw residuals, also Pearson residuals (standardized) are popular.
+
+The residuals can be used in the same way as for the Multiple linear model (module 2).
+
+---
+
+\footnotesize
+```{r tidy = TRUE,fig.width=16, fig.height=8,echo=-(1:4)}
+library(lme4); library(ggplot2); 
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
+df=data.frame(fitted=fitted(fit),resid=residuals(fit,scaled=TRUE))
+ggplot(df, aes(fitted,resid)) + 
+  geom_point(pch = 21) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") +
+  labs(x = "Fitted values", y = "Residuals", title = "Residuals vs Fitted values")
+```
+\normalsize
+
+**Q**: any trend? homoscedastic?
+
+---
+
+\footnotesize
+
+```{r tidy = TRUE,fig.width=16, fig.height=8}
+ggplot(df, aes(sample=resid)) +
+  stat_qq(pch = 19) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  labs(x = "Theoretical quantiles", y = "Standardized residuals", title = "Normal Q-Q")
+```
+\normalsize
+
+**Q**: normally distributed?
+
+# Random intercept and slope model
+
+## Example: Sleep deprivation study
+
+In a study on the effect of sleep deprivation the average reaction time per day were measured. On day 0 the subjects had their normal amount of sleep. Starting that night they were restricted to 3 hours of sleep per night. The observations represent the average reaction time on a series of tests given each day to each subject. This was measured for 18 subjects for 10 days (days 0-9). 
+
+```{r,eval=TRUE,echo=FALSE,fig.width=16, fig.height=7}
+library(lme4)
+library(ggplot2) 
+gg <- ggplot(sleepstudy, aes(x = Days, y = Reaction))
+gg <- gg + geom_point(color = "blue", alpha = 0.7)
+gg <- gg + geom_smooth(method = "lm", color = "black")
+gg <- gg + theme_bw()
+gg <- gg + facet_wrap(~Subject)
+gg
+```
+
+---
+
+We observe that each subject’s reaction time increases approximately linearly with the number of sleepdeprived
+days. But, it appears that subjects have different slopes and intercepts. 
+
+As a first model we may assume that there is a common intercept and slope for the population - called fixed effects, but allow for random deviations for the intercept and slope for each individual. This is called a _random intercept and slope model_.
+
+---
+
+\tiny
+```{r}
+fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+summary(fm1)
+```
+\normalsize
+
+**Q**: What are our parameter estimates and their interpretation?
+
+---
+
+**A**: Here the population fixed effects estimates are an intercept of 251.4 ms and a slope of 10.47 ms/day. The random effects for the intercept and the slope have estimated standard deviations 24.74 ms and 5.92 ms/day.
+
+---
+
+```{r,fig.width=16, fig.height=9}
+library(sjPlot)
+plot_model(fm1,type="re")
+```
+
+---
+
+ <!-- How to plot lines with differen slopes and intercepts? -->
+
+```{r,fig.width=16, fig.height=10,eval=FALSE,echo=FALSE}
+# sjp.lmer(fm1, type="rs.ri")
+
+```
+
+## Measurement model
+
+$$Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\gamma_{1i}x_{ij}+{\varepsilon}_{ij}$$
+
+* $\beta_0$: population intercept (fixed)
+* $\gamma_{0i}$: deviation (for members of cluster $i$) from the population intercept $\beta_0$ - not a parameter but a random variable!
+* $\beta_0+\gamma_{0i}$: random intercept for cluster $i$
+* $\beta_1$: population slope (fixed), common to all clusters
+* $\gamma_{1i}$: deviation (for members of cluster $i$) from the population slope $\beta_0$ - not a parameter but a random variable!
+* $\beta_1+\gamma_{1i}$: random slope for cluster $i$.
+
+---
+
+## Distributional assumptions 
+
+$$ {\boldsymbol \varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
+$${\boldsymbol \gamma}_i =\begin{pmatrix} \gamma_{0i}\\ \gamma_{1i} \end{pmatrix} \sim N \left( \begin{pmatrix} 0\\ 0 \end{pmatrix},{\bf Q}=
+\begin{pmatrix} \tau_0^2 & \tau_{01}\\
+\tau_{01} & \tau_1^2 \end{pmatrix}
+\right)$$
+
+The parameter $\tau_{01}$ gives the covariance beween the random intercept and random slope.
+
+---
+
+## Marginal covariances for ${\bf Y}_i$
+
+$$\text{Cov}(Y_{ij},Y_{kl})=\text{E}[(Y_{ij}-\mu_{ij})(Y_{kl}-\mu_{kl})]$$
+
+$$\text{Cov}(Y_{ij},Y_{kl})=\left\{\begin{array}{lr}
+        \tau_0^2+2\tau_{01}x_{ij}+\tau_1^2 x_{ij}^2+\sigma^2=\text{Var}(Y_{ij}) & \text{for } i=k, j=l\\
+        \tau_0^2 + \tau_{01}x_{ij}+\tau_{01}x_{il}+\tau_i^2x_{ij}x_{il}& \text{for } i=k, j\neq l\\
+        0 & \text{for } i\neq k, j\neq l
+        \end{array}\right\} $$
+
+
+The correlation between $Y_{ij}$ and $Y_{il}$ (two observations in the same cluster, that is, same beach) depends in a complicated way on the observed values for $x$ and is rather difficult to interpret.
+
+$$\text{Corr}(Y_{ij},Y_{il})=\frac{\text{Cov}(Y_{ij},Y_{il})}{\sqrt{\text{Var}(Y_{ij})\text{Var}(Y_{il})}}$$
+
+
+# Hypothesis testing
+
+## Testing fixed effects
+$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i\approx N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
+
+### Approximate Wald tests for fixed effects
+
+$${\bf C}{\boldsymbol \beta}={\bf d} \text{ vs. } {\bf C}{\boldsymbol \beta}\neq {\bf d} $$
+where ${\bf C}$ is a $r \times p$ constant matrix and ${\bf d}$ a $r \times 1$ constant vector.
+Then:
+$$(\hat{{\boldsymbol \beta}}-{\boldsymbol \beta})^T {\bf C}^T [{\bf C}(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1} {\bf C}^T]^{-1}{\bf C}(\hat{{\boldsymbol \beta}}-{\boldsymbol \beta})$$
+asymptotically follows a $\chi^2$-distribution with $r$-degrees of freedom.
+
+---
+
+### Beach-example: Hypothesis testing with normal approximation
+
+\tiny
+```{r,echo=-(1:3),results="hold"}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
+summary(fit)
+z=(summary(fit)$coefficients[2,3])
+1-pchisq(z^2,1)
+```
+\normalsize
+
+---
+
+### Likelihood ratio tests for fixed effects
+
+Notation:
+
+* A: the larger model and 
+* B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
+
+The random effects parts of these models are assumed to be the same, while the changes are only to the fixed effects part.
+
+The likelihood ratio statistic is defined as
+$$- 2\ln \lambda=-2(\ln L(\hat{{\boldsymbol \beta}}_B)-\ln L(\hat{{\boldsymbol \beta}}_A)) $$
+which under the null is asymptotically $\chi^2$-distributed with degrees of freedom equal the difference in the number of parameters in the large and the small model. Again, $p$-values are calculated in the upper tail of the $\chi^2$-distribution.
+
+Remark: this is the log-likelihood, not the REML version.
+
+---
+
+**Remark:** this result is **not valid** if the the models are fitted using REML istead of ML. The reason for this is that the mean structure of the model fitted under the null hypothesis is not the same mean structure under the alternative hypothesis, which leads to that different matrices ${\bf A}$ must be used for the REML method. Therefore these REML log-likelihoods are based on different observations and are therefore not comparable.
+
+---
+
+
+### Beach-example: Hypothesis testing with likelihood ratio test 
+
+\footnotesize
+```{r,echo=-(1:3)}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
+fit0=lmer(Richness~1+(1|Beach),data=RIKZ,REML=FALSE)
+anova(fit0,fit)
+```
+\normalsize
+
+**Q**: Which is model A (large) and model B (small)? What do we conclude? Compare to the Wald test result (above).
+
+---
+
+## Testing parameters for random effects
+
+In most situations the fixed effects model is of prime interest, however, a good choice of covariance structure is useful for interpreting the data and essential to be able to perform valid inference for the fixed effects. 
+
+* Overparameterization: gives inefficient estimation.
+* Too restrictive specification: invalid inference about the fixed effects.
+
+Wald test can also be used for random effects parameters $\vartheta$ in ${\bf Q}$ and $\sigma^2$, and 
+
+* asymptotically also $\hat{\vartheta}$ follows a multivariate normal distribution (under regularity conditions) with mean $\vartheta$ and covariance matrix given by the inverse of the Fisher information matrix. 
+* We may use the negative of the second order partial derivatives (Hessian) of the log-likelihood (ML or REML) wrt. $\vartheta$.
+
+---
+
+But there is a problem: the performance of the normal approximation depends strongly on the true value of $\vartheta$ and large samples are needed for values of $\vartheta$ that are close to the boundary of the parameter space (for the hyptothesis tested), and when on the boundary the normal approximation fails.
+
+We will not dive deep into this matter in this course, but report that the solution to this - both for the Wald and the likelihood ratio test (preferably using the REML log-likelihood) is to use a mixture of $\chi^2$ distributions in these cases.
+
+---
+
+### Likelihood ratio test for random effects
+
+* A: the larger model and 
+* B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
+
+The fixed effects parts of these models are assumed to be the same, while the changes are only to the random effects part - and the changes gives nested models.
+
+The likelihood ratio statistic is defined as
+$$- 2\ln \lambda=-2(\ln L(\hat{\vartheta}_B)-\ln L(\hat{\vartheta}_A)) $$
+and the REML-likelihood is preferred. 
+
+---
+
+For testing a random intercept model vs. no random intercept (need for this random effect) then 
+$$H_0: {\bf Q}=0  \text{ vs. } H_1: {\bf Q}=\tau_0^2$$
+asymptotically $-2\ln \lambda$ is a mixture of $\chi_1^2$ and $\chi_0^2$ with equal weights. Here $\chi_0^2$ is the distribution that gives probability mass 1 to the value 0.
+
+If we instead had used the classical null distribution ($\chi_1^2$) then the $p$-values would be too large and the null hypotheses kept to often.
+
+For testing a random intercept versus a random slope (with ${\bf Q}$ having three parameters) when $p$-values is found from $0.5$ times a $\chi^2_1$ and a $\chi^2_2$ distribution.
+
+Similar strategies for other situations - see Verbeke and Molenberghs (2000) pages 69-72.
+
+
+<!--
+### Likelihood ratio test for comparing random effects terms- with REML
+
+Not preferred way - should use chisq mixtures instad
+```{r}
+fm1=lmer(Reaction~Days+(Days|Subject),data=sleepstudy)# random slope and intercept, correlated
+fm2=lmer(Reaction~Days+((1|Subject)+(0+Days|Subject)),data=sleepstudy)# random slope and intercept, uncorrelated
+fm3=lmer(Reaction~Days+(1|Subject),data=sleepstudy)# random intercept
+anova(fm1,fm2,fm3,refit=FALSE)
+```
+
+**Q**: interpret what you see. Which of the three models do you prefer?
+A: significant drop in the log-likelihood between random intercept and then adding uncorrelated random slope, but insignifiant drop in the log-likelihood when going for correlated intercept-slope random model. Model `fm2` is preferred.-->
+
+---
+
+# Model selection methods
+
+There are two main strategies:
+
+* Hypothesis testing 
+    + asymptotic Wald tests for fixed effects
+    + likelihood ratio test for fixed effects and parameters for random effects
+* Information criteria: AIC and BIC
+
+---
+
+## AIC and BIC for Maximum likelihood estimation (ML)
+
+$$ \text{AIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +2\cdot r$$
+$$ \text{BIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +\ln(N)\cdot r$$
+
+* $r$: number of parameters in the model, both the ${\boldsymbol \beta}$s and the parameters in the variance of the random effects, i.e. the $\sigma^2$ from our error and then all variances and covariances for the random effects in ${\bf Q}$.
+* $N=\sum_{i=1}^m n_i$
+* $l(\hat{{\boldsymbol \beta}},\hat{\vartheta})$ is the maximum log-likelihood inserted the parameter estimates
+
+This can be used directly in the ML estimation, and as before BIC will give a smaller model than AIC.
+
+---
+
+## AIC and BIC for Restricted Maximum likelihood estimation (REML)
+
+$$ \text{AIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +2\cdot r$$
+$$ \text{BIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +\ln(N-p)\cdot r$$
+
+* $r$: number of parameters in the model, both the ${\boldsymbol \beta}$s and the parameters in the variance of the random effects, i.e. the $\sigma^2$ from our error and then all variances and covariances for the random effects in ${\bf Q}$.
+* $l(\hat{{\boldsymbol \beta}},\hat{\vartheta})$ is now the restricted maximum log-likelihood inserted the parameter estimates
+ 
+Remember:
+$$l_{\text{REML}}(\vartheta)= l_{P}(\vartheta)-\frac{1}{2}\ln \lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert $$
+
+---
+
+### Sleep study - comparing random effects models
+
+\footnotesize
+```{r}
+fm1=lmer(Reaction~Days+(Days|Subject),data=sleepstudy)
+# random slope and intercept, correlated
+fm2=lmer(Reaction~Days+((1|Subject)+(0+Days|Subject)),data=sleepstudy)
+# random slope and intercept, uncorrelated
+fm3=lmer(Reaction~Days+(1|Subject),data=sleepstudy)
+# random intercept
+AIC(fm1,fm2,fm3) #with REML
+extractAIC(fm1);extractAIC(fm2);extractAIC(fm3) #refit and give ML
+```
+\normalsize
+
+**Q**: What are the three models? Which model to choose?
+
+---
+
+**A**: 
+
+All three models have a population intercept and a slope in `Days`, but the random part of the models differ.
+
+* `fm1` is the most complex with a random intercept and a random slope, and a full $2\times 2$ matrix ${\bf Q}$
+* `fm2` also has a random intercept and slope, but the ${\bf Q}$-matrix is diagonal.
+* `fm3` only has a random intercept and only one element in the ${\bf Q}$-matrix.
+
+The `fm2` model gives the lowest AIC.
+
+
+
+---
+
+## Top-down strategy for model selection
+
+1. Start with model with all explanatory variables and possible interactions for the fixed effects - called a _beyond optimal_ model. (Nothing is really done her, just decide on the largest possible fixed part).
+
+2. With this beyond optimal fixed effects model we now focus on the random effects. The idea is that since we have many explanatory variables in the fixed effects the random component should not contain information that we would prefer to have in the fixed effect. To do this we may either use testing or AIC or BIC. Testing is problematic due to that the null hypotheses tested is on the boundary of the parameter values tested ($\tau^2=0$). REML must be used (to get as unbiased estimates as possible).
+
+---
+
+3. Now we have the optimal random effect, so we focus on the optimal fixed effect model. ML must be used because different fixed effects will give incomparable REML-log-likelihoods. Testing or AIC or BIC can be used.
+
+4. The final model is then presented with REML estimates.
+
+---
+
+### Top-down strategy for the beach-data
+This example is taken from Zuur et al. (2009), pages 127-128.
+
+1. We decide on fixed model with intercept, main effect of `NAP` and `Exposure` and the interaction thereof. (`fExp` is just a slight adjustment of `Exposure` by letting level 8 be 10 - just replicate what Zuur did, so `fExp` only has values 10 and 11. )
+
+2. Fit the fixed model from 1 to "no random effect", "random intercept" and "random interept and slope for `NAP`". Use REML. 
+
+\footnotesize
+```{r,echo=-(1:7)}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+library(nlme)
+RIKZ$fExp=RIKZ$Exposure
+RIKZ$fExp[RIKZ$fEx==8]=10
+RIKZ$fExp=factor(RIKZ$fExp,levels=c(1,2))
+B1=gls(Richness~1+NAP*fExp,data=RIKZ,method="REML")
+B2=lmer(Richness~1+NAP*fExp+(1|Beach),data=RIKZ)
+B3=lmer(Richness~1+NAP*fExp+(1+NAP|Beach),data=RIKZ)
+AIC(B1,B2,B3)
+```
+\normalsize
+
+Conclusion: choose the random intercept model (lowest AIC).
+
+---
+
+3. With the random intercept, now compare the different fixed effects models. Use ML.
+
+\footnotesize
+```{r}
+F2=lmer(Richness~1+NAP*fExp+(1|Beach),data=RIKZ,REML=FALSE)
+confint(F2)
+F2a=lmer(Richness~1+NAP+fExp+(1|Beach),data=RIKZ,REML=FALSE)
+confint(F2a)
+```
+
+---
+
+\footnotesize
+```{r}
+F2b=lmer(Richness~1+NAP+(1|Beach),data=RIKZ,REML=FALSE)
+confint(F2b)
+F2c=lmer(Richness~1+fExp+(1|Beach),data=RIKZ,REML=FALSE)
+confint(F2c)
+AIC(F2,F2a,F2b,F2c)
+```
+\normalsize
+
+---
+
+Conclusion: keep the full model. No confidence intervals cover 0, and the AIC supports the full model.
+
+Remark: In Zuur et al (2009), page 128, the conclusion was to use the additive model (model F2a above), based on asymptotic $p$-values (but this was smaller than 0.05) using the `nlme` package. We have instead used AIC for this selection.
+
+---
+
+\tiny
+```{r}
+summary(B2)
+```
+\normalsize
+
+---
+
+# Fitting LMM with function `lmer` in package `lme4`
+
+This is based on the article [_Fitting Linear Mixed-Effects Models Using *lme4*_ by Bates, Bolker, Mächler and Walker (2015) in _Journal of Statistical Software_](https://www.jstatsoft.org/index.php/jss/article/view/v067i01/v67i01.pdf), and in particular pages 30 and onwards.
+
+We use a data set called _the ergonometrics experiment data set_ `ergoStool` for illustration. 
+
+* `effort`: the effort required (on the "Borg scale") to arise from a stool (krakk) - this is our response
+* `Type`:  the type of stool - types T1, T2, T3 and T4 studied. 
+* `Subject`: each of nine different subjects tested the four different stools (in random order?). Subjects 
+
+Was there any clear winner among the stools, when the goal was to minimize effort?
+
+---
+
+## The `ergoStool` data set
+is found in the `MEMSS` package.
+
+\footnotesize
+```{r,results="hold"}
+library(MEMSS)
+summary(ergoStool)
+table(ergoStool$Subject) 
+contrasts(ergoStool$Type) #default contrast used 
+```
+\normalsize
+Observe that the type of stool is coded as dummy variable, with T1 as reference category.
+
+---
+
+## Fit a LMM with `lmer`: `summary`
+\footnotesize
+```{r,results="hold"}
+library(lme4)
+fit=lmer(effort~Type + (1|Subject), data=ergoStool)
+summary(fit)$coefficients
+```
+\normalsize
+
+---
+
+The model formula gives first the fixed effects, which here is an intercept and then type of stool (with T1 as reference, so estimate difference from T1). We use a random intercept for each Subject, given as `(1|Subject)`. 
+
+From the print-out from `summary` we see that REML is used to fit the model, and quantiles of scaled Pearson residuals. Could also have used:
+```{r,results="hold"}
+formula(fit)
+REMLcrit(fit)
+quantile(residuals(fit,"pearson",scaled=TRUE))
+```
+
+---
+
+Then there is a part on the fitted random effects and residual variation. The intra class correlation could also be calculated from `VarCorr(fit)` (an object of class `VarCorr.merMod`). Observe the very high ICC of 0.6.
+
+```{r,results="hold"}
+vc=VarCorr(fit)
+print(vc,comp="Variance")
+df=as.data.frame(vc)
+print(df)
+print(vc)
+nobs(fit)
+ngrps(fit)
+sigma(fit)
+ICC=df[4][[1]][1]/sum(df[4][[1]])
+ICC
+```
+
+---
+
+Then to the fitted fixed effects, which is interpreted as for `lm` with treatment contrast (dummy effect coding), but without any $p$-values, and `anova` gives the analysis of variance table. See `help("pvalues")` to explore your options to find $p$-values for testing fixed effects.
+```{r,results="hold"}
+fixef(fit)
+coef(summary(fit))
+anova(fit)
+help("pvalues")
+```
+It is easiest to rise from the stool of Type T1, followed by Type T4 and the Type T3 and finally Type T2.
+
+---
+
+We may also get confidence intervals for the fixed effects (and random effects variances), based on the profile likelihood, which might be thought of as analogues to $p$-values. However, keep in mind our coding of Type (dummy), so if the intervals contain 0 the Type is not different from the reference Type T1 (the best type wrt effort to arise). The confidence intervals are made using the Wald approximation for the fixed effects. A bootstrap confidence interval can also be provided.
+
+```{r,results="hold"}
+confint(fit)
+```
+
+---
+
+Finally, there is a part on the correlation between estimated fixed effects, here we have the estimated correlation between the three levels of type of stool. We can get the variance-covariance matrix with `vcov`, and can calculated correlations from that matrix.
+```{r,results="hold"}
+vcov(fit)
+```
+
+---
+
+## Diagnostic plots
+Fitted vs. residuals and normal qq-plot (from `lattice`). Not ggplot - see below for more plotting.
+
+```{r,fig.width=16, fig.height=5}
+plot(fit, type=c("p","smooth"))
+library(lattice)
+qqmath(fit,id=0.05)
+```
+
+<!-- krever endel forklaring så dropper
+```{r,eval=FALSE}
+library(lattice)
+prof.obj=profile(fit)
+xyplot(prof.obj)
+densityplot(prof.obj)
+splom(prof.obj)
+```
+-->
+
+---
+
+## Comparing models
+We may also use `anova` to compare models. Assume that we want to compare to the (probably very bad) model where type of stool is not taken into account (which is stupic if we want to investigate the types) - so just go show (better example for sleep study).
+\footnotesize
+```{r}
+fit0=lmer(effort~1 + (1|Subject), data=ergoStool)
+anova(fit0,fit)
+```
+\normalsize
+The comparison is based on the likelihood ratio test with ML (not REML), and also gives $p$-values.
+
+---
+
+## $p$-values in `lme4`
+
+Excerpt from [_Fitting Linear Mixed-Effects Models Using *lme4*_ by Bates, Bolker, Mächler and Walker (2015) in _Journal of Statistical Software_](https://www.jstatsoft.org/index.php/jss/article/view/v067i01/v67i01.pdf) page 35:
+
+**Computing p values** _One of the more controversial design decisions of lme4 has been to omit the output of p values
+associated with sequential ANOVA decompositions of fixed effects. The absence of analytical
+results for null distributions of parameter estimates in complex situations (e.g., unbalanced
+or partially crossed designs) is a long-standing problem in mixed-model inference. While the
+null distributions (and the sampling distributions of non-null estimates) are asymptotically
+normal, these distributions are not t distributed for finite size samples – nor are the corresponding
+null distributions of differences in scaled deviances F distributed. Thus approximate
+methods for computing the approximate degrees of freedom for t distributions, or the denominator
+degrees of freedom for F statistics (Satterthwaite 1946; Kenward and Roger 1997), are
+at best ad hoc solutions._
+
+---
+
+_However, computing finite-size-corrected p values is sometimes necessary. Therefore, although
+the package does not provide them (except via parametric bootstrapping, Section 5.1), we
+have provided a help page to guide users in finding appropriate methods:_
+
+`R> help("pvalues")`
+
+---
+
+pvalues {lme4}	R Documentation
+Getting p-values for fitted models
+
+Description
+
+One of the most frequently asked questions about lme4 is "how do I calculate p-values for estimated parameters?" Previous versions of lme4 provided the mcmcsamp function, which efficiently generated a Markov chain Monte Carlo sample from the posterior distribution of the parameters, assuming flat (scaled likelihood) priors. Due to difficulty in constructing a version of mcmcsamp that was reliable even in cases where the estimated random effect variances were near zero (e.g. https://stat.ethz.ch/pipermail/r-sig-mixed-models/2009q4/003115.html), mcmcsamp has been withdrawn (or more precisely, not updated to work with lme4 versions >=1.0.0).
+
+Many users, including users of the aovlmer.fnc function from the languageR package which relies on mcmcsamp, will be deeply disappointed by this lacuna. Users who need p-values have a variety of options. In the list below, the methods marked MC provide explicit model comparisons; CI denotes confidence intervals; and P denotes parameter-level or sequential tests of all effects in a model. The starred (*) suggestions provide finite-size corrections (important when the number of groups is <50); those marked (+) support GLMMs as well as LMMs.
+
+likelihood ratio tests via anova or drop1 (MC,+)
+
+profile confidence intervals via profile.merMod and confint.merMod (CI,+)
+
+parametric bootstrap confidence intervals and model comparisons via bootMer (or PBmodcomp in the pbkrtest package) (MC/CI,*,+)
+
+for random effects, simulation tests via the RLRsim package (MC,*)
+
+for fixed effects, F tests via Kenward-Roger approximation using KRmodcomp from the pbkrtest package (MC,*)
+
+car::Anova and lmerTest::anova provide wrappers for Kenward-Roger-corrected tests using pbkrtest: lmerTest::anova also provides t tests via the Satterthwaite approximation (P,*)
+
+afex::mixed is another wrapper for pbkrtest and anova providing "Type 3" tests of all effects (P,*,+)
+
+arm::sim, or bootMer, can be used to compute confidence intervals on predictions.
+
+For glmer models, the summary output provides p-values based on asymptotic Wald tests (P); while this is standard practice for generalized linear models, these tests make assumptions both about the shape of the log-likelihood surface and about the accuracy of a chi-squared approximation to differences in log-likelihoods.
+
+When all else fails, don't forget to keep p-values in perspective: http://www.phdcomics.com/comics/archive.php?comicid=905
+
+---
+
+# What have we not covered?
+
+* Multi-level models: we have only considered two levels
+* Structures for the covariance matrix of ${\boldsymbol \varepsilon}_i$: we have only considered $\sigma^2 {\bf I}$.
+* Effective sample size.
+* Details about testing random effects with mixtures of $\chi^2$-distributions.
+* External effects and the extended random intercept model to give different scales for the within and between cluster effects. See pages 353-354 in Fahrmeir et al (2013).
+* Penalized least squares view.
+* Bayesian view.
+

@@ -8,6 +8,7 @@ output:
     toc: yes
     toc_float: yes
     toc_depth: 2
+    css: "../TMA4315RMarkdown.css"
   '# html_document': default
 subtitle: 'Module 7: Linear mixed effects models'
 ---
@@ -117,11 +118,10 @@ The data for each individual are observed at multiple points in time
 * patients with drug A and drug B monitored over time
 * metabolic rate for patients at fasting, then 15, 45, 75 and 135 minutes after a heavy meal
     
-**Q**: Why not only analyse using linear models? 
+<span class="question">Question: Why not only analyse using linear models?</span>
 
----
-
-**A**: Assuming independent responses when they are correlated does not give the correct estimate for the standard error of the estimated parameters of interest.
+<details><summary>Answer</summary>
+Assuming independent responses when they are correlated does not give the correct estimate for the standard error of the estimated parameters of interest.</details>
 
 ---
 
@@ -141,17 +141,15 @@ Data: 45 observations, taken at 9 beaches:
 * exposure: an index composed of information about wave action, length of the surf zone, grain size, depth of anaerobic layer
 was measured, but we will not be used now.
 
----
-
 We want to use the richness of species as the response in a regression model.
-This is a count, so we could have used _Poisson regression_, but to make things simpler we assume that the counts are such that we instead can assume a _normal distribution_ (in the next module on generalized linear mixed effects models we will use the Poisson distribution).
+This is a count, so we could have used _Poisson regression_, but to make things simpler we assume that the counts are such that we instead can assume a _normal distribution_ (in the next module on generalized linear mixed effects models we will use the Poisson distribution). A notmal dsitribution is a bit naughty here, but we will use it anyway.
 
 ---
 
 \footnotesize
 ```{r}
-library("AED")
-data(RIKZ)
+# library("AED")
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 summary(RIKZ)
 ```
 \normalsize
@@ -160,7 +158,7 @@ summary(RIKZ)
 
 We first consider models with reponse `Richness` and one covariate `NAP`, and analyse data from each beach separately.
 
-```{r,echo=FALSE}
+```{r,echo=TRUE}
 library(lme4)
 library(ggplot2)
 gg <- ggplot(RIKZ, aes(x = NAP, y = Richness))
@@ -174,9 +172,10 @@ gg
 ---
 
 \footnotesize
-```{r, echo=FALSE,fig.width=16, fig.height=5}
-library(lme4);library(ggplot2);library(ggpubr);library(AED)
-data(RIKZ)
+
+```{r, echo=TRUE,fig.width=16, fig.height=5}
+library(lme4);library(ggplot2);library(ggpubr);
+# data(RIKZ)
 manylms=lmList(Richness~NAP|Beach,RIKZ)
 #manylms2=update(manylms,pool=FALSE)
 t(coef(manylms))
@@ -189,12 +188,13 @@ lme4:::plot.lmList4.confint(ci)
 
 The intercepts differ but the slopes are not that different.
 
-**Q:** What if we now want to combine the regression models for the nine beaches into one model (for the population of beaches), so we can answer the question about relationship between species richness and NAP on the population level. What can we do then?
 
----
+<span class="question">Question: What if we now want to combine the regression models for the nine beaches into one model (for the population of beaches), so we can answer the question about relationship between species richness and NAP on the population level. What can we do then?/span>
+
 
 **Possible solutions:**
 
+<details><summary>Three possible solutions</summary>
 1. Use all 45 observations in a regression - with a common intercept and linear effect in NAP.
 
 **Problem:** violation of assumption of independent observations lead to wrong estimates for variances of parameter estimates.
@@ -208,6 +208,9 @@ The intercepts differ but the slopes are not that different.
 3. Add beach as a _random_ covariate to the regression: this is called _random intercept models_.
 
 **Problem:** new stuff - slightly complicated. We do this because beaches not of interest in themselves, only random sample from population of beaches, and therefore we only need to account for beaches, not estimate separate parameters.
+
+</details>
+
 
 ---
 
@@ -274,23 +277,24 @@ The clusters are assumed to be random samples from a large population, and for t
 $$ \gamma_{0i}\sim N(0,\tau_0^2)$$
 and that the $\gamma_{0i}$s and the $\varepsilon_{ij}$s are mutually independent random variables. So, we have now two error terms. 
 
-**Q**: What are now our unknown parameters?
+<span class="question">What are now our unknown parameters?</span>
 
----
+<details><summary>Answer</summary>
+${\boldsymbol \gamma}_0, \beta_1, \sigma^2, \tau_0^2$. Remark that the $\gamma_{0i}$s are not parameters but random variables.
+</details>
 
-**A:** ${\boldsymbol \gamma}_0, \beta_1, \sigma^2, \tau_0^2$. Remark that the $\gamma_{0i}$s are not parameters but random variables.
 
 ---
 
 ### Beach-example: Parameter estimates
 (will talk about parameter estimation with ML and REML later) 
 
-**Q:** Try to identify $\hat{\beta_0}, \hat{\beta_1}, \hat{\sigma}^2, \hat{\tau}_0^2$ in the print-out.
+<span class="question">Question: Try to identify $\hat{\beta_0}, \hat{\beta_1}, \hat{\sigma}^2, \hat{\tau}_0^2$ in the print-out.</span>
 
 \tiny
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+# library("AED")
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -299,7 +303,9 @@ summary(fit)
 
 ---
 
-**A:** $\hat{\beta_0}=$ `r fixef(fit)[1]`, $\hat{\beta_1}=$ `r fixef(fit)[2]` , $\hat{\sigma}^2=$ `r sigma(fit)^2`, and $\hat{\tau}_0^2=$ `r as.data.frame(VarCorr(fit))[1,4]`
+<details><summary>Answer</summary>
+$\hat{\beta_0}=$ `r fixef(fit)[1]`, $\hat{\beta_1}=$ `r fixef(fit)[2]` , $\hat{\sigma}^2=$ `r sigma(fit)^2`, and $\hat{\tau}_0^2=$ `r as.data.frame(VarCorr(fit))[1,4]`
+</details>
 
 ---
 
@@ -356,20 +362,23 @@ Inserted parameter estimates this is called the _intra class correlation (ICC)_ 
 
 \tiny
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+# library("AED")
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
 ```
 \normalsize
 
-**Q:** What is the ICC for our fit?
-Hint: $\text{Corr}(Y_{ij},Y_{il})=\frac{\tau_0^2}{\tau_0^2+\sigma^2} \text{ for }j\neq l$.
+<span class="question">Question: What is the ICC for our fit?</span>
 
----
+<details><summary>Hint</summary>
+$\text{Corr}(Y_{ij},Y_{il})=\frac{\tau_0^2}{\tau_0^2+\sigma^2} \text{ for }j\neq l$.
+</details>
 
-**A:** 8.688/(8.688+9.362)=0.48.
+<details><summary>Answer</summary>
+8.688/(8.688+9.362)=0.48.
+</details>
 
 ---
 
@@ -428,23 +437,27 @@ Remark: one possible generalization is to assume ${\boldsymbol\varepsilon}_i \si
 
 ---
 
-###Questions
+### Questions
 
 $${\bf Y}_i= {\bf X}_i {\boldsymbol\beta} + {\bf U}_i {\boldsymbol\gamma}_{i} + {\boldsymbol\varepsilon}_i$$
 $${\boldsymbol\gamma}_i \sim N({\bf 0},{\bf Q})$$
 $${\boldsymbol\varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
 
-**Q**: 
+### Questions: 
 
-* What is ${\bf U}_i$, ${\boldsymbol\gamma}_i$ and ${\bf Q}$ for the random intercept model?
-* General: what is the marginal distribution of ${\bf Y}_i$?
+<span class="question">What is ${\bf U}_i$, ${\boldsymbol\gamma}_i$ and ${\bf Q}$ for the random intercept model?</span>
 
----
+<details><summary>Answer</summary>
+We had ${\bf U}_i={\bf 1}$ ($n_i\times 1$) and scalar ${\boldsymbol\gamma}_i=\gamma_{0i}$, and ${\bf Q}=\tau_{0}^2$.
 
-**A:** 
+</details>
 
-* We had ${\bf U}_i={\bf 1}$ ($n_i\times 1$) and scalar ${\boldsymbol\gamma}_i=\gamma_{0i}$, and ${\bf Q}=\tau_{0}^2$.
-* ${\bf Y}_i \sim N({\bf X}_i {\boldsymbol\beta},{\bf U}_i{\bf Q}{\bf U}_i^T+ \sigma^2 {\bf I})$.
+<span class="question">General: what is the marginal distribution of ${\bf Y}_i$?</span>
+
+<details><summary>Answer</summary>
+${\bf Y}_i \sim N({\bf X}_i {\boldsymbol\beta},{\bf U}_i{\bf Q}{\bf U}_i^T+ \sigma^2 {\bf I})$.
+</details>
+
 
 ---
 
@@ -598,19 +611,22 @@ But, we really don't know ${\bf V}$ so an estimate must be inserted (week 2 with
 \tiny
 
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+#library("AED")
+#data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
 ```
 \normalsize
 
-**Q:** Where is the parameter estimat for effect of NAP, with standard deviation? What is the interpretation of "Correlation of Fixed Effects"? 
+<span class="question">Question: Where is the parameter estimat for effect of NAP, with standard deviation? What is the interpretation of "Correlation of Fixed Effects"? </span>
 
----
+<details><summary>Answer</summary>
+"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{{\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
 
-**A:**"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{{\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
+</details>
+
 
 ---
 
@@ -650,19 +666,21 @@ In this course we will only use the asymptotic normality for confidence interval
 ### Beach-example: confidence interval for fixed effects
 
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 confint(fit)
 ```
 \normalsize
 
-**Q:** Interpret! First the last two rows. The first two we have not covered yet - since we don't know how to estimate the parameters in ${\bf V}$  but what do you think this is? 
+<span class="question">Question: Interpret! First the last two rows. The first two we have not covered yet - since we don't know how to estimate the parameters in ${\bf V}$  but what do you think this is? </span>
 
 ---
-
-**A**: Estimate $\pm$ 1.96 times standard error of estimate. 
+<details><summary>Answer</summary>
+Estimate $\pm$ 1.96 times standard error of estimate. 
+</details>
 
 ---
 
@@ -824,12 +842,9 @@ This gave the **marginal model for each cluster**:
 
 $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I}+{\bf U}_i {\bf Q}{\bf U}_i^T)$$
 
-**Q**: explain what the different parameters and random variables are, and what are their dimensions.
+<span class="question">Question: explain what the different parameters and random variables are, and what are their dimensions.</span>
 
----
-
-**A**:
-
+<details><summary>Answer</summary>
 * design matrix for fixed effects for cluster $i$: ${\bf X}_i$ is $n_i \times p$ (intercept included)
 * parametervector for fixed effects: ${\boldsymbol \beta}$ $p\times 1$
 * design matrix for random effects for cluster $i$: ${\bf U}_i$ is $n_i\times (q+1)$ (intercept included)
@@ -837,15 +852,16 @@ $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I
 * random errors: ${\boldsymbol \varepsilon}_i$ $n_i\times 1$
 * covariance matrix for the random effects: ${\bf Q}$, $(q+1)\times (q+1)$
 * parameter $\sigma^2$ for variance of the random errors $\text{Cov}({\boldsymbol \varepsilon}_i)=\sigma^2 {\bf I}$ with dimension $n_i \times n_i$.
+</details>
 
----
 
 ### Beach-example: Parameter estimation
 
 \tiny
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -990,9 +1006,10 @@ and also by [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.
 
 \footnotesize
 ```{r,echo=-(1:5)}
-library("AED")
-data(RIKZ)
-library(lme4)
+# library("AED")
+# data(RIKZ)
+# library(lme4)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(knitr)
 library(kableExtra)
 fitREML=lmer(Richness~NAP +(1|Beach),data=RIKZ)
@@ -1005,7 +1022,7 @@ kable(df, digits = 4)
 ```
 \normalsize
 
-**Q**: Comment on what you see.
+<span class="question">Question: Comment on what you see.</span>
 
 Remark: the default for `lmer` is REML, and we need to write `REML=FALSE` to get ML.
 
@@ -1045,8 +1062,9 @@ Maximizing of $l_{\text{REML}}(\vartheta)$ provides the REML estimator for $\var
 \tiny
 
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(knitr)
 library(kableExtra)
@@ -1055,7 +1073,7 @@ summary(fitREML)
 ```
 \normalsize
 
-**Q**: What have we covered so far, and what is missing? Explain the elements of the print-out! 
+<span class="question">Question: What have we covered so far, and what is missing? Explain the elements of the print-out! </span>
 
 ---
 
@@ -1063,8 +1081,9 @@ summary(fitREML)
 \tiny
 
 ```{r,echo=FALSE}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(knitr)
 library(kableExtra)
@@ -1073,7 +1092,7 @@ summary(fitML)
 ```
 \normalsize
 
-**Q**: Look for differences between the REML and ML output.
+<span class="question">Question: Look for differences between the REML and ML output.</span>
 
 ---
 
@@ -1101,10 +1120,11 @@ $[\text{E}({\bf a}^T\hat{{\boldsymbol \gamma}}_i-{\bf a}^T{\boldsymbol \gamma}_i
 library(sjPlot)
 library(sjmisc)
 library(ggplot2)
-library("AED")
+#library("AED")
 library(spcadjust)
-data(RIKZ)
-library(lme4)
+# data(RIKZ)
+# library(lme4)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 plot_model(fit, type="re")
 ```
@@ -1230,8 +1250,9 @@ For our beach-example: First the predicted values for the estimated random effec
 library(sjPlot)
 library(sjmisc)
 library(ggplot2)
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 plot_model(fit,type="re",y.offset=0.4)
@@ -1247,7 +1268,7 @@ library(ggplot2)
 plot_model(fit,type="re",sort.est="(Intercept)",y.offset=0.4)
 ```
 
-**Q**: comment on what you see.
+<span class="question">Question: comment on what you see.</span>
 
 ---
 
@@ -1286,8 +1307,10 @@ The residuals can be used in the same way as for the Multiple linear model (modu
 
 \footnotesize
 ```{r tidy = TRUE,fig.width=16, fig.height=8,echo=-(1:4)}
-library(lme4); library(ggplot2); library("AED")
-data(RIKZ)
+library(lme4); library(ggplot2); 
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 df=data.frame(fitted=fitted(fit),resid=residuals(fit,scaled=TRUE))
 ggplot(df, aes(fitted,resid)) + 
@@ -1298,7 +1321,7 @@ ggplot(df, aes(fitted,resid)) +
 ```
 \normalsize
 
-**Q**: any trend? homoscedastic?
+<span class="question">Question: any trend? homoscedastic?</span>
 
 ---
 
@@ -1312,7 +1335,7 @@ ggplot(df, aes(sample=resid)) +
 ```
 \normalsize
 
-**Q**: normally distributed?
+<span class="question">Are the residuals normally distributed?</span>
 
 # Random intercept and slope model
 
@@ -1347,11 +1370,13 @@ summary(fm1)
 ```
 \normalsize
 
-**Q**: What are our parameter estimates and their interpretation?
+<span class="question">What are our parameter estimates and their interpretation?</span>
 
----
+<details><summary>Answer</summary>
+Here the population fixed effects estimates are an intercept of 251.4 ms and a slope of 10.47 ms/day. The random effects for the intercept and the slope have estimated standard deviations 24.74 ms and 5.92 ms/day.
+</details>
 
-**A**: Here the population fixed effects estimates are an intercept of 251.4 ms and a slope of 10.47 ms/day. The random effects for the intercept and the slope have estimated standard deviations 24.74 ms and 5.92 ms/day.
+
 
 ---
 
@@ -1365,7 +1390,7 @@ plot_model(fm1,type="re")
  <!-- How to plot lines with differen slopes and intercepts? -->
 
 ```{r,fig.width=16, fig.height=10,eval=FALSE,echo=FALSE}
-sjp.lmer(fm1, type="rs.ri")
+# sjp.lmer(fm1, type="rs.ri")
 
 ```
 
@@ -1429,8 +1454,9 @@ asymptotically follows a $\chi^2$-distribution with $r$-degrees of freedom.
 
 \tiny
 ```{r,echo=-(1:3),results="hold"}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
 summary(fit)
@@ -1467,8 +1493,9 @@ Remark: this is the log-likelihood, not the REML version.
 
 \footnotesize
 ```{r,echo=-(1:3)}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
 fit0=lmer(Richness~1+(1|Beach),data=RIKZ,REML=FALSE)
@@ -1476,7 +1503,7 @@ anova(fit0,fit)
 ```
 \normalsize
 
-**Q**: Which is model A (large) and model B (small)? What do we conclude? Compare to the Wald test result (above).
+<span class="question">Which is model A (large) and model B (small)? What do we conclude? Compare to the Wald test result (above).</span>
 
 ---
 
@@ -1592,12 +1619,9 @@ extractAIC(fm1);extractAIC(fm2);extractAIC(fm3) #refit and give ML
 ```
 \normalsize
 
-**Q**: What are the three models? Which model to choose?
+<span class="question">Question: What are the three models? Which model to choose?</span>
 
----
-
-**A**: 
-
+<details><summary>Answer</summary>
 All three models have a population intercept and a slope in `Days`, but the random part of the models differ.
 
 * `fm1` is the most complex with a random intercept and a random slope, and a full $2\times 2$ matrix ${\bf Q}$
@@ -1605,7 +1629,7 @@ All three models have a population intercept and a slope in `Days`, but the rand
 * `fm3` only has a random intercept and only one element in the ${\bf Q}$-matrix.
 
 The `fm2` model gives the lowest AIC.
-
+</details>
 
 
 ---
@@ -1633,13 +1657,14 @@ This example is taken from Zuur et al. (2009), pages 127-128.
 
 \footnotesize
 ```{r,echo=-(1:7)}
-library("AED")
-data(RIKZ)
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(nlme)
 RIKZ$fExp=RIKZ$Exposure
 RIKZ$fExp[RIKZ$fEx==8]=10
-RIKZ$fExp=factor(RIKZ$fExp,levels=c(10,11))
+RIKZ$fExp=factor(RIKZ$fExp,levels=c(1,2))
 B1=gls(Richness~1+NAP*fExp,data=RIKZ,method="REML")
 B2=lmer(Richness~1+NAP*fExp+(1|Beach),data=RIKZ)
 B3=lmer(Richness~1+NAP*fExp+(1+NAP|Beach),data=RIKZ)
@@ -1659,11 +1684,12 @@ F2=lmer(Richness~1+NAP*fExp+(1|Beach),data=RIKZ,REML=FALSE)
 confint(F2)
 F2a=lmer(Richness~1+NAP+fExp+(1|Beach),data=RIKZ,REML=FALSE)
 confint(F2a)
-````
+```
 
 ---
 
 \footnotesize
+
 ```{r}
 F2b=lmer(Richness~1+NAP+(1|Beach),data=RIKZ,REML=FALSE)
 confint(F2b)
@@ -1983,7 +2009,7 @@ Topics you do _not_ need to address are: REML, hypothesis testing, AIC.
 install.packages("lme4")
 install.packages("devtools")
 library(devtools)
-install_github("romunov/AED")
+# install_github("romunov/AED")
 install.packages("lattice")
 install.packages("MEMSS")
 install.packages("sjPlot")
