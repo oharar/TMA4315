@@ -1,0 +1,745 @@
+---
+title: "TMA4315 Generalized linear models H2018"
+subtitle: "Module 8: Generalized linear mixed effects models (GLMM)"
+author: "Mette Langaas and Ingeborg Hem, Department of Mathematical Sciences, NTNU"
+date: "15.11.2018 [PL], 16.11.2018 [IL]"
+output: #3rd letter intentation hierarchy
+#  html_document:
+#    toc: true
+#    toc_float: true
+#    toc_depth: 2
+#    css: "../TMA4315RMarkdown.css"
+#  pdf_document:
+#     toc: true
+#     toc_depth: 2
+#     keep_tex: yes
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
+showsol<-FALSE
+```
+
+(Latest changes: 16.11: IL added links, 13.11.2018 - first version).
+
+# Overview
+
+Aim: Present methods for analysing correlated responses in a generalized linear models setting - LMM meets GLM to become _GLMM_.
+
+Also here (as in module LMM) we will only consider _two-level models_ and in particular focus on _random intercept models_ for binomial and Poisson responses. Emphasis will be on understanding.
+
+---
+
+
+## Learning material
+
+* Textbook: Fahrmeir et al (2013): Chapter 7.5: 389-394, 7.7.
+* [Classnotes (15.11.2018)](https://www.math.ntnu.no/emner/TMA4315/2018h/M8PL.pdf)
+
+---
+
+## Topics
+
+* beaches example - revisited
+* notation
+* the generalized linear mixed effect model (three ingredients)
+* the GLMM with random intercept
+* the marginal model
+* parameter estimation and Laplace approximation
+* summing up: what do we need to know about the GLMM?
+* [additional info on different software (not on reading list)](#additional)
+
+---
+
+# Beaches example - revisited
+This example is taken from Zuur et al. (2009, chapter 5, pages 101-142), and data are referred to as RIKZ. Data were collected on nine different beaches in the Netherlands
+with the aim to investigate if there is a relationship between:
+
+* richness of species (number of species observed) and 
+* NAP: the height of the sampling station compared to mean tidal level.
+
+Data: 45 observations, taken at 9 beaches:
+
+* beach: the beach that the samples were taken, for each beach 5 different samples were taken.
+
+---
+
+```{r,echo=FALSE}
+# library("AED")
+# data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+library(lme4)
+#library(arm)
+library(ggplot2)
+gg <- ggplot(RIKZ, aes(x = NAP, y = Richness))
+gg <- gg + geom_point(color = "blue", alpha = 0.7)
+gg <- gg + geom_smooth(method = "lowess", color = "black")
+gg <- gg + theme_bw()
+gg <- gg + facet_wrap(~Beach)
+gg
+```
+
+---
+
+We want to use the richness of species as the response in a regression model.
+
+In Module 7 we assumed that the response could be viewed as a normal variable, but now we assume that 
+the response comes from a _Poisson distribution_.
+
+As in the LMM module, we could (1) ignore the beach effect, (2) include it as a fixed effect, or (3) use a random effect. Here we will use (3), and extend the GLM framework to include random effects
+
+---
+
+
+But - first: what do we remember about GLMs (and Poission regression with log-link in particular)?
+
+---
+
+**Assumptions for GLM model (Poisson): **
+
+1. Random component from exponential family: We have for our beaches: $Y_i \sim \text{Poisson}(\lambda_i)$, with $\text{E}(Y_i)=\lambda_i$, and $\text{Var}(Y_i)=\lambda_i$.
+
+2. Linear predictor: $\eta_i={\bf x}_i^T {\boldsymbol \beta}$.
+
+3. Log link
+$$\eta_i=\ln(\lambda_i)=g(\lambda_i)$$
+and (inverse thereof) response function
+$$\lambda_i=\exp(\eta_i)$$
+Canonical link for Poisson is log.
+
+
+---
+
+# Generalized linear mixed effects models
+
+## Notation 
+
+combining GLM (Module 5) and LMM (Module 7)
+
+We have $n_i$ repeated observations ($j=1,\ldots, n_i$) from each of $i=1,\ldots,m$ clusters (or individuals).
+
+* Responses: $Y_{i1},Y_{i2},\ldots, Y_{in_i}$ (e.g. species richness at beach $i$ sample $j$)
+* Covariates: ${\bf x}_{i1},{\bf x}_{i1}, \ldots, {\bf x}_{in_i}$ (e.g. NAP for beach $i$ sample $j$)
+
+The covariates ${\bf x}_{ij}$ are $p\times 1$ vectors (as before, $k$ covariates and one intercept so $p=k+1$).
+
+---
+
+## Repetition GLM
+
+1. **Random component** - exponential family (now $y_{ij}$)
+
+\[ f(y_{ij}\mid \theta_{ij})=\exp \left( \frac{y_{ij} \theta_{ij}-b(\theta_{ij})}{\phi}\cdot w_{ij} + c(y_{ij}, \phi, w_{ij}) \right) \]
+
+* $\theta_{ij}$ is called the canonical parameter and is a parameter of interest
+
+* $\phi$ is called a nuisance parameter (and is not of interest to us=therefore a nuisance (plage))
+
+* $w_{ij}$ is a weight function, in most cases $w_{ij}=1$
+
+* $b$ and $c$ are known functions.
+
+We looked in detail into the binomial, Poisson and gamma distribution (in addition to the normal).
+
+---
+
+2. **Linear predictor** (previously "systematic component"):
+
+$$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}$$ 
+
+3. **Link function $g$- and response function $h$**
+
+$$\eta_{ij}=g(\mu_{ij})$$
+
+$$\mu_{ij}=h(\eta_{ij})$$
+
+---
+
+## New element
+
+we add a random component (effect) to the _linear predictor_!
+
+2. $$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ {\bf u}^T_{ij} \gamma_i$$ 
+and we make the same assumptions as for the LMM
+
+$$ \gamma_i \sim N({\bf 0},{\bf Q})$$
+and independent from covariates. Observe: we still assume normality for the random effects!
+
+In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen to be conditional on the random effect $\gamma_i$. This means that the specified response distribution is conditional on the random effect: $f(y_{ij}\mid \gamma_i)$.
+
+---
+
+## GLMM model assumptions
+
+### Distributional assumptions
+(previously "1. Random component from exponential family")
+
+* Given the random effects $\gamma_i$ and the covariates ${\bf x}_{ij}$ and ${\bf u}_{ij}$
+* the responses $Y_{ij}$ are _conditionally independent_ and
+* the _conditional distribution_ $f(y_{ij}\mid \gamma_i)$ belongs to and exponential family.
+
+---
+
+### Structural assumptions
+(previously "2. Systematic component" and "3. Link function")
+
+* The _conditional mean_ $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is linked to 
+* the _linear predictor_ $\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ {\bf u}_{ij} \gamma_i$
+* through the link function $$\eta_{ij}=g(\mu_{ij})$$ 
+* or equivalently through the response function $$\mu_{ij}=h(\eta_{ij})$$
+* where $h^{-1}=g$ (inverse functions).
+
+---
+
+### Distributional assumptions for random effects
+
+* The random effects $\gamma_i$, $i=1,\ldots,m$ are independent and identically distributed
+$$ \gamma_i \sim N({\bf 0}, {\bf Q})$$
+* where the covariance matrix ${\bf Q}$ is a $(q+1)\times (q+1)$ positive definite.
+* An important special case is ${\bf Q}=diag(\tau_0^2, \tau_1^2,\ldots,\tau_q^2)$.
+
+<span class="question">Any questions? Notice that we still have normal distribution for the random effects!</span>
+
+**Remark**: for LMMs we used that $\varepsilon \sim N({\bf 0}, \sigma^2 {\bf I})$, but said that it was possible to let the error terms be correlated  $\varepsilon \sim N({\bf 0}, {\bf R})$ where ${\bf R}$ could have non-zero off-diagonal elements. However, for GLMMs this is much more complicated.
+
+---
+
+## Alternative two-step formulation
+
+Consider a random variable $Y_{ij}$ and a random effect $\gamma_i$ for cluster $i$.
+
+Alternative two step formulation:
+
+1. $\gamma_i \sim N({\bf 0},{\bf Q})$
+2. Given the realization of $\gamma_i$, then the $Y_{ij}$s are independent and each have the distribution $f(y_{ij}\mid \gamma_i)$ with mean $\mu_{ij}=h(\eta_{ij})$ and linear predictor 
+$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ {\bf u}^T_{ij} \gamma_i$.
+
+Remark: this conditional formulation is "easy" to write down, but to do inference we need the marginal distribution of all $Y_{ij}$s together to construct the likelihood. We will soon see that this is hard.
+
+
+# GLMM random intercept model
+
+**Distributional assumptions:** we will focus on binomial and Poisson responses.
+
+**Structural assumptions:** The random effect is added to the linear predictor
+
+$$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ \gamma_{0i}$$
+
+and we only consider canonical links, so logit for binomial and log for Poisson.
+
+**Distributional assumptions for random effects**
+
+The $\gamma_{0i}$, $i=1,\ldots,m$ are independent and identically distributed
+$$\gamma_{0i}\sim N(0,\tau_0^2)$$
+
+---
+
+## Poisson random intercept model
+
+**Distributional assumptions:** 
+The conditional distribution of the response $Y_{ij}$ is Poisson with mean $\lambda_{ij}$
+$$
+f(y_{ij}\mid \gamma_i)=\frac{\lambda_{ij}^{y_{ij}}}{y_{ij}!}\exp(-\lambda_{ij}) \text{ for } y=0,1,2,\ldots
+$$
+This is conditional on $\lambda_{ij}$, which means that it is really conditional on the linear predictor - since the mean is a function of the linear predictor, and in the linear predictor we have fixed and random effects. So, conditional on the values for the fixed and random effects.
+
+Then the observations $Y_{ij}$ are _conditionally_ independent for all $i$ and $j$ - but, not _marginally_ independent.
+
+---
+
+**Structural assumptions:**
+$$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ \gamma_{0i}$$
+
+$$\ln(\lambda_{ij})=\eta_{ij} \text{ or } \lambda_{ij}=\exp(\eta_{ij})$$
+
+**Distributional assumptions for random effects**
+
+The $\gamma_{0i}$, $i=1,\ldots,m$ are independent and identically distributed
+$$\gamma_{0i}\sim N(0,\tau_0^2)$$
+
+---
+
+## Overdispersion
+
+It is not necessary that $n_i>1$ to use this model, and this model can be used to take care of overdispersion (when all $n_i=1$).
+
+For the Poisson case, this would be equivalent to using a Poisson log-normal distribution
+
+
+---
+
+## Beach-example: Poisson GLMM with beach as random intercept 
+(we will talk about parameter estimation soon)
+
+```{r,results="hold", echo=TRUE}
+fitRI=glmer(Richness~NAP +(1|Beach),data=RIKZ,family=poisson(link=log))
+summary(fitRI)$coefficients
+```
+
+```{r,results="hold", echo=TRUE}
+summary(fitRI)$varcor
+```
+
+
+---
+
+## Beach-example: Poisson GLMM with overdispersion
+
+`Sample` is 1:nrow(RIKZ)
+
+```{r,results="hold", echo=TRUE}
+fitRIod=glmer(Richness~NAP +(1|Beach) +(1|Sample),data=RIKZ,family=poisson(link=log))
+summary(fitRIod)$coefficients
+```
+
+```{r,results="hold", echo=TRUE}
+summary(fitRIod)$varcor
+```
+
+---
+
+\tiny
+
+```{r,eval=TRUE}
+library(sjPlot)
+library(ggplot2)
+
+plot_model(fitRI, type = "re") + ylab("BLUP") + xlab("Beaches")
+```
+
+---
+
+```{r, echo=FALSE}
+df <- data.frame(Y = RIKZ$Richness, x = RIKZ$NAP, 
+                 fitted = fitted(fitRI),
+                 dres = residuals(fitRI,scale=TRUE,type="deviance"),
+                 catBeach = as.factor(RIKZ$Beach))
+ggplot(df) + 
+  geom_point(aes(x = x, y = Y, col = catBeach)) +
+  geom_line(aes(x = x, y = fitted)) + 
+  xlab("NAP") + ylab("Richness") + 
+  facet_wrap(~ catBeach)
+```
+
+---
+
+```{r}
+df <- data.frame(fitted = fitted(fitRI), 
+                 resid = residuals(fitRI, scaled = TRUE, type = "deviance"),
+                 Beach = factor(RIKZ$Beach))
+ggplot(df, aes(x = log(fitted), y = resid)) + 
+  geom_hline(yintercept = 0) +
+  geom_point(aes(col = Beach)) +
+  geom_smooth(method = "loess") +
+  labs(x = "Log-predicted values", y = "Deviance residuals", title = "Residuals plot")
+```
+
+---
+
+```{r}
+df <- data.frame(Beach2 = RIKZ$Beach, 
+                 resid = residuals(fitRI, scaled = TRUE,type="deviance"), 
+                 Beach = factor(RIKZ$Beach))
+ggplot(df, aes(x = Beach2, y = resid)) + 
+  geom_hline(yintercept = 0) +
+  geom_point(aes(col = Beach)) +
+  geom_smooth(method = "loess") +
+  labs(x = "Beach", y = "Residuals", 
+       title = "Relationship between Beach and residuals")
+```
+
+---
+
+```{r}
+plot_model(fitRI, type = "diag")$Beach
+```
+
+\normalsize
+
+---
+
+<!---
+## Simulation example 
+
+Aim: to show the difference between random intercept and random slope log Poisson models, and to compare the cluster curves, mean of cluster curves and the marginal mean
+
+This example a slightly modified version (added line and changed to ggplot) of an example in the Lecture notes by Magne Aldrin, Norwegian Computing Centre (which is way the notation differs slightly from what we have used).
+
+---
+
+The model we use is
+$$\begin{pmatrix} \gamma_{0i}\\ \gamma_{1i} \end{pmatrix} \sim N \left( \begin{pmatrix}0\\ 0 \end{pmatrix},\begin{pmatrix} 0.2^2 & 0 \\ 0 &0.07^2 \end{pmatrix} \right)$$
+and then
+$$\eta_{ij} = \beta_0+\beta_1 x_{ij} + \gamma_{0i} $$ for the random intercept model
+and 
+$$\eta_{ij} = \beta_0+\beta_1 x_{ij} + \gamma_{0i}+\gamma_{1i}x_{ij} $$ for the random slope model.
+
+Values chosen are $\beta_0=-2$ and $\beta_1=0.3$.
+
+Log-link is used so $\eta_{ij}=\ln(\mu_{ij})$. 
+
+Only data for the random intercept and slope are simulated, while parameter estimates are considered known. The number of clusters is $m=1000$ and $n_i = 201$ value of $x$ from $-10$ to $10$ are studied.
+
+---
+
+Below 30 random lines are plotted together (in different colours).
+The black dashed line is $\exp(\beta_0+\beta_i x)$ (denoted "not mean" in the plot) and the black solid line is the population mean (really, the average of the $m$ curves).
+
+(Q: what would happen if we simulate data and estimate parameters instead of only plotting means?)
+
+---
+
+\small
+```{r, echo=FALSE}
+library(MASS)
+library(ggplot2)
+library(ggpubr)
+set.seed(42)
+
+
+n <- 1000
+beta0 <- -2
+beta1 <- 0.3
+gamma <- mvrnorm(n = n, mu = c(0,0), Sigma = matrix(c(0.2^2, 0, 0, 0.07^2), ncol = 2))
+gamma0 <- gamma[,1]; gamma1 <- gamma[,2]
+# gamma0 <- rnorm(n = n, mean = 0, sd = 0.2)
+# gamma1 <- rnorm(n = n, mean = 0, sd = 0.07)
+x <- seq(-10, 10, 0.1)
+nx <- length(x)
+Mu.ri <- matrix(NA, nrow = nx, ncol = n)
+Mu.ris <- matrix(NA, nrow = nx, ncol = n)
+for (i in 1:n) {
+  eta.ri <- beta0 + gamma0[i] + beta1*x # Random intercept
+  Mu.ri[,i] <- exp(eta.ri)
+  eta.ris <- beta0 + gamma0[i] + (beta1 + gamma1[i]) * x # Random intercept + slope
+  Mu.ris[,i] <- exp(eta.ris)
+}
+popMu.ri <- rowMeans(Mu.ri)
+popMu.ris <- rowMeans(Mu.ris)
+
+df <- data.frame(x = x, y.ri = c(Mu.ri), y.ris = c(Mu.ris),
+                 sim = factor(rep(1:n, each = nx)))
+df2 <- data.frame(popMu.ri, popMu.ris,
+                  notMean = exp(beta0 + beta1*x))
+
+subset <- sort(which(df$sim %in% sample(1:n, 30)))
+gg_color_hue <- function(n) {hues <- seq(15, 375, length = n + 1); hcl(h = hues, l = 65, c = 100)[1:n]}
+gg1 <- ggplot(data = df[subset,], mapping = aes(x = x, y = y.ri, col = sim)) + geom_line(size = 0.2, show.legend = FALSE) +
+  geom_line(data = df2, mapping = aes(x = x, y = popMu.ri, col = "Mean"), inherit.aes = FALSE) +
+  geom_line(data = df2, mapping = aes(x = x, y = notMean, col = "Not mean"), inherit.aes = FALSE, linetype = 2) +
+  labs(y = "y", title = "Random intercept") + ylim(range(popMu.ri)) +
+  guides(colour = guide_legend(override.aes = list(col = "black", linetype = c(1,2)))) + 
+  scale_color_manual(values = c(gg_color_hue(30), "black", "black"), breaks = c("Mean", "Not mean"), name = "")
+gg2 <- ggplot(data = df[subset,], mapping = aes(x = x, y = y.ris, col = sim)) + geom_line(size = 0.2) + 
+  geom_line(data = df2, mapping = aes(x = x, y = popMu.ris, col = "Mean"), inherit.aes = FALSE) +
+  geom_line(data = df2, mapping = aes(x = x, y = notMean, col = "Not mean"), inherit.aes = FALSE, linetype = 2) +
+  labs(y = "y", title = "Random intercept \nand slope") + 
+  xlim(0, max(x)) + ylim(range(popMu.ris)) +
+  guides(colour = guide_legend(override.aes = list(col = "black", linetype = c(1,2)))) + 
+  scale_color_manual(values = c(gg_color_hue(30), "black", "black"), breaks = c("Mean", "Not mean"), name = "")
+ggarrange(gg1, gg2, common.legend = TRUE)
+
+```
+\normalsize
+
+<span class="question">Comment on what you see. Would you expect that the solid and dashed curve were identical?</span>
+
+<!--Observe: The interpretation of the population parameter $\beta$ is not the same in the conditional as in the marginal model (as is the case for the LMM).-->
+
+---
+
+
+## Binomial random intercept model
+
+We will study this model in the interactive session.
+
+```{r,eval=FALSE,echo=FALSE}
+sjp.glmer(fitRI, type = "eff", show.ci = TRUE)
+sjp.glmer(fitRI, type = "pred", vars = "NAP")
+sjp.glmer(fitRI,
+          type = "ri.slope",
+          vars = "NAP",
+          show.ci = TRUE)
+```
+
+### Simulation example
+Aim: to show the difference between random intercept and random slope logit models, and to compare the mean cluster curve with the population curve (as for the Poisson model).
+
+This example a slightly modified version (added line and changed to ggplot) of an example in the Lecture notes by Magne Aldrin, Norwegian Computing Centre (which is way the notation differs slightly from what we have used).
+
+---
+
+The model we use is
+$$\begin{pmatrix} \gamma_{0i}\\ \gamma_{1i} \end{pmatrix} \sim N \left( \begin{pmatrix}0\\ 0 \end{pmatrix},\begin{pmatrix} 4 & 0 \\ 0 &1 \end{pmatrix} \right)$$
+and then
+$$\eta_{ij} = \beta_0+\beta_1 x_{ij} + \gamma_{0i} $$ for the random intercept model
+and 
+$$\eta_{ij} = \beta_0+\beta_1 x_{ij} + \gamma_{0i}+\gamma_{1i}x_{ij} $$ for the random slope model where $\beta_0=3$ and $\beta_1=1$.
+Logit-link is used so $\eta_{ij}=\ln(\frac{\pi_{ij}}{1-\pi_{ij}})$. 
+
+Only data for the random intercept and slope are simulated, while parameter estimates are considered known. The number of clusters is $m=1000$ and $n_i = 201$ value of $x$ from $-10$ to $10$ are studied.
+
+---
+
+Below 30 random lines are plotted together (in different colours).
+The black dashed line is $\exp(\beta_0+\beta_i x)/(1+\exp(\beta_0+\beta_i x))$ (denoted "not mean" in the plot) and the black solid line is the population mean (really, the average of the $m$ curves).
+
+---
+
+\small
+```{r,echo=FALSE}
+set.seed(43)
+n <- 1000
+beta0 <- 3
+beta1 <- 1
+gamma <- mvrnorm(n = n, mu = c(0,0), Sigma = matrix(c(2^2, 0, 0, 1), ncol = 2))
+gamma0 <- gamma[,1]; gamma1 <- gamma[,2]
+# gamma0 <- rnorm(n = n, mean = 0, sd = 2)
+# gamma1 <- rnorm(n = n, mean = 0, sd = 1)
+x <- seq(-10, 10, 0.1)
+nx <- length(x)
+Mu.ri <- matrix(NA, nrow = nx, ncol = n)
+Mu.ris <- matrix(NA, nrow = nx, ncol = n)
+for (i in 1:n) {
+  eta.ri <- beta0 + gamma0[i] + beta1*x # Random intercept
+  Mu.ri[,i] <- exp(eta.ri)/(1 + exp(eta.ri))
+  eta.ris <- beta0 + gamma0[i] + (beta1 + gamma1[i]) * x # Random intercept + slope
+  Mu.ris[,i] <- exp(eta.ris)/(1 + exp(eta.ris))
+}
+popMu.ri <- rowMeans(Mu.ri)
+popMu.ris <- rowMeans(Mu.ris)
+
+df <- data.frame(x = x, y.ri = c(Mu.ri), y.ris = c(Mu.ris),
+                 sim = factor(rep(1:n, each = nx)))
+df2 <- data.frame(x = x, popMu.ri, popMu.ris,
+                  notMean = exp(beta0 + beta1*x)/(1 + exp(beta0 + beta1*x)))
+
+subset <- sort(which(df$sim %in% sample(1:n, 30)))
+gg_color_hue <- function(n) {hues <- seq(15, 375, length = n + 1); hcl(h = hues, l = 65, c = 100)[1:n]}
+gg1 <- ggplot(data = df[subset,], mapping = aes(x = x, y = y.ri, col = sim)) + geom_line(size = 0.2) + 
+  geom_line(data = df2, mapping = aes(x = x, y = popMu.ri, col = "Mean"), inherit.aes = FALSE) +
+  geom_line(data = df2, mapping = aes(x = x, y = notMean, col = "Not mean"), inherit.aes = FALSE, linetype = 2) +
+  labs(y = "y", title = "Random intercept") +
+  guides(colour = guide_legend(override.aes = list(col = "black", linetype = c(1,2)))) + 
+  scale_color_manual(values = c(gg_color_hue(30), "black", "black"), breaks = c("Mean", "Not mean"), name = "")
+gg2 <- ggplot(data = df[subset,], mapping = aes(x = x, y = y.ris, col = sim)) + geom_line(size = 0.2) + 
+  geom_line(data = df2, mapping = aes(x = x, y = popMu.ri, col = "Mean"), inherit.aes = FALSE) +
+  geom_line(data = df2, mapping = aes(x = x, y = notMean, col = "Not mean"), inherit.aes = FALSE, linetype = 2) +
+  labs(y = "y", title = "Random intercept \nand slope") +
+  guides(colour = guide_legend(override.aes = list(col = "black", linetype = c(1,2)))) + 
+  scale_color_manual(values = c(gg_color_hue(30), "black", "black"), breaks = c("Mean", "Not mean"), name = "")
+ggarrange(gg1, gg2, common.legend = TRUE)
+```
+
+\normalsize
+
+<span class="question">Comment on what you see.</span>
+
+--->
+
+---
+
+# Conditional and marginal model
+
+To do parameter estimation in the LMM we started with the marginal model for $Y_{ij}$.
+
+$$f(y_{ij})=\int_{\gamma_i} f(y_{ij}\mid \gamma_i) f(\gamma_i) d\gamma_i$$
+
+where
+$$f(\gamma_i) \text{ is } N({\bf 0},{\bf Q})$$
+and $f(y_{ij}\mid \gamma_i)$ might be the binomial, Poisson, normal, gamma, ... distribution - chosen as an exponential family.
+
+It turns out that this integral can only be written out analytically in special cases.
+
+In the special case that $f(y_{ij}\mid \gamma_i)$ is normal we saw in Module LMM that the marginal distribution is also multivariate normal.
+
+---
+
+Another special case is the log-linear Poisson random intercept where all $n_i=1$. See pages 393-394 in our textbook to see the solution (that can be used to handle overdispersion in Poisson regression).
+
+Remark: for the random intercept Poisson GLMM with log-link the expected marginal mean is (Agresti, 2015, page 309)
+$$ \text{E}(Y_{ij})=\text{E}[\text{E}(Y_{ij}\mid \gamma_{0i})]=\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$$
+The solid line in the plot to the left above gives this curve, while the dashed is $\exp({\bf x}_{ij}^T{\boldsymbol \beta})$. In Agresti (2015, page 310) the variance of the marginal distribution is given as
+$$\text{Var}(Y_{ij})=\cdots = \text{E}(Y_{ij})+[\text{E}(Y_{ij})^2(\exp(\tau_0^2)-1)]$$
+so we see that the variance is larger than that of a Poisson distribution.
+
+Remark: the conditional mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\gamma_{0i})$, while the marginal mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$.
+
+(If the link function chosen had been the identity link then the marginal mean would have been ${\bf x}_{ij}^T{\boldsymbol \beta}$.)
+
+---
+
+
+# Parameter estimation
+
+The most popular method for parameter estimation for regression is maximum likelihood. The likelihood of the data is given by the marginal distribution of all $Y_{ij}$s jointly. However, this can not be found analytically (as we saw above), so we must resort to numerical methods to evaluate the likelihood of a general GLMM.
+
+The parameters we want to estimate are the fixed effects ${\boldsymbol \beta}$s, and the parameters in ${\bf Q}$ for the random effects - denoted by $\vartheta$.
+
+---
+
+The contribution from observations in the $i$th cluster is
+
+$$
+\begin{aligned}
+f({\bf y}_i\mid {\boldsymbol \beta},\vartheta) &= \int_{{\boldsymbol \gamma}_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+\\
+&=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+\end{aligned}
+$$
+
+And the likelihood is then (since the clusters are independent)
+
+$$
+L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {\boldsymbol \beta},\vartheta)
+$$
+
+---
+
+To arrive at parameter estimates we need to maximize the likelihood with respect to ${\boldsymbol \beta}$ and $\vartheta$, which is a complicated numerical problem, because wee need to integtrate over the $\gamma_i$'s.
+
+Let $l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}) = \log(({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \beta},\vartheta))$ be the _joint log-likelihood of the data and the random effects_ (with $\theta = (\beta, \vartheta)$).
+
+Observe that $l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \beta},\vartheta)$ depends on the unknown random effects $\gamma_i$ and the parameters in $\theta = (\beta, \vartheta)$ (here we have the fixed effects and the parameters in ${\bf Q}$ for the random effects).
+
+---
+
+The maximum likelihood estimate for $\theta$ maximises
+
+$$
+L(\theta)=\int_{\boldsymbol{\gamma}} \exp(l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}))d\gamma
+$$
+
+with respect to $\theta$.
+
+The random effects $\gamma_i$ are now integrated out and the marginal likelihood $L(\theta)$ is the likelihood of the data as a function of the parameters only. 
+
+
+---
+
+## Approximations
+
+There are a few approaches to approximating the integral:
+
+- The Laplace Approximation
+- Gauss-Hermite Quadrature
+- Simulation (usually MCMC: see TMA4300 for more)
+- INLA (Bayesian, much more advance. Involves nested Laplace approximations)
+
+`glmer` function in `lme4` uses the Laplace approximation as a default, but can also use Gauss-Hermite Quadrature. Bayesian methods abound: MCMC is slow, but more flexible.
+
+---
+
+## The Laplace Approximation
+
+The Laplace Approximation assumes that $l({\bf y}_i, \boldsymbol{\gamma} \mid {\boldsymbol \theta})$ is quadratic in $\boldsymbol{\gamma}$: this is equivalent to either 
+
+- assuming a Gaussian distribution for the sampling distribution of each $\gamma_i$, or
+- using a single quadrature point in Gauss-Hermite Quadrature
+
+---
+
+## The Approximation
+
+Let $g(\gamma)=\ln(f(y\mid \gamma)f(\gamma))$, and look at the second order Taylor expansion around $\hat{u}(\theta)$:
+
+$$
+\begin{aligned}
+g(\gamma_i) &\approx \tilde{g}(\gamma_i)=g(\hat{\gamma_i})+(\gamma_i-\hat{\gamma_i})g'(\hat{\gamma_i})+
+\frac{1}{2}(\gamma_i-\hat{\gamma_i})^2 g''(\hat{\gamma_i}) \\
+&=g(\hat{\gamma_i})-\frac{1}{2}(\gamma_i-\hat{\gamma_i})^2 (-g''(\hat{\gamma_i}))
+\end{aligned}
+$$
+
+This means that $\exp(\tilde{g}(\gamma_i))$ is proportional to the normal density with mean $\mu=\hat{\gamma_i}$ and variance $\sigma^2=-1/g''(\hat{\gamma_i})$.
+
+Putting this back into our integral:
+
+$$
+\begin{aligned}
+L(\theta) &= \int_{\boldsymbol{\gamma}} \exp(l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}))d\boldsymbol{\gamma} \approx\int_{\boldsymbol{\gamma}} \exp(\tilde{l}({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}))d\boldsymbol{\gamma} \\
+&=\exp(l(\bf{y}_i, \hat{{\boldsymbol \gamma}} \mid \boldsymbol{\theta}))
+\int_{\boldsymbol{\gamma}} \exp(-\frac{1}{\sigma^2} (\boldsymbol{\gamma}-\hat{\boldsymbol{\gamma}})^2) d\boldsymbol{\gamma} \\
+&=\exp(l({\bf y}_i, \hat{\boldsymbol{\gamma}} \mid {\boldsymbol \theta}))\sqrt{-2\pi/g''(\hat{\gamma_i})}
+\end{aligned}
+$$
+
+---
+
+Now we can plus this into our full likelihood, pausing only to note that $H(\theta)$ is the Hessian of $l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta})$ evaluated at $\hat{\boldsymbol{\gamma}}(\theta)$, so contains $g''(\hat{\gamma}_i)$ terms
+
+Let $\hat{\boldsymbol{\gamma}}(\theta)$ be the maximum of $l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta})$ w.r.t $\boldsymbol{\gamma}$.
+
+The Laplace approximation for the marginal likelihood $L(\theta)$ is then 
+
+$$
+L^{*}(\theta)=(2\pi)^{n/2} \text{det}(H(\theta))^{-1/2} \exp(f(\hat{u},\theta))
+$$
+
+---
+
+## Gauss-Hermite Quadrature
+
+If the dimension of ${\boldsymbol \gamma}_i$ is small, for example our random intercept model, then the Gauss-Hermite quadrature may be used to approximate the integral above. This is because the form 
+
+$$\int_{-\infty}^{\infty} h(\gamma)\exp(-\gamma^2)d\gamma$$
+
+can be written as a sum of weights and quadrature points that are roots of Hermite polynomials. This can then be maximized using Newton-Raphson methods.
+
+When the dimension of ${\boldsymbol \gamma}$ gets large, this gets too slow, so other methods are usually better.
+
+In essence, this is a better approximation than the Laplace Approximation, but there is a computational cost that might not be worth paying.
+
+
+---
+
+# What have we not covered?
+
+* We have skipped a lot of technicalities about the parameter estimation.
+* How to predict the random effects $\gamma_i$: "the conditional modes" of the random effects.
+* What is fitted values, and how are residuals calculated.
+* How to test hypotheses?
+* AIC to compare models (very similar to LMM).
+* And, surely, much more.
+
+# Summing up - what have we learned about the GLMM?
+
+* The GLMM can be formulated using three ingredients: 
+    + distributional assumption: $f(y_{ij}\mid \gamma_i)$ from exponential family
+    + structural assumptions: linear predictor $\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+{\bf u}_{ij}\gamma_i$ and link function $\eta_{ij}=g(\mu_{ij})$ where $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$.
+    + distributional assumptions for the random effects: $\gamma_i\sim N({\bf 0},{\bf Q})$.
+* The GLMM likelihood function is expressed as an integral with respect to the random effects and does (in general) not have a closed form solution.
+* Numerical approximation methods need to be used to find parameter estimates, and one possibility is to use the Laplace approximation, but many competing method exists.
+
+---
+
+* Three `R` packages that can be investigated is `lme4`(function `glmer`) and `glmmTMB` (template model builder), and the NTNU-flagship `inla`. How to use these three packages on a simulated data set (binary data, logit link, random intercept and slope) is shown in the end of the module page (NOT on our reading list but for the interested student).
+
+---
+
+# R packages
+
+```{r, eval=FALSE}
+# install.packages("arm")
+install.packages("reshape2")
+install.packages("sp")
+install.packages("glmmTBM")
+install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable", dep=TRUE)
+install.packages("lme4")
+install.packages("devtools")
+library(devtools)
+# install_github("romunov/AED")
+install.packages("sjPlot")
+install.packages("sjmisc")
+```
+
+# Further reading
+
+* [Bolker et al. (2008):_Generalized linear mixed models: a practical guide for ecology and evolution_](http://avesbiodiv.mncn.csic.es/estadistica/curso2011/regm26.pdf)
+* Zuur et al. (2009): "Mixed Effects Models and Extensions in Ecology with R", chapter 13 (pages 323-341). Available as free ebook from Springer for NTNU students. More explanations and less mathematics than Fahrmeir et al (2013), more focus on understanding. [Link to ebook Chapter 13](https://link.springer.com/chapter/10.1007/978-0-387-87458-6_13)
+* Agresti (2015): Foundations of linear and generalized linear models, Chapter 9.
+

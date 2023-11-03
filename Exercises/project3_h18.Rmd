@@ -1,15 +1,15 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 3: (Generalized) Linear Mixed Models" 
-date: "Deadline: Friday, November 23rd, 2018 at 16.00" 
+date: "Deadline: Friday, November 18rd, 2023 at Midnight" 
 output: # 3rd letter intentation hierarchy
-  # html_document:
-  #   toc: true
-  #   toc_float: true
-  #   toc_depth: 2
-  pdf_document:
-   toc: false
-   toc_depth: 2
+   html_document:
+     toc: true
+     toc_float: true
+     toc_depth: 2
+#  pdf_document:
+#   toc: false
+#   toc_depth: 2
 
 ---
 
@@ -28,14 +28,11 @@ You shall deliver a document that answers all questions, using print-outs from `
 
 As for the previous two compulsory exercises this exercise should be handed in on Blackboard and *please write the names of the group members and the group number you have on Blackboard on top of your document!*
 
-Guidance by the teaching assistant (Ingeborg) will be given Tuesdays and Thursdays from 10:15-12:00 in room 922 at the 9th floor of Sentralbygg 2. She will be there from the beginning, but leaves if no one shows up. If you know you will be arriving very late, send her an email (<ingeborg.hem@ntnu.no>) to ensure that she will be in 922. *Note: No exercise hours Tuesday, November 20th!*
-
-
 **In this exercise, we will focus on (generalized) linear mixed models. Each problem (there are 5 problems) has a maximum score of 2 points. Please provide _short_ answers (preferably one-two sentences) to all questions.** We have included bullet points in each problem to make it easier to see what we ask about, but the points are not necessarily weighted equally. 
 
 ----
 
-We will use a SIMULATED (thus, not a real dataset) with clustered data. The R-package `faraway` contains a dataset called `jsp` is used as an example, and we have fitted a model to this dataset and then used the result to generate a new dataset. We do this because the original dataset does not give interesting results (you can ask Ingeborg if you are interested in how the new dataset is made). Assume we have the following variables:
+We will use a SIMULATED (thus, not a real dataset) with clustered data. The R-package `faraway` contains a dataset called `jsp` is used as an example, and we have fitted a model to this dataset and then used the result to generate a new dataset. We do this because the original dataset does not give interesting results. Assume we have the following variables:
 
 * `school`: 50 schools, with code 1-50
 * `gender`: a factor with levels boy, girl
@@ -150,7 +147,7 @@ df <- data.frame(x = rep(range(dataset$raven), each = 49),
                  School = factor(rep(c(1:42, 44:50), times = 2)))
 ggplot(df, aes(x = x, y = y, col = School)) + geom_line()
 
-anova(fitRI, fitRIS)
+# anova(fitRI, fitRIS)
 ```
 
 ## d)
@@ -199,13 +196,13 @@ Finally:
 
 ## e) 
 
-Now imagine that we want to model the _probability for a student to fail maths_ instead of the the individual grades given in maths. 
+Now imagine that we want to model the _probability for a student to fail maths_ instead of the the individual grades given in maths. A student fails if they score less than -10.
 
 * Why is it not suitable to use a linear mixed effects model? 
 * What type of model would be more suitable? (hint: IL module 7) 
 * How would we add a random school intercept into this model (in which part of the model)? 
 * What is the main challenge with this type of models? (hint: marginal model)
-
+* Fit the equivalent model to `fitRI1`, and comment on the differences in the model inferences.
 
 
 

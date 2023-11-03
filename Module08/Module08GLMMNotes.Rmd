@@ -8,6 +8,7 @@ output: #3rd letter intentation hierarchy
     toc: true
     toc_float: true
     toc_depth: 2
+    css: "../TMA4315RMarkdown.css"
 #  pdf_document:
   #   toc: true
   #   toc_depth: 2
@@ -88,12 +89,12 @@ We want to use the richness of species as the response in a regression model.
 In Module LMM we assumed that the response could be viewed as a normal variable, but now we rather assume that 
 the response comes from a _Poisson distribution_.
 
-**Q**: Why do we want to assume a Poisson distribution?
+<span class="question">**Q**: Why do we want to assume a Poisson distribution?</span>
 \normalsize
 
 ---
 
-**A**:
+<details><summary>Answer</summary>
 
 We observe events that may occur within a time interval or a region. 
 
@@ -104,7 +105,7 @@ We observe events that may occur within a time interval or a region.
 When all of these three properties are funfilled we have a _Poisson process_.
 
 * The number of events in a Poisson process follows a Poisson distribution.
-
+</details>
 ---
 
 We go ahead and fit a Poission GLM with log-link and NAP as covariate. In Module LMM we talked about possible solutions to how to handle multiple observations for each beach and came up with:
@@ -169,7 +170,8 @@ ggarrange(gg1,gg2)
 ```
 
 \normalsize
-**Q**: What is the formula for the black line on the left panel?
+
+<span class="question">What is the formula for the black line on the left panel?</span>
 **A**: see classnotes.
 
 ---
@@ -233,13 +235,19 @@ We looked in detail into the binomial, Poisson and gamma distribution (in additi
 
 2. **Linear predictor** (previously "systematic component"):
 
-$$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}$$ 
+$$
+\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}
+$$ 
 
 3. **Link function $g$- and response function $h$**
 
-$$\eta_{ij}=g(\mu_{ij})$$
+$$
+\eta_{ij}=g(\mu_{ij})
+$$
 
-$$\mu_{ij}=h(\eta_{ij})$$
+$$
+\mu_{ij}=h(\eta_{ij})
+$$
 
 ---
 
@@ -247,7 +255,8 @@ $$\mu_{ij}=h(\eta_{ij})$$
 
 we add a random component (effect) to the _linear predictor_!
 
-2. $$\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ {\bf u}^T_{ij} \gamma_i$$ 
+2. $\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ {\bf u}^T_{ij} \gamma_i$ 
+
 and we make the same assumptions as for the LMM
 
 $$ \gamma_i \sim N({\bf 0},{\bf Q})$$
@@ -268,7 +277,7 @@ In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen
 
 ---
 
-###Structural assumptions
+### Structural assumptions
 (previously "2. Systematic component" and "3. Link function")
 
 * The _conditional mean_ $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is linked to 
@@ -279,14 +288,14 @@ In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen
 
 ---
 
-###Distributional assumptions for random effects
+### Distributional assumptions for random effects
 
 * The random effects $\gamma_i$, $i=1,\ldots,m$ are independent and identically distributed
 $$ \gamma_i \sim N({\bf 0}, {\bf Q})$$
 * where the covariance matrix ${\bf Q}$ is a $(q+1)\times (q+1)$ positive definite.
 * An important special case is ${\bf Q}=diag(\tau_0^2, \tau_1^2,\ldots,\tau_q^2)$.
 
-**Q**: Any questions? Notice that we still have normal distribution for the random effects!
+<span class="question">Any questions? Notice that we still have normal distribution for the random effects!</span>
 
 **Remark**: for LMMs we used that $\varepsilon \sim N({\bf 0}, \sigma^2 {\bf I})$, but said that it was possible to let the error terms be correlated  $\varepsilon \sim N({\bf 0}, {\bf R})$ where ${\bf R}$ could har non-zero off-diagonal elements. However, for GLMMs this is much more complicated.
 
@@ -304,8 +313,7 @@ $\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+ {\bf u}^T_{ij} \gamma_i$.
 
 Remark: this conditional formulation is "easy" to write down, but to do inference we need the marginal distribution of all $Y_{ij}$s together to construct the likelihood. We will soon see that this is hard.
 
-**Q:** 
-How would you proceed to generate a GLMM data set - e.g. based on the beaches example?
+<span class="question">How would you proceed to generate a GLMM data set - e.g. based on the beaches example?</span>
 
 **A:** see class notes
 
@@ -366,7 +374,7 @@ summary(fitRI)
 ```
 \normalsize
 
-**Q**: Comment on what you see. 
+<span class="question">Comment on what you see. </span>
 
 **A**: `glmer`, "Laplace approximation", we now have $p$-values, and for the fixed effects we read z and not t. No estimate for $\sigma^2$ (or `residual` term in random effects part) - since the model does not contain any dispersion parameter.
 
@@ -542,7 +550,7 @@ ggarrange(gg1, gg2, common.legend = TRUE)
 ```
 \normalsize
 
-**Q**: comment on what you see. Would you expect that the solid and dashed curve were identical?
+<span class="question">Comment on what you see. Would you expect that the solid and dashed curve were identical?</span>
 
 <!--Observe: The interpretation of the population parameter $\beta$ is not the same in the conditional as in the marginal model (as is the case for the LMM).-->
 
@@ -552,6 +560,7 @@ ggarrange(gg1, gg2, common.legend = TRUE)
 ## Binomial random intercept model
 
 We will study this model in the interactive session.
+
 ```{r,eval=FALSE,echo=FALSE}
 sjp.glmer(fitRI, type = "eff", show.ci = TRUE)
 sjp.glmer(fitRI, type = "pred", vars = "NAP")
@@ -632,7 +641,7 @@ ggarrange(gg1, gg2, common.legend = TRUE)
 
 \normalsize
 
-**Q**: comment on what you see.
+<span class="question">Comment on what you see.</span>
 
 # Conditional and marginal model
 
@@ -698,6 +707,7 @@ When the dimension of ${\boldsymbol \gamma}$ gets more than two, other methods a
 ---
 
 ## Laplace approximation (for the interested student)
+
 The notation in this section is taken from Kristensen et al (2016): "TMB: Automatic Differentiation and Laplace Approximation", _Journal of Statistical Software_, 70, 5. doi:10.18637/jss.v070.i05, which is the background for the `glmmTMB` package. The notation is different from what is used in this module, but this reflects that often different notation is used for the same models.
 
 Let $f(u,\theta)$ be the _joint log-likelihood of the data and the random effects_. This will in our case be related to $\ln[f({\bf y}_i \mid \gamma_i,{\boldsymbol \beta}) f(\gamma_i \mid {\bf Q})]$.
@@ -764,7 +774,7 @@ This is the last interactive session of the course.
 
 ## Problem 1: Taken from UiO, STK3100, 2011, problem 2
 
-**a)** Show that the binomial distribution is a member of the exponential family of distributions. What do we mean with canonical link, and which advantages do we get when using canonical link? What is the canonical link for the binomial distibution?
+<span class="question">a) Show that the binomial distribution is a member of the exponential family of distributions. What do we mean with canonical link, and which advantages do we get when using canonical link? What is the canonical link for the binomial distibution?</span>
 
 Remark: this has been done several times before. Instead of doing the maths on the board, focus on the concepts. Also discuss this relationship:
 $\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \mathbf{\beta}$
@@ -778,7 +788,10 @@ $$y_{ij} \sim \text{Bin}(1, \pi_{ij})$$
 
 $$ g(\pi_{ij}) = \beta_0 + \beta_1x_{1,ij} + \beta_2x_{2,i} $$
 
-where $g(\cdot)$ is a suitable link function and all $y_{ij}$ are independent. What kind of model is this?  
+where $g(\cdot)$ is a suitable link function and all $y_{ij}$ are independent. 
+
+<span class="question">What kind of model is this?</span>
+
 The table below shows AIC-values for three different link functions often used with binary response data:
 
 ```{r, echo = FALSE}
@@ -804,7 +817,7 @@ kable(df)
 
 ```
 
-Explain what AIC is, and argue why it is reasonable to use such criteria in this situation (instead of other tests from this course). Based on these three values, which link-function do you prefer? Why?
+<span class="question">Explain what AIC is, and argue why it is reasonable to use such criteria in this situation (instead of other tests from this course). Based on these three values, which link-function do you prefer? Why?</span>
 
 Remark: what is the take home message here? Hint: nested models?
 
@@ -836,7 +849,7 @@ $$ \gamma_{0i} \sim N(0, \tau_0^2) $$
 
 where $g(\cdot)$ is the logit link function, and all $A_{ij}$ are conditional independent (given $\gamma_i$).
 
-**c1)** *New:* What kind of model is this? What is $\gamma_{0i}$? Compare to the linear mixed effects model- similarities and differences.
+<span class="question">c1) *New:* What kind of model is this? What is $\gamma_{0i}$? Compare to the linear mixed effects model- similarities and differences.</span>
 
 Below you find an excerpt of this model:
 
@@ -857,13 +870,13 @@ summary(fit1)
 
 
 
-**c2)** *New:* Explain what it means that the model is fitted by maximum likelihood. What does Laplace approximation has to do with the model fit? 
+<span class="question">c2) *New:* Explain what it means that the model is fitted by maximum likelihood. What does Laplace approximation has to do with the model fit?</span>
 
-**Skip d)- not in our reading list to test random effects - so too advanced. ** Instead discuss why this is difficult.
+<span class="question">Skip d)- not in our reading list to test random effects - so too advanced. ** Instead discuss why this is difficult.</span>
 
-**d)** The log-likelihood value for the corresponding model without any random effects (which corresponds to a model with $\tau_0^2 = 0$) is `r round(logLik(fit0),2)`. Use this to perform a likelihood ratio test with $H_0: \tau_0^2 = 0$. Calculate the corresponding p-value and draw a conclusion.
+<span class="question">d) The log-likelihood value for the corresponding model without any random effects (which corresponds to a model with $\tau_0^2 = 0$) is `r round(logLik(fit0),2)`. Use this to perform a likelihood ratio test with $H_0: \tau_0^2 = 0$. Calculate the corresponding p-value and draw a conclusion.</span>
 
-**e)** The Havforskningsinstituttet believes that the haulsize is important in the modelling of age and length of the fish (read: as a fixed effect). Based on the excerpts above (on dichotomized age) and below (on weight), what do you think about this?
+<span class="question">e) The Havforskningsinstituttet believes that the haulsize is important in the modelling of age and length of the fish (read: as a fixed effect). Based on the excerpts above (on dichotomized age) and below (on weight), what do you think about this?</span>
 
 ```{r, echo = FALSE}
 
