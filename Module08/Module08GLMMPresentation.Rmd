@@ -275,13 +275,14 @@ For the Poisson case, this would be equivalent to using a Poisson log-normal dis
 ## Beach-example: Poisson GLMM with beach as random intercept 
 (we will talk about parameter estimation soon)
 
-```{r,results="hold", echo=TRUE}
-fitRI=glmer(Richness~NAP +(1|Beach),data=RIKZ,family=poisson(link=log))
-summary(fitRI)$coefficients
+```{r,results="hold", echo=TRUE, tidy=FALSE}
+RI=glmer(Richness~NAP +(1|Beach),data=RIKZ,
+         family=poisson(link=log))
+summary(RI)$coefficients
 ```
 
 ```{r,results="hold", echo=TRUE}
-summary(fitRI)$varcor
+summary(RI)$varcor
 ```
 
 
@@ -291,13 +292,14 @@ summary(fitRI)$varcor
 
 `Sample` is 1:nrow(RIKZ)
 
-```{r,results="hold", echo=TRUE}
-fitRIod=glmer(Richness~NAP +(1|Beach) +(1|Sample),data=RIKZ,family=poisson(link=log))
-summary(fitRIod)$coefficients
+```{r,results="hold", echo=TRUE, tidy=FALSE}
+RIod=glmer(Richness~NAP +(1|Beach) +(1|Sample),  
+           data=RIKZ,family=poisson(link=log))
+summary(RIod)$coefficients
 ```
 
 ```{r,results="hold", echo=TRUE}
-summary(fitRIod)$varcor
+summary(RIod)$varcor
 ```
 
 ---
@@ -308,15 +310,15 @@ summary(fitRIod)$varcor
 library(sjPlot)
 library(ggplot2)
 
-plot_model(fitRI, type = "re") + ylab("BLUP") + xlab("Beaches")
+plot_model(RI, type = "re") + ylab("BLUP") + xlab("Beaches")
 ```
 
 ---
 
 ```{r, echo=FALSE}
 df <- data.frame(Y = RIKZ$Richness, x = RIKZ$NAP, 
-                 fitted = fitted(fitRI),
-                 dres = residuals(fitRI,scale=TRUE,type="deviance"),
+                 fitted = fitted(RI),
+                 dres = residuals(RI,scale=TRUE,type="deviance"),
                  catBeach = as.factor(RIKZ$Beach))
 ggplot(df) + 
   geom_point(aes(x = x, y = Y, col = catBeach)) +
@@ -327,9 +329,9 @@ ggplot(df) +
 
 ---
 
-```{r}
-df <- data.frame(fitted = fitted(fitRI), 
-                 resid = residuals(fitRI, scaled = TRUE, type = "deviance"),
+```{r, echo=FALSE}
+df <- data.frame(fitted = fitted(RI), 
+                 resid = residuals(RI, scaled = TRUE, type = "deviance"),
                  Beach = factor(RIKZ$Beach))
 ggplot(df, aes(x = log(fitted), y = resid)) + 
   geom_hline(yintercept = 0) +
@@ -340,9 +342,9 @@ ggplot(df, aes(x = log(fitted), y = resid)) +
 
 ---
 
-```{r}
+```{r, echo=FALSE}
 df <- data.frame(Beach2 = RIKZ$Beach, 
-                 resid = residuals(fitRI, scaled = TRUE,type="deviance"), 
+                 resid = residuals(RI, scaled = TRUE,type="deviance"), 
                  Beach = factor(RIKZ$Beach))
 ggplot(df, aes(x = Beach2, y = resid)) + 
   geom_hline(yintercept = 0) +
@@ -354,8 +356,8 @@ ggplot(df, aes(x = Beach2, y = resid)) +
 
 ---
 
-```{r}
-plot_model(fitRI, type = "diag")$Beach
+```{r, echo=FALSE}
+plot_model(RI, type = "diag")$Beach
 ```
 
 \normalsize
@@ -458,9 +460,9 @@ ggarrange(gg1, gg2, common.legend = TRUE)
 We will study this model in the interactive session.
 
 ```{r,eval=FALSE,echo=FALSE}
-sjp.glmer(fitRI, type = "eff", show.ci = TRUE)
-sjp.glmer(fitRI, type = "pred", vars = "NAP")
-sjp.glmer(fitRI,
+sjp.glmer(RI, type = "eff", show.ci = TRUE)
+sjp.glmer(RI, type = "pred", vars = "NAP")
+sjp.glmer(RI,
           type = "ri.slope",
           vars = "NAP",
           show.ci = TRUE)
@@ -539,8 +541,6 @@ ggarrange(gg1, gg2, common.legend = TRUE)
 
 <span class="question">Comment on what you see.</span>
 
---->
-
 ---
 
 # Conditional and marginal model
@@ -559,9 +559,9 @@ In the special case that $f(y_{ij}\mid \gamma_i)$ is normal we saw in Module LMM
 
 ---
 
-Another special case is the log-linear Poisson random intercept where all $n_i=1$. See pages 393-394 in our textbook to see the solution (that can be used to handle overdispersion in Poisson regression).
+Another special case is the log-linear Poisson random intercept where all $n_i=1$. See pages 393-394 in our textbook to see the solution.
 
-Remark: for the random intercept Poisson GLMM with log-link the expected marginal mean is (Agresti, 2015, page 309)
+For the random intercept Poisson GLMM with log-link the expected marginal mean is (Agresti, 2015, page 309)
 $$ \text{E}(Y_{ij})=\text{E}[\text{E}(Y_{ij}\mid \gamma_{0i})]=\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$$
 The solid line in the plot to the left above gives this curve, while the dashed is $\exp({\bf x}_{ij}^T{\boldsymbol \beta})$. In Agresti (2015, page 310) the variance of the marginal distribution is given as
 $$\text{Var}(Y_{ij})=\cdots = \text{E}(Y_{ij})+[\text{E}(Y_{ij})^2(\exp(\tau_0^2)-1)]$$

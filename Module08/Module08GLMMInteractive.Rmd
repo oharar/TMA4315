@@ -72,12 +72,12 @@ Also here (as in module LMM) we will only consider _two-level models_ and in par
 This is the last interactive session of the course.
 
 * First hour: Problem 1
-* 15 min before end first hour (or if you finish earlier): answer the following questions in your group (togehter) and fill in [this Google form](https://goo.gl/forms/lcW6AXDgcXpIMHsG3)
+* 15 min before end first hour (or if you finish earlier): answer the following questions in your group (togehter) and fill in [this Google form](https://forms.gle/a9L3r4JZ9oWyqNAd7)
     + What was the top 5 (or so) concepts in this course that you feel that you need to work more to understand? (input to summing-up last lecture)
     + You are here today - you are the students that come to the IL, even the last one. Why do you attend the IL? What is good about the IL? What can be challenging?
 * If you want: [here is the draft for the summing-up](https://www.math.ntnu.no/emner/TMA4315/2018h/Summingup2018draft.pdf) (module 6 on categorical missing and some QC needed) - any comments?
 
-* Second hour: continue the work above, or work on (and get help)  with Compulsory 3!
+* Second hour: continue the work above, or work on (and get help)  with Compulsory Exercise 3!
 
 ---
 

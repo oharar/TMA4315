@@ -246,8 +246,7 @@ summary(fm1)
 
 ## GLMM - random intercept and slope Poisson
 ```{r,results="hold"}
-library("AED")
-data(RIKZ)
+RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fitRI=glmer(Richness~NAP +(1+NAP|Beach),data=RIKZ,family=poisson(link=log))
 summary(fitRI)
