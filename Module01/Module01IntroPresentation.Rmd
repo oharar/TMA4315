@@ -2,7 +2,7 @@
 subtitle: "TMA4315 Generalized linear models H2023"
 title: "Module 1: INTRODUCTION"
 author: "Bob O'Hara, Department of Mathematical Sciences, NTNU"
-date: "22.08 [PL] and 23.08 [IL]"
+date: "20.08 [PL] and 21.08 [IL]"
 output: #3rd letter intentation hierarchy
   # html_document:
   #   toc: true
@@ -136,7 +136,7 @@ Both theoretic derivations and practical analysis in R will be emphasized.
 
 ## Module 2: Multiple linear regression
 
-**PLAN:** You recapitulate what you have learned in TMA4267 Linear statistical models, and in the plenary lectures we focus on a three-step model, likelihood theory and formal inference connected to the likelihood. Instead of sums-of-squares of error (MSE, RSS) we will use deviance. 
+**PLAN:** You recapitulate what you have learned in TMA4267 Linear statistical models (or an equivalent course!), and in the plenary lectures we focus on a three-step model, likelihood theory and formal inference connected to the likelihood. Instead of sums-of-squares of error (MSE, RSS) we will use deviance. 
 
 In Compulsory exercise 1 you make your own `mylm` function to perform MLR.
 

@@ -1,5 +1,5 @@
 ---
-subtitle: "TMA4315 Generalized linear models H2018"
+subtitle: "TMA4315 Generalized linear models H2024"
 title: "Module 1: INTRODUCTION"
 author: "Bob O'Hara, Department of Mathematical Sciences, NTNU"
 output: #3rd letter intentation hierarchy

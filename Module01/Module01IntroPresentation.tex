@@ -136,7 +136,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -148,13 +148,13 @@
 \title{Module 1: INTRODUCTION}
 \subtitle{TMA4315 Generalized linear models H2023}
 \author{Bob O'Hara, Department of Mathematical Sciences, NTNU}
-\date{22.08 {[}PL{]} and 23.08 {[}IL{]}}
+\date{20.08 {[}PL{]} and 21.08 {[}IL{]}}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}{Introduction: Aim of this module}
-\protect\hypertarget{introduction-aim-of-this-module}{}
+\phantomsection\label{introduction-aim-of-this-module}
 \begin{itemize}
 \item
   Introduction (to the introduction\ldots)
@@ -178,7 +178,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Introduction: Aim of this module}
-\protect\hypertarget{introduction-aim-of-this-module-1}{}
+\phantomsection\label{introduction-aim-of-this-module-1}
 \begin{itemize}
 \tightlist
 \item
@@ -195,7 +195,7 @@
 \begin{frame}
 \begin{block}{Where we are going with GLMs: Expanding the linear
 regression framework}
-\protect\hypertarget{where-we-are-going-with-glms-expanding-the-linear-regression-framework}{}
+\phantomsection\label{where-we-are-going-with-glms-expanding-the-linear-regression-framework}
 We will stay with regression (for the whole course) - but make
 expansions in several directions.
 
@@ -216,7 +216,7 @@ What will not change:
 
 \begin{frame}
 \begin{block}{Expanding the linear regression framework}
-\protect\hypertarget{expanding-the-linear-regression-framework}{}
+\phantomsection\label{expanding-the-linear-regression-framework}
 We will consider relationships between the \emph{conditional mean of
 \(Y_i\)}, \(\text{E}(Y_i\mid {\bf x}_i)=\mu_i\), and linear combinations
 of the covariates in \emph{a linear predictor}
@@ -232,7 +232,7 @@ We connect \(\eta_i\) and \(\mu\) through a \emph{link function}:
 
 \begin{frame}
 \begin{block}{Expanding the linear regression framework even more}
-\protect\hypertarget{expanding-the-linear-regression-framework-even-more}{}
+\phantomsection\label{expanding-the-linear-regression-framework-even-more}
 For most of the course we will assume observation pairs
 (\(Y_i,{\bf x}_i\)) are independent \(i=1,\ldots,n\), but we will also
 consider clustered pairs (in Module 7+8: Linear mixed effects models LMM
@@ -249,7 +249,7 @@ linear)
 
 \begin{frame}
 \begin{block}{Modules}
-\protect\hypertarget{modules}{}
+\phantomsection\label{modules}
 The course is split up into 9 modules, which take 1-2 weeks of class.
 
 Each module has a different theme
@@ -258,7 +258,7 @@ Each module has a different theme
 
 \begin{frame}
 \begin{block}{The modules - in short}
-\protect\hypertarget{the-modules---in-short}{}
+\phantomsection\label{the-modules---in-short}
 The modules of this course are:
 
 \begin{enumerate}
@@ -290,7 +290,7 @@ The modules of this course are:
 
 \begin{frame}
 \begin{block}{Common - for all modules}
-\protect\hypertarget{common---for-all-modules}{}
+\phantomsection\label{common---for-all-modules}
 \begin{enumerate}
 \item
   Model specification: an equation linking the response and the
@@ -312,12 +312,12 @@ emphasized.
 
 \begin{frame}[fragile]
 \begin{block}{Module 2: Multiple linear regression}
-\protect\hypertarget{module-2-multiple-linear-regression}{}
+\phantomsection\label{module-2-multiple-linear-regression}
 \textbf{PLAN:} You recapitulate what you have learned in TMA4267 Linear
-statistical models, and in the plenary lectures we focus on a three-step
-model, likelihood theory and formal inference connected to the
-likelihood. Instead of sums-of-squares of error (MSE, RSS) we will use
-deviance.
+statistical models (or an equivalent course!), and in the plenary
+lectures we focus on a three-step model, likelihood theory and formal
+inference connected to the likelihood. Instead of sums-of-squares of
+error (MSE, RSS) we will use deviance.
 
 In Compulsory exercise 1 you make your own \texttt{mylm} function to
 perform MLR.
@@ -328,7 +328,7 @@ perform MLR.
 
 \begin{frame}
 \begin{block}{Module 3: Binary regression}
-\protect\hypertarget{module-3-binary-regression}{}
+\phantomsection\label{module-3-binary-regression}
 How can be model a response that is not a continuous variable? Here we
 look at present/absent, true/false, healthy/diseased.
 
@@ -344,7 +344,7 @@ overdispersion.
 
 \begin{frame}
 \begin{block}{Module 4: Poisson and gamma regression}
-\protect\hypertarget{module-4-poisson-and-gamma-regression}{}
+\phantomsection\label{module-4-poisson-and-gamma-regression}
 Count data - the number of times and event occurs - is common.
 
 Continuous positive data - like life times, costs and claim sized
@@ -361,7 +361,7 @@ log scale of the response.
 \begin{frame}
 \begin{block}{Module 5: GLM in general (and quasi likelihood --- if
 time)}
-\protect\hypertarget{module-5-glm-in-general-and-quasi-likelihood-if-time}{}
+\phantomsection\label{module-5-glm-in-general-and-quasi-likelihood-if-time}
 We will see that normal, binary, Poisson and gamma regression all have
 the same underlying features: this leads to a unified framework, and
 maximum likelihood estimation can be written on a generalized form for
@@ -381,7 +381,7 @@ modules 1-4.
 
 \begin{frame}
 \begin{block}{Module 6: Categorical regression and contingency tables}
-\protect\hypertarget{module-6-categorical-regression-and-contingency-tables}{}
+\phantomsection\label{module-6-categorical-regression-and-contingency-tables}
 Here our response variable has more than two categories, and these
 categories can either be unordered or ordered.
 
@@ -400,7 +400,7 @@ Compulsory exercise 2 will cover modules 3-6.
 
 \begin{frame}
 \begin{block}{Module 7: Linear mixed effects models}
-\protect\hypertarget{module-7-linear-mixed-effects-models}{}
+\phantomsection\label{module-7-linear-mixed-effects-models}
 We sometimes have categorical factors with lots of levels, e.g.~repeated
 measures on several subjects
 
@@ -423,7 +423,7 @@ random effects.
 
 \begin{frame}
 \begin{block}{Module 8: Generalized linear mixed effects models}
-\protect\hypertarget{module-8-generalized-linear-mixed-effects-models}{}
+\phantomsection\label{module-8-generalized-linear-mixed-effects-models}
 We generalize our model in Module 7 - on normal responses - to binary
 (and possibly Poisson) responses.
 
@@ -435,13 +435,13 @@ Compulsory exercise 3 will cover modules 7-8.
 
 \begin{frame}
 \begin{block}{Module 9: Discussion and Conclusions}
-\protect\hypertarget{module-9-discussion-and-conclusions}{}
+\phantomsection\label{module-9-discussion-and-conclusions}
 Summarise where we are
 \end{block}
 \end{frame}
 
 \begin{frame}{Textbook}
-\protect\hypertarget{textbook}{}
+\phantomsection\label{textbook}
 \textbf{Textbook:} Fahrmeir, Kneib, Lang, Marx (2013): ``Regression.
 Models, Methods and Applications''
 \url{https://link.springer.com/book/10.1007\%2F978-3-642-34333-9} (free
@@ -450,7 +450,7 @@ ebook for NTNU students). Tentative reading list: main parts of Chapters
 \end{frame}
 
 \begin{frame}{Learning outcomes}
-\protect\hypertarget{learning-outcomes}{}
+\phantomsection\label{learning-outcomes}
 \textbf{Knowledge}.
 
 The student can assess whether a generalised linear model can be used in
@@ -474,7 +474,7 @@ further carry out and evaluate such a statistical analysis.
 \end{frame}
 
 \begin{frame}{How we will teach}
-\protect\hypertarget{how-we-will-teach}{}
+\phantomsection\label{how-we-will-teach}
 Two principles used in developnig this course
 
 \begin{itemize}
@@ -487,7 +487,7 @@ Two principles used in developnig this course
 \end{frame}
 
 \begin{frame}{Learning styles}
-\protect\hypertarget{learning-styles}{}
+\phantomsection\label{learning-styles}
 Back in 1988 Felder and Silverman devised a taxonomy for learning styles
 - where four different axis are defined:
 
@@ -526,7 +526,7 @@ plenary lectures or not only read in the book).}
 \end{frame}
 
 \begin{frame}{Active Learning}
-\protect\hypertarget{active-learning}{}
+\phantomsection\label{active-learning}
 Since active students are more able to analyse, evaluate and synthesise
 ideas
 
@@ -563,12 +563,12 @@ Now: plenary and \emph{interactive lectures}.
 \end{frame}
 
 \begin{frame}{Learning resources in the GLM course}
-\protect\hypertarget{learning-resources-in-the-glm-course}{}
+\phantomsection\label{learning-resources-in-the-glm-course}
 Different learning resources in this GLM course have been designed,
 hopefully many of these match your way of learning.
 
 \begin{block}{The module pages}
-\protect\hypertarget{the-module-pages}{}
+\phantomsection\label{the-module-pages}
 The course is divided into modular units with specific focus, in order
 to use smaller units (time and topic) to facilitate learning.
 
@@ -587,7 +587,7 @@ to use smaller units (time and topic) to facilitate learning.
 
 \begin{frame}
 \begin{block}{Structure of module pages}
-\protect\hypertarget{structure-of-module-pages}{}
+\phantomsection\label{structure-of-module-pages}
 \begin{enumerate}
 [1)]
 \tightlist
@@ -607,7 +607,7 @@ to use smaller units (time and topic) to facilitate learning.
 
 \begin{frame}
 \begin{block}{How to use the module pages}
-\protect\hypertarget{how-to-use-the-module-pages}{}
+\phantomsection\label{how-to-use-the-module-pages}
 \begin{itemize}
 \tightlist
 \item
@@ -632,7 +632,7 @@ The module pages are the backbone of the course!
 
 \begin{frame}
 \begin{block}{The plenary lectures (PL)}
-\protect\hypertarget{the-plenary-lectures-pl}{}
+\phantomsection\label{the-plenary-lectures-pl}
 \begin{itemize}
 \tightlist
 \item
@@ -654,7 +654,7 @@ new module.
 
 \begin{frame}
 \begin{block}{Questions}
-\protect\hypertarget{questions}{}
+\phantomsection\label{questions}
 What are advantages of attending a plenary lecture (as compared to
 reading the text book or the module pages, or watching videos)?
 
@@ -664,7 +664,7 @@ Do you plan to attend the plenary lectures?
 
 \begin{frame}
 \begin{block}{The interactive lectures (IL)}
-\protect\hypertarget{the-interactive-lectures-il}{}
+\phantomsection\label{the-interactive-lectures-il}
 Has focus on student activity and understanding though discussing with
 fellow students and with the lecturer/TA - in groups.
 
@@ -732,7 +732,7 @@ fellow students and with the lecturer/TA - in groups.
 
 \begin{frame}
 \begin{block}{The compulsory exercises}
-\protect\hypertarget{the-compulsory-exercises}{}
+\phantomsection\label{the-compulsory-exercises}
 Has mainly focus on programming and interpretation - with some theory -
 and can be worked on in small groups (1-3). Will be a test of acquired
 understanding, and will constitute 30\% of the final evaluation.
@@ -740,19 +740,19 @@ understanding, and will constitute 30\% of the final evaluation.
 \end{frame}
 
 \begin{frame}{Practical details}
-\protect\hypertarget{practical-details}{}
+\phantomsection\label{practical-details}
 go to Blackboard \href{https://innsida.ntnu.no/bb-student}{student
 log-in} or
-\href{https://ntnu.blackboard.com/webapps/login?action=guest_login\&new_loc=/webapps/blackboard/execute/courseMain?course_id=_11002_1}{guest
+\href{https://ntnu.blackboard.com/webapps/login?action=guest_login&new_loc=/webapps/blackboard/execute/courseMain?course_id=_11002_1}{guest
 access}.
 \end{frame}
 
 \begin{frame}{End of Presentation Part}
-\protect\hypertarget{end-of-presentation-part}{}
+\phantomsection\label{end-of-presentation-part}
 \end{frame}
 
 \begin{frame}{Core concept: Exponential family of distributions}
-\protect\hypertarget{core-concept-exponential-family-of-distributions}{}
+\phantomsection\label{core-concept-exponential-family-of-distributions}
 Now lets's start with GLMs\ldots{}
 \end{frame}
 
@@ -785,21 +785,21 @@ might be used in TMA4295, but the basic findings are the same).
 \end{frame}
 
 \begin{frame}{Interactive lectures - problem set}
-\protect\hypertarget{interactive-lectures---problem-set}{}
+\phantomsection\label{interactive-lectures---problem-set}
 You may of cause read through the problem set before the interactive
 lecture, but that is not a prerequisite. Solutions will be provided to
 the major part of the recommended exercises (but not to the R-part of
 this one).
 
 \begin{block}{Theoretical questions (first hour)}
-\protect\hypertarget{theoretical-questions-first-hour}{}
+\phantomsection\label{theoretical-questions-first-hour}
 We will work with the exponential family, but to make the notation
 easier for these tasks, we omit the \(i\) subscript.
 
 \[ f(y \mid \theta)=\exp \left( \frac{y \theta-b(\theta)}{\phi}\cdot w + c(y, \phi, w) \right) \]
 
 \begin{block}{Problem 1:}
-\protect\hypertarget{problem-1}{}
+\phantomsection\label{problem-1}
 Choose (discuss and then talk to lecturer/TA) if you will work on a)
 binomial, b) Poisson, c) univariate normal or d) gamma.
 \end{block}
@@ -867,7 +867,7 @@ Hint: \url{https://wiki.math.ntnu.no/tma4245/tema/begreper/continuous}
 
 \begin{frame}
 \begin{block}{Problem 2. Choose either alternative a or b.}
-\protect\hypertarget{problem-2.-choose-either-alternative-a-or-b.}{}
+\phantomsection\label{problem-2.-choose-either-alternative-a-or-b.}
 Alternative a: Prove that \(\text{E}(Y_i)=b'(\theta_i)\) and
 \(\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}\). Hint: integration
 by parts, and investigate what is
@@ -884,7 +884,7 @@ from one step to another.
 \begin{frame}
 \begin{block}{Exam questions with the exponential family -- optional
 (covered above)}
-\protect\hypertarget{exam-questions-with-the-exponential-family-optional-covered-above}{}
+\phantomsection\label{exam-questions-with-the-exponential-family-optional-covered-above}
 We have covered the Poisson and gamma in the problem sets above, but not
 the negative binomial (not in the core of the course)
 \end{block}
@@ -892,7 +892,7 @@ the negative binomial (not in the core of the course)
 
 \begin{frame}
 \begin{block}{Exam December 2017, Problem 1a: Poisson regression}
-\protect\hypertarget{exam-december-2017-problem-1a-poisson-regression}{}
+\phantomsection\label{exam-december-2017-problem-1a-poisson-regression}
 (Remark: last question can not be answered before module 4.)
 
 Consider a random variable \(Y\). In our course we have considered the
@@ -933,7 +933,7 @@ function?
 
 \begin{frame}
 \begin{block}{Exam 2012, Problem 3: Precipitation in Trondheim, amount}
-\protect\hypertarget{exam-2012-problem-3-precipitation-in-trondheim-amount}{}
+\phantomsection\label{exam-2012-problem-3-precipitation-in-trondheim-amount}
 Remark: the text is slightly modified from the original exam since we
 parameterized the gamma as in our textbook.
 
@@ -960,7 +960,7 @@ Use this to find expressions for the expected value and the variance of
 
 \begin{frame}
 \begin{block}{Exam 2010, Problem 2: Negative binomial distribution}
-\protect\hypertarget{exam-2010-problem-2-negative-binomial-distribution}{}
+\phantomsection\label{exam-2010-problem-2-negative-binomial-distribution}
 The probability density function for a negative binomial random variable
 is
 \[f_y(y; \theta, r) = \frac{\Gamma(y + r)}{y! \Gamma(r)} (1-\theta)^r \theta^y\]
@@ -983,34 +983,34 @@ that \(\text{E}(Y)=\mu=r\frac{\theta}{1-\theta}\) and
 
 \begin{frame}
 \begin{block}{Focus on R-related topics (second hour)}
-\protect\hypertarget{focus-on-r-related-topics-second-hour}{}
+\phantomsection\label{focus-on-r-related-topics-second-hour}
 \end{block}
 
 \begin{block}{R, Rstudio, CRAN and GitHub - and R Markdown}
-\protect\hypertarget{r-rstudio-cran-and-github---and-r-markdown}{}
+\phantomsection\label{r-rstudio-cran-and-github---and-r-markdown}
 \begin{block}{What is R?}
-\protect\hypertarget{what-is-r}{}
+\phantomsection\label{what-is-r}
 \url{https://www.r-project.org/about.html}
 \end{block}
 
 \begin{block}{What is Rstudio?}
-\protect\hypertarget{what-is-rstudio}{}
+\phantomsection\label{what-is-rstudio}
 \url{https://www.rstudio.com/products/rstudio/}
 \end{block}
 
 \begin{block}{What is an R package?}
-\protect\hypertarget{what-is-an-r-package}{}
+\phantomsection\label{what-is-an-r-package}
 \url{http://r-pkgs.had.co.nz} (We will make an R package in the exercise
 part of this course.)
 \end{block}
 
 \begin{block}{What is CRAN?}
-\protect\hypertarget{what-is-cran}{}
+\phantomsection\label{what-is-cran}
 \url{https://cran.uib.no/}
 \end{block}
 
 \begin{block}{What is GitHub and Bitbucket?}
-\protect\hypertarget{what-is-github-and-bitbucket}{}
+\phantomsection\label{what-is-github-and-bitbucket}
 Do we need GitHub or Bitbucket in our course?
 \url{https://www.youtube.com/watch?v=w3jLJU7DT5E} and
 \url{https://techcrunch.com/2012/07/14/what-exactly-is-github-anyway/}
@@ -1020,17 +1020,17 @@ Do we need GitHub or Bitbucket in our course?
 
 \begin{frame}[fragile]
 \begin{block}{What is R Markdown?}
-\protect\hypertarget{what-is-r-markdown}{}
+\phantomsection\label{what-is-r-markdown}
 \url{http://r4ds.had.co.nz/r-markdown.html}
 \end{block}
 
 \begin{block}{What is \texttt{knitr}?}
-\protect\hypertarget{what-is-knitr}{}
+\phantomsection\label{what-is-knitr}
 \url{https://yihui.name/knitr/}
 \end{block}
 
 \begin{block}{What is R Shiny?}
-\protect\hypertarget{what-is-r-shiny}{}
+\phantomsection\label{what-is-r-shiny}
 \url{https://shiny.rstudio.com/}
 
 (In the statistics group we will build R Shiny app for the thematic
@@ -1051,7 +1051,7 @@ shiny server.)
 
 \begin{frame}
 \begin{block}{Explore R Markdown in Rstudio}
-\protect\hypertarget{explore-r-markdown-in-rstudio}{}
+\phantomsection\label{explore-r-markdown-in-rstudio}
 Quotations from
 \url{https://rmarkdown.rstudio.com/authoring_quick_tour.html}:
 
@@ -1108,7 +1108,7 @@ latex to be installed on your machine.
 
 \begin{frame}[fragile]
 \begin{block}{Not use R Markdown, but only R code?}
-\protect\hypertarget{not-use-r-markdown-but-only-r-code}{}
+\phantomsection\label{not-use-r-markdown-but-only-r-code}
 If you only want to extract the R code from a R Markdown file you may do
 that using the function \texttt{purl} from library \texttt{knitr}. To
 produce a file ``1Intro.R'' from this ``1Intro.Rmd'' file:
@@ -1127,7 +1127,7 @@ The file will then be saved in your working directory, that you see with
 
 \begin{frame}[fragile]
 \begin{block}{R packages}
-\protect\hypertarget{r-packages}{}
+\phantomsection\label{r-packages}
 And to work with either the 1Intro.R or 1Intro.Rmd file you will have to
 first install the following libraries:
 
@@ -1144,7 +1144,7 @@ the end of the page.
 
 \begin{frame}[fragile]
 \begin{block}{The Munich Rent Index Data set}
-\protect\hypertarget{the-munich-rent-index-data-set}{}
+\phantomsection\label{the-munich-rent-index-data-set}
 We will use this data set when working with multiple linear regression
 (next module), so this is a good way to start to know the data set and
 the ggplot functions, which can be installed together with a suite of
@@ -1381,7 +1381,7 @@ of the residuals independent of the fitted values? Yes, more in Module
 
 \begin{frame}
 \begin{block}{Combining exercise 1 and 2:}
-\protect\hypertarget{combining-exercise-1-and-2}{}
+\phantomsection\label{combining-exercise-1-and-2}
 Choose one of the distributions you studied earlier (binomial, Poisson,
 normal or gamma), and write a R-markdown document answering the
 questions on requirements, f(x), f(x) as exponential family and mean and
@@ -1394,7 +1394,7 @@ email the link to your repo to be added to this module page.
 \end{frame}
 
 \begin{frame}{Further reading}
-\protect\hypertarget{further-reading}{}
+\phantomsection\label{further-reading}
 \begin{itemize}
 \item
   Grolemund and Hadwick (2017): ``R for Data Science'',
