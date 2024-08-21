@@ -1,5 +1,5 @@
 ---
-subtitle: "TMA4315 Generalized linear models H2023"
+subtitle: "TMA4315 Generalized linear models H2024"
 title: "Module 1: INTRODUCTION"
 author: "Bob O'Hara, Department of Mathematical Sciences, NTNU"
 date: "20.08 [PL] and 21.08 [IL]"
@@ -228,6 +228,7 @@ Summarise where we are
 **Textbook:** Fahrmeir, Kneib, Lang, Marx (2013): "Regression. Models, Methods and Applications" <https://link.springer.com/book/10.1007%2F978-3-642-34333-9> (free ebook for NTNU students).
 Tentative reading list: main parts of Chapters 2, 3 (repetition), 5, 6, 7, Appendix B.4.
 
+(link on Wiki page)
 ---
 
 # Learning outcomes

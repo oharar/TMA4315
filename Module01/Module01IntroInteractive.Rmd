@@ -27,6 +27,10 @@ The exam style questions are optional, but will be helpful for, well, the exam. 
 
 # Core concept: Exponential family of distributions 
 
+![](GLMsFTW.jpg){width=50%}
+
+(source: [Barry Rowlingson on Twitter. Sorry, X](https://x.com/geospacedman/status/1825255764719726607))
+
 In this course we will look at models where the distribution of the response variable, $y_i$, can be written in the form of a _univariate exponential family_
 \[ f(y_i\mid \theta_i)=\exp \left( \frac{y_i \theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right) \]
 where
@@ -63,6 +67,9 @@ Choose (discuss and then talk to lecturer/TA) if you will work on a) binomial, b
 You may first use $n=1$ in the binomial (which then is called Bernoulli) - since that is much easier than a general $n$.
 
 Hint: <https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete> and nearly the same parameterization for showing the binomial is member of exponential <https://www.youtube.com/watch?v=7mNrsFr7P_A>.
+
+Also: $x = e^{\ln x}$
+
 </details>
 
 <details><summary>Hints for Poisson distribution</summary>
@@ -106,9 +113,9 @@ Mettes solution to 1a-d:  <https://www.math.ntnu.no/emner/TMA4315/2017h/Module1E
 
 Alternative a: 
 
-<span class="question">Prove that $\text{E}(Y_i)=b'(\theta_i)$ and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.</span>
+<span class="question">Prove that $\text{E}(Y_i)=b'(\theta_i)$ ($b'(\theta_i)= \frac{d b(\theta_i)}{d \theta_i}$) and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.</span>
 
-**Hint: integration by parts, and investigate what is $\int_{-\infty}^{\infty} \frac{df}{dy}dy$?**
+**Hint: take a sideways approach: integration by parts, and investigate what is $\int_{-\infty}^{\infty} \frac{df}{dy}dy$?**
 
 Alternative b: 
 
