@@ -84,7 +84,14 @@ s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
 \sum_{i=1}^n s_i(\beta)
 $$
 
-which will be filled in when I get the time...
+$$
+\begin{align}
+s_i(\beta) &= \frac{\partial l()}{\partial \psi} \frac{\partial \psi}{\partial \beta} \\
+&= -\frac{1}{2} 2 \sigma^{-2} \psi x_i^T \\
+&= - \sigma^{-2} (y_i - x_i^T \mathbf{\beta}) x_i^T \\
+&= \sigma^{-2} (x_i^T x_i \mathbf{\beta} - x_i^T y_i) 
+\end{align}
+$$
 
 </details>
 
@@ -95,6 +102,15 @@ which will be filled in when I get the time...
 
 Start with $s(\beta)=0$...
 
+$$
+\begin{align}
+s(\beta) &= \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y}) = 0 \\
+&= X^TX \mathbf{\beta} - X^T \mathbf{y}\\
+(X^TX)^{-1}X^TX \mathbf{\beta} &= (X^TX)^{-1} X^T \mathbf{y}\\
+\mathbf{\hat{\beta}} &= (X^TX)^{-1} X^T \mathbf{y}
+\end{align}
+$$
+
 If there is no closed solution, we have to resort to numerical methods, of which there are a lot
 
 </details>
@@ -104,13 +120,29 @@ If there is no closed solution, we have to resort to numerical methods, of which
 
 <details><summary>Solution</summary>
 
-The matrices can tell us the location of the Holy Grail?
+Observed Fisher information matrix: 
+
+$$
+H(\beta) = -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} = -\frac{\partial s(\beta)}{\partial\beta^T}
+$$
+
+
+Expected Fisher information matrix
+
+$$
+F(\beta) = E\left(-\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} \right)
+$$
+
+They are both square matrices of dimension $p \times p$, where $p$ is the length of $\beta$.
+
+These matrices tell us about the variance in the estimate of $\hat{\beta}$.
 
 </details>
 
 ---
 
 4. A core finding is $\hat \beta$. 
+
 $$
 \hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf y}
 $$
@@ -130,7 +162,8 @@ The only element that is random is ${\bf y}$, and we know its distribution. And 
 <span class="question">What does this imply for the distribution of the $j$th element of $\hat{\beta}$? In particular, how can we calculate the variance of $\hat{\beta}_j$?</span>
 
 <details><summary>Solution</summary>
-Hmm. 
+The $j$th element of $\hat{\beta}$ is normally distributed, with mean $\beta$, and variance [that is a bit complicated](https://stats.stackexchange.com/questions/243315/variance-of-hat-mathbf-beta-j-in-multiple-linear-regression-models).
+
 </details>
 
 5. <span class="question">Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this?</span>
@@ -138,7 +171,13 @@ Hmm.
 <details><summary>Solution</summary>
 The difference between an estimand and an estimate.
 
-To be explained later...
+The error is the difference from the true (or "true") line: the residual is from the fitted line. 
+
+The raw residuals (i.e. $y_i - x_i^T \mathbf{\hat{\beta}}$) 
+$$\hat{\varepsilon}={\bf Y}-{\bf \hat{Y}}=({\bf I}-{\bf H}){\bf Y}$$
+where ${\bf H} = X (X^T X)^{-1} X^T$. Thus these can be heteroscedastic, and correlated (unless ${\bf H}$ behaves)
+
+THe solution is to studentise them.
 
 </details>
 
@@ -147,9 +186,8 @@ To be explained later...
 **Hint: [QQ--plot as html](https://www.math.ntnu.no/emner/TMA4315/2017h/qq.html)**
 
 <details><summary>Solution</summary>
-Whatever you want: you can re-scale the predicted quantiles.
+Because we're assuming a 1:1 relationship, the intercept should be 0, and slope 1.
 
-(not the best answer, of course)
 </details>
 
 ---

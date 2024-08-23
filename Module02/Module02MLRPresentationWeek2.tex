@@ -143,7 +143,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -163,7 +163,7 @@ contributions from Øyvind Bakke and Ingeborg Hem}
 
 \begin{frame}
 \begin{block}{What to remember?}
-\protect\hypertarget{what-to-remember}{}
+\phantomsection\label{what-to-remember}
 Model: \[
 {\bf Y}= X {\boldsymbol \beta}+\boldsymbol{\varepsilon}
 \]
@@ -200,14 +200,14 @@ independent.
 \end{frame}
 
 \begin{frame}{Inference}
-\protect\hypertarget{inference}{}
+\phantomsection\label{inference}
 We will consider confidence intervals and prediction intervals, and then
 test single and linear hypotheses.
 \end{frame}
 
 \begin{frame}
 \begin{block}{Confidence intervals (CI)}
-\protect\hypertarget{confidence-intervals-ci}{}
+\phantomsection\label{confidence-intervals-ci}
 In addition to providing a parameter estimate for each element of our
 parameter vector \(\beta\) we should also report a \((1-\alpha)100\)\%
 confidence interval (CI) for each element. (We will not consider
@@ -270,7 +270,7 @@ as reference location.)
 
 \begin{frame}
 \begin{block}{Prediction intervals}
-\protect\hypertarget{prediction-intervals}{}
+\phantomsection\label{prediction-intervals}
 Remember, one aim for regression was to ``construct a model to predict
 the reponse from a set of (one or several) explanatory variables- more
 or less black box''.
@@ -339,7 +339,7 @@ heating:
 
 \begin{frame}[fragile]
 \begin{block}{Questions:}
-\protect\hypertarget{questions}{}
+\phantomsection\label{questions}
 \begin{enumerate}
 \item
   {When is a prediction interval of interest? }
@@ -354,7 +354,7 @@ heating:
 
 \begin{frame}
 \begin{block}{Single hypothesis testing set-up}
-\protect\hypertarget{single-hypothesis-testing-set-up}{}
+\phantomsection\label{single-hypothesis-testing-set-up}
 In single hypothesis testing we are interesting in testing one null
 hypothesis against an alternative hypothesis. In linear regression the
 hypothesis is often about a regression parameter \(\beta_j\):
@@ -368,7 +368,7 @@ variables are present in the model, that is, the other \(\beta_i\)s
 
 \begin{frame}
 \begin{block}{Two types of errors:}
-\protect\hypertarget{two-types-of-errors}{}
+\phantomsection\label{two-types-of-errors}
 \begin{itemize}
 \item
   ``Reject \(H_0\) when \(H_0\) is true''=``false positives'' = ``type I
@@ -407,7 +407,7 @@ What else should be written in the last two cells?
 
 \begin{frame}
 \begin{block}{Hypothesis test on \(\beta_j\) (t-test)}
-\protect\hypertarget{hypothesis-test-on-beta_j-t-test}{}
+\phantomsection\label{hypothesis-test-on-beta_j-t-test}
 In linear regression models our test statistic for testing
 \(H_0: \beta_j=0\) is
 \[T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}_{\varepsilon}}\sim t_{n-2}\]
@@ -423,7 +423,7 @@ We would in a two-sided setting reject \(H_0\) for large values of
 
 \begin{frame}
 \begin{block}{The p-value}
-\protect\hypertarget{the-p-value}{}
+\phantomsection\label{the-p-value}
 A p-value is a test statistic satisfying \(0 \leq p({\bf Y}) \leq 1\)
 for every vector of observations \({\bf Y}\).
 
@@ -467,7 +467,7 @@ signficance level. We often choose as significance level
 
 \begin{frame}[fragile]
 \begin{block}{Munich rent index hypothesis test}
-\protect\hypertarget{munich-rent-index-hypothesis-test}{}
+\phantomsection\label{munich-rent-index-hypothesis-test}
 We look at print-out using \texttt{summary} from fitting \texttt{lm}.
 
 \begin{Shaded}
@@ -533,7 +533,7 @@ cheating1 & 161.414 & 8.663 & 18.632 & 0.000 \\
 
 \begin{frame}
 \begin{block}{Testing linear hypotheses in regression}
-\protect\hypertarget{testing-linear-hypotheses-in-regression}{}
+\phantomsection\label{testing-linear-hypotheses-in-regression}
 We study a normal linear regression model with \(p=k+1\) covariates, and
 refer to this as model A (the larger model). We then want to investigate
 the null and alternative hypotheses of the following type(s):
@@ -569,7 +569,7 @@ from the smaller model B, and \(\hat{{\boldsymbol \beta}}\) and
 \begin{frame}
 \begin{block}{Testing a set of parameters - what is \({\bf C}\) and
 \({\bf d}\)?}
-\protect\hypertarget{testing-a-set-of-parameters---what-is-bf-c-and-bf-d}{}
+\phantomsection\label{testing-a-set-of-parameters---what-is-bf-c-and-bf-d}
 We consider a regression model with intercept and five covariates,
 \(x_1, \ldots, x_5\). Assume that we want to know if the covariates
 \(x_3\), \(x_4\), and \(x_5\) can be dropped (due to the fact that none
@@ -589,7 +589,7 @@ This means that our \({\bf C}\) is a \(6\times 3\) matrix and
 
 \begin{frame}
 \begin{block}{Testing one regression parameter}
-\protect\hypertarget{testing-one-regression-parameter}{}
+\phantomsection\label{testing-one-regression-parameter}
 If we set \({\bf C}=(0,1, 0, \cdots, 0)^T\), a row vector with 1 in
 position 2 and 0 elsewhere, and \({\bf d}=(0,0,\ldots,0)\), a column
 vector with 0s, then we test
@@ -608,7 +608,7 @@ Remark: Remember that \(T_{\nu}^2=F_{1,\nu}\).
 
 \begin{frame}
 \begin{block}{Testing ``significance of the regression''}
-\protect\hypertarget{testing-significance-of-the-regression}{}
+\phantomsection\label{testing-significance-of-the-regression}
 If we set \({\bf C}=(0,1,1, \cdots ,1)^T\), a row vector with 0 in
 position 1 and 0 elsewhere, and \({\bf d}=(0,0,\ldots,0)\), a column
 vector with 0s, then we test
@@ -642,7 +642,7 @@ Is the regression significant?
 
 \begin{frame}
 \begin{block}{Relation to Wald test}
-\protect\hypertarget{relation-to-wald-test}{}
+\phantomsection\label{relation-to-wald-test}
 Since \(\text{Cov}(\hat{\beta})=\sigma^2 ({\bf X}^T{\bf X})^{-1}\), then
 \(\text{Cov}({\bf C}\hat{\beta})={\bf C}\sigma^2({\bf X}^T{\bf X})^{-1}{\bf C}^T\),
 so that \({\bf C}\hat{\sigma}^2({\bf X}^T{\bf X})^{-1}{\bf C}^T\) can be
@@ -658,7 +658,7 @@ the Wald test in more detail later in this course.
 
 \begin{frame}
 \begin{block}{Asympotic result}
-\protect\hypertarget{asympotic-result}{}
+\phantomsection\label{asympotic-result}
 It can in general be shown that
 \[r F_{r,n-p}\stackrel{n\rightarrow \infty}{\longrightarrow} \chi^2_r.\]
 That is, if we have a random variable \(F\) that is distributed as
@@ -674,9 +674,9 @@ that when the number of observation becomes very large then
 \end{frame}
 
 \begin{frame}{Focus on likelihood: Likelihood ratio test and deviance}
-\protect\hypertarget{focus-on-likelihood-likelihood-ratio-test-and-deviance}{}
+\phantomsection\label{focus-on-likelihood-likelihood-ratio-test-and-deviance}
 \begin{block}{The likelihood ratio test}
-\protect\hypertarget{the-likelihood-ratio-test}{}
+\phantomsection\label{the-likelihood-ratio-test}
 An alternative to the Wald test is the likelihood ratio test (LRT),
 which compares the likelihood of \emph{two models}.
 
@@ -739,7 +739,7 @@ The LRT can be performed using \texttt{anova()}.
 
 \begin{frame}
 \begin{block}{Deviance (something new!)}
-\protect\hypertarget{deviance-something-new}{}
+\phantomsection\label{deviance-something-new}
 The \emph{deviance} is used to assess model fit and also for model
 choice, and is based on the likelihood ratio test statistic. It is used
 for all GLMs in general - and replaces using SSE in multiple linear
@@ -789,7 +789,7 @@ model fits the data well, \(D\sim \chi^2_{n-p}\) exactly (in this case).
 
 \begin{frame}{Analysis of variance decomposition and coefficient of
 determination, \(R^2\)}
-\protect\hypertarget{analysis-of-variance-decomposition-and-coefficient-of-determination-r2}{}
+\phantomsection\label{analysis-of-variance-decomposition-and-coefficient-of-determination-r2}
 It is possible to decompose the total variability in the data, called
 SST (sums-of-squares total), into a part that is explained by the
 regression SSR (sums-of-squares regression), and a part that is not
@@ -831,7 +831,7 @@ that is, perfect fit to the data.
 \begin{frame}[fragile]
 \begin{block}{Analysis of variance tables - with emphasis on sequential
 Type I ANOVA}
-\protect\hypertarget{analysis-of-variance-tables---with-emphasis-on-sequential-type-i-anova}{}
+\phantomsection\label{analysis-of-variance-tables---with-emphasis-on-sequential-type-i-anova}
 It is possible to call the function \texttt{anova} on an
 \texttt{lm}-object. What does that function do?
 
@@ -920,7 +920,7 @@ formulas!
 
 \begin{frame}[fragile]
 \begin{block}{Details on the test \texttt{anova(fit)}}
-\protect\hypertarget{details-on-the-test-anovafit}{}
+\phantomsection\label{details-on-the-test-anovafit}
 When running \texttt{anova} on one fitted regression the \(F\)-test in
 \texttt{anova} is calculated as for ``testing linear hypotheses'' - but
 with a slight twist. Our large model is still the full regression model
@@ -1054,7 +1054,7 @@ type 3 ANOVA tables would have been equal.
 
 \begin{frame}
 \begin{block}{Quality measures}
-\protect\hypertarget{quality-measures}{}
+\phantomsection\label{quality-measures}
 To assess the quality of the regression we can report the \(R^2\)
 coefficient of determination. However, since adding covariates to the
 linear regression can not make the SSE larger, this means that adding
@@ -1072,7 +1072,7 @@ need to look at other measures of quality for the regression.
 
 \begin{frame}
 \begin{block}{\(R^2\) adjusted (corrected)}
-\protect\hypertarget{r2-adjusted-corrected}{}
+\phantomsection\label{r2-adjusted-corrected}
 \[R^2_{\text{adj}}=1-\frac{\frac{SSE}{n-p}}{\frac{SST}{n-1}}=1-\frac{n-1}{n-p}(1-R^2)\]
 Choose the model with the \emph{largest} \(R^2_{\text{adj}}\).
 \end{block}
@@ -1080,7 +1080,7 @@ Choose the model with the \emph{largest} \(R^2_{\text{adj}}\).
 
 \begin{frame}
 \begin{block}{AIC Akaike information criterion}
-\protect\hypertarget{aic-akaike-information-criterion}{}
+\phantomsection\label{aic-akaike-information-criterion}
 AIC is one of the most widely used criteria, and is designed for
 likelihood-based inference. Let \(l(\hat{\beta}_M,\tilde{\sigma}^2)\) be
 the maximum of the log-likelihood of the data inserted the maximum
@@ -1103,7 +1103,7 @@ Choose the model with the minimum AIC.
 
 \begin{frame}
 \begin{block}{BIC Bayesian information criterion.}
-\protect\hypertarget{bic-bayesian-information-criterion.}{}
+\phantomsection\label{bic-bayesian-information-criterion.}
 The BIC is also based on the likelihood (see notation above).
 \[\text{BIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)\]
 
@@ -1121,7 +1121,7 @@ a model that is too complex.
 
 \begin{frame}
 \begin{block}{Model selection strategies}
-\protect\hypertarget{model-selection-strategies}{}
+\phantomsection\label{model-selection-strategies}
 \begin{itemize}
 \item
   All subset selection: use smart ``leaps and bounds'' algorithm, works
@@ -1141,7 +1141,7 @@ a model that is too complex.
 \end{frame}
 
 \begin{frame}[fragile]{R packages}
-\protect\hypertarget{r-packages}{}
+\phantomsection\label{r-packages}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{install.packages}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"gamlss.data"}\NormalTok{, }\StringTok{"tidyverse"}\NormalTok{, }\StringTok{"GGally"}\NormalTok{, }\StringTok{"Matrix"}\NormalTok{, }\StringTok{"nortest"}\NormalTok{))}
@@ -1150,7 +1150,7 @@ a model that is too complex.
 \end{frame}
 
 \begin{frame}{References and further reading}
-\protect\hypertarget{references-and-further-reading}{}
+\phantomsection\label{references-and-further-reading}
 \begin{itemize}
 \tightlist
 \item

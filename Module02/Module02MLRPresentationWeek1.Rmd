@@ -17,16 +17,14 @@ opts_chunk$set(tidy.opts=list(width.cutoff=68),results="hold",tidy=TRUE,warning=
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-(Lastest changes: 26.08.2018)
-
 # Overview
 
 ## Learning material
 
 * Textbook: Chapter 2.2, 3 and B.4.
-(Chapter 3 was on the reading list for TMA4267 Linear statistical 2016-2018, so much of this module is know from before.)
 * [Classnotes 30.08.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/TMA4315M2H20180830.pdf)
 * [Classnotes 06.09.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/TMA4315M2H20180906.pdf)
+
 
 ---
 
@@ -61,15 +59,27 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Aim of multiple linear regression
 
-1. Construct a model to help understand the relationship between a response and one or several explanatory variables. [Correlation, or cause and effect?]
+1. **Explanation** Construct a model to help understand the relationship between a response and one or several explanatory variables.
 
-2. Construct a model to predict the response from a set of (one or several) explanatory variables. [More or less "black box"]
+2. **Prediction** Construct a model to predict the response from a set of (one or several) explanatory variables.
 
 ---
 
 ### Munich rent index
 
 Munich, 1999: 3082 observations on 9 variables.
+
+Interested in `rent`. Govt wants to know what a typical rent is in different areas of Munich
+
+- what variables explain it
+- how well can we predict it?
+
+More information in Fahrmeir et. al., (2021) page 6.
+
+---
+
+
+### Munich rent index Variables
 
 * `rent`: the net rent per month (in Euro).
 * `rentsqm`: the net rent per month per square meter (in Euro).
@@ -80,8 +90,6 @@ Munich, 1999: 3082 observations on 9 variables.
 * `kitchen`: Quality of kitchen: 0 standard 1 premium.
 * `cheating`: central heating: a factor 0 without central heating, 1 with central heating.
 * `district`: District in Munich.
-
-More information in Fahrmeir et. al., (2013) page 5.
 
 ---
 
@@ -154,11 +162,15 @@ X=model.matrix(rentsqm~area+yearc+location+bath+kitchen+cheating+district,data=d
 
 ---
 
+# Regression Models
+
+---
+
 # Model
 
 ## The traditional way
 
-$${\bf Y=X \beta}+\boldsymbol{\varepsilon}$$
+$${\bf Y}=X \boldsymbol{\beta}+\boldsymbol{\varepsilon}$$
 is called a classical linear model if the following is true:
 
 1. $\text{E}(\boldsymbol{\varepsilon})=\bf{0}$.
@@ -179,7 +191,7 @@ For random covariates these assumptions are to be understood conditionally on $\
 
 Independent pairs $(Y_i, {\bf x}_i)$ for $i=1,\ldots,n$.
 
-1. Random component: $Y_i \sim N$ with $\text{E}(Y_i)=\mu_i$ and $\text{Var}(Y_i)=\sigma^2$.
+1. Random component: $Y_i \sim N(\mu_i, \sigma^2)$.
 2. Systematic component: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
 3. Link function: linking the random and systematic component (linear predictor): Identity link and response function.
 $\mu_i=\eta_i$.
@@ -202,11 +214,11 @@ In multiple linear regression there are two popular methods for estimating the r
 - maximum likelihood and 
 - least squares. 
 
-These two methods give the same estimator when we assume the normal linear regression model. We will in this module focus on maximum likelihood estimation, since that can be used also when we have non-normal responses (modules 3-6: binomial, Poisson, gamma, multinomial).
+These two methods give the same estimator when we assume the normal linear regression model.
 
 ---
 
-## Likelihood theory (from B.4)
+## Likelihood theory
 
 ### Likelihood $L(\beta)$
 
@@ -233,15 +245,21 @@ Observe that the log-likelihood is a sum of individual contributions for each ob
 
 ---
 
-### Repetition: rules for derivatives of vector
-H\¨{a}rdle and Simes (2015), page 65.
+### Rules for derivatives of vector
+
+Härdle and Simes (2015), page 65.
 
 * Let ${\beta}$ be a $p$-dimensional column vector of interest, 
 * and let $\frac{\partial}{\partial {\beta}}$ denote the $p$-dimensional vector with partial derivatives wrt the $p$ elements of ${\beta}$. 
 * Let ${\bf d}$ be a $p$-dimensional column vector of constants and 
 * ${\bf D}$ be a $p\times p$ symmetric matrix of constants.
 
+---
+
+### Rules for derivatives of vector II
+
 **Rule 1:**
+
 $$\frac{\partial}{\partial \boldsymbol{\beta}}({\bf d}^T\boldsymbol{\beta})=\frac{\partial}{\partial \boldsymbol{\beta}}(\sum_{j=1}^p d_j \beta_j)={\bf d}$$
 **Rule 2:**
 $$\frac{\partial}{\partial \boldsymbol{\beta}}(\boldsymbol{\beta}^T{\bf D}\boldsymbol{\beta})=\frac{\partial}{\partial \boldsymbol{\beta}}(\sum_{j=1}^p \sum_{k=1}^p \beta_j d_{jk} \beta_k)=2{\bf D}\boldsymbol{\beta}$$
@@ -297,25 +315,6 @@ $$
 
 But, for other distribution than the normal we get a set of non-linear equations when we look at $s(\hat{\beta})=0$, and then we will use the Newton-Raphson or Fisher Scoring iterative methods.
 
-<!-- , but first we will work on finding the mean and covariance matrix of the score vector - and the derivatives of the score vector (the Hessian, which is minus the observed Fisher matrix). -->
-
-<!-- Since the score function depends on $Y_i=y_i$ we may regard the score function as a random vector. We will now calculate the mean and covariance matrix for the score function. The expected value is -->
-
-<!-- ### The expected Fisher information matrix $F(\beta)$ -->
-
-<!-- The covariance of $s(\beta)$ is called the expected Fisher information matrix, $F(\beta)$ and is given by -->
-
-<!-- \begin{align} F(\beta) &= \text{Cov}(s(\beta)) =   \sum_{i=1}^n \text{Cov}(s_i(\beta)) \\ -->
-<!-- &= \sum_{i=1}^n E\left[\Big(s_i(\beta) - E(s_i(\beta))\Big)\Big(s_i(\beta)-E(s_i(\beta))\Big)^T\right] \\ -->
-<!-- &= \sum_{i=1}^n E(s_i(\beta)s_i(\beta)^T) = \sum_{i=1}^n F_i(\beta)  -->
-<!-- \end{align} -->
-
-<!-- where it is used that the responses $Y_i$ and $Y_j$ are independent, and that $E(s_i(\beta)) = 0 \ \forall i$. -->
-
-<!-- **A useful relationship:** Under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \beta}$): -->
-
-<!-- $$F(\beta) = E\left( -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} \right) = E(-\text{Hessian matrix of }l)$$ -->
-<!-- which relates the expected to the observed Fisher information matrix $H(\beta)$. -->
 
 ---
 
@@ -324,8 +323,8 @@ But, for other distribution than the normal we get a set of non-linear equations
 $$
 H(\beta) = -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} = -\frac{\partial s(\beta)}{\partial\beta^T}
 $$
-
-so this is minus the Hessian of the loglikelihood. $H(\beta)$ may be considered as a _local measure of information_ that the likelihood contains. The higher the curvature of the log-likelihood near its maximum the more information is providd by the likelihood about the unknown parameter. Since we look at minus the Hessian, we have a positive $H(\beta)$ near the maximum.
+- May be considered as a _local measure of information_ that the likelihood contains. 
+- The higher the curvature of the log-likelihood near its maximum the more information is providd by the likelihood about the unknown parameter. 
 
 
 **Q:** <span class="question">Calculate this for the multiple linear regression model. What is the dimension of $H(\beta)$?
@@ -340,11 +339,12 @@ $$
 
 **Q:** <span class="question">Calculate this for the multiple linear regression model. What is the dimension of $F(\beta)$?
 
-In Module 3 we need the Fisher information matrix in the Newton-Raphson method, and also to find the (asympotic) covariance matrix of our estimated coefficents $\hat{\beta}$ - so much more about this then.
+More on these later: for the moment, note the relationship between $\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T}$ and $Var(\hat{\beta})$
 
 ---
 
 ### Hands on: Munich rent index parameter estimates
+
 Explain what the values under `Estimate` mean in practice.
 
 ```{r}
@@ -398,11 +398,11 @@ $$
 
 But, this estimator is biased.
 
+<!---
 To prove this you may use the trace-formula, that is $\text{E}({\bf Y}^T {\bf A}{\bf Y})=\text{tr}({\bf A}\text{Cov}({\bf Y}))+\text{E}({\bf Y})^T{\bf A}\text{E}({\bf Y})$, and we use that $\text{SSE}={\bf Y}^T ({\bf I}-{\bf H}){\bf Y}$. This was done in [class notes from TMA4267 - lecture 10](https://www.math.ntnu.no/emner/TMA4267/2017v/L10classnotes20170217.pdf)
+--->
 
 ---
-
-
 
 When an unbiased version is preferred, it is found using _restricted maximum likelihood_ (REML). We will look into REML-estimation in Module 7. In our case the (unbiased) REML estimate is
 
@@ -410,7 +410,7 @@ $$ \hat{\sigma}^2=\frac{1}{n-p}({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\ha
 
 The restricted maximum likelihood estimate is used in `lm`.
 
-**Q:** <span class="question">What does it mean that the REML estimate is unbiased? Where is the estimate $\hat{\sigma}$ in the regression output? (See output from `lm` for the rent index example.)
+**Q:** <span class="question">What does it mean that the REML estimate is unbiased?</span>
 
 <!---
   cat("Answer: \n")
@@ -432,7 +432,8 @@ cat("Residual standard error: 2.031 is sigmahat")
 <!-- See class notes. -->
 
 # Properties for the normal linear model
-To be able to do inference (=make confidence intervals, prediction intervals, test hypotheses) we need to know about the properties of our parameter estimators in the (normal) linear model.
+
+To be able to do inference we need to know about the properties of our parameter estimators in the (normal) linear model.
 
 * Least squares and maximum likelihood estimator for ${\boldsymbol \beta}$:
 \[ \hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
@@ -490,6 +491,9 @@ Remark: a similar result will exist for GLMs, using the concept of _orthogonal p
 
 ---
 
+# Checking model assumptions 
+
+---
 
 # Checking model assumptions 
 
@@ -619,7 +623,7 @@ fit <- lm(rent ~ area, data=rent99) # Run a regression analysis
 format(head(fortify(fit)), digits = 4L)
 ```
 
-(`ggplot2::fortify.lm` creates a dataframe from an `lm`-object, which can be used to plot diagnostic plots. `ggplot` will do this automatically when asjked to plot)
+(`ggplot2::fortify.lm` creates a dataframe from an `lm`-object, which can be used to plot diagnostic plots. `ggplot` will do this automatically when asked to plot)
 
 ---
 
@@ -657,14 +661,6 @@ ggplot(fit, aes(sample = .stdresid)) +
 
 ---
 
-```{r}
-library(nortest)
-ad.test(rstudent(fit))
-```
-
-<!-- (Not normal.) -->
-
-----
 
 #### Scale-location
 

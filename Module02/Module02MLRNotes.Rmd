@@ -231,6 +231,7 @@ We assume that pairs of covariates and response are measured independently of ea
 $$L(\boldsymbol{\beta})=\prod_{i=1}^n L_i(\boldsymbol{\beta})=\prod_{i=1}^n f(y_i; \boldsymbol{\beta})$$
 **Q**: fill in with the normal density for $f$ and the multiple linear regression model.
 
+
 ---
 
 ###Loglikelihood $l(\boldsymbol{\beta})$
@@ -268,12 +269,9 @@ $$\frac{\partial^2 \boldsymbol{\beta}^T{\bf D}\boldsymbol{\beta}}{\partial \bold
 
 ---
 
-###Score function $s(\beta)$
+### Score function $s(\beta)$
 
 The score function is a $p\times 1$ vector, $s(\beta)$, with the partial derivatives of the log-likelihood with respect to the $p$ elements of the $\beta$ vector.
-
-<!-- **Q**: Write down the rules for derivatives: chain rule, product rule, fraction rule, and in particular derivative of $\ln(x)$, $\exp(x)$ and $\frac{1}{x}$, you will need them now. (Yes, known from the R1 course in vgs.) -->
-<!-- A: Chain rule: $\frac{d f(u(x))}{du}=\frac{df}{du}\cdot \frac{du}{dx}$, product rule: $(u\cdot v)'=u'\cdot v+u\cdot v'$, fraction rule: $(\frac{u}{v})'=\frac{u' \cdot v - u\cdot v'}{v^2}$, $\frac{d \ln(x)}{dx}=\frac{1}{x}$, $\frac{d\exp(x)}{dx}=\exp(x)$ and $\frac{d(\frac{1}{x})}{dx}=-\frac{1}{x^2}$. -->
 
 $$s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
 \sum_{i=1}^n \frac{\partial l_i(\beta)}{\partial \beta}=
@@ -281,7 +279,34 @@ $$s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
 
 Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
 
+<details><summary>rules for derivatives: chain rule, product rule, fraction rule, and in particular derivative of $\ln(x)$, $\exp(x)$ and $\frac{1}{x}$</summary>
+
+
+Chain rule: $\frac{d f(u(x))}{du}=\frac{df}{du}\cdot \frac{du}{dx}$
+
+Product rule: $(u\cdot v)'=u'\cdot v+u\cdot v'$
+
+Fraction rule: $(\frac{u}{v})'=\frac{u' \cdot v - u\cdot v'}{v^2}$ 
+
+$\frac{d \ln(x)}{dx}=\frac{1}{x}$
+
+$\frac{d\exp(x)}{dx}=\exp(x)$ and 
+
+$\frac{d(\frac{1}{x})}{dx}=-\frac{1}{x^2}$.
+</details>
+
 **Q**: fill in for the multiple linear regression model.
+
+<details><summary>Answer</summary>
+The log likelihood is (from B.3.2 in Fahrmeier et al.)
+
+$$
+l(\beta) = -\frac{1}{2} (\mathbf{y} - X \mathbf{\beta})^T \Sigma^{-1} (\mathbf{y} - X \mathbf{\beta})
+$$
+
+(Fahrmeier et al. use $P$, the **precision matrix**, i.e. $P = \Sigma^{-1}$)
+</details>
+
 
 ---
 
@@ -290,7 +315,39 @@ $$s(\hat{\boldsymbol{\beta}})=0$$
 
 **Q**: fill in for the multiple linear regression model. Specify what the _normal equations_ are.
 
+<details><summary>Answer</summary>
+The score is $\frac{\partial l(\beta)}{\partial \beta}$. We can write $\psi = \mathbf{y} - X \mathbf{\beta}$, and then from the chain rule have 
+
+$$
+\begin{align}
+s(\beta) &= \frac{\partial l()}{\partial \psi} \frac{\partial \psi}{\partial \beta} \\
+&= -\frac{1}{2} 2 \Sigma^{-1} \psi X^T \\
+&= - \Sigma^{-1} (\mathbf{y} - X \mathbf{\beta}) X^T \\
+&= \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y}) 
+\end{align}
+$$
+
+Using Rule 1 and Rule 2 above.
+
+
+</details>
+
 For the normal linear regression model, these equations $s(\hat{\beta})=0$ have a solution to be written on closed form. 
+
+<details><summary>Solution</summary>
+The score is $\frac{\partial l(\beta)}{\partial \beta}$. We can write $\psi = \mathbf{y} - X \mathbf{\beta}$, and then from the chain rule have 
+
+$$
+\begin{align}
+s(\beta) &= \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y}) = 0 \\
+&= X^TX \mathbf{\beta} - X^T \mathbf{y}\\
+(X^TX)^{-1}X^TX \mathbf{\beta} &= (X^TX)^{-1} X^T \mathbf{y}\\
+\mathbf{\hat{\beta}} &= (X^TX)^{-1} X^T \mathbf{y}
+
+\end{align}
+$$
+
+</details>
 
 ---
 
@@ -304,27 +361,9 @@ $$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
 
 ### Looking ahead: Hessian and Fisher information
 
-But, for other distribution than the normal we get a set of non-linear equations when we look at $s(\hat{\beta})=0$, and then we will use the Newton-Raphson or Fisher Scoring iterative methods.
+For other distribution than the normal we get a set of non-linear equations when we look at $s(\hat{\beta})=0$, and then we will use the Newton-Raphson or Fisher Scoring iterative methods.
 
-<!-- , but first we will work on finding the mean and covariance matrix of the score vector - and the derivatives of the score vector (the Hessian, which is minus the observed Fisher matrix). -->
 
-<!-- Since the score function depends on $Y_i=y_i$ we may regard the score function as a random vector. We will now calculate the mean and covariance matrix for the score function. The expected value is -->
-
-<!-- ### The expected Fisher information matrix $F(\beta)$ -->
-
-<!-- The covariance of $s(\beta)$ is called the expected Fisher information matrix, $F(\beta)$ and is given by -->
-
-<!-- \begin{align} F(\beta) &= \text{Cov}(s(\beta)) =   \sum_{i=1}^n \text{Cov}(s_i(\beta)) \\ -->
-<!-- &= \sum_{i=1}^n E\left[\Big(s_i(\beta) - E(s_i(\beta))\Big)\Big(s_i(\beta)-E(s_i(\beta))\Big)^T\right] \\ -->
-<!-- &= \sum_{i=1}^n E(s_i(\beta)s_i(\beta)^T) = \sum_{i=1}^n F_i(\beta)  -->
-<!-- \end{align} -->
-
-<!-- where it is used that the responses $Y_i$ and $Y_j$ are independent, and that $E(s_i(\beta)) = 0 \ \forall i$. -->
-
-<!-- **A useful relationship:** Under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \beta}$): -->
-
-<!-- $$F(\beta) = E\left( -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} \right) = E(-\text{Hessian matrix of }l)$$ -->
-<!-- which relates the expected to the observed Fisher information matrix $H(\beta)$. -->
 
 **Observed Fisher information matrix $H(\beta)$**
 
@@ -334,9 +373,10 @@ so this is minus the Hessian of the loglikelihood.
 
 * $H(\beta)$ may be considered as a _local measure of information_ that the likelihood contains. 
 * The higher the curvature of the log-likelihood near its maximum the more information is provide by the likelihood about the unknown parameter. 
-<!-- Since we look at minus the Hessian, we have a positive $H(\beta)$ near the maximum. -->
+
 
 **Q:** Calculate this for the multiple linear regression model. What is the dimension of $H(\beta)$?
+
 
 ---
 
