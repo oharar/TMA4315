@@ -116,7 +116,7 @@ If there is no closed solution, we have to resort to numerical methods, of which
 </details>
 
 
-4. <span class="question">Define the observed and the expected Fisher information matrix. What dimension does these matrices have? What can these matrices tell us?</span>
+4. <span class="question">Define the observed and the expected Fisher information matrix. What dimension does these matrices have?</span>
 
 <details><summary>Solution</summary>
 
@@ -135,10 +135,42 @@ $$
 
 They are both square matrices of dimension $p \times p$, where $p$ is the length of $\beta$.
 
-These matrices tell us about the variance in the estimate of $\hat{\beta}$.
+</details>
+
+(NOTE: these  next two questions have been added at the last minute, so may not be complete)
+
+<span class="question">Calculate the Fisher information for multiple regression</span>
+
+<details><summary>Hint</summary>
+Use the rules from Hardle and Simes (2015), page 65 (search the module notes for Simes if you can't fine them!).
+</details>
+
+<details><summary>Solution</summary>
+You can go via the likelihood or the score.
+
+The log likelihood is 
+
+$$
+l(\beta) = -\frac{1}{2} (\mathbf{y} - X \mathbf{\beta})^T \Sigma^{-1} (\mathbf{y} - X \mathbf{\beta})
+$$
+
+... (to be continued. Basically, use Rule 3, and substitute $\beta = (\mathbf{y} - X \mathbf{\beta})$, with apologies for using $\beta$ to mean different things.
+
+Or we can go via the score
+$$
+s(\beta) = \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y})
+$$
+Where $\Sigma^{-1} = \sigma^{-2} I$, and use Rule 1.
 
 </details>
 
+<span class="question">How does it relate to the covariance of $\hat{beta}$?</span>
+
+<details><summary>Solution</summary>
+It's the inverse!
+
+(we will see later that this is a special case of a more general result, which is why we care about it now)
+</details>
 ---
 
 4. A core finding is $\hat \beta$. 
