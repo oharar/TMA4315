@@ -65,16 +65,16 @@ This helps us get to the generalisation to GLMs.
 
 <details><summary>Solution</summary>
 
-Likelihood:
+Likelihood of a single observation:
 
 $$
-L({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = \frac{1}{2\pi \sigma^2} e^{-\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X {\boldsymbol \beta})}
+L({\boldsymbol \beta}, \sigma^2 ; {\bf x}_i, y_i) = \frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{1}{2 \sigma^2}(y_i - {\bf x}_i {\boldsymbol \beta})^2}
 $$
 
-log-likelihood:
+log-likelihood for all of the data:
 
 $$
-l({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = -\log{2\pi \sigma^2} -\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X {\boldsymbol \beta})
+l({\boldsymbol \beta}, \sigma^2 ; X, {\bf y}) = -\frac{n}{2}\log{2\pi \sigma^2} -\frac{1}{2 \sigma^2}({\bf y} - X {\boldsymbol \beta})^T({\bf y} - X {\boldsymbol \beta})
 $$
 The score vector is
 
@@ -83,6 +83,7 @@ s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=
 \sum_{i=1}^n \frac{\partial l_i(\beta)}{\partial \beta}=
 \sum_{i=1}^n s_i(\beta)
 $$
+CHECK THIS: THE SIGN OF \PSI NEEDS FOLLOWING, AND THE X^T SWAPS SIDES
 
 $$
 \begin{align}

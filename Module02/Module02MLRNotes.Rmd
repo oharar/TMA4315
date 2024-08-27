@@ -536,7 +536,7 @@ with $\hat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
 with $\frac{(n-p)\hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p}$.
 
 * Statistic for inference about $\beta_j$, $c_{jj}$ is diagonal element $j$ of $({\bf X}^T{\bf X})^{-1}$.
-\[ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p}\]
+$T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p}$
 This requires that $\hat{\beta}_j$ and $\hat{\sigma}$ are independent (see below).
 
 ---

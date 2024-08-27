@@ -60,7 +60,18 @@ We will consider confidence intervals and prediction intervals, and then test si
 
 In addition to providing a parameter estimate for each element of our parameter vector $\beta$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element. (We will not consider simultanious confidence regions in this course.)
 
-We focus on element $j$ of $\beta$, called $\beta_j$. It is known that $T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}$ follows a $t$-distribution with $n-p$ degrees of freedom. Let $t_{\alpha/2,n-p}$ be such that $P(T_j>t_{\alpha/2,n-p})=\alpha/2$. 
+---
+
+## Confidence intervals (CI)
+
+We focus on element $j$ of $\beta$, called $\beta_j$. We know 
+$$
+T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}
+$$
+
+follows a $t$-distribution with $n-p$ degrees of freedom. 
+
+Let $t_{\alpha/2,n-p}$ be such that $P(T_j>t_{\alpha/2,n-p})=\alpha/2$. 
 
 Since the $t$-distribution is symmetric around 0, then $P(T_j< -t_{\alpha/2,n-p})=\alpha/2$. We may then write
 $$P(-t_{\alpha/2,n-p}\le T_j \le t_{\alpha/2,n-p})=1-\alpha$$
@@ -139,22 +150,28 @@ confint(fit)
 
 ## Prediction intervals
 
-Remember, one aim for regression was to "construct a model to predict the reponse from a set of (one or several) explanatory variables- more or less black box". 
+One aim for regression was to construct a model to predict the response from a set of (one or several) explanatory variables 
 
-Assume we want to make a prediction (of the response - often called $Y_0$) given specific values for the covariates - often called ${\bf x}_0$. An intuitive point estimate is $\hat{Y}_0={\bf x}_0^T \hat{\beta}$ - but to give a hint of the uncertainty in this prediction we also want to present a prediction interval for the $Y_0$.
+Assume we want to make a prediction ($Y_0$) given specific values for the covariates, ${\bf x}_0$. An intuitive point estimate is $\hat{Y}_0={\bf x}_0^T \hat{\beta}$ - but to give a hint of the uncertainty in this prediction we also want to present a prediction interval for the $Y_0$.
 
 ----
 
-First, we assume that the unobserved response at covariate ${\bf x}_0$ is independent of our previous observations and follows the same distribution, that is 
-$Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)$. Further, 
+First, assume the unobserved response at covariate ${\bf x}_0$ follows the same distribution, i.e. $Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)$ and is independent of our previous observations. Further, 
 
 $$\hat{Y}_0={\bf x}_0^T \hat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).$$
 
 Then, for $Y_0-{\bf x}_0^T \hat{\beta}$ we have
-$$\text{E}(Y_0-{\bf x}_0^T \hat{\beta})=0 \text{ and } \text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \hat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0$$
+
+$$\text{E}(Y_0-{\bf x}_0^T \hat{\beta})=0$$
+and
+
+$$\text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \hat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0$$
 so that 
 $$Y_0-{\bf x}_0^T \hat{\beta}\sim N(0,\sigma^2 (1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0)) $$
-Inserting our REML-estimate for $\sigma^2$ gives 
+
+---
+
+Inserting our REML estimate for $\sigma^2$ gives 
 
 
 $$T=\frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}}\sim t_{n-p}.$$
@@ -208,15 +225,18 @@ Remark: we implicitly say that our test is done given that the other variables a
 
 ### Two types of errors:
 
-* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error" ="miscarriage of justice".
-These are our _fake news_, which are very important for us to avoid.
+* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error"
 
-* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"= "guilty criminal go free".
+* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"
 
 ---
 
+## Strict Interpretaitons of significance tests
+
 We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test (see below) is smaller than the chosen significance level.
 We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
+
+---
 
 **Q**: <span class="question">Draw a 2 by 2 table showing the connection between 
 
@@ -245,15 +265,15 @@ We would in a two-sided setting reject $H_0$ for large values of $\text{abs}(t_0
 
 A p-value is a test statistic satisfying $0 \leq p({\bf Y}) \leq 1$ for every vector of observations ${\bf Y}$. 
 
-* Small values are interpreted as evidence that $H_1$ is true(-ish).
-
-* In single hypothesis testing, if the p-value is less than the chosen significance level (chosen upper limit for the probability of committing a type I error), then we reject the null hypothesis, $H_0$. The chosen significance level is often referred to as $\alpha$.
+* In single hypothesis testing, if the p-value is less than the chosen significance level, then we reject the null hypothesis, $H_0$. The chosen significance level is often referred to as $\alpha$.
 
 * A p-value is _valid_ if
 $$ P(p({\bf Y}) \leq \alpha) \leq \alpha$$
-for all $\alpha$, $0 \leq \alpha \leq 1$, whenever $H_0$ is true, that is, if the $p$-value is valid, rejection on the basis of the $p$-value ensures that the probability of type I error does not exceed $\alpha$.
+for all $\alpha$, $0 \leq \alpha \leq 1$, whenever $H_0$ is true.
 
 * If $P(p({\bf Y}) \leq \alpha) = \alpha$ for all $\alpha$, $0 \leq \alpha \leq 1$, the $p$-value is called an _exact_ p-value.  
+
+
 
 ---
 
@@ -283,13 +303,16 @@ knitr::kable(summary(fit)$coefficients, digits=3)
 2. <span class="question">Will the test statistics and $p$-values change if we change the regression model?
 <!-- A: Yes. Unless our design matrix has orthogonal columns. -->
 
-3. <span class="question">What is the relationship between performing an hypothesis test and constructing a CI interval? Remember:
+3. <span class="question">What is the relationship between performing an hypothesis test and constructing a CI interval?
+
+<!---
+Remember:
 ```{r}
 library(gamlss.data)
 fit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
 confint(fit)
 ```
-
+--->
 <!-- A: If a $(1-\alpha)$ 100% CI covers the hypothsized value (here 0) then this is a sensible value for the parameter it can be shown that then the $p$-value will be larger than $\alpha$. And, if a $(1-\alpha)$ 100% CI does not cover the hypothsized value (here 0) then this is not a sensible value for the parameter it can be shown that then the $p$-value will be smaller than $\alpha$. -->
 
 ---
@@ -641,18 +664,28 @@ But, if we want to compare models with different model complexity we need to loo
 $$R^2_{\text{adj}}=1-\frac{\frac{SSE}{n-p}}{\frac{SST}{n-1}}=1-\frac{n-1}{n-p}(1-R^2)$$
 Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
+But, if we are choosing model, we should use hypothesis tests, or techniques to comapre models!
+
+----
+
+### Information Criteria
+
+Rather than find the best model by hypothesis testing, we can instead use a measure of model adequacy (defined somehow!) to compare models.
+
+There are different ways of defining model adequacy, which lead to different statistics
+
 ----
 
 ### AIC Akaike information criterion 
 
-AIC is one of the most widely used criteria, and is designed for likelihood-based inference.
+AIC is one of the most widely used criteria, and is designed for likelihood-based prediction.
 Let $l(\hat{\beta}_M,\tilde{\sigma}^2)$ be the maximum of the log-likelihood of the data inserted the maximum likelihood estimates for the regression and nuisance parameter. Further, let $\lvert M \rvert$ be the number of estimated regression parameters in our model.
 $$\text{AIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+2(\lvert M\rvert +1)$$
 
 For a normal regression model:
 $$\text{AIC} =n\ln(\tilde{\sigma}^2)+2(\lvert M\rvert +1)+C$$
 where C is a function of $n$ (will be the same for two models for the same data set).
-Remark that $\tilde{\sigma}^2=SSE/n$ - our ML estimator (not our unbiased REML), so that the first term in the AIC is just a function of the SSE. For MLR the AIC and the Mallows Cp gives the same result when comparing models.
+Remark that $\tilde{\sigma}^2=SSE/n$ - our ML estimator (not our unbiased REML), so that the first term in the AIC is just a function of the SSE.
 
 Choose the model with the minimum AIC. 
 
@@ -660,15 +693,16 @@ Choose the model with the minimum AIC.
 
 ### BIC  Bayesian information criterion.
 
-The BIC is also based on the likelihood (see notation above).
+The BIC is also based on the likelihood, nad is designed for inference (finding the "true" model).
+
 $$\text{BIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)$$
 
 For a normal regression model:
 $$ \text{BIC}= n\ln(\tilde{\sigma}^2)+\ln(n)(\lvert M\rvert +1)$$
 Choose the model with the minimum BIC. 
 
-AIC and BIC are motivated in very different ways, but the final result for the normal regression model is very similar.
 BIC has a larger penalty than AIC ($\log(n)$ vs. $2$), and will often give a smaller model (=more parsimonious models) than AIC. 
+
 In general we would not like a model that is too complex.
 
 ---
