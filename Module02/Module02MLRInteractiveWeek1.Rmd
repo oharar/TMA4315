@@ -164,7 +164,7 @@ Where $\Sigma^{-1} = \sigma^{-2} I$, and use Rule 1.
 
 </details>
 
-<span class="question">How does it relate to the covariance of $\hat{beta}$?</span>
+<span class="question">How does it relate to the covariance of $\hat{\beta}$?</span>
 
 <details><summary>Solution</summary>
 It's the inverse!
