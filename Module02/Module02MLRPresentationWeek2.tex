@@ -212,11 +212,20 @@ In addition to providing a parameter estimate for each element of our
 parameter vector \(\beta\) we should also report a \((1-\alpha)100\)\%
 confidence interval (CI) for each element. (We will not consider
 simultanious confidence regions in this course.)
+\end{block}
+\end{frame}
 
-We focus on element \(j\) of \(\beta\), called \(\beta_j\). It is known
-that \(T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\)
-follows a \(t\)-distribution with \(n-p\) degrees of freedom. Let
-\(t_{\alpha/2,n-p}\) be such that \(P(T_j>t_{\alpha/2,n-p})=\alpha/2\).
+\begin{frame}
+\begin{block}{Confidence intervals (CI)}
+\phantomsection\label{confidence-intervals-ci-1}
+We focus on element \(j\) of \(\beta\), called \(\beta_j\). We know \[
+T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}
+\]
+
+follows a \(t\)-distribution with \(n-p\) degrees of freedom.
+
+Let \(t_{\alpha/2,n-p}\) be such that
+\(P(T_j>t_{\alpha/2,n-p})=\alpha/2\).
 
 Since the \(t\)-distribution is symmetric around 0, then
 \(P(T_j< -t_{\alpha/2,n-p})=\alpha/2\). We may then write
@@ -271,13 +280,11 @@ as reference location.)
 \begin{frame}
 \begin{block}{Prediction intervals}
 \phantomsection\label{prediction-intervals}
-Remember, one aim for regression was to ``construct a model to predict
-the reponse from a set of (one or several) explanatory variables- more
-or less black box''.
+One aim for regression was to construct a model to predict the response
+from a set of (one or several) explanatory variables
 
-Assume we want to make a prediction (of the response - often called
-\(Y_0\)) given specific values for the covariates - often called
-\({\bf x}_0\). An intuitive point estimate is
+Assume we want to make a prediction (\(Y_0\)) given specific values for
+the covariates, \({\bf x}_0\). An intuitive point estimate is
 \(\hat{Y}_0={\bf x}_0^T \hat{\beta}\) - but to give a hint of the
 uncertainty in this prediction we also want to present a prediction
 interval for the \(Y_0\).
@@ -285,18 +292,23 @@ interval for the \(Y_0\).
 \end{frame}
 
 \begin{frame}
-First, we assume that the unobserved response at covariate \({\bf x}_0\)
-is independent of our previous observations and follows the same
-distribution, that is \(Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)\).
-Further,
+First, assume the unobserved response at covariate \({\bf x}_0\) follows
+the same distribution, i.e.~\(Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)\)
+and is independent of our previous observations. Further,
 
 \[\hat{Y}_0={\bf x}_0^T \hat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).\]
 
 Then, for \(Y_0-{\bf x}_0^T \hat{\beta}\) we have
-\[\text{E}(Y_0-{\bf x}_0^T \hat{\beta})=0 \text{ and } \text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \hat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0\]
+
+\[\text{E}(Y_0-{\bf x}_0^T \hat{\beta})=0\] and
+
+\[\text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \hat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0\]
 so that
 \[Y_0-{\bf x}_0^T \hat{\beta}\sim N(0,\sigma^2 (1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0)) \]
-Inserting our REML-estimate for \(\sigma^2\) gives
+\end{frame}
+
+\begin{frame}
+Inserting our REML estimate for \(\sigma^2\) gives
 
 \[T=\frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}}\sim t_{n-p}.\]
 \end{frame}
@@ -372,23 +384,26 @@ variables are present in the model, that is, the other \(\beta_i\)s
 \begin{itemize}
 \item
   ``Reject \(H_0\) when \(H_0\) is true''=``false positives'' = ``type I
-  error'' =``miscarriage of justice''. These are our \emph{fake news},
-  which are very important for us to avoid.
+  error''
 \item
   ``Fail to reject \(H_0\) when \(H_1\) is true (and \(H_0\) is
-  false)''=``false negatives'' = ``type II error''= ``guilty criminal go
-  free''.
+  false)''=``false negatives'' = ``type II error''
 \end{itemize}
 \end{block}
 \end{frame}
 
 \begin{frame}
+\begin{block}{Strict Interpretations of significance tests}
+\phantomsection\label{strict-interpretations-of-significance-tests}
 We choose to reject \(H_0\) at some significance level \(\alpha\) if the
 \(p\)-value of the test (see below) is smaller than the chosen
 significance level. We say that : Type I error is ``controlled'' at
 significance level \(\alpha\), which means that the probability of
 miscarriage of justice (Type I error) does not exceed \(\alpha\).
+\end{block}
+\end{frame}
 
+\begin{frame}
 \textbf{Q}: Draw a 2 by 2 table showing the connection between
 
 \begin{itemize}
@@ -429,20 +444,13 @@ for every vector of observations \({\bf Y}\).
 
 \begin{itemize}
 \item
-  Small values are interpreted as evidence that \(H_1\) is true(-ish).
-\item
   In single hypothesis testing, if the p-value is less than the chosen
-  significance level (chosen upper limit for the probability of
-  committing a type I error), then we reject the null hypothesis,
-  \(H_0\). The chosen significance level is often referred to as
-  \(\alpha\).
+  significance level, then we reject the null hypothesis, \(H_0\). The
+  chosen significance level is often referred to as \(\alpha\).
 \item
   A p-value is \emph{valid} if
   \[ P(p({\bf Y}) \leq \alpha) \leq \alpha\] for all \(\alpha\),
-  \(0 \leq \alpha \leq 1\), whenever \(H_0\) is true, that is, if the
-  \(p\)-value is valid, rejection on the basis of the \(p\)-value
-  ensures that the probability of type I error does not exceed
-  \(\alpha\).
+  \(0 \leq \alpha \leq 1\), whenever \(H_0\) is true.
 \item
   If \(P(p({\bf Y}) \leq \alpha) = \alpha\) for all \(\alpha\),
   \(0 \leq \alpha \leq 1\), the \(p\)-value is called an \emph{exact}
@@ -496,7 +504,7 @@ cheating1 & 161.414 & 8.663 & 18.632 & 0.000 \\
 \end{block}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 \textbf{Q} (and A):
 
 \begin{enumerate}
@@ -508,27 +516,8 @@ cheating1 & 161.414 & 8.663 & 18.632 & 0.000 \\
   regression model?
 \item
   What is the relationship between performing an hypothesis test and
-  constructing a CI interval? Remember:
+  constructing a CI interval?
 \end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(gamlss.data)}
-\NormalTok{fit }\OtherTok{=} \FunctionTok{lm}\NormalTok{(rent }\SpecialCharTok{\textasciitilde{}}\NormalTok{ area }\SpecialCharTok{+}\NormalTok{ location }\SpecialCharTok{+}\NormalTok{ bath }\SpecialCharTok{+}\NormalTok{ kitchen }\SpecialCharTok{+}\NormalTok{ cheating, }\AttributeTok{data =}\NormalTok{ rent99)}
-\FunctionTok{confint}\NormalTok{(fit)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##                  2.5 %      97.5 %
-## (Intercept) -44.825534   0.8788739
-## area          4.354674   4.8029443
-## location2    28.579849  49.9405909
-## location3    92.970636 159.1443278
-## bath1        52.076412  96.0311030
-## kitchen1     94.907671 145.9621578
-## cheating1   144.427555 178.4000215
-\end{verbatim}
 \end{frame}
 
 \begin{frame}
@@ -541,7 +530,7 @@ the null and alternative hypotheses of the following type(s):
  H_0: \beta_{j}&=&0 \text{ vs. } H_1:\beta_j\neq 0\\
  H_0: \beta_{1}&=&\beta_{2}=\beta_{3}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0\\
  H_0: \beta_{1}&=&\beta_{2}=\cdots=\beta_{k}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0\\
- \end{eqnarray*} We call the restricted model (when the null hypotesis
+ \end{eqnarray*} We call the restricted model (when the null hypothesis
 is true) model B, or the smaller model.
 \end{block}
 \end{frame}
@@ -1075,6 +1064,20 @@ need to look at other measures of quality for the regression.
 \phantomsection\label{r2-adjusted-corrected}
 \[R^2_{\text{adj}}=1-\frac{\frac{SSE}{n-p}}{\frac{SST}{n-1}}=1-\frac{n-1}{n-p}(1-R^2)\]
 Choose the model with the \emph{largest} \(R^2_{\text{adj}}\).
+
+But, if we are choosing model, we should use hypothesis tests, or
+techniques to comapre models!
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Information Criteria}
+\phantomsection\label{information-criteria}
+Rather than find the best model by hypothesis testing, we can instead
+use a measure of model adequacy (defined somehow!) to compare models.
+
+There are different ways of defining model adequacy, which lead to
+different statistics
 \end{block}
 \end{frame}
 
@@ -1082,8 +1085,8 @@ Choose the model with the \emph{largest} \(R^2_{\text{adj}}\).
 \begin{block}{AIC Akaike information criterion}
 \phantomsection\label{aic-akaike-information-criterion}
 AIC is one of the most widely used criteria, and is designed for
-likelihood-based inference. Let \(l(\hat{\beta}_M,\tilde{\sigma}^2)\) be
-the maximum of the log-likelihood of the data inserted the maximum
+likelihood-based prediction. Let \(l(\hat{\beta}_M,\tilde{\sigma}^2)\)
+be the maximum of the log-likelihood of the data inserted the maximum
 likelihood estimates for the regression and nuisance parameter. Further,
 let \(\lvert M \rvert\) be the number of estimated regression parameters
 in our model.
@@ -1094,8 +1097,7 @@ For a normal regression model:
 a function of \(n\) (will be the same for two models for the same data
 set). Remark that \(\tilde{\sigma}^2=SSE/n\) - our ML estimator (not our
 unbiased REML), so that the first term in the AIC is just a function of
-the SSE. For MLR the AIC and the Mallows Cp gives the same result when
-comparing models.
+the SSE.
 
 Choose the model with the minimum AIC.
 \end{block}
@@ -1104,18 +1106,19 @@ Choose the model with the minimum AIC.
 \begin{frame}
 \begin{block}{BIC Bayesian information criterion.}
 \phantomsection\label{bic-bayesian-information-criterion.}
-The BIC is also based on the likelihood (see notation above).
+The BIC is also based on the likelihood, nad is designed for inference
+(finding the ``true'' model).
+
 \[\text{BIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)\]
 
 For a normal regression model:
 \[ \text{BIC}= n\ln(\tilde{\sigma}^2)+\ln(n)(\lvert M\rvert +1)\] Choose
 the model with the minimum BIC.
 
-AIC and BIC are motivated in very different ways, but the final result
-for the normal regression model is very similar. BIC has a larger
-penalty than AIC (\(\log(n)\) vs.~\(2\)), and will often give a smaller
-model (=more parsimonious models) than AIC. In general we would not like
-a model that is too complex.
+BIC has a larger penalty than AIC (\(\log(n)\) vs.~\(2\)), and will
+often give a smaller model (=more parsimonious models) than AIC.
+
+In general we would not like a model that is too complex.
 \end{block}
 \end{frame}
 

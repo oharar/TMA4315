@@ -194,10 +194,12 @@ We want to predict the rent - with PI - for an apartment with area 50 $m^2$, loc
 
 ```{r}
 library(gamlss.data)
-fit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
+fit=lm(rent~area+location+bath+kitchen+cheating,
+       data=rent99)
 newobs=rent99[1,]
 newobs[1,]=c(NA,NA,50,NA,2,1,1,1,NA)
-predict(fit,newdata=newobs,interval="prediction",type="response")
+predict(fit,newdata=newobs,interval="prediction",
+        type="response")
 ```
 
 --- 
@@ -231,7 +233,7 @@ Remark: we implicitly say that our test is done given that the other variables a
 
 ---
 
-## Strict Interpretaitons of significance tests
+## Strict Interpretations of significance tests
 
 We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test (see below) is smaller than the chosen significance level.
 We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
@@ -324,7 +326,7 @@ We study a normal linear regression model with $p=k+1$ covariates, and refer to 
  H_0: \beta_{1}&=&\beta_{2}=\beta_{3}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0\\
  H_0: \beta_{1}&=&\beta_{2}=\cdots=\beta_{k}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0\\
  \end{eqnarray*}
-We call the restricted model (when the null hypotesis is true) model B, or the smaller model.
+We call the restricted model (when the null hypothesis is true) model B, or the smaller model.
 
 ---
 

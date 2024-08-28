@@ -1,12 +1,13 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 1: Linear models for Gaussian data" 
-date: "Deadline: Friday, September 28, 2018 at 16.00" 
-output: # 3rd letter intentation hierarchy
+date: "Deadline: Friday, September 6th, 2024 at 23.59" 
+output: # 3rd letter indentation hierarchy
   html_document:
     toc: true
     toc_float: true
     toc_depth: 2
+    css: "../TMA4315RMarkdown.css"
   # pdf_document:
   #  toc: false
   #  toc_depth: 2
@@ -22,23 +23,22 @@ opts_chunk$set(tidy.opts = list(width.cutoff = 68), tidy = TRUE, warning = FALSE
 
 **To be handed in on Blackboard.**
 
-Students may work on the assignment alone, or in groups of two or three, and are also encouraged to collaborate across groups. Each group needs to hand in an [R Markdown] (http://rmarkdown.rstudio.com/) document with answers to the questions as well as all source code. Hand in the file as an R Markdown file (`.Rmd`) *and* a pdf file (`.pdf`). Make sure that the `.Rmd` compiles as both pdf and html before you hand it in. Include all code you have written in the `mylm.R` file in the end of your file (hint: use `eval = FALSE` in the chunk option) (only include the final version). 
+Students may work on the assignment alone, or in groups of two or three, and are also encouraged to collaborate across groups. Each group needs to hand in an [R Markdown](http://rmarkdown.rstudio.com/) document with answers to the questions as well as all source code. Hand in the file as an R Markdown file (`.Rmd`) *and* a pdf file (`.pdf`). Make sure that the `.Rmd` compiles as both pdf and html before you hand it in. Include all code you have written in the `mylm.R` file in the end of your file (hint: use `eval = FALSE` in the chunk option) (only include the final version). 
 
-You shall deliver a document that answers all questions, using print-outs from `R` when asked for/when it seems necessary. It should include calculations you needed to answer the questions, and enough information so the teaching assistant can see that you have understood the theory (but do not write too much either, and exclude code not directly necessary for the answers). You will often be asked to interpret the parameters. This does not mean that you should just say what the numeric values are or state how you interpret the parameter in general, but rather explain what these values mean for the model in question.
+All of the quesrions you should answer are <span class="question">marked like this</span>.
+
+You should deliver a document that answers all questions, using print-outs from `R` when asked for/when it seems necessary. It should include calculations you needed to answer the questions, and enough information so the teaching assistant can see that you have understood the theory (but do not write too much either, and exclude code not directly necessary for the answers). You will often be asked to interpret the parameters. This does not mean that you should just say what the numeric values are or state how you interpret the parameter in general, but rather explain what these values mean for the model in question.
 
 *Please write the names of the group members and the group number you have on Blackboard on top of your document!*
 
-Guidance by the teaching assistant (Ingeborg) will be given Tuesdays and Thursdays from 10:15-12:00 in room 922 at the 9th floor of Sentralbygg 2. She will be there from the beginning, but leaves if no one shows up. If you know you will be arriving very late, send her an email (ingeborg.hem@ntnu.no) to ensure that she will be in 922.
-
-In this project you will create your own `R`-package to handle linear models for Gaussian data and use this package to analyse a dataset. You can find more information about the package system and classes in `R` at https://cran.r-project.org/doc/contrib/Leisch-CreatingPackages.pdf. The text below describes how the package can be created using R-Studio since it makes it easy to rebuild and reload the package. The description is reasonably platform-independent, and should work on Windows, Mac and Linux. R-Studio is a useful integrated development environment (IDE) for `R`. 
+In this project you will create your own `R`-package to handle linear models for Gaussian data and use this package to analyse a dataset. You can find more information about the package system and classes in `R` at https://cran.r-project.org/doc/contrib/Leisch-CreatingPackages.pdf. The text below describes how the package can be created using R-Studio since it makes it easy to rebuild and reload the package. The description is reasonably platform-independent, and should work on Windows, Mac and Linux.
 
 
 # Introduction
 
 Follow these steps to get started:
 
-1. Install `R` and R-Studio if necessary (already installed on machines in Nullrommet and
-Banachrommet) (can be useful to update `R` if you do not have the latest version). Contact orakel@ntnu.no if you run into technical problems with your own computer.
+1. Install `R` and R-Studio if necessary. Contact orakel@ntnu.no if you run into technical problems with your own computer.
 2. Start R-Studio 
 3. Select *File--New Project* 
 4. Select create
@@ -72,6 +72,8 @@ The dataset we will work on is from Canada, and consists of 3987 observations on
 * `sex`, Male or Female
 * `language`, English, French or Other
 
+We want to study how the qualitative variable `wages` depends on the explanatory variables. 
+
 The dataset is available in the library `car` in `R`, but with missing data. The following command will store the data as a dataframe called `SLID`, and then remove all rows containing missing data.
 
 ```{r, eval = FALSE}
@@ -83,23 +85,24 @@ SLID <- SLID[complete.cases(SLID),]
 
 ```
 
-Draw a matrix of diagnostic plots of all the variables and comment briefly on the relationship between some of the variables. 
+<span class="question">Draw a matrix of diagnostic plots of all the variables and comment briefly on the relationship between some of the variables.</span>
+
 Hint: The function `ggpairs` (from the `GGally` library) makes a diagnostic plot matrix using the `ggplot` functionality.
 
-We want to study how the qualitative variable `wages` depends on one or more explanatory variables. Which assumptions do we need make about the data if we want to perform a multiple linear regression analysis?
+<span class="question">Which assumptions do we need make about the data if we want to perform a multiple linear regression analysis?</span>
 
 # Part 2: Linear regression with the `mylm` package (4.5 points)
 
-You can use asymptotic expressions for all the tests. This means that instead of the exact \(t_{\nu}\)-test you can use the asymptotic \(z\)-test, and instead of the exact \(F_{r,m}\)-test you can use the asymptotic \(\chi_{m}^2\)-test (but test statistic scaled with $r$, details below). The `lm` function in `R` uses the exact (not asymptotic) tests, but later in this course we will use models that need the asymptotic tests (for the binary regression, the Poission regression, ...). That is why you will use them already here. The asymptotic expressions are valid when the number of observations is large.
+You can use asymptotic expressions for all the tests. This means that instead of the exact $t_{\nu}$-test you can use the asymptotic $z$-test, and instead of the exact $F_{r,m}$-test you can use the asymptotic $\chi_{m}^2$-test (but test statistic scaled with $r$, details below). The `lm` function in `R` uses the exact (not asymptotic) tests, but later in this course we will use models that need the asymptotic tests (for the binary regression, Poisson regression, ...). That is why you will use them already here. The asymptotic expressions are valid when the number of observations is large.
 
 When you are finished with the whole exercise, your `mylm`-package should be able to
 
 1. calculate the estimates of the regression coefficients, and the estimated covariance matrix of the parameter estimates
-2. calculate the standard error and \(z\)-test for each estimated coefficient
+2. calculate the standard error and $z$-test for each estimated coefficient
 3. calculate the fitted values and the residuals
 4. calculate the residual sum of squares (SSE) and degrees of freedom
 5. calculate the analysis of variance table
-6. calculate the coefficient of determination (\(R^2\))
+6. calculate the coefficient of determination ($R^2$)
 
 Note that you will be creating a class called `mylm` in this exercise. That is why all function names end with ".mylm". You do NOT need to include ".mylm" when using the functions, as `R` detects the class of the object you are giving to the function. This will hopefully become more clear during the exercise, the important thing for now is that you are aware that you are creating a new class, called `mylm`.
 
@@ -109,7 +112,9 @@ Please include the statistical formulas and theory you have used to write the co
 
 ## a) (1 points)
 
-Fill-in the missing parts in the `mylm` function in your `mylm` package required to calculate the estimates of the coefficients. Fit a simple linear regression model to the data with `wages` as the response and `education` as predictor to check if the function works.
+<span class="question">Fill-in the missing parts in the `mylm` function in your `mylm` package required to calculate the estimates of the coefficients. </span>
+
+<span class="question">Fit a simple linear regression model to the data with `wages` as the response and `education` as predictor to check if the function works.</span>
 
 The commands
 ```{r eval = FALSE}
@@ -130,44 +135,61 @@ Hint 3: The function `browser` in `R` can be used for debugging.
 
 ## b) (1.5 points)
 
-Develop the `mylm` function further, so it can calculate the estimated covariance matrix for the parameter estimates. 
+<span class="question">Develop the `mylm` function further, so it can calculate the estimated covariance matrix for the parameter estimates. </span>
 
-What are the estimates and standard errors of the intercept and regression coefficient for this model? Test the significance of the regression coefficient using a \(z\)-test. What is the interpretation of the parameter estimates?  
+<span class="question">What are the estimates and standard errors of the intercept and regression coefficient for this model?</span>
 
-Fill-in the missing parts in `summary.mylm` such that
+<span class="question">Test the significance of the regression coefficient using a $z$-test. </span>
+
+<span class="question">What is the interpretation of the parameter estimates?  </span>
+
+<span class="question">Fill-in the missing parts in `summary.mylm` such that</span>
 
 ```{r eval = FALSE}
 summary(model1)
 ```
 
-gives a similar table of tests of significance as `summary` used on an `lm` object. Note that the results will not be the same since `lm` uses a \(t\)-test, and you should use a \(z\)-test in `mylm`. Hint: To calculate two-sided p-values remember the standard normal distribution is symmetric around 0.
+gives a similar table of tests of significance as `summary` used on an `lm` object. Note that the results will not be the same since `lm` uses a \(t\)-test, and you should use a \(z\)-test in `mylm`. 
+
+Hint: To calculate two-sided p-values remember the standard normal distribution is symmetric around 0.
 
 ## c) (0.5 points)
 
-Implement a plot function for the `mylm` class (called `plot.mylm`) that makes a scatter plot with fitted value on the \(x\)-axis and residuals on the \(y\)-axis (the raw residuals). This function shall use the `ggplot` functionality from the library `ggplot2`! (Don't make this too complicated.) Comment on the plot.
+<span class="question">Implement a plot function for the `mylm` class (called `plot.mylm`) that makes a scatter plot with fitted value on the $x$-axis and residuals on the $y$-axis (the raw residuals).</span>
+
+This function should use the `ggplot` functionality from the library `ggplot2`! (Don't make this too complicated.) 
+
+<span class="question">Comment on the plot.</span>
 
 ## d) (1 points)
 
 After a scaling, the $\chi^2$-distribution is the limiting distribution of an $F$-distribution as the denominator degrees of freedom goes to infinity. The normalization is $\chi^2 =$ (numerator degrees of freedom)$\cdot F$.
 
-* What is the residual sum of squares (SSE) and the degrees of freedom for this model? 
-* What is total sum of squares (SST) for this model? Test the significance of the regression using a \(\chi^2\)-test. 
-* What is the relationship between the \(\chi^2\)- and \(z\)-statistic in simple linear regression? Find the critical value(s) for both tests.
+* <span class="question">What is the residual sum of squares (SSE) and the degrees of freedom for this model? </span>
+* <span class="question">What is total sum of squares (SST) for this model? Test the significance of the regression using a \(\chi^2\)-test. </span>
+* <span class="question">What is the relationship between the \(\chi^2\)- and \(z\)-statistic in simple linear regression? Find the critical value(s) for both tests.</span>
 
-Fill-in the missing parts in the function `anova.mylm` so that it shows the results in a similar way as the `anova` function on an object from `lm`. Note that your values differ from the ANOVA table produced by `lm`, as you use the $\chi^2$-test instead of the $F$-test used by `lm`. You shall use the same ANOVA type as `lm`, i.e., a sequential ANOVA, also called type I ANOVA. Type II and III also exists, but we do not consider them in this exercise.  
-Print the ANOVA-table and comment briefly.
+<span class="question">Fill-in the missing parts in the function `anova.mylm` so that it shows the results in a similar way as the `anova` function on an object from `lm`. </span>
+
+Note that your values differ from the ANOVA table produced by `lm`, as you use the $\chi^2$-test instead of the $F$-test used by `lm`. You shall use the same ANOVA type as `lm`, i.e., a sequential ANOVA, also called type I ANOVA. Type II and III also exists, but we do not consider them in this exercise.  
+
+<span class="question">Print the ANOVA-table and comment briefly.</span>
 
 ## e) (0.5 points)
 
-What is the "coefficient of determination" ($R^2$) for this model and how do you interpret this value?  
-Modify the function `summary.mylm` so that it shows this value.
+<span class="question">What is the "coefficient of determination" ($R^2$) for this model and how do you interpret this value?  </span>
+
+<span class="question">Modify the function `summary.mylm` so that it shows this value.</span>
 
 
 # Part 3: Multiple linear regression (3 points)
 
 ## a) (1 points)
 
-Make any changes necessary to make the function `mylm` and `print.mylm` work also for multiple linear regression. Fit a linear regression model to the data with `wages` as the response with `education` and `age` as predictors.  
+<span class="question">Make any changes necessary to make the function `mylm` and `print.mylm` work also for multiple linear regression.</span>
+
+<span class="question">Fit a linear regression model to the data with `wages` as the response with `education` and `age` as predictors.  </span>
+
 You can regress a variable `y` on `x1` and `x2` from the data frame `myframe` with
 
 ```{r eval = FALSE}
@@ -176,27 +198,28 @@ model2 <- mylm(y ~ x1 + x2, data = myframe)
 
 ## b) (1 points)
 
-What are the estimates and standard errors of the intercepts and regression coefficients for this model? Test the significance of the coefficients using a \(z\)-test. What is the interpretation of the parameters?  
-Make any changes necessary to make the function `summary.mylm` work also for multiple linear regression.
+<span class="question">What are the estimates and standard errors of the intercepts and regression coefficients for this model? Test the significance of the coefficients using a $z$-test. What is the interpretation of the parameters?  
+Make any changes necessary to make the function `summary.mylm` work also for multiple linear regression.</span>
 
 ## c) (1 points)
 
-The estimated effect of `education` and of `age` on `wages` can be modelled in two simple linear regressions (one model with only `age` as covariate and one with only `eduacation`) or a multiple linear regression (both covariates in the model). Why (and when) does the parameter estimates found (the two simple and the one multiple) differ? 
-Explain/show how you can use `mylm` to find these values.
+The estimated effect of `education` and of `age` on `wages` can be modelled in two simple linear regressions (one model with only `age` as covariate and one with only `eduacation`) or a multiple linear regression (both covariates in the model). 
+
+<span class="question">Why (and when) does the parameter estimates found (the two simple and the one multiple) differ? 
+Explain/show how you can use `mylm` to find these values.</span>
 
 
 # Part 4: Testing the `mylm` package (2 points)
 
 Use dummy variable coding only for this part.
 
-Now your `mylm` package should be able to do regression on any linear model. Confirm this by fitting models with `wages` as response, and the following predictors:
+Now your `mylm` package should be able to do regression on any linear model. <span class="question">Confirm this by fitting models with `wages` as response, and the following predictors:</span>
 
 * `sex, age, language` and `education^2` (see the function `I()` to include functions of variables in the formula. This gives the same results as if you transform the data before fitting the models, but is simpler. To use `education^2` directly only gives the linear variable, which is not what we want now here!) 
 * `language` and `age` with an interaction term between the predictors
 * `education` and no intercept (you can remove the intercept by adding `-1` to the formula. Note that $R^2$ is not defined when the intercept is removed from the model, so your $R^2$ will probably differ from that of `lm`. Ignore this, and use other diagnostics to evaluate the model.)
 
-For each of the three models: Use your `mylm`-package to fit the models and include some diagnostics. Write a few sentences about the interpretation and significance of the parameters, and mention one small change that could make the model better.
-
+<span class="question">For each of the three models: Use your `mylm`-package to fit the models and include some diagnostics. Write a few sentences about the interpretation and significance of the parameters, and mention one small change that could make the model better.</span>
 
 
 # Analysis of variance (ANOVA) (0 points, optional)

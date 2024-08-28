@@ -1320,6 +1320,24 @@ if (window.hljs) {
 
 
 
+<style type="text/css">```{css, echo=FALSE}
+details > summary {
+padding: 10px 6px;
+background-color: #e5f5f5;
+border: none;
+cursor: pointer;
+}
+details {
+background-color: #f5f5f5;
+border: none;
+cursor: pointer;
+}
+.question {
+font-size: 120%;
+color: blue
+}
+```
+</style>
 
 
 
@@ -1480,7 +1498,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">TMA4315 Generalized Linear Models</h1>
 <h3 class="subtitle">Compulsory exercise 1: Linear models for Gaussian
 data</h3>
-<h4 class="date">Deadline: Friday, September 28, 2018 at 16.00</h4>
+<h4 class="date">Deadline: Friday, September 6th, 2024 at 23.59</h4>
 
 </div>
 
@@ -1488,15 +1506,16 @@ data</h3>
 <p><strong>To be handed in on Blackboard.</strong></p>
 <p>Students may work on the assignment alone, or in groups of two or
 three, and are also encouraged to collaborate across groups. Each group
-needs to hand in an [R Markdown] (<a href="http://rmarkdown.rstudio.com/" class="uri">http://rmarkdown.rstudio.com/</a>) document with answers to
-the questions as well as all source code. Hand in the file as an R
-Markdown file (<code>.Rmd</code>) <em>and</em> a pdf file
-(<code>.pdf</code>). Make sure that the <code>.Rmd</code> compiles as
-both pdf and html before you hand it in. Include all code you have
-written in the <code>mylm.R</code> file in the end of your file (hint:
-use <code>eval = FALSE</code> in the chunk option) (only include the
-final version).</p>
-<p>You shall deliver a document that answers all questions, using
+needs to hand in an <a href="http://rmarkdown.rstudio.com/">R
+Markdown</a> document with answers to the questions as well as all
+source code. Hand in the file as an R Markdown file (<code>.Rmd</code>)
+<em>and</em> a pdf file (<code>.pdf</code>). Make sure that the
+<code>.Rmd</code> compiles as both pdf and html before you hand it in.
+Include all code you have written in the <code>mylm.R</code> file in the
+end of your file (hint: use <code>eval = FALSE</code> in the chunk
+option) (only include the final version).</p>
+<p>All of the quesrions you should answer are <span class="question">marked like this</span>.</p>
+<p>You should deliver a document that answers all questions, using
 print-outs from <code>R</code> when asked for/when it seems necessary.
 It should include calculations you needed to answer the questions, and
 enough information so the teaching assistant can see that you have
@@ -1508,12 +1527,6 @@ general, but rather explain what these values mean for the model in
 question.</p>
 <p><em>Please write the names of the group members and the group number
 you have on Blackboard on top of your document!</em></p>
-<p>Guidance by the teaching assistant (Ingeborg) will be given Tuesdays
-and Thursdays from 10:15-12:00 in room 922 at the 9th floor of
-Sentralbygg 2. She will be there from the beginning, but leaves if no
-one shows up. If you know you will be arriving very late, send her an
-email (<a href="mailto:ingeborg.hem@ntnu.no" class="email">ingeborg.hem@ntnu.no</a>) to ensure that she will be in
-922.</p>
 <p>In this project you will create your own <code>R</code>-package to
 handle linear models for Gaussian data and use this package to analyse a
 dataset. You can find more information about the package system and
@@ -1521,15 +1534,12 @@ classes in <code>R</code> at <a href="https://cran.r-project.org/doc/contrib/Lei
 The text below describes how the package can be created using R-Studio
 since it makes it easy to rebuild and reload the package. The
 description is reasonably platform-independent, and should work on
-Windows, Mac and Linux. R-Studio is a useful integrated development
-environment (IDE) for <code>R</code>.</p>
+Windows, Mac and Linux.</p>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Follow these steps to get started:</p>
 <ol style="list-style-type: decimal">
-<li>Install <code>R</code> and R-Studio if necessary (already installed
-on machines in Nullrommet and Banachrommet) (can be useful to update
-<code>R</code> if you do not have the latest version). Contact <a href="mailto:orakel@ntnu.no" class="email">orakel@ntnu.no</a> if you run
+<li>Install <code>R</code> and R-Studio if necessary. Contact <a href="mailto:orakel@ntnu.no" class="email">orakel@ntnu.no</a> if you run
 into technical problems with your own computer.</li>
 <li>Start R-Studio</li>
 <li>Select <em>File–New Project</em></li>
@@ -1580,6 +1590,8 @@ observations on the following 5 variables:</p>
 <li><code>sex</code>, Male or Female</li>
 <li><code>language</code>, English, French or Other</li>
 </ul>
+<p>We want to study how the qualitative variable <code>wages</code>
+depends on the explanatory variables.</p>
 <p>The dataset is available in the library <code>car</code> in
 <code>R</code>, but with missing data. The following command will store
 the data as a dataframe called <code>SLID</code>, and then remove all
@@ -1588,15 +1600,15 @@ rows containing missing data.</p>
 library(car)
 data(SLID, package = &quot;carData&quot;)
 SLID &lt;- SLID[complete.cases(SLID), ]</code></pre>
-<p>Draw a matrix of diagnostic plots of all the variables and comment
-briefly on the relationship between some of the variables. Hint: The
-function <code>ggpairs</code> (from the <code>GGally</code> library)
-makes a diagnostic plot matrix using the <code>ggplot</code>
+<p><span class="question">Draw a matrix of diagnostic plots of all the
+variables and comment briefly on the relationship between some of the
+variables.</span></p>
+<p>Hint: The function <code>ggpairs</code> (from the <code>GGally</code>
+library) makes a diagnostic plot matrix using the <code>ggplot</code>
 functionality.</p>
-<p>We want to study how the qualitative variable <code>wages</code>
-depends on one or more explanatory variables. Which assumptions do we
-need make about the data if we want to perform a multiple linear
-regression analysis?</p>
+<p><span class="question">Which assumptions do we need make about the
+data if we want to perform a multiple linear regression
+analysis?</span></p>
 </div>
 <div id="part-2-linear-regression-with-the-mylm-package-4.5-points" class="section level1">
 <h1>Part 2: Linear regression with the <code>mylm</code> package (4.5
@@ -1609,10 +1621,9 @@ and instead of the exact <span class="math inline">\(F_{r,m}\)</span>-test you c
 scaled with <span class="math inline">\(r\)</span>, details below). The
 <code>lm</code> function in <code>R</code> uses the exact (not
 asymptotic) tests, but later in this course we will use models that need
-the asymptotic tests (for the binary regression, the Poission
-regression, …). That is why you will use them already here. The
-asymptotic expressions are valid when the number of observations is
-large.</p>
+the asymptotic tests (for the binary regression, Poisson regression, …).
+That is why you will use them already here. The asymptotic expressions
+are valid when the number of observations is large.</p>
 <p>When you are finished with the whole exercise, your
 <code>mylm</code>-package should be able to</p>
 <ol style="list-style-type: decimal">
@@ -1640,11 +1651,12 @@ write the content of the functions in your <code>mylm</code>
 package.</p>
 <div id="a-1-points" class="section level2">
 <h2>a) (1 points)</h2>
-<p>Fill-in the missing parts in the <code>mylm</code> function in your
-<code>mylm</code> package required to calculate the estimates of the
-coefficients. Fit a simple linear regression model to the data with
-<code>wages</code> as the response and <code>education</code> as
-predictor to check if the function works.</p>
+<p><span class="question">Fill-in the missing parts in the
+<code>mylm</code> function in your <code>mylm</code> package required to
+calculate the estimates of the coefficients. </span></p>
+<p><span class="question">Fit a simple linear regression model to the
+data with <code>wages</code> as the response and <code>education</code>
+as predictor to check if the function works.</span></p>
 <p>The commands</p>
 <pre class="r"><code>model1 &lt;- mylm(wages ~ education, data = SLID)
 print(model1)</code></pre>
@@ -1670,29 +1682,33 @@ exercise.</strong></p>
 </div>
 <div id="b-1.5-points" class="section level2">
 <h2>b) (1.5 points)</h2>
-<p>Develop the <code>mylm</code> function further, so it can calculate
-the estimated covariance matrix for the parameter estimates.</p>
-<p>What are the estimates and standard errors of the intercept and
-regression coefficient for this model? Test the significance of the
-regression coefficient using a <span class="math inline">\(z\)</span>-test. What is the interpretation of the
-parameter estimates?</p>
-<p>Fill-in the missing parts in <code>summary.mylm</code> such that</p>
+<p><span class="question">Develop the <code>mylm</code> function
+further, so it can calculate the estimated covariance matrix for the
+parameter estimates. </span></p>
+<p><span class="question">What are the estimates and standard errors of
+the intercept and regression coefficient for this model?</span></p>
+<p><span class="question">Test the significance of the regression
+coefficient using a <span class="math inline">\(z\)</span>-test.
+</span></p>
+<p><span class="question">What is the interpretation of the parameter
+estimates? </span></p>
+<p><span class="question">Fill-in the missing parts in
+<code>summary.mylm</code> such that</span></p>
 <pre class="r"><code>summary(model1)</code></pre>
 <p>gives a similar table of tests of significance as
 <code>summary</code> used on an <code>lm</code> object. Note that the
-results will not be the same since <code>lm</code> uses a <span class="math inline">\(t\)</span>-test, and you should use a <span class="math inline">\(z\)</span>-test in <code>mylm</code>. Hint: To
-calculate two-sided p-values remember the standard normal distribution
-is symmetric around 0.</p>
+results will not be the same since <code>lm</code> uses a <span class="math inline">\(t\)</span>-test, and you should use a <span class="math inline">\(z\)</span>-test in <code>mylm</code>.</p>
+<p>Hint: To calculate two-sided p-values remember the standard normal
+distribution is symmetric around 0.</p>
 </div>
 <div id="c-0.5-points" class="section level2">
 <h2>c) (0.5 points)</h2>
-<p>Implement a plot function for the <code>mylm</code> class (called
-<code>plot.mylm</code>) that makes a scatter plot with fitted value on
-the <span class="math inline">\(x\)</span>-axis and residuals on the
-<span class="math inline">\(y\)</span>-axis (the raw residuals). This
-function shall use the <code>ggplot</code> functionality from the
-library <code>ggplot2</code>! (Don’t make this too complicated.) Comment
-on the plot.</p>
+<p><span class="question">Implement a plot function for the
+<code>mylm</code> class (called <code>plot.mylm</code>) that makes a
+scatter plot with fitted value on the <span class="math inline">\(x\)</span>-axis and residuals on the <span class="math inline">\(y\)</span>-axis (the raw residuals).</span></p>
+<p>This function should use the <code>ggplot</code> functionality from
+the library <code>ggplot2</code>! (Don’t make this too complicated.)</p>
+<p><span class="question">Comment on the plot.</span></p>
 </div>
 <div id="d-1-points" class="section level2">
 <h2>d) (1 points)</h2>
@@ -1703,51 +1719,57 @@ normalization is <span class="math inline">\(\chi^2 =\)</span>
 (numerator degrees of freedom)<span class="math inline">\(\cdot
 F\)</span>.</p>
 <ul>
-<li>What is the residual sum of squares (SSE) and the degrees of freedom
-for this model?</li>
-<li>What is total sum of squares (SST) for this model? Test the
-significance of the regression using a <span class="math inline">\(\chi^2\)</span>-test.</li>
-<li>What is the relationship between the <span class="math inline">\(\chi^2\)</span>- and <span class="math inline">\(z\)</span>-statistic in simple linear regression?
-Find the critical value(s) for both tests.</li>
+<li><span class="question">What is the residual sum of squares (SSE) and
+the degrees of freedom for this model? </span></li>
+<li><span class="question">What is total sum of squares (SST) for this
+model? Test the significance of the regression using a <span class="math inline">\(\chi^2\)</span>-test. </span></li>
+<li><span class="question">What is the relationship between the <span class="math inline">\(\chi^2\)</span>- and <span class="math inline">\(z\)</span>-statistic in simple linear regression?
+Find the critical value(s) for both tests.</span></li>
 </ul>
-<p>Fill-in the missing parts in the function <code>anova.mylm</code> so
-that it shows the results in a similar way as the <code>anova</code>
-function on an object from <code>lm</code>. Note that your values differ
-from the ANOVA table produced by <code>lm</code>, as you use the <span class="math inline">\(\chi^2\)</span>-test instead of the <span class="math inline">\(F\)</span>-test used by <code>lm</code>. You shall
+<p><span class="question">Fill-in the missing parts in the function
+<code>anova.mylm</code> so that it shows the results in a similar way as
+the <code>anova</code> function on an object from <code>lm</code>.
+</span></p>
+<p>Note that your values differ from the ANOVA table produced by
+<code>lm</code>, as you use the <span class="math inline">\(\chi^2\)</span>-test instead of the <span class="math inline">\(F\)</span>-test used by <code>lm</code>. You shall
 use the same ANOVA type as <code>lm</code>, i.e., a sequential ANOVA,
 also called type I ANOVA. Type II and III also exists, but we do not
-consider them in this exercise.<br />
-Print the ANOVA-table and comment briefly.</p>
+consider them in this exercise.</p>
+<p><span class="question">Print the ANOVA-table and comment
+briefly.</span></p>
 </div>
 <div id="e-0.5-points" class="section level2">
 <h2>e) (0.5 points)</h2>
-<p>What is the “coefficient of determination” (<span class="math inline">\(R^2\)</span>) for this model and how do you
-interpret this value?<br />
-Modify the function <code>summary.mylm</code> so that it shows this
-value.</p>
+<p><span class="question">What is the “coefficient of determination”
+(<span class="math inline">\(R^2\)</span>) for this model and how do you
+interpret this value? </span></p>
+<p><span class="question">Modify the function <code>summary.mylm</code>
+so that it shows this value.</span></p>
 </div>
 </div>
 <div id="part-3-multiple-linear-regression-3-points" class="section level1">
 <h1>Part 3: Multiple linear regression (3 points)</h1>
 <div id="a-1-points-1" class="section level2">
 <h2>a) (1 points)</h2>
-<p>Make any changes necessary to make the function <code>mylm</code> and
-<code>print.mylm</code> work also for multiple linear regression. Fit a
-linear regression model to the data with <code>wages</code> as the
-response with <code>education</code> and <code>age</code> as
-predictors.<br />
-You can regress a variable <code>y</code> on <code>x1</code> and
+<p><span class="question">Make any changes necessary to make the
+function <code>mylm</code> and <code>print.mylm</code> work also for
+multiple linear regression.</span></p>
+<p><span class="question">Fit a linear regression model to the data with
+<code>wages</code> as the response with <code>education</code> and
+<code>age</code> as predictors. </span></p>
+<p>You can regress a variable <code>y</code> on <code>x1</code> and
 <code>x2</code> from the data frame <code>myframe</code> with</p>
 <pre class="r"><code>model2 &lt;- mylm(y ~ x1 + x2, data = myframe)</code></pre>
 </div>
 <div id="b-1-points" class="section level2">
 <h2>b) (1 points)</h2>
-<p>What are the estimates and standard errors of the intercepts and
-regression coefficients for this model? Test the significance of the
-coefficients using a <span class="math inline">\(z\)</span>-test. What
-is the interpretation of the parameters?<br />
+<p><span class="question">What are the estimates and standard errors of
+the intercepts and regression coefficients for this model? Test the
+significance of the coefficients using a <span class="math inline">\(z\)</span>-test. What is the interpretation of the
+parameters?<br />
 Make any changes necessary to make the function
-<code>summary.mylm</code> work also for multiple linear regression.</p>
+<code>summary.mylm</code> work also for multiple linear
+regression.</span></p>
 </div>
 <div id="c-1-points" class="section level2">
 <h2>c) (1 points)</h2>
@@ -1755,17 +1777,19 @@ Make any changes necessary to make the function
 <code>age</code> on <code>wages</code> can be modelled in two simple
 linear regressions (one model with only <code>age</code> as covariate
 and one with only <code>eduacation</code>) or a multiple linear
-regression (both covariates in the model). Why (and when) does the
-parameter estimates found (the two simple and the one multiple) differ?
-Explain/show how you can use <code>mylm</code> to find these values.</p>
+regression (both covariates in the model).</p>
+<p><span class="question">Why (and when) does the parameter estimates
+found (the two simple and the one multiple) differ? Explain/show how you
+can use <code>mylm</code> to find these values.</span></p>
 </div>
 </div>
 <div id="part-4-testing-the-mylm-package-2-points" class="section level1">
 <h1>Part 4: Testing the <code>mylm</code> package (2 points)</h1>
 <p>Use dummy variable coding only for this part.</p>
 <p>Now your <code>mylm</code> package should be able to do regression on
-any linear model. Confirm this by fitting models with <code>wages</code>
-as response, and the following predictors:</p>
+any linear model. <span class="question">Confirm this by fitting models
+with <code>wages</code> as response, and the following
+predictors:</span></p>
 <ul>
 <li><code>sex, age, language</code> and <code>education^2</code> (see
 the function <code>I()</code> to include functions of variables in the
@@ -1781,10 +1805,11 @@ removed from the model, so your <span class="math inline">\(R^2\)</span>
 will probably differ from that of <code>lm</code>. Ignore this, and use
 other diagnostics to evaluate the model.)</li>
 </ul>
-<p>For each of the three models: Use your <code>mylm</code>-package to
-fit the models and include some diagnostics. Write a few sentences about
-the interpretation and significance of the parameters, and mention one
-small change that could make the model better.</p>
+<p><span class="question">For each of the three models: Use your
+<code>mylm</code>-package to fit the models and include some
+diagnostics. Write a few sentences about the interpretation and
+significance of the parameters, and mention one small change that could
+make the model better.</span></p>
 </div>
 <div id="analysis-of-variance-anova-0-points-optional" class="section level1">
 <h1>Analysis of variance (ANOVA) (0 points, optional)</h1>

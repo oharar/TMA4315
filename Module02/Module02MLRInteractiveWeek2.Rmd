@@ -95,12 +95,23 @@ $\mu_i=\eta_i$.
 1. <span class="question">What is the interpretation of a 95% confidence interval?</span>
 
 **Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$? **
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 <!-- 2. What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\bf x}_0$. -->
 
 <!-- 3. Construct a 95% CI for ${\bf x}_0^T \beta$. Explain what is the connections between a CI for $\beta_j$, a CI for ${\bf x}_0^T \beta$ and a PI for $Y$ at ${\bf x}_0$. -->
 
 2. <span class="question">Explain in words and with formulas the $p$-values printed in a `summary` from `lm`.</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 ```{r}
 fit=lm(rent~area+location+bath+kitchen+cheating,
@@ -110,11 +121,23 @@ summary(fit)
 
 3. <span class="question">Explain in words and with formulas the full output (with $p$-values) printed in an `anova` from `lm`.</span>
 
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 ```{r}
 anova(fit)
 ```
 
 4. <span class="question">In particular: why does using `summary` and `anova` on a fitted `lm` give different test statistics and different $p$-values listed for each covariate. And, why is `summary` listing `location2` and `location3` while `anova` is listing `location`?</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 Optional: Maybe test out `Anova` in library `car` with type 3 ANOVA to compare?
 
@@ -122,7 +145,19 @@ Consider a MLR model $A$ and a submodel $B$ (all parameters in $B$ are in $A$ al
 
 5. <span class="question">Why is the following true: the likelihood for model $A$ will always be larger or equal to the likelihood for model $B$.</span> 
 
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 6. <span class="question">How do we define the deviance of model $A$? What is a _saturated model_ in our MLR setting? What does our finding in 5. imply for the deviance (can the deviance both be positive and negative)?</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 <!-- 6. Take a look at the details getting from the general AIC criterion to the version used for MLR. We will partly be using AIC for this course, but with likelihood from the binomial, Possion, etc.  -->
 
@@ -156,11 +191,35 @@ Examine the results with `summary` and `anova`.
 
 <span class="question">What parametrization is used?</span>
 
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 <span class="question">What is the interpretation of the parameters?/span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 <span class="question">Which null hypothesis is tested in the anova-call?</span>
 
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 <span class="question">What is the result of the hypothesis test?</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 ```{r}
 summary(model)
@@ -182,10 +241,22 @@ We have talked about dummy- and effect encoding of categorical covariates.
 
 <span class="question">What are the parametrizations used here? What is the interpretation of the parameters and how do the parameter interpretations differ between `model1` and `model2`?</span>
 
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 4. We want to test the (one-way ANOVA) null hypothesis that there is no effect of place. Use
 the $F_{obs}$ to do this both using the dummy-variable and the effect coding of the place-factor. 
 
 <span class="question">Compare the results from the two coding strategies.</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 ```{r}
 model0=lm(income~1,data=data)
@@ -206,8 +277,28 @@ anova(model4)
 ```
 
 <span class="question">What are the parameterizations?</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 <span class="question">What is the interpretation of the parameters?</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
+
 <span class="question">Does the ANOVA table look different for the two parametrizations?</span>
+
+<details><summary>Hint</summary>
+</details>
+
+<details><summary>Solution</summary>
+</details>
 
 **Hint: orthogonality of design matrix for this balanced design?**
 
