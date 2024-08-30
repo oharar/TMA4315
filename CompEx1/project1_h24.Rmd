@@ -25,7 +25,7 @@ opts_chunk$set(tidy.opts = list(width.cutoff = 68), tidy = TRUE, warning = FALSE
 
 Students may work on the assignment alone, or in groups of two or three, and are also encouraged to collaborate across groups. Each group needs to hand in an [R Markdown](http://rmarkdown.rstudio.com/) document with answers to the questions as well as all source code. Hand in the file as an R Markdown file (`.Rmd`) *and* a pdf file (`.pdf`). Make sure that the `.Rmd` compiles as both pdf and html before you hand it in. Include all code you have written in the `mylm.R` file in the end of your file (hint: use `eval = FALSE` in the chunk option) (only include the final version). 
 
-All of the quesrions you should answer are <span class="question">marked like this</span>.
+All of the questions you should answer are <span class="question">marked like this</span>.
 
 You should deliver a document that answers all questions, using print-outs from `R` when asked for/when it seems necessary. It should include calculations you needed to answer the questions, and enough information so the teaching assistant can see that you have understood the theory (but do not write too much either, and exclude code not directly necessary for the answers). You will often be asked to interpret the parameters. This does not mean that you should just say what the numeric values are or state how you interpret the parameter in general, but rather explain what these values mean for the model in question.
 
