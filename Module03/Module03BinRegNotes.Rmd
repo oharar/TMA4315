@@ -84,7 +84,7 @@ Two running examples: mortality of beetles and probability of respiratory infant
 
 ---
 
-## <a id="beetle1">Example: Mortality of beetles</a>
+## Example: Mortality of beetles
 
 A total of 481 beetles were exposed to 8 different consentration of CS$_2$ (data on log10-dose). Yes, only one consentration tried for each beetle. For each beetle is was recorded if the beetle was alive or killed at the given concentration. 
 
@@ -143,7 +143,7 @@ In addition we have independent pairs $({\bf x}_i,Y_i)$, and assume that the des
 
 ---
 
-## <id="binary"> Binary regression</a>
+## Binary regression
 
 1. $Y_i \sim \text{bin}(n_i,\pi_i)$. First we study the case that $n_i=1$, that is, each individual observation comes from a Bernoulli process with $n_i=1$ trials (this version of the binomial distribution is called the Bernoulli distribution). (Remark: later we will also look at "grouped" data with $n_i>1$.) 
 Our parameter of interest is $\pi_i$ which is the mean $\text{E}(Y_i)=\mu_i=\pi_i$.

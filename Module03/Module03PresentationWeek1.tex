@@ -143,7 +143,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -162,9 +162,9 @@ contributions from Øyvind Bakke, Thea Bjørnland and Ingeborg Hem}
 \frame{\titlepage}
 
 \begin{frame}{Overview}
-\protect\hypertarget{overview}{}
+\phantomsection\label{overview}
 \begin{block}{Learning material}
-\protect\hypertarget{learning-material}{}
+\phantomsection\label{learning-material}
 \begin{itemize}
 \tightlist
 \item
@@ -181,9 +181,9 @@ contributions from Øyvind Bakke, Thea Bjørnland and Ingeborg Hem}
 
 \begin{frame}
 \begin{block}{Topics}
-\protect\hypertarget{topics}{}
-\begin{block}{\protect\hyperlink{firstweek}{First week}}
-\protect\hypertarget{first-week}{}
+\phantomsection\label{topics}
+\begin{block}{\hyperlink{firstweek}{First week}}
+\phantomsection\label{first-week}
 \begin{itemize}
 \tightlist
 \item
@@ -214,8 +214,8 @@ contributions from Øyvind Bakke, Thea Bjørnland and Ingeborg Hem}
 \end{frame}
 
 \begin{frame}[fragile]
-\begin{block}{\protect\hyperlink{secondweek}{Second week}}
-\protect\hypertarget{second-week}{}
+\begin{block}{\hyperlink{secondweek}{Second week}}
+\phantomsection\label{second-week}
 \begin{itemize}
 \tightlist
 \item
@@ -262,9 +262,9 @@ contributions from Øyvind Bakke, Thea Bjørnland and Ingeborg Hem}
 \end{frame}
 
 \begin{frame}{Aim of binary regression}
-\protect\hypertarget{aim-of-binary-regression}{}
+\phantomsection\label{aim-of-binary-regression}
 \begin{block}{Two aims}
-\protect\hypertarget{two-aims}{}
+\phantomsection\label{two-aims}
 \begin{enumerate}
 \tightlist
 \item
@@ -283,7 +283,7 @@ respiratory infant disease.
 
 \begin{frame}
 \begin{block}{Example: Dose response of beetles}
-\protect\hypertarget{example-dose-response-of-beetles}{}
+\phantomsection\label{example-dose-response-of-beetles}
 A total of 481 beetles were exposed to 8 different concentration of
 CS\(_2\) (data on log10-dose).
 
@@ -331,7 +331,7 @@ axis and fraction of beetles killed (killed/total) for each log10-dose.
 \end{frame}
 
 \begin{frame}{How to model a binary response?}
-\protect\hypertarget{how-to-model-a-binary-response}{}
+\phantomsection\label{how-to-model-a-binary-response}
 In multiple linear regression we have
 
 \begin{enumerate}
@@ -362,7 +362,7 @@ In multiple linear regression we have
 
 \begin{frame}
 \begin{block}{Binary regression}
-\protect\hypertarget{binary-regression}{}
+\phantomsection\label{binary-regression}
 \begin{enumerate}
 \tightlist
 \item
@@ -382,14 +382,14 @@ M1 that the binomial distribution is an exponential family.}
 
 \begin{frame}
 \begin{block}{Linear Predictor}
-\protect\hypertarget{linear-predictor}{}
+\phantomsection\label{linear-predictor}
 \(\eta_i={\bf x}_i^T \boldsymbol{\beta}\).
 \end{block}
 \end{frame}
 
 \begin{frame}
 \begin{block}{Link Function}
-\protect\hypertarget{link-function}{}
+\phantomsection\label{link-function}
 \begin{enumerate}
 \setcounter{enumi}{2}
 \tightlist
@@ -417,7 +417,7 @@ differential.
 
 \begin{frame}
 \begin{block}{Response function for binary regression}
-\protect\hypertarget{response-function-for-binary-regression}{}
+\phantomsection\label{response-function-for-binary-regression}
 Based on selecting a cumulative distribution function (cdf) as the
 response function.
 
@@ -446,7 +446,7 @@ In this module we focus on the logit model.
 
 \begin{frame}
 \begin{block}{The logit model aka logistic regression}
-\protect\hypertarget{the-logit-model-aka-logistic-regression}{}
+\phantomsection\label{the-logit-model-aka-logistic-regression}
 In the beetle example we have a simple linear predictor:
 \(\eta_i=\beta_0+\beta_1 x_i\) where \(x_i\) is the log10-dose for
 beetle \(i\).
@@ -468,7 +468,7 @@ this plot. Where are the observed log10-doses in this graph?
 
 \begin{frame}
 \begin{block}{Link and reponse function}
-\protect\hypertarget{link-and-reponse-function}{}
+\phantomsection\label{link-and-reponse-function}
 The logit model is based on the logistic cdf as the response function,
 given as \[ \mu_i=\pi_i=h(\eta_i)=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}\]
 or alternatively as the link function (the inverse of the response
@@ -481,7 +481,7 @@ function)
 
 \begin{frame}
 \begin{block}{Interpreting the logit model}
-\protect\hypertarget{interpreting-the-logit-model}{}
+\phantomsection\label{interpreting-the-logit-model}
 If the value of the linear predictor \(\eta_i\) changes to \(\eta_i+1\)
 the probability \(\pi\) increases non-linearly from
 \(\frac{\exp(\eta_i)}{1+\exp(\eta_i)}\) to
@@ -497,16 +497,14 @@ Before we go further: do you know about the odds? The ratio
 \(\pi_i=\frac{1}{4}\) then the odds is \(\frac{1}{3}\). We may make a
 table for probability vs.~odds in R:
 
-\begin{table}
-\centering
-\begin{tabular}{l|r|r|r|r|r|r|r|r|r}
-\hline
+\begin{longtable}[t]{lrrrrrrrrr}
+\toprule
+ &  &  &  &  &  &  &  &  & \\
+\midrule
 pivec & 0.10 & 0.20 & 0.30 & 0.40 & 0.5 & 0.6 & 0.70 & 0.8 & 0.9\\
-\hline
 odds & 0.11 & 0.25 & 0.43 & 0.67 & 1.0 & 1.5 & 2.33 & 4.0 & 9.0\\
-\hline
-\end{tabular}
-\end{table}
+\bottomrule
+\end{longtable}
 \end{frame}
 
 \begin{frame}
@@ -552,7 +550,7 @@ can be easier to interpret than \(\beta_1\).
 
 \begin{frame}
 \begin{block}{To Sum Up}
-\protect\hypertarget{to-sum-up}{}
+\phantomsection\label{to-sum-up}
 For the linear predictor we interpret effects in the same way as for the
 linear model (in Module 2), then we transform this linear effect in
 \(\eta\) into a nonlinear effect for
@@ -568,7 +566,7 @@ the log odds and the change in the probability?
 \begin{frame}
 \begin{block}{Infant respiratory disease: interpretating parameter
 estimates}
-\protect\hypertarget{infant-respiratory-disease-interpretating-parameter-estimates}{}
+\phantomsection\label{infant-respiratory-disease-interpretating-parameter-estimates}
 This example is taken from Faraway (2006): ``Extending the linear model
 with R''
 
@@ -593,24 +591,23 @@ estimates.
 \end{frame}
 
 \begin{frame}
-\begin{tabular}{l|r|r|r|r}
-\hline
-  & Estimate & Std. Error & z value & Pr(>|z|)\\
-\hline
-(Intercept) & -1.61 & 0.11 & -14.35 & 0.00\\
-\hline
-sexGirl & -0.31 & 0.14 & -2.22 & 0.03\\
-\hline
-foodBreast & -0.67 & 0.15 & -4.37 & 0.00\\
-\hline
-foodSuppl & -0.17 & 0.21 & -0.84 & 0.40\\
-\hline
-\end{tabular}
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule\noalign{}
+& Estimate & Std. Error & z value &
+Pr(\textgreater\textbar z\textbar) \\
+\midrule\noalign{}
+\endhead
+(Intercept) & -1.61 & 0.11 & -14.35 & 0.00 \\
+sexGirl & -0.31 & 0.14 & -2.22 & 0.03 \\
+foodBreast & -0.67 & 0.15 & -4.37 & 0.00 \\
+foodSuppl & -0.17 & 0.21 & -0.84 & 0.40 \\
+\bottomrule\noalign{}
+\end{longtable}
 \end{frame}
 
 \begin{frame}[fragile]
 \begin{block}{Questions}
-\protect\hypertarget{questions}{}
+\phantomsection\label{questions}
 Observe that the two factors by default is coded with dummy variable
 coding, and that \texttt{sexBoy} is the reference category for sex and
 \texttt{foodBottle} the reference category for feeding method.
@@ -624,7 +621,7 @@ most favourable?
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{print}\NormalTok{(}\FunctionTok{predict}\NormalTok{(fit,}\AttributeTok{type=}\StringTok{"response"}\NormalTok{), }\AttributeTok{digits=}\DecValTok{2}\NormalTok{) }\CommentTok{\#gives predicted probabilites}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{predict}\NormalTok{(fit, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{), }\AttributeTok{digits =} \DecValTok{2}\NormalTok{)  }\CommentTok{\#gives predicted probabilites}
 \end{Highlighting}
 \end{Shaded}
 
@@ -637,7 +634,7 @@ most favourable?
 
 \begin{frame}
 \begin{block}{More response function plots for the logit model}
-\protect\hypertarget{more-response-function-plots-for-the-logit-model}{}
+\phantomsection\label{more-response-function-plots-for-the-logit-model}
 The response function as a function of the covariate \(x\) and not of
 \(\eta\). Solid lines: \(\beta_0=0\) and \(\beta_1\) is \(0.8\) (blue),
 \(1\) (red) and \(2\) (orange), and dashed lines with \(\beta_0=1\).
@@ -647,7 +644,7 @@ The response function as a function of the covariate \(x\) and not of
 \end{frame}
 
 \begin{frame}{Grouped vs.~individual data}
-\protect\hypertarget{grouped-vs.-individual-data}{}
+\phantomsection\label{grouped-vs.-individual-data}
 So far we have only mentioned individual data.
 
 However, in both the examples we have looked at some covariate vectors
@@ -655,26 +652,19 @@ are \emph{identical} (rows in the design matrix are identical). We call
 these unique combinations of covariates \emph{covariate patterns}, and
 say we have \emph{grouped} data.
 
-\begin{table}
-\centering
-\begin{tabular}{r|r|l|l}
-\hline
+\begin{longtable}[t]{rrll}
+\toprule
 disease & nondisease & sex & food\\
-\hline
+\midrule
 77 & 381 & Boy & Bottle\\
-\hline
 19 & 128 & Boy & Suppl\\
-\hline
 47 & 447 & Boy & Breast\\
-\hline
 48 & 336 & Girl & Bottle\\
-\hline
 16 & 111 & Girl & Suppl\\
-\hline
+\addlinespace
 31 & 433 & Girl & Breast\\
-\hline
-\end{tabular}
-\end{table}
+\bottomrule
+\end{longtable}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -712,7 +702,7 @@ We then keep the linear predictor, and the link function is still
 \end{frame}
 
 \begin{frame}{Likelihood and derivations thereof}
-\protect\hypertarget{likelihood-and-derivations-thereof}{}
+\phantomsection\label{likelihood-and-derivations-thereof}
 Our parameter of interest is the vector \(\boldsymbol{\beta}\) of
 regression coefficients, and we have no nuicance parameters (because the
 variance is related directly to the \(\pi_j\) and \(n_j\) is known).
@@ -729,7 +719,7 @@ patterns with \(n_j\) observations of each pattern.
 
 \begin{frame}
 \begin{block}{Assumptions}
-\protect\hypertarget{assumptions}{}
+\phantomsection\label{assumptions}
 \begin{enumerate}
 \tightlist
 \item
@@ -750,7 +740,7 @@ We will also need:
 
 \begin{frame}
 \begin{block}{Likelihood \(L(\boldsymbol{\beta})\)}
-\protect\hypertarget{likelihood-lboldsymbolbeta}{}
+\phantomsection\label{likelihood-lboldsymbolbeta}
 We assume that pairs of covariates and response are measured
 independently of each other: \(({\bf x}_i,Y_i)\), and \(Y_i\) follows
 the distribution specified above, and \({\bf x}_i\) is fixed.
@@ -761,7 +751,7 @@ the distribution specified above, and \({\bf x}_i\) is fixed.
 
 \begin{frame}
 \begin{block}{Loglikelihood \(l(\boldsymbol{\beta})\)}
-\protect\hypertarget{loglikelihood-lboldsymbolbeta}{}
+\phantomsection\label{loglikelihood-lboldsymbolbeta}
 \begin{align}
 l(\boldsymbol{\beta})&=\ln L(\boldsymbol{\beta})=\sum_{i=1}^n \ln L_i(\boldsymbol{\beta})=\sum_{i=1}^n l_i(\boldsymbol{\beta})\\
 &=\sum_{i=1}^n[y_i \ln \pi_i+(1-y_i) \ln(1-\pi_i)]\\
@@ -815,7 +805,7 @@ chain rule.}
 
 \begin{frame}
 \begin{block}{Score function \(s(\boldsymbol{\beta})\)}
-\protect\hypertarget{score-function-sboldsymbolbeta}{}
+\phantomsection\label{score-function-sboldsymbolbeta}
 The score function is a \(p\times 1\) vector, \(s(\boldsymbol{\beta})\),
 with the partial derivatives of the log-likelihood with respect to the
 \(p\) elements of the \(\boldsymbol{\beta}\) vector.
