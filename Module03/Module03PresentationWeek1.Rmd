@@ -81,7 +81,7 @@ Two running examples: mortality of beetles and probability of respiratory infant
 
 ## Example: Dose response of beetles
 
-A total of 481 beetles were exposed to 8 different concentration of CS$_2$ (data on log10-dose). 
+A total of 481 flour beetles (*Tribolium confusum*) were exposed to 8 different concentration of CS$_2$ (data on log10-dose). 
 
 For each beetle is was recorded if the beetle was alive or killed at the given concentration. 
 
@@ -495,7 +495,9 @@ Observe that the log-likelihood is a sum of invidual contributions for each obse
 The log-likelihood is now expressed as a function of $\pi_i$, but we want to make this a function of $\boldsymbol{\beta}$ and the connection between $\pi_i$ and $\boldsymbol{\beta}$ goes through $\eta_i$. We have that
 $\pi=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ and in our log-likelihood we need
 
-$$(1-\pi_i)=\frac{1}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}$$
+$$
+1-\pi_i=1 - \frac{\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}
+$$
 and 
 
 $$\ln(\frac{\pi_i}{1-\pi_1})=\eta_i$$ (the last is our logit link function). 

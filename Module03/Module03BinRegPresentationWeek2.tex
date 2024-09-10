@@ -143,7 +143,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -170,9 +170,9 @@ after the ILw1, and added one sentence to Problem 5 ILw1.)
 \end{frame}
 
 \begin{frame}{Overview}
-\protect\hypertarget{overview}{}
+\phantomsection\label{overview}
 \begin{block}{Learning material}
-\protect\hypertarget{learning-material}{}
+\phantomsection\label{learning-material}
 \begin{itemize}
 \tightlist
 \item
@@ -189,9 +189,9 @@ after the ILw1, and added one sentence to Problem 5 ILw1.)
 
 \begin{frame}
 \begin{block}{Topics}
-\protect\hypertarget{topics}{}
-\begin{block}{\protect\hyperlink{firstweek}{First week}}
-\protect\hypertarget{first-week}{}
+\phantomsection\label{topics}
+\begin{block}{\hyperlink{firstweek}{First week}}
+\phantomsection\label{first-week}
 \begin{itemize}
 \tightlist
 \item
@@ -222,8 +222,8 @@ after the ILw1, and added one sentence to Problem 5 ILw1.)
 \end{frame}
 
 \begin{frame}[fragile]
-\begin{block}{\protect\hyperlink{secondweek}{Second week}}
-\protect\hypertarget{second-week}{}
+\begin{block}{\hyperlink{secondweek}{Second week}}
+\phantomsection\label{second-week}
 \begin{itemize}
 \tightlist
 \item
@@ -271,19 +271,18 @@ after the ILw1, and added one sentence to Problem 5 ILw1.)
 
 \begin{frame}
 \begin{block}{SECOND WEEK}
-\protect\hypertarget{second-week-1}{}
-Remember the \protect\hyperlink{beetle1}{beetle} and
-\protect\hyperlink{infant1}{infant respitory disease} examples?
+\phantomsection\label{second-week-1}
+Remember the \hyperlink{beetle1}{beetle} and \hyperlink{infant1}{infant
+respitory disease} examples?
 
-First, we look back at the \protect\hyperlink{binaryregassump}{model
+First, we look back at the \hyperlink{binaryregassump}{model
 requirements} for the binary regression - and the
-\protect\hyperlink{loglik}{loglikelihood} and
-\protect\hyperlink{score}{score function}.
+\hyperlink{loglik}{loglikelihood} and \hyperlink{score}{score function}.
 \end{block}
 \end{frame}
 
 \begin{frame}{Likelihood and derivations thereof - continued}
-\protect\hypertarget{likelihood-and-derivations-thereof---continued}{}
+\phantomsection\label{likelihood-and-derivations-thereof---continued}
 Individual data (not grouped):
 
 Loglikelihood:
@@ -295,7 +294,7 @@ Score function:
 
 \begin{frame}
 \begin{block}{Properties of the score function}
-\protect\hypertarget{properties-of-the-score-function}{}
+\phantomsection\label{properties-of-the-score-function}
 Since the score function depends on \(Y_i=y_i\) we may regard the score
 function as a random vector. We will now calculate the mean and
 covariance matrix for the score function.
@@ -304,7 +303,7 @@ covariance matrix for the score function.
 
 \begin{frame}
 \begin{block}{\(E(s(\boldsymbol{\beta}))\)}
-\protect\hypertarget{esboldsymbolbeta}{}
+\phantomsection\label{esboldsymbolbeta}
 The expected value of the score function is
 
 \[
@@ -324,7 +323,7 @@ We also see that
 
 \begin{frame}
 \begin{block}{Fisher Information and Variances of Estimates}
-\protect\hypertarget{fisher-information-and-variances-of-estimates}{}
+\phantomsection\label{fisher-information-and-variances-of-estimates}
 The ``amount of information'' that the data carry about the parameters,
 \(\boldsymbol{\beta}\), can be summarised by the curvature in the
 likelihood surface
@@ -336,7 +335,7 @@ likelihood surface
 \begin{frame}
 \begin{block}{The expected Fisher information matrix
 \(F(\boldsymbol{\beta})\)}
-\protect\hypertarget{the-expected-fisher-information-matrix-fboldsymbolbeta}{}
+\phantomsection\label{the-expected-fisher-information-matrix-fboldsymbolbeta}
 The covariance of \(s(\boldsymbol{\beta})\) is called the expected
 Fisher information matrix, \(F(\boldsymbol{\beta})\) and is given by
 
@@ -353,7 +352,7 @@ assuming that the responses \(Y_i\) and \(Y_j\) are independent
 
 \begin{frame}
 \begin{block}{\(F_i(\boldsymbol{\beta})\)}
-\protect\hypertarget{f_iboldsymbolbeta}{}
+\phantomsection\label{f_iboldsymbolbeta}
 Remember that \(s_i(\boldsymbol{\beta})=(Y_i-\pi_i){\bf x}_i\), then:
 
 \[
@@ -382,7 +381,7 @@ which relates the expected to the observed Fisher information matrix.
 \begin{frame}
 \begin{block}{Observed Fisher information matrix
 \(H(\boldsymbol{\beta})\)}
-\protect\hypertarget{observed-fisher-information-matrix-hboldsymbolbeta}{}
+\phantomsection\label{observed-fisher-information-matrix-hboldsymbolbeta}
 What is the observed Fisher information matrix?
 
 \[H(\boldsymbol{\beta}) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} = -\frac{\partial s(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}^T} = \frac{\partial}{\partial\boldsymbol{\beta}^T}\left[\sum_{i=1}^n (\pi_i-y_i){\bf x}_i \right] \]
@@ -396,7 +395,7 @@ Note that \(\pi_i = \pi_i(\boldsymbol{\beta})\).
 
 \begin{frame}
 \begin{block}{Calculating \(H(\boldsymbol{\beta})\)}
-\protect\hypertarget{calculating-hboldsymbolbeta}{}
+\phantomsection\label{calculating-hboldsymbolbeta}
 \[H(\boldsymbol{\beta}) = \sum_{i=1}^n \frac{\partial}{\partial\boldsymbol{\beta}^T}[{\bf x}_i\pi_i-{\bf x}_iy_i] = \sum_{i=1}^n \frac{\partial}{\partial\boldsymbol{\beta}^T}{\bf x}_i\pi_i = \sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \eta_i} \frac{\partial \eta_i}{\partial \boldsymbol{\beta}^T} \]
 \end{block}
 \end{frame}
@@ -436,7 +435,7 @@ This is not the case for the probit or complementary log-log models.
 
 \begin{frame}
 \begin{block}{Overview of the results for individual and grouped data}
-\protect\hypertarget{overview-of-the-results-for-individual-and-grouped-data}{}
+\phantomsection\label{overview-of-the-results-for-individual-and-grouped-data}
 \begin{itemize}
 \tightlist
 \item
@@ -490,7 +489,7 @@ link} for the binomial distribution.
 
 \begin{frame}
 \begin{block}{Fitting the Models}
-\protect\hypertarget{fitting-the-models}{}
+\phantomsection\label{fitting-the-models}
 There is no analytic solution, so we have to resort to numerics.
 Luckily, these models behave well enough
 \end{block}
@@ -498,7 +497,7 @@ Luckily, these models behave well enough
 
 \begin{frame}
 \begin{block}{Iterative gradient-based methods}
-\protect\hypertarget{iterative-gradient-based-methods}{}
+\phantomsection\label{iterative-gradient-based-methods}
 Use a first order multivariate Taylor approximation for
 \(s(\hat{\boldsymbol{\beta}})\), around some chosen reference value
 \(\boldsymbol{\beta}^{(0)}\):
@@ -521,7 +520,7 @@ Setting \(s(\hat{\boldsymbol{\beta}})=0\) solving for
 
 \begin{frame}
 \begin{block}{Enter Newton and Raphson}
-\protect\hypertarget{enter-newton-and-raphson}{}
+\phantomsection\label{enter-newton-and-raphson}
 If we start with some value \(\boldsymbol{\beta}^{(0)}\) and then find a
 new value \(\boldsymbol{\beta}^{(1)}\) by applying this equation, and
 then continue applying the equation until convergence we have the
@@ -547,7 +546,7 @@ chosen constant.
 
 \begin{frame}
 \begin{block}{Requirements for convergence}
-\protect\hypertarget{requirements-for-convergence}{}
+\phantomsection\label{requirements-for-convergence}
 For the Newton-Raphson algorithm we see that the observed Fisher
 information matrix \(H\) needs to be invertible for all
 \(\boldsymbol{\beta}\), alternatively for the Fisher scoring algorithm
@@ -557,7 +556,7 @@ the expected Fisher information matrix \(F\) needs to be invertible.
 
 \begin{frame}
 \begin{block}{Proof of convergence}
-\protect\hypertarget{proof-of-convergence}{}
+\phantomsection\label{proof-of-convergence}
 In our logit model
 \[F(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \pi_j (1-\pi_j)\]
 
@@ -576,7 +575,7 @@ definite and all is good.
 \begin{frame}
 \begin{block}{Why is \(F(\boldsymbol{\beta})\) positive definite if we
 require that the design matrix has full rank?}
-\protect\hypertarget{why-is-fboldsymbolbeta-positive-definite-if-we-require-that-the-design-matrix-has-full-rank}{}
+\phantomsection\label{why-is-fboldsymbolbeta-positive-definite-if-we-require-that-the-design-matrix-has-full-rank}
 Formally, let \({\bf X}\) be a \(n\times p\) matrix and \(\Lambda\) a
 \(n\times n\) diagonal matrix where all the diagonal elements are
 positive (like our \(\pi_j(1-\pi_j)\), yes, put them on the diagonal).
@@ -603,7 +602,7 @@ definite. This is, \({\bf X}\) has independent columns.
 
 \begin{frame}
 \begin{block}{We need a full rank}
-\protect\hypertarget{we-need-a-full-rank}{}
+\phantomsection\label{we-need-a-full-rank}
 Therefore, for GLMs we will also - as for the multiple linear regression
 model in Module 2 - assume that the design matrix has full rank!
 
@@ -614,7 +613,7 @@ general.
 
 \begin{frame}
 \begin{block}{Convergence}
-\protect\hypertarget{convergence}{}
+\phantomsection\label{convergence}
 Convergence is still not guarnateed, especially for small samples.
 
 According to our text book, Fahrmeir et al (2013), page 284, the
@@ -633,9 +632,9 @@ stopped here
 \end{frame}
 
 \begin{frame}{Asymptotic properties of ML estimates}
-\protect\hypertarget{asymptotic-properties-of-ml-estimates}{}
+\phantomsection\label{asymptotic-properties-of-ml-estimates}
 \begin{block}{Results}
-\protect\hypertarget{results}{}
+\phantomsection\label{results}
 We need some weak regularity conditions, including
 
 \begin{itemize}
@@ -653,7 +652,7 @@ We need some weak regularity conditions, including
 
 \begin{frame}
 \begin{block}{The Results}
-\protect\hypertarget{the-results}{}
+\phantomsection\label{the-results}
 Let \(\hat{\boldsymbol{\beta}}\) be the maximum likelihood (ML) estimate
 in the GLM model. As the total sample size increases,
 \(n\rightarrow \infty\):
@@ -697,7 +696,7 @@ Here we will sketch the proof. The strategy:
 
 \begin{frame}
 \begin{block}{The sketch}
-\protect\hypertarget{the-sketch}{}
+\phantomsection\label{the-sketch}
 Use \(\boldsymbol{\theta}\) as the parameter of interest
 
 (there is the connection to \(\boldsymbol{\mu}\), then to
@@ -772,11 +771,12 @@ also holds when \({\bf F}^{-1}(\boldsymbol{\theta}))\) is replaced by
 \end{frame}
 
 \begin{frame}{Parameter estimation}
-\protect\hypertarget{parameter-estimation}{}
+\phantomsection\label{parameter-estimation}
 Parameter estimation can be based on grouped data - so now we use
 \(Y_j \sim \text{bin}(n_j,\pi_j)\) from 1 above, but keep 2 and 3
 unchanged. The number of groups is \(G\) and the total number of
-observations is \(\sum_{j=1}^G n_j\).
+observations is \(\sum_{j=1}^G
+n_j\).
 
 \begin{itemize}
 \item
@@ -811,7 +811,7 @@ observations is \(\sum_{j=1}^G n_j\).
 \end{frame}
 
 \begin{frame}{Further statistical inference}
-\protect\hypertarget{further-statistical-inference}{}
+\phantomsection\label{further-statistical-inference}
 Our further statistical inference (confidence intervals and hypotheses
 tests) are based on the asymptotic distribution of the parameter
 estimates
@@ -861,7 +861,7 @@ is asymptotically standard normal. We will use this now!
 
 \begin{frame}
 \begin{block}{Confidence intervals}
-\protect\hypertarget{confidence-intervals}{}
+\phantomsection\label{confidence-intervals}
 In addition to providing a parameter estimate for each element of our
 parameter vector \(\boldsymbol{\beta}\) we should also report a
 \((1-\alpha)100\)\% confidence interval (CI) for each element.
@@ -894,7 +894,7 @@ for the upper and lower limits.
 
 \begin{frame}[fragile]
 \begin{block}{Example with the beetle data}
-\protect\hypertarget{example-with-the-beetle-data}{}
+\phantomsection\label{example-with-the-beetle-data}
 Again, we study our beetle data - in the grouped version.
 
 Here we calculate the upper and lower limits of the confidence interval
@@ -902,13 +902,13 @@ using the formula.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fitgrouped}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle) }
-\NormalTok{coeff}\OtherTok{=}\NormalTok{fitgrouped}\SpecialCharTok{$}\NormalTok{coefficients}
-\NormalTok{sds}\OtherTok{=}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{summary}\NormalTok{(fitgrouped)}\SpecialCharTok{$}\NormalTok{cov.scaled))}
-\NormalTok{alpha}\OtherTok{=}\FloatTok{0.05}
-\NormalTok{lower}\OtherTok{=}\NormalTok{coeff}\SpecialCharTok{{-}}\FunctionTok{qnorm}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{sds}
-\NormalTok{upper}\OtherTok{=}\NormalTok{coeff}\SpecialCharTok{+}\FunctionTok{qnorm}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{sds}
-\FunctionTok{cbind}\NormalTok{(lower,upper)}
+\NormalTok{fitgrouped }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
+\NormalTok{coeff }\OtherTok{=}\NormalTok{ fitgrouped}\SpecialCharTok{$}\NormalTok{coefficients}
+\NormalTok{sds }\OtherTok{=} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{summary}\NormalTok{(fitgrouped)}\SpecialCharTok{$}\NormalTok{cov.scaled))}
+\NormalTok{alpha }\OtherTok{=} \FloatTok{0.05}
+\NormalTok{lower }\OtherTok{=}\NormalTok{ coeff }\SpecialCharTok{{-}} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ sds}
+\NormalTok{upper }\OtherTok{=}\NormalTok{ coeff }\SpecialCharTok{+} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ sds}
+\FunctionTok{cbind}\NormalTok{(lower, upper)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -924,7 +924,7 @@ using the formula.
 
 \begin{frame}
 \begin{block}{Hypothesis testing}
-\protect\hypertarget{hypothesis-testing}{}
+\phantomsection\label{hypothesis-testing}
 There are three methods that are mainly used for testing hypotheses in
 GLMs: - Wald test, - likelihood ratio test and - score test.
 
@@ -958,7 +958,7 @@ to be a column vector of length \(d\).
 
 \begin{frame}
 \begin{block}{The Wald test}
-\protect\hypertarget{the-wald-test}{}
+\phantomsection\label{the-wald-test}
 The Wald test statistic is given as:
 
 \[
@@ -1003,9 +1003,8 @@ performed using the Wald test?
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(investr)}
-\NormalTok{fitgrouped}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y,n}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{, }
-               \AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle) }
-\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\FunctionTok{summary}\NormalTok{(fitgrouped)}\SpecialCharTok{$}\NormalTok{coefficients, }\AttributeTok{digits=}\DecValTok{2}\NormalTok{)}
+\NormalTok{fitgrouped }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\FunctionTok{summary}\NormalTok{(fitgrouped)}\SpecialCharTok{$}\NormalTok{coefficients, }\AttributeTok{digits =} \DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1023,7 +1022,7 @@ ldose & 34.27 & 2.91 & 11.77 & 0 \\
 
 \begin{frame}
 \begin{block}{The likelihood ratio test}
-\protect\hypertarget{the-likelihood-ratio-test}{}
+\phantomsection\label{the-likelihood-ratio-test}
 The likelihood ratio test (LRT), which compares the likelihood of two
 models.
 
@@ -1074,13 +1073,15 @@ loglikelihood-function that we made for the lecture session for week 2.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(investr)}
-\NormalTok{fitgrouped}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle) }
-\NormalTok{fitnull}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle) }
+\NormalTok{fitgrouped }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
+\NormalTok{fitnull }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
 
-\NormalTok{loglik }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(par, args)\{}
-\NormalTok{  y }\OtherTok{\textless{}{-}}\NormalTok{ args}\SpecialCharTok{$}\NormalTok{y; x }\OtherTok{\textless{}{-}}\NormalTok{ args}\SpecialCharTok{$}\NormalTok{x; n }\OtherTok{\textless{}{-}}\NormalTok{ args}\SpecialCharTok{$}\NormalTok{n}
-\NormalTok{  res }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{\%*\%}\NormalTok{par }\SpecialCharTok{{-}}\NormalTok{ n}\SpecialCharTok{*}\FunctionTok{log}\NormalTok{(}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{\%*\%}\NormalTok{par)))}
-  \FunctionTok{return}\NormalTok{(res)}
+\NormalTok{loglik }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(par, args) \{}
+\NormalTok{    y }\OtherTok{\textless{}{-}}\NormalTok{ args}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{    x }\OtherTok{\textless{}{-}}\NormalTok{ args}\SpecialCharTok{$}\NormalTok{x}
+\NormalTok{    n }\OtherTok{\textless{}{-}}\NormalTok{ args}\SpecialCharTok{$}\NormalTok{n}
+\NormalTok{    res }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(y }\SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{\%*\%}\NormalTok{ par }\SpecialCharTok{{-}}\NormalTok{ n }\SpecialCharTok{*} \FunctionTok{log}\NormalTok{(}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{exp}\NormalTok{(x }\SpecialCharTok{\%*\%}\NormalTok{ par)))}
+    \FunctionTok{return}\NormalTok{(res)}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -1090,15 +1091,14 @@ loglikelihood-function that we made for the lecture session for week 2.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# call this with parameters estimated under model A=larger model}
-\NormalTok{beetleargs }\OtherTok{=} \FunctionTok{list}\NormalTok{(}\AttributeTok{y =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y, }
-            \AttributeTok{x =} \FunctionTok{cbind}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(investr}\SpecialCharTok{::}\NormalTok{beetle)), investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{ldose), }
-            \AttributeTok{n =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{ beetle}\SpecialCharTok{$}\NormalTok{n)}
+\NormalTok{beetleargs }\OtherTok{=} \FunctionTok{list}\NormalTok{(}\AttributeTok{y =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y, }\AttributeTok{x =} \FunctionTok{cbind}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(investr}\SpecialCharTok{::}\NormalTok{beetle)),}
+\NormalTok{    investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{ldose), }\AttributeTok{n =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n)}
 
-\NormalTok{llA}\OtherTok{=}\FunctionTok{loglik}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(fitgrouped}\SpecialCharTok{$}\NormalTok{coefficients,}\AttributeTok{ncol=}\DecValTok{1}\NormalTok{),}\AttributeTok{args=}\NormalTok{beetleargs)}
+\NormalTok{llA }\OtherTok{=} \FunctionTok{loglik}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(fitgrouped}\SpecialCharTok{$}\NormalTok{coefficients, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{), }\AttributeTok{args =}\NormalTok{ beetleargs)}
 
 \CommentTok{\# then the smaller model, then we set the coeff for ldose to 0. B=smaller model}
-\NormalTok{llB}\OtherTok{=}\FunctionTok{loglik}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(fitnull}\SpecialCharTok{$}\NormalTok{coefficients,}\DecValTok{0}\NormalTok{),}\AttributeTok{ncol=}\DecValTok{1}\NormalTok{),}\AttributeTok{args=}\NormalTok{beetleargs)}
-\NormalTok{lrt}\OtherTok{=}\SpecialCharTok{{-}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{(llB}\SpecialCharTok{{-}}\NormalTok{llA)}
+\NormalTok{llB }\OtherTok{=} \FunctionTok{loglik}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(fitnull}\SpecialCharTok{$}\NormalTok{coefficients, }\DecValTok{0}\NormalTok{), }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{), }\AttributeTok{args =}\NormalTok{ beetleargs)}
+\NormalTok{lrt }\OtherTok{=} \SpecialCharTok{{-}}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ (llB }\SpecialCharTok{{-}}\NormalTok{ llA)}
 \NormalTok{lrt}
 \end{Highlighting}
 \end{Shaded}
@@ -1109,7 +1109,7 @@ loglikelihood-function that we made for the lecture session for week 2.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{pchisq}\NormalTok{(lrt,}\AttributeTok{df=}\DecValTok{1}\NormalTok{, }\AttributeTok{lower.tail =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{pchisq}\NormalTok{(lrt, }\AttributeTok{df =} \DecValTok{1}\NormalTok{, }\AttributeTok{lower.tail =} \ConstantTok{FALSE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1121,7 +1121,7 @@ loglikelihood-function that we made for the lecture session for week 2.
 \begin{frame}[fragile]
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{anova}\NormalTok{(fitnull, fitgrouped, }\AttributeTok{test=}\StringTok{"LRT"}\NormalTok{)}
+\FunctionTok{anova}\NormalTok{(fitnull, fitgrouped, }\AttributeTok{test =} \StringTok{"LRT"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1146,7 +1146,7 @@ performed using \texttt{anova}.
 \end{frame}
 
 \begin{frame}{Deviance}
-\protect\hypertarget{deviance}{}
+\phantomsection\label{deviance}
 The \emph{deviance} is used to assess model fit and also for model
 choice, and is based on the likelihood ratio test statistic.
 
@@ -1204,7 +1204,7 @@ example by computing the formula for \(D\) directly:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{D}\OtherTok{=}\FunctionTok{deviance}\NormalTok{(fitgrouped)}
+\NormalTok{D }\OtherTok{=} \FunctionTok{deviance}\NormalTok{(fitgrouped)}
 \NormalTok{D}
 \end{Highlighting}
 \end{Shaded}
@@ -1215,7 +1215,7 @@ example by computing the formula for \(D\) directly:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{G}\OtherTok{=}\FunctionTok{dim}\NormalTok{(investr}\SpecialCharTok{::}\NormalTok{beetle)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{G }\OtherTok{=} \FunctionTok{dim}\NormalTok{(investr}\SpecialCharTok{::}\NormalTok{beetle)[}\DecValTok{1}\NormalTok{]}
 \NormalTok{G}
 \end{Highlighting}
 \end{Shaded}
@@ -1226,8 +1226,8 @@ example by computing the formula for \(D\) directly:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{p}\OtherTok{=}\DecValTok{2}
-\DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{pchisq}\NormalTok{(D,G}\SpecialCharTok{{-}}\NormalTok{p)}
+\NormalTok{p }\OtherTok{=} \DecValTok{2}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pchisq}\NormalTok{(D, G }\SpecialCharTok{{-}}\NormalTok{ p)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1286,7 +1286,7 @@ intercept term present. This deviance asymptotically distributed as
 
 \begin{frame}
 \begin{block}{Analysis of deviance}
-\protect\hypertarget{analysis-of-deviance}{}
+\phantomsection\label{analysis-of-deviance}
 In MLR we have seen that we may produce a sequential analysis of
 variance (Type I) by adding more and more terms to the model and
 comparing the scaled decrease in SSE by the scaled SSE of a full model.
@@ -1304,7 +1304,8 @@ We use the infant respiratory disease data as an example
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(faraway)}
-\NormalTok{fit}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease)}\SpecialCharTok{\textasciitilde{}}\NormalTok{sex}\SpecialCharTok{*}\NormalTok{food,}\AttributeTok{family=}\FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\NormalTok{logit),}\AttributeTok{data=}\NormalTok{babyfood)}
+\NormalTok{fit }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex }\SpecialCharTok{*}\NormalTok{ food, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =}\NormalTok{ logit),}
+    \AttributeTok{data =}\NormalTok{ babyfood)}
 \FunctionTok{summary}\NormalTok{(fit)}
 \end{Highlighting}
 \end{Shaded}
@@ -1337,7 +1338,7 @@ We use the infant respiratory disease data as an example
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{anova}\NormalTok{(fit,}\AttributeTok{test=}\StringTok{"Chisq"}\NormalTok{)}
+\FunctionTok{anova}\NormalTok{(fit, }\AttributeTok{test =} \StringTok{"Chisq"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1369,7 +1370,7 @@ to the model? What does it mean that the Residual deviance is 0 for the
 
 \begin{frame}
 \begin{block}{Deviance residuals}
-\protect\hypertarget{deviance-residuals}{}
+\phantomsection\label{deviance-residuals}
 The deviance residuals are given by a signed version of each element in
 the sum for the deviance, that is
 \[d_k=\text{sign}(y_k-n_k\hat{\pi}_k)\cdot \left\{ 
@@ -1380,13 +1381,13 @@ residuals possible.
 \end{frame}
 
 \begin{frame}{Model assessment and choice}
-\protect\hypertarget{model-assessment-and-choice}{}
+\phantomsection\label{model-assessment-and-choice}
 The fit of the model can be assessed based on goodness of fit statistics
 (and related tests) and by residual plots. Model choice can be made from
 analysis of deviance, or by comparing the AIC for different models.
 
 \begin{block}{Deviance test for grouped data}
-\protect\hypertarget{deviance-test-for-grouped-data}{}
+\phantomsection\label{deviance-test-for-grouped-data}
 We may use the deviance test presented before to test if the model under
 study is preferred compared to the saturated model.
 \end{block}
@@ -1394,7 +1395,7 @@ study is preferred compared to the saturated model.
 
 \begin{frame}
 \begin{block}{Pearson test and residuals}
-\protect\hypertarget{pearson-test-and-residuals}{}
+\phantomsection\label{pearson-test-and-residuals}
 An alternative to the deviance test is the Pearson test. We will look in
 more detail at this test in a Module 4. The Pearson test statistic can
 be written as a function of the Pearson residuals, which for the
@@ -1420,7 +1421,7 @@ i.e.~\(n_j \hat{\pi}_j\) is small (below 1).
 
 \begin{frame}
 \begin{block}{Model assessment with continuous covariates}
-\protect\hypertarget{model-assessment-with-continuous-covariates}{}
+\phantomsection\label{model-assessment-with-continuous-covariates}
 If data have continuous covariates it is possible to form groups based
 making intervals for continuous covariates. Alternatively grouping on
 predicted probabilites can be done.
@@ -1432,7 +1433,7 @@ reading list.
 
 \begin{frame}
 \begin{block}{Plotting residuals}
-\protect\hypertarget{plotting-residuals}{}
+\phantomsection\label{plotting-residuals}
 Deviance and Pearson residuals can be used for checking the fit of the
 model, by plotting the residuals against fitted values and covariates.
 
@@ -1452,15 +1453,17 @@ for this module.
 
 \begin{frame}[fragile]
 \begin{block}{Other plots}
-\protect\hypertarget{other-plots}{}
+\phantomsection\label{other-plots}
 A useful plot is to show observed and fitted proportions (grouped data)
 plotted against the linear predictor or covariates.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(ggplot2)}
-\NormalTok{df}\OtherTok{=}\FunctionTok{data.frame}\NormalTok{(}\StringTok{"fitted"}\OtherTok{=}\NormalTok{fitgrouped}\SpecialCharTok{$}\NormalTok{fitted.values,}\StringTok{"dres"}\OtherTok{=}\FunctionTok{residuals}\NormalTok{(fitgrouped,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{),}\StringTok{"ldose"}\OtherTok{=}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{ldose,}\StringTok{"frac"}\OtherTok{=}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{/}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n)}
-\FunctionTok{ggplot}\NormalTok{(df,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{ldose))}\SpecialCharTok{+}\FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{frac,}\AttributeTok{colour=}\StringTok{"observed"}\NormalTok{))}\SpecialCharTok{+}\FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{fitted,}\AttributeTok{colour=}\StringTok{"fitted"}\NormalTok{))}
+\NormalTok{df }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{fitted =}\NormalTok{ fitgrouped}\SpecialCharTok{$}\NormalTok{fitted.values, }\AttributeTok{dres =} \FunctionTok{residuals}\NormalTok{(fitgrouped, }\AttributeTok{type =} \StringTok{"deviance"}\NormalTok{),}
+    \AttributeTok{ldose =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{ldose, }\AttributeTok{frac =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{/}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n)}
+\FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ ldose)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ frac, }\AttributeTok{colour =} \StringTok{"observed"}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ fitted,}
+    \AttributeTok{colour =} \StringTok{"fitted"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1470,7 +1473,7 @@ plotted against the linear predictor or covariates.
 
 \begin{frame}
 \begin{block}{AIC}
-\protect\hypertarget{aic}{}
+\phantomsection\label{aic}
 It is known to us from multiple linear regression that if a model is
 chosen based on a goodness of fit statistic (like the SSE or \(R^2\) in
 multiple linear regression) will in general result in us choosing a to
@@ -1495,12 +1498,14 @@ or \(\log(n)\cdot p\).
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(faraway)}
-\NormalTok{fit1}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease)}\SpecialCharTok{\textasciitilde{}}\DecValTok{1}\NormalTok{,}\AttributeTok{family=}\FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\NormalTok{logit),}\AttributeTok{data=}\NormalTok{babyfood)}
-\NormalTok{fit2}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease)}\SpecialCharTok{\textasciitilde{}}\NormalTok{sex,}\AttributeTok{family=}\FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\NormalTok{logit),}\AttributeTok{data=}\NormalTok{babyfood)}
-\NormalTok{fit3}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease)}\SpecialCharTok{\textasciitilde{}}\NormalTok{food,}\AttributeTok{family=}\FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\NormalTok{logit),}\AttributeTok{data=}\NormalTok{babyfood)}
-\NormalTok{fit4}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease)}\SpecialCharTok{\textasciitilde{}}\NormalTok{food}\SpecialCharTok{+}\NormalTok{sex,}\AttributeTok{family=}\FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\NormalTok{logit),}\AttributeTok{data=}\NormalTok{babyfood)}
-\NormalTok{fit5}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease)}\SpecialCharTok{\textasciitilde{}}\NormalTok{food}\SpecialCharTok{*}\NormalTok{sex,}\AttributeTok{family=}\FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\NormalTok{logit),}\AttributeTok{data=}\NormalTok{babyfood)}
-\FunctionTok{AIC}\NormalTok{(fit1,fit2,fit3,fit4,fit5)}
+\NormalTok{fit1 }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =}\NormalTok{ logit), }\AttributeTok{data =}\NormalTok{ babyfood)}
+\NormalTok{fit2 }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =}\NormalTok{ logit), }\AttributeTok{data =}\NormalTok{ babyfood)}
+\NormalTok{fit3 }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ food, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =}\NormalTok{ logit), }\AttributeTok{data =}\NormalTok{ babyfood)}
+\NormalTok{fit4 }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ food }\SpecialCharTok{+}\NormalTok{ sex, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =}\NormalTok{ logit),}
+    \AttributeTok{data =}\NormalTok{ babyfood)}
+\NormalTok{fit5 }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(disease, nondisease) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ food }\SpecialCharTok{*}\NormalTok{ sex, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =}\NormalTok{ logit),}
+    \AttributeTok{data =}\NormalTok{ babyfood)}
+\FunctionTok{AIC}\NormalTok{(fit1, fit2, fit3, fit4, fit5)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1519,7 +1524,7 @@ or \(\log(n)\cdot p\).
 \end{frame}
 
 \begin{frame}{Overdispersion and estimating overdispersion parameter}
-\protect\hypertarget{overdispersion-and-estimating-overdispersion-parameter}{}
+\phantomsection\label{overdispersion-and-estimating-overdispersion-parameter}
 When we have grouped data: \(Y_j \sim \text{Bin} (n_j, \pi_j)\) and
 Var\((Y_j) = n_j\pi_j(1-\pi_j)\).
 
@@ -1581,11 +1586,11 @@ correlated observations.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(investr)}
-\NormalTok{estpi}\OtherTok{=}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{/}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n}
-\NormalTok{empvars}\OtherTok{=}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n}\SpecialCharTok{*}\NormalTok{estpi}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{estpi)}
-\NormalTok{fit}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
-\NormalTok{modelestvar}\OtherTok{=}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n}\SpecialCharTok{*}\NormalTok{fit}\SpecialCharTok{$}\NormalTok{fitted.values}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{fit}\SpecialCharTok{$}\NormalTok{fitted.values)}
-\FunctionTok{cbind}\NormalTok{(empvars,modelestvar)}
+\NormalTok{estpi }\OtherTok{=}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{/}\NormalTok{investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n}
+\NormalTok{empvars }\OtherTok{=}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n }\SpecialCharTok{*}\NormalTok{ estpi }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ estpi)}
+\NormalTok{fit }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
+\NormalTok{modelestvar }\OtherTok{=}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle}\SpecialCharTok{$}\NormalTok{n }\SpecialCharTok{*}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{fitted.values }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{fitted.values)}
+\FunctionTok{cbind}\NormalTok{(empvars, modelestvar)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1603,7 +1608,7 @@ correlated observations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{est.dispersion}\OtherTok{=}\NormalTok{fit}\SpecialCharTok{$}\NormalTok{deviance}\SpecialCharTok{/}\NormalTok{fit}\SpecialCharTok{$}\NormalTok{df.residual }
+\NormalTok{est.dispersion }\OtherTok{=}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{deviance}\SpecialCharTok{/}\NormalTok{fit}\SpecialCharTok{$}\NormalTok{df.residual}
 \NormalTok{est.dispersion}
 \end{Highlighting}
 \end{Shaded}
@@ -1614,7 +1619,7 @@ correlated observations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{summary}\NormalTok{(fit,}\AttributeTok{dispersion=}\NormalTok{est.dispersion,}\AttributeTok{correlation=}\ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(fit, }\AttributeTok{dispersion =}\NormalTok{ est.dispersion, }\AttributeTok{correlation =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1645,7 +1650,7 @@ correlated observations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fitquasi}\OtherTok{=}\FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
+\NormalTok{fitquasi }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
 \CommentTok{\# preferred method of estimation is to use quasilikelihood}
 \FunctionTok{summary}\NormalTok{(fitquasi)}\SpecialCharTok{$}\NormalTok{dispersion}
 \end{Highlighting}
@@ -1657,7 +1662,7 @@ correlated observations.
 \end{frame}
 
 \begin{frame}{References for further reading}
-\protect\hypertarget{references-for-further-reading}{}
+\phantomsection\label{references-for-further-reading}
 \begin{itemize}
 \tightlist
 \item
@@ -1682,7 +1687,7 @@ If we have time
 \begin{frame}
 \begin{block}{Look back at MLR - what is \(s(\boldsymbol{\beta})\) and
 \(F(\boldsymbol{\beta})\) then?}
-\protect\hypertarget{look-back-at-mlr---what-is-sboldsymbolbeta-and-fboldsymbolbeta-then}{}
+\phantomsection\label{look-back-at-mlr---what-is-sboldsymbolbeta-and-fboldsymbolbeta-then}
 \begin{enumerate}
 \item
   \(Y_i \sim \text{N}(\mu_i, \sigma^2)\)
@@ -1703,7 +1708,7 @@ Loglikelihood:
 
 \begin{frame}
 Since
-\((y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta}) = Y^TY - 2Y^T{\bf X}\boldsymbol{\beta} + \boldsymbol{\beta}^T{\bf X}^T{\bf X}\boldsymbol{\beta}\),
+\((y-{\bf X}\boldsymbol{\beta})^T(y-{\bf X}\boldsymbol{\beta}) = Y^TY - 2Y^T{\bf X}\boldsymbol{\beta}  + \boldsymbol{\beta}^T{\bf X}^T{\bf X}\boldsymbol{\beta}\),
 then
 
 \[s(\boldsymbol{\beta}) = \frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = -\frac{1}{2\sigma^2}(2{\bf X}^T{\bf X}\boldsymbol{\beta}-2{\bf X}^TY) = \frac{1}{\sigma^2}({\bf X}^TY - {\bf X}^T{\bf X}\boldsymbol{\beta})\]
@@ -1729,7 +1734,7 @@ which we know as \(\text{Cov}(\hat{\boldsymbol{\beta}})\).
 \end{frame}
 
 \begin{frame}{Exponential family - and canonical link}
-\protect\hypertarget{exponential-family---and-canonical-link}{}
+\phantomsection\label{exponential-family---and-canonical-link}
 In Module 1 we introduced distributions of the \(Y_i\), that could be
 written in the form of a \emph{univariate exponential family}
 \[ f(y_i\mid \theta_i)=\exp \left( \frac{y_i \theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right) \]
@@ -1809,7 +1814,7 @@ Proving this is beyond the scope of this course.
 \end{frame}
 
 \begin{frame}{Parameter estimation - in practise}
-\protect\hypertarget{parameter-estimation---in-practise}{}
+\phantomsection\label{parameter-estimation---in-practise}
 To find the ML estimate \(\hat{\boldsymbol{\beta}}\) we need to solve
 \[s(\hat{\boldsymbol{\beta}})=0\] We have that the score function for
 the logit model is:

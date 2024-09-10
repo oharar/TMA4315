@@ -494,6 +494,14 @@ $\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, reall
 ---
 
 ## <a id="loglik">Loglikelihood $l(\boldsymbol{\beta})$</a>
+
+This is a video deriving the log likelihood:
+
+<!---
+
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=5f6ff41d-0f8b-4c93-b042-b1e300c8f14e&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m3Lhood" ></iframe>
+--->
+
 The log-likelihood is the natural log of the likelihood, and makes the mathematics simpler - since we work with exponential families.
 The main aim with the likelihood is to maximize it to find the maximum likelihood estimate, and since the log is a monotone function the maximum of the log-likelihood will be in the same place as the maximum of the likelihood.
 
@@ -552,6 +560,14 @@ $$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymb
 Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
 
 ---
+
+Here is a video of me deriving the score:
+
+<!---
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=ac013c23-d963-4ecb-b50b-b1e300e4a54e&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m3Score" ></iframe>
+
+--->
+
 
 We will use the chain rule to calculate $s_i(\boldsymbol{\beta})$.
 
