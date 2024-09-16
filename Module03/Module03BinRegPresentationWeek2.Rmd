@@ -136,47 +136,22 @@ legend(-2, -30, c("n=100", "n=10"), lty=1, col=1:2)
 
 ```
 
----
-
-## <a id="covscore">The expected Fisher information matrix $F(\boldsymbol{\beta})$</a>
-
-The covariance of $s(\boldsymbol{\beta})$ is called the expected Fisher information matrix, $F(\boldsymbol{\beta})$ and is given by
-
-
-$$
-\begin{aligned} 
-F(\boldsymbol{\beta}) &= \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta})) \\
-&= \sum_{i=1}^n E\left[\Big(s_i(\boldsymbol{\beta}) - E(s_i(\boldsymbol{\beta}))\Big)\Big(s_i(\boldsymbol{\beta})-E(s_i(\boldsymbol{\beta}))\Big)^T\right] \\
-&= \sum_{i=1}^n E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = \sum_{i=1}^n F_i(\boldsymbol{\beta}) \end{aligned}
-$$
-
-
-assuming that the responses $Y_i$ and $Y_j$ are independent
+The more curvature, the more certain we are = the lower the variance
 
 ---
 
-## $F_i(\boldsymbol{\beta})$
+## Fisher information matrix
 
-Remember that $s_i(\boldsymbol{\beta})=(Y_i-\pi_i){\bf x}_i$, then:
+We can formalise this with the observed and expected Fisher information matrices
 
-$$
-\begin{aligned}
-F_i(\boldsymbol{\beta}) &= E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = E((Y_i-\pi_i){\bf x}_i(Y_i-\pi_i){\bf x}_i^T) \\
-&= {\bf x}_i{\bf x}_i^T E((Y_i-\pi_i)^2)\\ 
-&= {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i) 
-\end{aligned}
-$$
-where $E((Y_i-\pi_i)^2)=\text{Var}(Y_i)=\pi_i(1-\pi_i)$ is the variance of $Y_i$. Thus
+Observed: $H(\boldsymbol{\beta}) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T}$ - curvature
 
-$$F(\boldsymbol{\beta}) = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
+Expected: $F(\boldsymbol{\beta}) = \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta}))$ - variance
 
----
-
-**A useful relationship:** Under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \boldsymbol{\beta}}$):
+We will calculate these for the binomial with a logit link, and show they are the same, i.e.  under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \boldsymbol{\beta}}$):
 
 $$\text{Cov}(s(\boldsymbol{\beta}))=F(\boldsymbol{\beta}) = E\left( -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} \right) = E(-\text{Hessian matrix of }l)$$
 
-which relates the expected to the observed Fisher information matrix.
 
 ---
 
@@ -223,6 +198,41 @@ H(\boldsymbol{\beta}) &=\sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \e
 &= \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).
 \end{aligned}
 $$
+
+
+---
+
+## The expected Fisher information matrix $F(\boldsymbol{\beta})$
+
+The covariance of $s(\boldsymbol{\beta})$ is called the expected Fisher information matrix, $F(\boldsymbol{\beta})$ and is given by
+
+
+$$
+\begin{aligned} 
+F(\boldsymbol{\beta}) &= \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta})) \\
+&= \sum_{i=1}^n E\left[\Big(s_i(\boldsymbol{\beta}) - E(s_i(\boldsymbol{\beta}))\Big)\Big(s_i(\boldsymbol{\beta})-E(s_i(\boldsymbol{\beta}))\Big)^T\right] \\
+&= \sum_{i=1}^n E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = \sum_{i=1}^n F_i(\boldsymbol{\beta}) \end{aligned}
+$$
+
+
+assuming that the responses $Y_i$ and $Y_j$ are independent
+
+---
+
+## $F_i(\boldsymbol{\beta})$
+
+Remember that $s_i(\boldsymbol{\beta})=(Y_i-\pi_i){\bf x}_i$, then:
+
+$$
+\begin{aligned}
+F_i(\boldsymbol{\beta}) &= E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = E((Y_i-\pi_i){\bf x}_i(Y_i-\pi_i){\bf x}_i^T) \\
+&= {\bf x}_i{\bf x}_i^T E((Y_i-\pi_i)^2)\\ 
+&= {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i) 
+\end{aligned}
+$$
+where $E((Y_i-\pi_i)^2)=\text{Var}(Y_i)=\pi_i(1-\pi_i)$ is the variance of $Y_i$. Thus
+
+$$F(\boldsymbol{\beta}) = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
 
 So the observed and the expected Fisher information matrix are equal., i.e. $Cov(s(\beta) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T}$
 
@@ -333,9 +343,11 @@ If we require that the design matrix has full rank ($G$) then also ${\bf X}^T{\b
 ## Why is $F(\boldsymbol{\beta})$ positive definite if we require that the design matrix has full rank? 
 
 Formally, let ${\bf X}$ be a $n\times p$ matrix and $\Lambda$ a $n\times n$ diagonal matrix where all the diagonal elements are positive (like our $\pi_j(1-\pi_j)$, yes, put them on the diagonal). 
-Let ${\bf X}$ have independent columnes (full rank) $\Leftrightarrow$ ${\bf X}^T\Lambda{\bf X}$ is positive definite.
+Let ${\bf X}$ be of full rank $\Leftrightarrow$ ${\bf X}^T\Lambda{\bf X}$ is positive definite.
+
 
 *Proof:* 
+
 $\Rightarrow$: Let ${\bf v}$ be a $p$ dimensional column vector. Assume $0={\bf v}^T {\bf X}^T \Lambda {\bf X} {\bf v}=(\Lambda^{1/2}{\bf X}{\bf v})^T(\Lambda^{1/2}{\bf X}{\bf v})=\sum_{i=1}^n w_i^2$ where ${\bf W}=\Lambda^{1/2}{\bf X}{\bf v}$. Then, $w$ must be 0, that is $\Lambda^{1/2}{\bf X}{\bf v}=0$ since multiplication with $\Lambda^{1/2}$ is to multiply each element in ${\bf X}{\bf v}$ with a number different from 0. That is, we must have ${\bf v}={\bf 0}$ since ${\bf X}$ has independent columns.
 
 $\Leftarrow$: Assume that ${\bf X}{\bf v}={\bf 0}$. Then ${\bf v}^T {\bf X}^T \Lambda {\bf X} {\bf v}={\bf 0}$ so ${\bf v}={\bf 0}$ since ${\bf X}^T\Lambda{\bf X}$ is positive definite. This is, ${\bf X}$ has independent columns.

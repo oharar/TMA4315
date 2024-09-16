@@ -55,7 +55,7 @@ dim(ds)
 head(ds)
 ```
 
-We will study binary regression using the logit model, and we will work with grouped data.
+We will study binary regression using the logit model, and we will work with grouped data. So the proportion using contraception is `using`/(`using` + `notUsing`). For grouped data as a response, R wants 2 columns, with success in the fist column, and failure in the second. We can write this as `cbind(success, failure) ~ X1 + X2`.
 
 <!-- Useful functions: `qlogis(p)` calculates the logit logit(p) = log(p/(1-p)) and the function `plogis(x)` is the inverse logit, that is exp(x)/(1-exp(x)). -->
 
@@ -85,6 +85,7 @@ Then ${\bf x}_j^T\boldsymbol{\beta}=\beta_0$. The log-likelihood can be written 
 \begin{align} l(\boldsymbol{\beta}) &=\sum_{j=1}^G (y_j{\bf x}_j^T \boldsymbol{\beta} - n_j \log(1+\exp({\bf x}_j^T\boldsymbol{\beta})))= \sum_{j=1}^G (y_j\beta_0 - n_j \log(1+\exp(\beta_0)))\\
 &= \beta_0 \sum_{j=1}^G y_j - \log(1+\exp(\beta_0))\sum_{j=1}^G n_j =\beta_0 N_1 - \log(1+\exp(\beta_0))N
 \end{align}
+
 where $N_1=\sum_{j=1}^G y_j$ is the total number of successes and $N=\sum_{j=1}^G n_j$ is the total number of trials (over all covariates patterns, that is, here the number of individuals in the data set). Also $N_2=N-N_1$ is the total number of failures.
 
 We will use this loglikelihood in the next question.
@@ -169,7 +170,7 @@ So, $F^{-1}(\boldsymbol{\beta}) = Var(\boldsymbol{\beta}) = N/(N_1 N_2) = \frac{
 vcov(fit0)
 ```
 
-Hopefully, "yes", especially if `1/sum(ds$notUsing) + 1/sum(ds$using) = ` `r 1/sum(ds$notUsing) + 1/sum(ds$using)`
+Hopefully, "yes" (up to rounding error), especially if `1/sum(ds$notUsing) + 1/sum(ds$using) = ` `r 1/sum(ds$notUsing) + 1/sum(ds$using)`
 </details>
 
 <span class="question">**e)** What is the asymptotic distribution of the estimated regression coefficient? Use this to write down the formula for the 95% confidence interval for the intercept, and calculate the interval in R. Compare numerically to `confint.default` and `confint`.</span>
@@ -193,8 +194,15 @@ So, the asymptotic answer is (almost) the same as the one `confint.default()` gi
 <span class="question">**f)** Translate the 95% CI to probability scale</span>
 <details><summary>Hint</summary>
 `plogis` is the inverse logit. Or write your own function.
+
+Conceptually, think about what probability mass is above the upper limit on the linear scale and after it has been transformed.
 </details>
 <details><summary>Answer</summary>
+
+If a transformation is linear, then an x% quantile before transformation is also an x% (or (100-x)%) quantile on the transformed scale. Recall that this does not hold for other statistics (e.g. the mean, mode or standard deviation).
+
+So, we can simply transform the `ci`:
+
 ```{r}
 plogis(ci)
 fit0$family$linkinv(ci)
@@ -384,49 +392,116 @@ We're interested in which covariate is in which model
 
 <span class="question">**b)** What is the definition of the deviance and df. What can we use the deviance for? </span>
 
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+df = degrees of freedom
+
+Deviance is a function of likelihoods.
 </details>
 <details><summary>Answer</summary>
 
 The _deviance_ is defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
 
-$$
+
 \begin{aligned}
 D&=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model})) \\
 &=-2(l(\hat{\pi})-l(\tilde{\pi}))=
 -2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))
 \end{aligned}
-$$
+
 
 The df is the difference in the number of parameters of the models being compared.
 
-We can use it to (a) compare models, (b) test howgoodness of fit of a model, and (c) test for overdispersion.
+We can use it to (a) compare models, (b) test how goodness of fit of a model, and (c) test for overdispersion.
 
 </details>
 
 <span class="question">Optional: derive the formula for the deviance for the logit model (the derivation is not given on the module pages.)</span>
 
 <details><summary>Hint</summary>
-No answer yet!
+The deviance is 
+
+$$
+D= -2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j)) = 
+2\sum_{j=1}^G [y_j\ln(\frac{y_j}{n_j\hat{\pi}_j})+(n_j-y_j)\ln(\frac{n_j-y_j}{n_j-n_j\hat{\pi}_j})]
+$$
+
 </details>
 <details><summary>Answer</summary>
-Sorry 😢 
+
+Because $D = -2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))$, we can just work with $l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j)$, where $\hat{\pi}_j$ is the estimate at our model and $l_j(\tilde{\pi}_j) = y_j/n_j$ is the estimate at the saturated model. 
+
+\begin{aligned}
+l_j({\hat{\pi}}_j)-l_j({\tilde{\pi}}_j) &= \left( y_j \ln {\hat{\pi}}_j + (1-y_j) \ln(n_j-{\hat{\pi}}_j) \right)
+- \left( y_j \ln {\tilde{\pi}}_j + (1-y_j) \ln(n_j-{\tilde{\pi}}_j) \right) \\
+&= y_j \ln \frac{{\hat{\pi}}_j}{{\tilde{\pi}}_j} + (1-y_j) \ln \frac{{n_j-\hat{\pi}}_j}{{1-\tilde{\pi}}_j} \\
+&= y_j \ln \frac{{\hat{\pi}}_j}{{\tilde{\pi}}_j} + (1-y_j) \ln \frac{{n_j-\hat{\pi}}_j}{{1-\tilde{\pi}}_j} \\
+&= y_j \ln \frac{n_j {\hat{\pi}}_j}{{y_j}} + (n_j-y_j) \ln \frac{n_j (1-{\hat{\pi}}_j)}{n_j-y_j}= y_j \ln \frac{n_j {\hat{\pi}}_j}{{y_j}} + (n_j-y_j) \ln \frac{n_j-n_j {\hat{\pi}}_j}{n_j-y_j}
+\end{aligned}
+
+So now we can plug this into $-2\sum D_j$ to get
+
+$$
+D = -2 \sum_{j=1}^G  y_j \ln \frac{n_j {\hat{\pi}}_j}{{y_j}} + (1-y_j) \ln \frac{n_j-n_j {\hat{\pi}}_j}{n_j-y_j}
+$$
+
+
 </details>
 
 
 **c)** Perform a likelihood ratio test - based on the deviance results given in the data frame in the R chunk- to compare the additive and interact models. First write down the null and alternative hypothesis you are testing. 
 <span class="question">Which of the two models would you prefer?</span>
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+The models are 
+
+additive: `Y ~ age + wantsMore`
+interact: `Y ~ age * wantsMore`
 </details>
+
 <details><summary>Answer</summary>
+
+The null hypothesis is $H_0$: `Y ~ age + wantsMore` is the correct model, i.e. all of the interaction terms are 0.
+The alternative hypothesis is $H_1$: `Y ~ age + wantsMore` is the correct model.
+
+We could do this using `anova(additive, interact)`, but let's do it by hand!
+
+The deviances are (using `summary(models$additive)$deviance`):
+
+additive: `R summary(models$additive)$deviance`
+interact: `R summary(models$interact)$deviance`
+
+with `R summary(models$additive)$df.residual` and `R summary(models$interact)$df.residual` degrees of freedom respectively (using `summary(models$additive)$df.residual`). The test statistic is then:
+
+```{r}
+(test.dev <- summary(models$additive)$deviance - summary(models$interact)$deviance)
+(test.df <-  summary(models$additive)$df.residual - summary(models$interact)$df.residual)
+
+pchisq(test.dev, test.df, lower.tail = FALSE)
+
+```
+
+Hence, we reject the null hypothesis, and prefer the model with the interactions.
+
+
 </details>
 
 
 <span class="question">**d)** What if you use the AIC for model selection, which model (out of the 5) will you then use?</span>
 
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+Lower AIC is better. 
 </details>
 <details><summary>Answer</summary>
+
+We can extract the AICs from each object (or just read the output above). Then we can use R to find the model with the lowest AIC:
+
+```{r}
+(AICs <- unlist(lapply(models, AIC))) # lapply() returns a list, so unlist() tidies this up
+
+which(AICs ==min(AICs))
+```
+
+And we find the interaction model, once again, is best.
+
 </details>
 
 
