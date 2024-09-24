@@ -209,7 +209,7 @@ c) Let $\hat{\eta}(x_{W})$ be the estimated linear predictor when the width of t
 
 <span class="question">What is the distribution of $\hat{\eta}(x_{W})$? </span>
 <details><summary>Answer</summary>
-It is a linear combination of normal random variables (the estiamtes of the parameters), so must be Normal.
+It is, asymptotically at least, a linear combination of normal random variables (the estimates of the parameters), so must be Normal.
 
 </details>
 
@@ -276,7 +276,10 @@ where $\lambda>0$.
 
 * <span class="question">Show that the Poisson distribution is a univariate exponential family, and specify what the elements of the exponential family ($\theta$, $\phi$, $b(\theta)$, $w$, $c(y,\phi,w)$) are.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
+<details><summary>Hint</summary>
+This means re-writing the Poisson log likelihood in the exponential form, and playing "spot the $\theta$" etc.
+</details>
+<details><summary>Answer</summary>
 The log likelihood for a single datum, $y$, can be written as
 
 $$
@@ -291,14 +294,18 @@ So $\theta=\ln(\lambda)$, $=b(\theta)=\lambda$, $w=\phi=1$ and $c(y,\phi,w)=\ln(
 
 * <span class="question">What is the connections between $\text{E}(Y)$ and elements of the exponential family? </span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-$\text{E}(Y) = \theta$
+<details><summary>Hint</summary>
+What is $\text{E}(Y)$ for a Poisson?
+</details>
+
+<details><summary>Answer</summary>
+$\text{E}(Y) = e^\theta$. It is also $b(\theta)$, and also $b'(\theta)$, $b''(\theta)$, $b'''(\theta)$ etc. We will see the general relationship between $\text{E}(Y)$ and hte parts of the exponential family in module 5.
 </details>
 
 * <span class="question">What is the connections between $\text{Var}(Y)$ and elements of the exponential family?</span>
 
 <details><summary>Answer</summary>
-
+Because $\text{E}(Y) = \text{Var}(Y)$ this is the same as the previous answer! Again, we will see the general form later (but if you look back at the binomial module, you might eb able to guess it)
 </details>
 
 * <span class="question">Use these connections to derive the mean and variance for the Poisson distribution.</span>
@@ -309,7 +316,7 @@ $\text{E}(Y) = \theta$
 
 * <span class="question">If the Poisson distribution is used as the distribution for the response in a generalized linear model, what is the _canonical link_ function?</span>
 
-<details><summary>Answer/Hint</summary>
+<details><summary>Answer</summary>
 The log link.
 </details>
 
@@ -320,27 +327,54 @@ We consider a Poisson regression with log link $\eta_i=g(\mu_i)=\ln(\mu_i)$, and
 
 * <span class="question">Does this set-up satisfy the _requirements_ of a GLM model? Explain.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
+<details><summary>Hint (not yet added)</summary>
 42
+</details>
+
+<details><summary>Answer</summary>
+Yes it does. The Poisson distribution is a member of the exponential family, indeed the log link it the cononical link for the Poisson. The data are independent pairs, and the covaraites have a linear effect on $\eta_i$.
+
 </details>
 
 * <span class="question">Write down the log-likelihood.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+
+$$ 
+\log(f(y)) =\log \left(\frac{\lambda^{y}}{y!}\exp(- \lambda)\right)
+$$
+
+Strictly this would be correct, but a bit naughty. This is better:
+
+$$ 
+l(y) = y \log \lambda - \lambda - \log(y!)
+$$
+
+And if you forget the $- \log(y!)$, it's still right (if not exact).
 </details>
 
 * <span class="question">From the log-likelihood, _derive_ the formula for the score function ${\bf s}(\boldsymbol{\beta})$ and the expected Fisher information matrix, ${\bf F}(\boldsymbol{\beta})$.</span>
 * <span class="question">What are the dimensions of ${\bf s}(\boldsymbol{\beta})$ and ${\bf F}(\boldsymbol{\beta})$?</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+
+Above we wrote "let $p$ be the number of regression parameters in $\boldsymbol{\beta}$ (intercept included)", so
+
+- ${\bf s}(\boldsymbol{\beta})$ is a vector of length $p$, and 
+- ${\bf F}(\boldsymbol{\beta})$ is a $p \times p$ matrix.
+
 </details>
 
 * <span class="question">How can ${\bf s}(\boldsymbol{\beta})$ and ${\bf F}(\boldsymbol{\beta})$ be used to arrive at a maximum likelihood estimate for $\boldsymbol{\beta}$?</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+The MLE for $\boldsymbol{\beta}$ is the solution to ${\bf s}(\boldsymbol{\beta}) = 0$. We can solve this using Fisher scoring, which is also a Newton-Raphson appraoch (because the observed and expected Fisher information are the same). i.e. we iterate 
+
+$$
+\beta^{(t+1)} = \beta^{(t)} + F(\beta^{(t)})^{-1} s(\beta^{(t)})
+$$
+until $\beta^{(t+1)} - \beta^{(t)} < \epsilon$, for some small $\epsilon$.
+
 </details>
 
 **c)** (10 points)
@@ -365,38 +399,58 @@ fit <- glm(Species~Area+Elevation+Nearest+Scruz+Adjacent,data=gala,family=poisso
 summary(fit)
 ```
 
-Let $\boldsymbol{\beta}$ be a $6 \times 1$ column vector with the regression coefficients (intercept included), and let $\hat{\boldsymbol{\beta}}$ be the maximum likelihood estimator for $\boldsymbol{\beta}$. 
+Let $\boldsymbol{\beta}$ be a $6 \times 1$ column vector with the regression coefficients (intercept included), and let $\boldsymbol{\hat{\beta}}$ be the maximum likelihood estimator for $\boldsymbol{\beta}$. 
 
-* <span class="question">Write down the asymptotic distribution for $\hat{\boldsymbol{\beta}}$, and specify how the covariance matrix for $\hat{\boldsymbol{\beta}}$ is estimated.</span>
+* <span class="question">Write down the asymptotic distribution for $\boldsymbol{\hat{\beta}}$, and specify how the covariance matrix for $\boldsymbol{\hat{\beta}}$ is estimated.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+Assymptotically $\boldsymbol{\hat{\beta}} \sim N(\boldsymbol{\beta}), F(\beta))$ where $F(\beta) = \text{Cov}(\beta)$, i.e. the expected Fisher information matrix.
+
+We can approximate $F(\beta)$ with the observed Fisher information calculated at $\boldsymbol{\hat{\beta}}$, i.e.
+
+$$
+H(\boldsymbol{\hat{\beta}}) = -\frac{\partial s(\boldsymbol{\hat{\beta}})}{\partial \boldsymbol{\hat{\beta}}^T}
+$$
+
 </details>
 
 We will focus on the effect of `Elevation`, and denote the corresponding regression coefficient $\beta_2$. 
 
 * <span class="question">Write down the maximum likelihood estimate for $\beta_2$ in the print-out above.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+3.541e-03
+
+(or `coef(fit)["Elevation"]` = `r coef(fit)["Elevation"]` if you want to extract it).
 </details>
 
 * <span class="question">How can you explain this value to a biologist interested in understanding the effect of `Elevation` on the number of species of tortoise found on the islands? </span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+It say that the number of species increase $e^{0.00335} = 1.00035$ times for each meter higher an island is.
+
+This is small, but so is a 1m change in elevation. So we can talk about a change in 100m: this would increase the number of species $e^{100*0.00335} = 1.42$ times.
+
+In fact, a change of 200m doubles the numer of species.
+
 </details>
 
 * <span class="question">What is numerical value for the estimated standard deviation of $\hat{\beta}_2$ given in above?</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+8.741e-05
+
+(or `sqrt(vcov(fit)["Elevation", "Elevation"])` = `r sqrt(vcov(fit)["Elevation", "Elevation"])` if you want to extract it).
+
 </details>
 
 * <span class="question">Construct an approximate 95\% confidence interval for $\beta_2$.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+Approximately this is ${\hat \beta}_2 \pm 1.96 \hat{\sigma}_2$, 
+
+i.e. 3.541e-03 $\pm 1.96 \times$ 8.741e-05 = (3.37e-03, 3.71e-03).
+
 </details>
 
 ## Problem 3: Exam December 2017 from UiO, Problem 1.
@@ -410,34 +464,83 @@ $$\text{P}(Y = y | \lambda)= \frac{\lambda^y}{y!} \exp(-\lambda), \ y = 0, 1, 2,
 $$\exp\left\{\frac{y \theta - b(\theta)}{\phi}w + c(y, \phi, w)\right\},$$
 and determine $\theta$, $\phi$, $w$, $b(\theta)$ and $c(y, \phi, w)$.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+The log likelihood for a single datum, $y$, can be written as
+
+$$
+\begin{aligned}
+l(\theta)&=\ln L(\theta)=[y \ln(\lambda)-\lambda-\ln(y!)] \\
+&= \frac{y \ln(\lambda)-\lambda}{1}1 + \ln(y!)
+\end{aligned}
+$$
+
+So $\theta=\ln(\lambda)$, $=b(\theta)=\lambda$, $w=\phi=1$ and $c(y,\phi,w)=\ln(y!)$.
+
+(seem familiar? I just copied and pasted from Q2)
 </details>
 
 We then assume that $Y_1, Y_2, \dots, Y_n$ are independent with the pmf from a), and let $\mu_i = \text{E}(Y_i)$, $i = 1, \dots, n$.
 
 <span class="question">b) Explain what we mean by a generalized linear model (GLM) for $Y_1, Y_2, \dots, Y_n$ with link function $g(\cdot)$, and determine the canonical link function.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+A GLM is a model for the data, $Y_1, Y_2, \dots, Y_n$, where we assume $g(\text{E}(Y_i)) = \bf{x}_i' \beta$, where $g()$ is the link function.
+
+For the Poisson model we see $\theta=\ln(\lambda)$, where $\lambda$ is $\text{E}(Y))$, so $\log$ must be the canonical link.
 </details>
 
 <span class="question">c) Derive an expression for the log-likelihood function $l(\mathbf{\mu}; \mathbf{y})$, where $\mathbf{y} = (y_1, \dots, y_n)^T$ is the observed value of $\mathbf{Y} = (Y_1, Y_2, \dots, Y_n)^T$ and $\mathbf{\mu} = (\mu_1, \dots, \mu_n)^T$.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Hint</summary>
+Use the answer to (a).
+</details>
+
+<details><summary>Answer</summary>
+First, $l(\mathbf{\mu}; \mathbf{y}) = \sum_{i=1}^n{\log \text{P}(Y_i = y_i | \mu_i)}$, so
+
+$l(\mathbf{\mu}; \mathbf{y}) = \sum_{i=1}^n{\log \text{P}(Y_i = y_i | \mu_i)}$, so from answer (a) we see $l(\mu_i; y_i)=y_i \ln(\mu_i)-\lambda_i-\ln(y_i!)$, and thus 
+
+$$
+l(\mathbf{\mu}; \mathbf{y}) = \sum_{i=1}^n{y_i \ln(\mu_i)} - \sum_{i=1}^n{\mu_i}- \sum_{i=1}^n{\ln(y_i!)}
+$$
+
 </details>
 
 <span class="question">d) Explain what we mean by a saturated model and determine the maximum of $l(\mathbf{\mu}; \mathbf{y})$ for the saturated model.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+A saturated model is one where there is a parameter for every data point, i.e. $p=n$
+
+We can find $l(\mathbf{\mu}; \mathbf{y})$ for the saturated model by solving $\partial l(\mu_i; y_i)/\partial \mu_i =0$
+
+$$
+\begin{aligned}
+\frac{\partial l(\mu_i; y_i)}{\partial \mu_i}&=\frac{\partial \left(y \ln(\mu_i)-\mu_i-\ln(y_i!)\right)}{\partial \mu_i} =0\\
+&= \frac{y_i}{\mu_i} -1=0
+\end{aligned}
+$$
+
+So $y_i = \mu_i$
+
 </details>
 
 <span class="question">e) Explain what we mean by the deviance $D(\mathbf{y}; \mathbf{\hat{\mu}})$ of a Poisson GLM, find an expression for the deviance, and discuss how it may be used.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Answer</summary>
+The deviance of a model is -2 times the difference between the log likelihood for the model and the saturated likelihood, i.e. $- 2 (l(\mathbf{\beta}; \mathbf{y}) - l(\mathbf{\mu}; \mathbf{y}))$.
+
+So for the Poisson distribution, using $\tilde{\mu}_i$ for the estimate of $\mu_i$ at the model of interest, and substituting $\mu_i = y_i$ for the saturated model, we get
+
+$$
+\begin{aligned}
+- 2 (l(\mathbf{\beta}; y_i) - l(\mu_i; y_i)) &= -2\left(\left(y_i \ln(\tilde{\mu}_i)-\tilde{\mu}_i-\ln(y_i!)\right) - \left(y_i \ln(y_i)-y_i-\ln(y_i!) \right)\right)\\
+&= -2\left( y_i (\ln \tilde{\mu}_i -\ln y_i) - (\tilde{\mu}_i - y_i) \right) \\
+&= 2y_i \ln \frac{y_i}{\tilde{\mu}_i} - 2( y_i - \tilde{\mu}_i)
+\end{aligned}
+$$
+
+(there is some flexibility on where to stop fiddling to make this look the most elegant)
+
 </details>
 
 

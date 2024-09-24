@@ -460,7 +460,7 @@ interact: `Y ~ age * wantsMore`
 <details><summary>Answer</summary>
 
 The null hypothesis is $H_0$: `Y ~ age + wantsMore` is the correct model, i.e. all of the interaction terms are 0.
-The alternative hypothesis is $H_1$: `Y ~ age + wantsMore` is the correct model.
+The alternative hypothesis is $H_1$: `Y ~ age * wantsMore` is the correct model.
 
 We could do this using `anova(additive, interact)`, but let's do it by hand!
 
@@ -519,17 +519,43 @@ exp(fit3add$coefficients)
 
 <span class="question">**a)** Comment on the output from `summary`. Use the deviance to test if this is a good model. Which model do you then compare to (what is the saturated model here)?.</span>
 
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+Think about both the directions of effects and their size.
+
+You should know how a saturates model is defined. For extra marks, can you write the R formula for it?
+
 </details>
 <details><summary>Answer</summary>
+The summary suggests a lot is going on. In particular:
+
+- low education and wanting more children are associated with a lower probability of using contraceptives: the effect of wanting more children is much stronger (perhaps not surprisingly).
+- the age levels are contrasts to "<25", so the effect of age 25-29 is to increade the odds $e^{0.39} = 1.48$ times.
+- we can see that as age increases, the age effect also increases, i.e. the older women are, the more likely they are to use contraception.
+
+We can test the goodness of the model by using the deviance. This is, as you now know, based on the difference between the likelihood for the model, and the likelihood for a saturated model. The saturated model has one parameter per data point (i.e. row in the data). Because the data are all factors, and we have every comnination, this is the same as the model with all possible interactions, i.e. `cbind(using,notUsing) ~ age*education*wantsMore`.
+
+We can test if this is a good model from this line:
+
+`Residual deviance:  29.917  on 10  degrees of freedom` 
+
+We can compare this to a $\chi^2$ distribution:
+
+```{r}
+pchisq(29.917, 10, lower.tail = FALSE)
+pchisq(fit3add$deviance, fit3add$df.residual, lower.tail = FALSE) < 0.05
+```
+
+The second line is just to show you how to (a) extract the statistics from the model, and (b) reduce hte p-value to a yes-no, i.e. if it is less than 0.05.
+
+We can see that the test is significant, i.e. the model does not appear to be good.
+
 </details>
 
 **b)** Look at the plot of fitted values vs. deviance residuals. 
 <span class="question">Do you see a trend?</span>
 
 <details><summary>Answer</summary>
-</details>
-<details><summary>Answer</summary>
+I don't. With 16 data points, random can look weird in all sorts of ways.
 </details>
 
 
@@ -552,16 +578,39 @@ ggplot(logitdf,aes(x=age))+geom_point(aes(y=lfrac,colour="saturated"))+geom_poin
 
 <span class="question">How can you see from the dots for fitted values that we are assuming an additive model on the logit scale (that is, the pattern for each panel for logit fitted vs age is the same for each panel if we have an additive model on the logit scale - you see that from the fitted points)? Do you also see that for the observed values? Implication? Any other observations?</span>
 
-<details><summary>Answer</summary>
+<details><summary>Hint</summary>
+If it helps, write Age as continuous, and ask how the line changes when factor levels change.
+
+For the observed values, are there clear patterns? Note that this is a subjective judgement!
 </details>
 <details><summary>Answer</summary>
+If the model is additive on the scale here, the plots should look similar: the relative effects of age should be the same, i.e. the effect of going from high to low education should be to change the age effect by the same amount. So, with some obvious notation we can go from 
+
+$$
+\eta_i = \beta_0 + \beta_{age25-29} + \beta_{educationHigh}
+$$
+
+to 
+
+$$
+\eta_i = \beta_0 + \beta_{age25-29} + \beta_{educationLow} = \beta_1 + \beta_{age25-29}
+$$
+
+and changing age changes $\beta_{age}$, but not $\beta_1$.
+
+For the observed values this is not so clear. For `no, low` (i.e. not wanting more children and low education) the residuals are close to the fitted line. But for `no, high` the line seems steeper, and `yes, low` has a lower value for ages 40-59. 
+
+The problem with interpreting these is that it is easy to over-interpret random noise (this is called [Pareidolia](https://en.wikipedia.org/wiki/Pareidolia)). But we know from the test of the residual deviance that this model does not fit the data well enough, so perhaps there is something going on. Or perhaps this extra variation is random noise (Robert Abelson [in his book](https://www.routledge.com/Statistics-As-Principled-Argument/Abelson/p/book/9780805805284?srsltid=AfmBOorgdpIjsLBH9mVBbOE2WUZ5JI3EKTQHbX9lTqNT7otypBln3TOK) summarised this as "chance is lumpy").
+ 
 </details>
 
+<!---
+These links are dead. *sniff*
 
 To see what Rodríguez have found to be the best model, look at the bottom of <http://data.princeton.edu/wws509/R/c3s6.html>.
   
 **Note:** This exercise is based on the excellent notes of Germán Rodríguez at Princeton, see in particular the R logs at <http://data.princeton.edu/wws509/R/c3s1.html>.
-
+--->
 
 <!--
 We will use a data set on embryogenic anters of the plant species Dutura innoxia (as described in Dobson and Barnett, 2008), given as

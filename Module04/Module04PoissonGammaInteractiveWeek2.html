@@ -1514,7 +1514,8 @@ Answer/Hint (not yet added)
 </summary>
 42
 </details>
-<p>#<a id="interactivew2">Interactive session - second week</a></p>
+<div id="interactive-session---second-week" class="section level1">
+<h1><a id="interactivew2">Interactive session - second week</a></h1>
 <div id="problem-1-exam-2007-problem-1-a-bit-modified---smoking-and-lung-cancer" class="section level2">
 <h2>Problem 1: Exam 2007 (Problem 1, a bit modified) - Smoking and lung
 cancer</h2>
@@ -1537,30 +1538,31 @@ cigars or pipe only (<code>cigarPipeOnly</code>), smokes cigarettes and
 cigar or pipe (<code>cigarettePlus</code>), and smokes cigarettes only
 (<code>cigaretteOnly</code>)</li>
 </ul>
-<p>You can look at the dataset here: <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt" class="uri">https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt</a>,
-and can be found here as well: <a href="http://data.princeton.edu/wws509/datasets/#smoking" class="uri">http://data.princeton.edu/wws509/datasets/#smoking</a></p>
-<p>Remark: the data set is probably taken from <a href="https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents" class="uri">https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents</a>
-and there it is said the the persons under study are males who have
-contributed in wars before 1956 and who answered a questionaire. The
-authors point out that the dataset is not representative for the whole
-population.</p>
+<p>You can look at the dataset <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt">here</a>.
+The data set is probably taken from <a href="https://www.jstor.org/stable/41983444?seq=1#page_scan_tab_contents">Best
+&amp; Walker (1964)</a>, who say that the people studied were males who
+have contributed in wars before 1956 and who answered a questionaire.
+The authors point out that the dataset is not representative for the
+whole population.</p>
 <p>We are interested in studying if the mortality rate due to lung
 cancer (the number of deaths due to lung cancer per individual during
-six year) controlled for age group and smoking status. Assume that the
+six years) controlled for age group and smoking status. Assume that the
 number of deaths for each set of covariate values, <span class="math inline">\(Y_i\)</span>, can be considered Poisson
 distributed, <span class="math inline">\(Y_i \sim
 \text{Poisson}(\lambda_i)\)</span>. We fit the following model:</p>
 <pre class="r"><code># load data:
 smoking &lt;- read.table(file = &quot;https://www.math.ntnu.no/emner/TMA4315/2018h/smoking.txt&quot;)
+# Correct typo. There are a few ways of doing this
+smoking$age &lt;- gsub(&quot;45-5&quot;, &quot;45-4&quot;, smoking$age)
 head(smoking)
 nrow(smoking)
 model1 &lt;- glm(dead ~ age + smoke, family = &quot;poisson&quot;, data = smoking, offset = log(pop))
-# note that the size of the population for each combination of the covaraites
+# note that the size of the population for each combination of the covariates
 # is the offset here
 summary(model1)</code></pre>
 <pre><code>##   dead  pop   age ageLevel smoke
 ## 1   18  656 40-44        1    no
-## 2   22  359 45-59        2    no
+## 2   22  359 45-49        2    no
 ## 3   19  249 50-54        3    no
 ## 4   55  632 55-59        4    no
 ## 5  117 1067 60-64        5    no
@@ -1574,7 +1576,7 @@ summary(model1)</code></pre>
 ## Coefficients:
 ##                     Estimate Std. Error z value Pr(&gt;|z|)    
 ## (Intercept)         -3.63222    0.06783 -53.552  &lt; 2e-16 ***
-## age45-59             0.55388    0.07999   6.924 4.38e-12 ***
+## age45-49             0.55388    0.07999   6.924 4.38e-12 ***
 ## age50-54             0.98039    0.07682  12.762  &lt; 2e-16 ***
 ## age55-59             1.37946    0.06526  21.138  &lt; 2e-16 ***
 ## age60-64             1.65423    0.06257  26.439  &lt; 2e-16 ***
@@ -1598,33 +1600,63 @@ summary(model1)</code></pre>
 <p><span class="question">a) What is an offset?</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>In a model, an offset can be seen as a covariate with a fixed effect
+(usually 1). It is used because the fundamental structure of the problem
+means the effect size is known.</p>
+The problem here is a typical example: we expect the number of deaths to
+be proportional to the population size, i.e. if the probability of an
+individual dying is <span class="math inline">\(p\)</span>, the expected
+number of deaths, <span class="math inline">\(\text{E}(n)\)</span>
+should be proportional to <span class="math inline">\(N\)</span>, the
+population size. So <span class="math inline">\(\text{E}(n) = \mu =
+Np\)</span>, and hence in a GLM with a log link we get <span class="math inline">\(\eta = \log N + \log p\)</span>, so we can use
+<span class="math inline">\(\log N\)</span> as an offset.
 </details>
 <p><span class="question">For 53-year old non-smokers, what is the
 estimated number of deaths due to lung cancer (per person over 6 years)?
 </span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>First by hand (as you would have to do in an exam)</p>
+<p><span class="math inline">\(\mu = \exp(-3.63222 + 0.98039 -0.04781  +
+\log(249)) = \exp(2.817813) = 16.7402\)</span></p>
+<p>Then, in R. The first line predicts the mean for all of the data, and
+the second extracts the number we want.</p>
+<pre class="r"><code>smoking$predict &lt;- predict(model1, type = &quot;response&quot;)
+smoking$predict[smoking$age == &quot;50-54&quot; &amp; smoking$smoke == &quot;no&quot;]</code></pre>
+<pre><code>## [1] 16.74024</code></pre>
 </details>
 <p><span class="question">Why is the number of degrees of freedom for
 the deviance of this model 24?</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>Because we have 36 data points, and 12 parameters (an intercept, 8
+age contrasts to age <code>40-44</code>, and 3 contrasts to smoke level
+<code>cigarPipeOnly</code>).</p>
+As an aside, I would make the <code>no</code> smoking level the
+reference level.
 </details>
 <p><span class="question">Does the model give a good fit?</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>Yes. We can see that the residual deviance is 21.5. If the model
+gives a good fit, this should follow a chi-squared distribution with 24
+degrees of freedom. Without calculating the p-value, we can see it will
+not be significant, because the expected value is the degrees of
+freedom, and the residual deviance would have to be larger than this to
+reject the null hypothesis of a good fit.</p>
+<p>Formally, we can calculate the p-value:</p>
+<pre class="r"><code>pchisq(model1$deviance, model1$df.residual, lower.tail = FALSE)</code></pre>
+<pre><code>## [1] 0.609872</code></pre>
+<p>And, yes, it is not significant.</p>
 </details>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Let <span class="math inline">\(\lambda(a,s)\)</span> denote the
@@ -1637,9 +1669,15 @@ s_1)}{\lambda(a, s_2)}.\]</span></p>
 s_1, s_2)\)</span> does <strong>not</strong> vary as a function of <span class="math inline">\(a\)</span> in <code>model1</code>. </span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+The most difficult part of this is understanding the question!
+</details>
+<details>
+<summary>
+Answer
+</summary>
+Because there is no interaction in the model.
 </details>
 <p><span class="question">For <span class="math inline">\(s_1 =\)</span>
 <code>cigarPipeOnly</code> and <span class="math inline">\(s_2
@@ -1647,9 +1685,42 @@ Answer/Hint (not yet added)
 confidence interval.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+This is a bit simpler than it appears. Work out how you would calculate
+predictions for each level.
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>The long version starts by noting (with a slight abuse of notation)
+that <span class="math inline">\(\lambda(a, s_1) = \exp(\beta_0 +
+\beta_a + \beta_{s_1})\)</span>, so</p>
+<p><span class="math display">\[
+\begin{aligned}
+r(a, s_1, s_2) &amp;= \frac{\lambda(a, s_1)}{\lambda(a, s_2)}\\
+&amp;= \frac{\exp(\beta_0 + \beta_a + \beta_{s_1})}{\exp(\beta_0 +
+\beta_a + \beta_{s_2})} \\
+&amp;= \exp((\beta_0 + \beta_a + \beta_{s_1}) -(\beta_0 + \beta_a +
+\beta_{s_2})) \\
+&amp;=\exp(\beta_{s_1} - \beta_{s_2})
+\end{aligned}
+\]</span></p>
+<p>This is easier than it appears: <code>cigarPipeOnly</code> is the
+reference class, so <span class="math inline">\(\beta_{s_1}=0\)</span>
+and we only need the <code>cigaretteOnly</code> effect. From above this
+is 0.36915, with a standard error of 0.03791.</p>
+<p>So <span class="math inline">\(r(a, s_1, s_2) = e^{0.36915} =
+1.45\)</span>. And the the 90% confidence interval is <span class="math inline">\(e^{0.36915 \pm 1.645\times0.03791} = (1.393,
+1.502)\)</span></p>
+<p>We can compare this with the values from R:</p>
+<pre class="r"><code>exp(coef(model1)[&quot;smokecigarretteOnly&quot;])
+exp(confint(model1, level = 0.9)[&quot;smokecigarretteOnly&quot;, ])</code></pre>
+<pre><code>## smokecigarretteOnly 
+##            1.446509 
+##      5 %     95 % 
+## 1.359415 1.540004</code></pre>
 </details>
 <p><span class="question">Is there a significant difference in the
 expected number of lung cancer deaths for individuals that smoke
@@ -1657,9 +1728,16 @@ cigarettes <code>cigaretteOnly</code> versus those that smoke cigar/pipe
 <code>cigarPipeOnly</code>?</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>This depends on what level <span class="math inline">\(\alpha\)</span> is used! If we use 10%, then from
+the previous question we can say no, because the confidence intervals do
+not overlap 0. This is the same as using a Wald test.</p>
+If we read the z test from the summary table we see that the z value is
+9.737, with an associated p-value which is &lt; 2e-16 (in fact it is
+about <span class="math inline">\(10^{-22}\)</span>). So for any sane
+<span class="math inline">\(\alpha\)</span> there is a significant
+difference.
 </details>
 <p><strong>c)</strong> We will now consider two alternative models,
 <code>model2</code> and <code>model3</code>:</p>
@@ -1717,9 +1795,13 @@ summary(model3)</code></pre>
 respectively?</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>For both of these, there are 36 data points. <code>model2</code>
+estimates 4 parameters (the intercept and 3 for the <code>smoke</code>
+factor), leaving 32 degrees of freedom. <code>model3</code> uses an
+additional parameter to estimate the ageLevel slope, so there are 31
+left.</p>
 </details>
 <p><span class="question">If we want to compare the three models
 <code>model1</code>, <code>model2</code> and <code>model3</code>, which
@@ -1728,18 +1810,45 @@ relevant hypotheses and perform hypothesis tests, based on the
 print-outs above.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+Remember that to compare two models then one model needs to be nested
+within the other model.
 </details>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>We could use AIC to compare the models:</p>
+<pre class="r"><code>AIC(model1, model2, model3)</code></pre>
+<pre><code>##        df       AIC
+## model1 12  285.5097
+## model2  4 4158.7273
+## model3  5  325.7574</code></pre>
+<p>Lower is better, so <code>model1</code> is the best, by a long way.
+BIC would give the same result.</p>
+<p>Although it might not look like it, we could also use Analysis of
+Deviance (i.e. ANOVA for GLMs). The trick is to see that
+<code>model2</code> is nested within <code>model1</code>, even though
+the age variables are different. The only difference is that
+<code>ageLevel</code> is ordered, as we assume the effect is linear,
+whereas <code>age</code> assumes no ordering. We could actually fit an
+8th order polynomial to <code>ageLevel</code>and get the same model.</p>
+<p>If we compare the models we see, again that <code>model1</code>is
+best:</p>
+<pre class="r"><code>anova(model2, model3, model1)</code></pre>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model 1: dead ~ smoke
+## Model 2: dead ~ ageLevel + smoke
+## Model 3: dead ~ age + smoke
+##   Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+## 1        32     3910.7                          
+## 2        31       75.7  1   3835.0 &lt; 2.2e-16 ***
+## 3        24       21.5  7     54.2 2.101e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </details>
-<p>Hint: remember that to compare two models then one model needs to be
-nested within the other model.</p>
 <p>New: For <code>model3</code>: <span class="question">Plot the
 regression line for the expected number of lung cancer deaths per person
 as a function of <code>age</code> for each of the four different smoking
@@ -1770,7 +1879,9 @@ amount</h2>
 <p>Remark: the text is slightly modified from the original exam since we
 parameterized the gamma as in our textbook.</p>
 <p>Remark: Problems 1 (binomial) and 2 (multinomial) at the 2012 exam
-also asked about percipitation.</p>
+also asked about precipitation.</p>
+<p>Remark: There is no data provided in this problem: it is purely
+theoretical (unlike the rain in Trondheim).</p>
 <p>We want to model the amount of daily precipitation given that it
 <em>is</em> precipitation, and denote this quantity <span class="math inline">\(Y\)</span>. It is common to model <span class="math inline">\(Y\)</span> as a gamma distributed random variable,
 <span class="math inline">\(Y \sim Gamma(\nu,\mu)\)</span>, with
@@ -1788,9 +1899,43 @@ distribution function is member of the exponential family when <span class="math
 interest.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+<p>You need to be able to write it in this form</p>
+<span class="math display">\[
+f(y_i\mid \theta_i)=\exp \left( \frac{y_i
+\theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right)
+\]</span>
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>We want the likelihood in this form:</p>
+<p><span class="math display">\[
+f(y_i\mid \theta_i)=\exp \left( \frac{y_i
+\theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right)
+\]</span> it’s easier to just look at the parts in the brackets,
+i.e. look at the log likelihood:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log f_Y(y) &amp;= -\log\Gamma(\nu) +\nu \log
+\left(\frac{\nu}{\mu}\right) +  (\nu-1)\log y - \frac{\nu}{\mu} y \\
+&amp;= - \frac{\nu}{\mu} y + \nu \log \frac{1}{\mu} + \nu \log {\nu}
+-\log\Gamma(\nu)  +  (\nu-1)\log y  \\
+&amp;= \frac{ -y\frac{1}{\mu} + \log \frac{1}{\mu}}{\frac{1}{\nu}} + \nu
+\log {\nu} -\log\Gamma(\nu)  +  (\nu-1)\log y
+\end{aligned}
+\]</span> So</p>
+<p><span class="math display">\[
+\begin{aligned}
+\theta &amp;= -\frac{1}{\mu} \\
+b(\theta_i) &amp;= -\log \frac{1}{\mu} \\
+\phi &amp;= \frac{1}{\nu} \\
+c(y_i, \phi, w_i) &amp;= \nu \log {\nu} -\log\Gamma(\nu)  +  (\nu-1)\log
+y
+\end{aligned}
+\]</span></p>
 </details>
 <p><span class="question">Use this to find expressions for the expected
 value and the variance of <span class="math inline">\(Y_i\)</span>, in
@@ -1808,13 +1953,8 @@ distribution?</span></p>
 <summary>
 Answer/Hint (not yet added)
 </summary>
-42
-</details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
+<p><span class="math inline">\(\theta &amp;= -\frac{1}{\mu}\)</span></p>
+<p>So the negative inverse link.</p>
 </details>
 <p>Hint: if you want to focus on discussing - you may look at the
 solutions from <a href="https://www.math.ntnu.no/emner/TMA4315/2017h/Module1ExponentialFamily.pdf">Module
@@ -1823,36 +1963,96 @@ solutions from <a href="https://www.math.ntnu.no/emner/TMA4315/2017h/Module1Expo
 model is.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+A model where there is one parameter per data point.
 </details>
 <p><span class="question">Set up the log-likelihood function expressed
 by <span class="math inline">\(\mu_i\)</span>, and use it to find the
-maximum likelihood estimators for <span class="math inline">\(\mu_i\)</span>-s of the saturated model.
+maximum likelihood estimators for <span class="math inline">\(\mu_i\)</span>s of the saturated model.
 </span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+Hint: Do you see directly that <span class="math inline">\(\hat{\mu}_i=y_i\)</span>? If not, you may look at
+the likelihood for one observation and solve that the derivative equals
+0, i.e. <span class="math inline">\(s(\mu_i)=0\)</span>: follow how this
+was done for other distributions.
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>We want to differentiate with respect to <span class="math inline">\(\mu_i\)</span> to get the score, and solve for
+when this equals 0. We can do this for any one data point (and not worry
+about summing likelihoods!):</p>
+<p><span class="math display">\[
+\begin{aligned}
+s(\mu_i) &amp;= \frac{\partial \log f_Y(y_i)}{\partial \mu_i} \\
+&amp;= \frac{\partial {\frac{ -y_i\frac{1}{\mu} + \log
+\frac{1}{\mu}}{\frac{1}{\nu}} + \nu \log {\nu}
+-\log\Gamma(\nu)  +  (\nu-1)\log y_i}}{\partial \mu_i} \\
+&amp;= \nu\left(-\frac{\partial y_i \frac{1}{\mu_i}}{\partial \mu_i} +
+\frac{\partial \log\frac{1}{\mu_i}}{\partial \mu_i} \right)
+\end{aligned}
+\]</span></p>
+<p>We can use the chain rule, with <span class="math inline">\(\theta_i
+= \mu_i^{-1}\)</span>, so</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial \theta_i}{\mu_i} &amp;= -\mu_i^{-2} \\
+\frac{\partial y \theta_i}{\partial \theta_i} &amp;=y_i \\
+\frac{\partial \log\theta_i}{\partial \theta_i} &amp;=\frac{1}{\theta_i}
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+s(\mu_i) &amp;= \frac{\partial \log f_Y(y_i)}{\partial
+\theta_i}\frac{\partial \theta_i}{\mu_i} =0\\
+&amp;= \nu\left(-y_i + \mu_i \right) \left(-\frac{1}{\mu_i^2} \right) \\
+&amp;= -y_i + \mu_i =0 \\
+y_i &amp;= \mu_i
+\end{aligned}
+\]</span></p>
 </details>
 <p><span class="question">Find the deviance (based on all <span class="math inline">\(N\)</span> observations).</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>The For a model that gives us estimates of <span class="math inline">\(\mu_i\)</span>, the deviance is</p>
+<p><span class="math display">\[
+D({\bf y}|{\boldsymbol \mu}) = -2(\sum_{i=1}^nl(y_i|\mu_i) - l(y_i|y_i)
+)
+\]</span></p>
+<p>For one datum for the gamma distribution this is</p>
+<p><span class="math display">\[
+\begin{aligned}
+D_i(y_i|\mu_i) &amp;= -2(l(y_i|\mu_i) - l(y_i|y_i))\\
+&amp;= -2 \left(\frac{ -y_i\frac{1}{\mu_i} + \log
+\frac{1}{\mu_i}}{\frac{1}{\nu}} - \frac{ -y_i\frac{1}{y_i} + \log
+\frac{1}{y_i}}{\frac{1}{\nu}} \right) \\
+&amp;= - 2 \nu\left(-\frac{y_i}{\mu_i} + \frac{y_i}{y_i} +\log
+\frac{1}{\mu_i} - \log \frac{1}{y_i }\right) \\
+&amp;= - 2 \nu \left(1-\frac{y_i}{\mu_i} + \log \frac{y_i}{\mu_i}
+\right)
+\end{aligned}
+\]</span></p>
+<p>So for all <span class="math inline">\(N\)</span> observations the
+deviance is</p>
+<p><span class="math display">\[
+\begin{aligned}
+D_i({\bf y}| {\boldsymbol \mu}) &amp;= - 2 \nu
+\sum_{i=1}^{N}\left(1-\frac{y_i}{\mu_i} + \log \frac{y_i}{\mu_i} \right)
+\\
+&amp;= - 2 \nu N + 2 \nu \sum_{i=1}^{N}\frac{y_i}{\mu_i} -
+\sum_{i=1}^{N}\log \frac{y_i}{\mu_i}
+\end{aligned}
+\]</span></p>
+<p>(you can rewrite this in a couple of ways depending on what you think
+looks nicest)</p>
 </details>
-<details>
-<summary>
-Answer/Hint (not yet added)
-</summary>
-42
-</details>
-<p>Hint: Do you see directly that <span class="math inline">\(\hat{\mu}_i=y_i\)</span>? If not, you may look at
-the likelihood for one observation and solve that the derivative equals
-0.</p>
 <p><strong>c)</strong> We now want to construct a model for amount of
 precipitation (given that there are occurrence) with precipitation
 forecast as explanatory variable.<br />
@@ -1864,18 +2064,28 @@ GLM for this, and argue for your choice of link function and linear
 predictor.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+Hint: explain why this fits into our GLM-gamma framework and set up our
+3 equation model (random, systematic, link).
 </details>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<ul>
+<li><strong>Random</strong>: We assume <span class="math inline">\(Y_i\)</span> follows a Gamma distribution with
+mean <span class="math inline">\(\mu_i\)</span></li>
+<li><strong>Systematic</strong>: We assume <span class="math inline">\(g(\mu_i) = \eta_i = \beta_0 +
+\beta_1/x_i\)</span></li>
+<li><strong>Link</strong>: We assume <span class="math inline">\(g(\mu_i) -1/\eta_i\)</span></li>
+</ul>
+The link function is the canonical link, so is what makes
+<code>glm()</code> happiest. The linear predictor is not quite obvious:
+it’s linear in <span class="math inline">\(1/x_i\)</span> to conter-act
+the inverse link. We would expect <span class="math inline">\(\beta_0=0\)</span> and <span class="math inline">\(\beta_1 = -1\)</span>, but only if we trust the
+forecasters.
 </details>
-<p>Hint: explain why this fits into our GLM-gamma framework and set up
-our 3 equation model (random, systematic, link).</p>
 <hr />
 </div>
 <div id="problem-3-taken-from-uio-stk3100-2015-problem-2" class="section level2">
@@ -2051,6 +2261,7 @@ Answer/Hint (not yet added)
 </summary>
 42
 </details>
+</div>
 </div>
 <div id="work-on-your-own-exam-questions" class="section level1">
 <h1>Work on your own: Exam questions</h1>

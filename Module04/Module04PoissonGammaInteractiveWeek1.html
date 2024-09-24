@@ -1521,22 +1521,23 @@ the exam. They will also help you now to see if you understand the
 content.</p>
 <div id="interactive-session---first-week" class="section level1">
 <h1><a id="interactivew1">Interactive session - first week</a></h1>
-<div id="problem-1-exam-2005-problem-1d-f---slightly-modified---female-crabs-and-satellites" class="section level2">
+<div id="problem-1-exam-2005-problem-1d-f---slightly-modified---female-horseshoe-crabs-and-satellites" class="section level2">
 <h2>Problem 1: Exam 2005 (Problem 1d-f - slightly modified) - Female
-crabs and satellites</h2>
-<p>(Only a subset of 20 crabs in the original data was used in the exam
-problems, but we will use the full data set of 173 crabs - so results
-will not be the same. Permitted aids for the exam was “all printed and
-handwritten material and all calculators” - NB that is not the case for
-2018!)</p>
-<p>We assume that the number of satellites for each female crab follows
-a Poisson distribution and want to perform a Poisson regression using a
-log-link to find if there is a connection between the expected number of
-satellites <code>Sa</code> and the width <code>W</code> and colour
-<code>C</code> of the carapace of the female crab.</p>
+horseshoe crabs and satellites</h2>
+<p>(Only a subset of 20 horseshoe crabs in the original data was used in
+the exam problems, but we will use the full data set of 173 horseshoe
+crabs - so results will not be the same. Permitted aids for the exam was
+“all printed and handwritten material and all calculators” - NB that is
+not the case for 2018!)</p>
+<p>We assume that the number of satellites for each female horseshoe
+crab follows a Poisson distribution and want to perform a Poisson
+regression using a log-link to find if there is a connection between the
+expected number of satellites <code>Sa</code> and the width
+<code>W</code> and colour <code>C</code> of the carapace of the female
+horseshoe crab.</p>
 <ul>
-<li><code>C</code>: the color of the female crab (1=light medium,
-2=medium, 3=dark medium, 4=dark)</li>
+<li><code>C</code>: the color of the female horseshoe crab (1=light
+medium, 2=medium, 3=dark medium, 4=dark)</li>
 <li><code>W</code>: width of carapace (cm)</li>
 </ul>
 <p>The following model was fitted.</p>
@@ -1718,7 +1719,8 @@ p-value is thus:</p>
 statistic this test is based on.)</p>
 <p><span class="question">b) Make a sketch <em>by hand</em> illustrating
 the connection between the expected number of satellites and the width
-of the carapace for each of the four colours of the crab. </span></p>
+of the carapace for each of the four colours of the horseshoe crab.
+</span></p>
 <details>
 <summary>
 Answer
@@ -1765,7 +1767,7 @@ Answer
 </details>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Let <span class="math inline">\(\hat{\eta}(x_{W})\)</span> be the
-estimated linear predictor when the width of the carapace is <span class="math inline">\(x_{W}\)</span> and the crab is “light
+estimated linear predictor when the width of the carapace is <span class="math inline">\(x_{W}\)</span> and the horseshoe crab is “light
 medium”.</li>
 </ol>
 <span class="question">What is the distribution of <span class="math inline">\(\hat{\eta}(x_{W})\)</span>? </span>
@@ -1773,8 +1775,8 @@ medium”.</li>
 <summary>
 Answer
 </summary>
-<p>It is a linear combination of normal random variables (the estiamtes
-of the parameters), so must be Normal.</p>
+<p>It is, asymptotically at least, a linear combination of normal random
+variables (the estimates of the parameters), so must be Normal.</p>
 </details>
 <p><span class="question">Which value of <span class="math inline">\(x_W\)</span> would give estimated mean number of
 satellites equal to 5?</span></p>
@@ -1861,9 +1863,24 @@ exponential family (<span class="math inline">\(\theta\)</span>, <span class="ma
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+This means re-writing the Poisson log likelihood in the exponential
+form, and playing “spot the <span class="math inline">\(\theta\)</span>”
+etc.
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>The log likelihood for a single datum, <span class="math inline">\(y\)</span>, can be written as</p>
+<p><span class="math display">\[
+\begin{aligned}
+l(\theta)&amp;=\ln L(\theta)=[y \ln(\lambda)-\lambda-\ln(y!)] \\
+&amp;= \frac{y \ln(\lambda)-\lambda}{1}1 + \ln(y!)
+\end{aligned}
+\]</span></p>
+So <span class="math inline">\(\theta=\ln(\lambda)\)</span>, <span class="math inline">\(=b(\theta)=\lambda\)</span>, <span class="math inline">\(w=\phi=1\)</span> and <span class="math inline">\(c(y,\phi,w)=\ln(y!)\)</span>.
 </details>
 <ul>
 <li><span class="question">What is the connections between <span class="math inline">\(\text{E}(Y)\)</span> and elements of the
@@ -1871,9 +1888,18 @@ exponential family? </span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+What is <span class="math inline">\(\text{E}(Y)\)</span> for a Poisson?
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<span class="math inline">\(\text{E}(Y) = e^\theta\)</span>. It is also
+<span class="math inline">\(b(\theta)\)</span>, and also <span class="math inline">\(b&#39;(\theta)\)</span>, <span class="math inline">\(b&#39;&#39;(\theta)\)</span>, <span class="math inline">\(b&#39;&#39;&#39;(\theta)\)</span> etc. We will see
+the general relationship between <span class="math inline">\(\text{E}(Y)\)</span> and hte parts of the
+exponential family in module 5.
 </details>
 <ul>
 <li><span class="question">What is the connections between <span class="math inline">\(\text{Var}(Y)\)</span> and elements of the
@@ -1881,9 +1907,12 @@ exponential family?</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+Because <span class="math inline">\(\text{E}(Y) = \text{Var}(Y)\)</span>
+this is the same as the previous answer! Again, we will see the general
+form later (but if you look back at the binomial module, you might eb
+able to guess it)
 </details>
 <ul>
 <li><span class="question">Use these connections to derive the mean and
@@ -1902,9 +1931,9 @@ distribution for the response in a generalized linear model, what is the
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+The log link.
 </details>
 <p><strong>b)</strong> (15 points)</p>
 <p>We consider a Poisson regression with log link <span class="math inline">\(\eta_i=g(\mu_i)=\ln(\mu_i)\)</span>, and linear
@@ -1919,18 +1948,36 @@ included). The response–covariate pairs <span class="math inline">\((Y_i, {\bf
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint (not yet added)
 </summary>
 42
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>Yes it does. The Poisson distribution is a member of the exponential
+family, indeed the log link it the cononical link for the Poisson. The
+data are independent pairs, and the covaraites have a linear effect on
+<span class="math inline">\(\eta_i\)</span>.</p>
 </details>
 <ul>
 <li><span class="question">Write down the log-likelihood.</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p><span class="math display">\[
+\log(f(y)) =\log \left(\frac{\lambda^{y}}{y!}\exp(- \lambda)\right)
+\]</span></p>
+<p>Strictly this would be correct, but a bit naughty. This is
+better:</p>
+<p><span class="math display">\[
+l(y) = y \log \lambda - \lambda - \log(y!)
+\]</span></p>
+And if you forget the <span class="math inline">\(- \log(y!)\)</span>,
+it’s still right (if not exact).
 </details>
 <ul>
 <li><span class="question">From the log-likelihood, <em>derive</em> the
@@ -1942,9 +1989,17 @@ F}(\boldsymbol{\beta})\)</span>.</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>Above we wrote “let <span class="math inline">\(p\)</span> be the
+number of regression parameters in <span class="math inline">\(\boldsymbol{\beta}\)</span> (intercept included)”,
+so</p>
+<ul>
+<li><span class="math inline">\({\bf s}(\boldsymbol{\beta})\)</span> is
+a vector of length <span class="math inline">\(p\)</span>, and</li>
+<li><span class="math inline">\({\bf F}(\boldsymbol{\beta})\)</span> is
+a <span class="math inline">\(p \times p\)</span> matrix.</li>
+</ul>
 </details>
 <ul>
 <li><span class="question">How can <span class="math inline">\({\bf
@@ -1954,9 +2009,17 @@ likelihood estimate for <span class="math inline">\(\boldsymbol{\beta}\)</span>?
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>The MLE for <span class="math inline">\(\boldsymbol{\beta}\)</span>
+is the solution to <span class="math inline">\({\bf
+s}(\boldsymbol{\beta}) = 0\)</span>. We can solve this using Fisher
+scoring, which is also a Newton-Raphson appraoch (because the observed
+and expected Fisher information are the same). i.e. we iterate</p>
+<p><span class="math display">\[
+\beta^{(t+1)} = \beta^{(t)} + F(\beta^{(t)})^{-1} s(\beta^{(t)})
+\]</span> until <span class="math inline">\(\beta^{(t+1)} - \beta^{(t)}
+&lt; \epsilon\)</span>, for some small <span class="math inline">\(\epsilon\)</span>.</p>
 </details>
 <p><strong>c)</strong> (10 points)</p>
 <p>We now look at a data set giving the number of species of tortoise on
@@ -2008,19 +2071,27 @@ summary(fit)</code></pre>
 ## Number of Fisher Scoring iterations: 5</code></pre>
 <p>Let <span class="math inline">\(\boldsymbol{\beta}\)</span> be a
 <span class="math inline">\(6 \times 1\)</span> column vector with the
-regression coefficients (intercept included), and let <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> be the maximum
+regression coefficients (intercept included), and let <span class="math inline">\(\boldsymbol{\hat{\beta}}\)</span> be the maximum
 likelihood estimator for <span class="math inline">\(\boldsymbol{\beta}\)</span>.</p>
 <ul>
 <li><span class="question">Write down the asymptotic distribution for
-<span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span>, and
-specify how the covariance matrix for <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> is
+<span class="math inline">\(\boldsymbol{\hat{\beta}}\)</span>, and
+specify how the covariance matrix for <span class="math inline">\(\boldsymbol{\hat{\beta}}\)</span> is
 estimated.</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>Assymptotically <span class="math inline">\(\boldsymbol{\hat{\beta}}
+\sim N(\boldsymbol{\beta}), F(\beta))\)</span> where <span class="math inline">\(F(\beta) = \text{Cov}(\beta)\)</span>, i.e. the
+expected Fisher information matrix.</p>
+<p>We can approximate <span class="math inline">\(F(\beta)\)</span> with
+the observed Fisher information calculated at <span class="math inline">\(\boldsymbol{\hat{\beta}}\)</span>, i.e.</p>
+<p><span class="math display">\[
+H(\boldsymbol{\hat{\beta}}) = -\frac{\partial
+s(\boldsymbol{\hat{\beta}})}{\partial \boldsymbol{\hat{\beta}}^T}
+\]</span></p>
 </details>
 <p>We will focus on the effect of <code>Elevation</code>, and denote the
 corresponding regression coefficient <span class="math inline">\(\beta_2\)</span>.</p>
@@ -2031,9 +2102,11 @@ above.</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>3.541e-03</p>
+(or <code>coef(fit)[&quot;Elevation&quot;]</code> = 0.0035406 if you want to
+extract it).
 </details>
 <ul>
 <li><span class="question">How can you explain this value to a biologist
@@ -2042,9 +2115,13 @@ number of species of tortoise found on the islands? </span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>It say that the number of species increase <span class="math inline">\(e^{0.00335} = 1.00035\)</span> times for each
+meter higher an island is.</p>
+<p>This is small, but so is a 1m change in elevation. So we can talk
+about a change in 100m: this would increase the number of species <span class="math inline">\(e^{100*0.00335} = 1.42\)</span> times.</p>
+<p>In fact, a change of 200m doubles the numer of species.</p>
 </details>
 <ul>
 <li><span class="question">What is numerical value for the estimated
@@ -2053,9 +2130,11 @@ given in above?</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>8.741e-05</p>
+<p>(or <code>sqrt(vcov(fit)[&quot;Elevation&quot;, &quot;Elevation&quot;])</code> =
+8.7407037^{-5} if you want to extract it).</p>
 </details>
 <ul>
 <li><span class="question">Construct an approximate 95% confidence
@@ -2063,9 +2142,12 @@ interval for <span class="math inline">\(\beta_2\)</span>.</span></li>
 </ul>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>Approximately this is <span class="math inline">\({\hat \beta}_2 \pm
+1.96 \hat{\sigma}_2\)</span>,</p>
+<p>i.e. 3.541e-03 <span class="math inline">\(\pm 1.96 \times\)</span>
+8.741e-05 = (3.37e-03, 3.71e-03).</p>
 </details>
 </div>
 <div id="problem-3-exam-december-2017-from-uio-problem-1." class="section level2">
@@ -2081,9 +2163,17 @@ that the pmf can be written in the form <span class="math display">\[\exp\left\{
 c(y, \phi, w)\right\},\]</span> and determine <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>, <span class="math inline">\(w\)</span>, <span class="math inline">\(b(\theta)\)</span> and <span class="math inline">\(c(y, \phi, w)\)</span>.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>The log likelihood for a single datum, <span class="math inline">\(y\)</span>, can be written as</p>
+<p><span class="math display">\[
+\begin{aligned}
+l(\theta)&amp;=\ln L(\theta)=[y \ln(\lambda)-\lambda-\ln(y!)] \\
+&amp;= \frac{y \ln(\lambda)-\lambda}{1}1 + \ln(y!)
+\end{aligned}
+\]</span></p>
+<p>So <span class="math inline">\(\theta=\ln(\lambda)\)</span>, <span class="math inline">\(=b(\theta)=\lambda\)</span>, <span class="math inline">\(w=\phi=1\)</span> and <span class="math inline">\(c(y,\phi,w)=\ln(y!)\)</span>.</p>
+(seem familiar? I just copied and pasted from Q2)
 </details>
 <p>We then assume that <span class="math inline">\(Y_1, Y_2, \dots,
 Y_n\)</span> are independent with the pmf from a), and let <span class="math inline">\(\mu_i = \text{E}(Y_i)\)</span>, <span class="math inline">\(i = 1, \dots, n\)</span>.</p>
@@ -2093,9 +2183,12 @@ Y_n\)</span> with link function <span class="math inline">\(g(\cdot)\)</span>, a
 link function.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>A GLM is a model for the data, <span class="math inline">\(Y_1, Y_2,
+\dots, Y_n\)</span>, where we assume <span class="math inline">\(g(\text{E}(Y_i)) = \bf{x}_i&#39; \beta\)</span>,
+where <span class="math inline">\(g()\)</span> is the link function.</p>
+For the Poisson model we see <span class="math inline">\(\theta=\ln(\lambda)\)</span>, where <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(\text{E}(Y))\)</span>, so <span class="math inline">\(\log\)</span> must be the canonical link.
 </details>
 <p><span class="question">c) Derive an expression for the log-likelihood
 function <span class="math inline">\(l(\mathbf{\mu};
@@ -2105,27 +2198,71 @@ function <span class="math inline">\(l(\mathbf{\mu};
 \mu_n)^T\)</span>.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+Use the answer to (a).
+</details>
+<details>
+<summary>
+Answer
+</summary>
+<p>First, <span class="math inline">\(l(\mathbf{\mu}; \mathbf{y}) =
+\sum_{i=1}^n{\log \text{P}(Y_i = y_i | \mu_i)}\)</span>, so</p>
+<p><span class="math inline">\(l(\mathbf{\mu}; \mathbf{y}) =
+\sum_{i=1}^n{\log \text{P}(Y_i = y_i | \mu_i)}\)</span>, so from answer
+(a) we see <span class="math inline">\(l(\mu_i; y_i)=y_i
+\ln(\mu_i)-\lambda_i-\ln(y_i!)\)</span>, and thus</p>
+<p><span class="math display">\[
+l(\mathbf{\mu}; \mathbf{y}) = \sum_{i=1}^n{y_i \ln(\mu_i)} -
+\sum_{i=1}^n{\mu_i}- \sum_{i=1}^n{\ln(y_i!)}
+\]</span></p>
 </details>
 <p><span class="question">d) Explain what we mean by a saturated model
 and determine the maximum of <span class="math inline">\(l(\mathbf{\mu};
 \mathbf{y})\)</span> for the saturated model.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>A saturated model is one where there is a parameter for every data
+point, i.e. <span class="math inline">\(p=n\)</span></p>
+<p>We can find <span class="math inline">\(l(\mathbf{\mu};
+\mathbf{y})\)</span> for the saturated model by solving <span class="math inline">\(\partial l(\mu_i; y_i)/\partial \mu_i
+=0\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial l(\mu_i; y_i)}{\partial \mu_i}&amp;=\frac{\partial
+\left(y \ln(\mu_i)-\mu_i-\ln(y_i!)\right)}{\partial \mu_i} =0\\
+&amp;= \frac{y_i}{\mu_i} -1=0
+\end{aligned}
+\]</span></p>
+<p>So <span class="math inline">\(y_i = \mu_i\)</span></p>
 </details>
 <p><span class="question">e) Explain what we mean by the deviance <span class="math inline">\(D(\mathbf{y}; \mathbf{\hat{\mu}})\)</span> of a
 Poisson GLM, find an expression for the deviance, and discuss how it may
 be used.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-42
+<p>The deviance of a model is -2 times the difference between the log
+likelihood for the model and the saturated likelihood, i.e. <span class="math inline">\(- 2 (l(\mathbf{\beta}; \mathbf{y}) -
+l(\mathbf{\mu}; \mathbf{y}))\)</span>.</p>
+<p>So for the Poisson distribution, using <span class="math inline">\(\tilde{\mu}_i\)</span> for the estimate of <span class="math inline">\(\mu_i\)</span> at the model of interest, and
+substituting <span class="math inline">\(\mu_i = y_i\)</span> for the
+saturated model, we get</p>
+<p><span class="math display">\[
+\begin{aligned}
+- 2 (l(\mathbf{\beta}; y_i) - l(\mu_i; y_i)) &amp;= -2\left(\left(y_i
+\ln(\tilde{\mu}_i)-\tilde{\mu}_i-\ln(y_i!)\right) - \left(y_i
+\ln(y_i)-y_i-\ln(y_i!) \right)\right)\\
+&amp;= -2\left( y_i (\ln \tilde{\mu}_i -\ln y_i) - (\tilde{\mu}_i - y_i)
+\right) \\
+&amp;= 2y_i \ln \frac{y_i}{\tilde{\mu}_i} - 2( y_i - \tilde{\mu}_i)
+\end{aligned}
+\]</span></p>
+<p>(there is some flexibility on where to stop fiddling to make this
+look the most elegant)</p>
 </details>
 </div>
 </div>

@@ -2312,7 +2312,7 @@ Answer
 </summary>
 <p>The null hypothesis is <span class="math inline">\(H_0\)</span>:
 <code>Y ~ age + wantsMore</code> is the correct model, i.e. all of the
-interaction terms are 0. The alternative hypothesis is <span class="math inline">\(H_1\)</span>: <code>Y ~ age + wantsMore</code> is
+interaction terms are 0. The alternative hypothesis is <span class="math inline">\(H_1\)</span>: <code>Y ~ age * wantsMore</code> is
 the correct model.</p>
 <p>We could do this using <code>anova(additive, interact)</code>, but
 let’s do it by hand!</p>
@@ -2396,13 +2396,48 @@ Which model do you then compare to (what is the saturated model
 here)?.</span></p>
 <details>
 <summary>
-Answer
+Hint
 </summary>
+<p>Think about both the directions of effects and their size.</p>
+<p>You should know how a saturates model is defined. For extra marks,
+can you write the R formula for it?</p>
 </details>
 <details>
 <summary>
 Answer
 </summary>
+<p>The summary suggests a lot is going on. In particular:</p>
+<ul>
+<li>low education and wanting more children are associated with a lower
+probability of using contraceptives: the effect of wanting more children
+is much stronger (perhaps not surprisingly).</li>
+<li>the age levels are contrasts to “&lt;25”, so the effect of age 25-29
+is to increade the odds <span class="math inline">\(e^{0.39} =
+1.48\)</span> times.</li>
+<li>we can see that as age increases, the age effect also increases,
+i.e. the older women are, the more likely they are to use
+contraception.</li>
+</ul>
+<p>We can test the goodness of the model by using the deviance. This is,
+as you now know, based on the difference between the likelihood for the
+model, and the likelihood for a saturated model. The saturated model has
+one parameter per data point (i.e. row in the data). Because the data
+are all factors, and we have every comnination, this is the same as the
+model with all possible interactions,
+i.e. <code>cbind(using,notUsing) ~ age*education*wantsMore</code>.</p>
+<p>We can test if this is a good model from this line:</p>
+<p><code>Residual deviance:  29.917  on 10  degrees of freedom</code></p>
+<p>We can compare this to a <span class="math inline">\(\chi^2\)</span>
+distribution:</p>
+<pre class="r"><code>pchisq(29.917, 10, lower.tail = FALSE)</code></pre>
+<pre><code>## [1] 0.0008838311</code></pre>
+<pre class="r"><code>pchisq(fit3add$deviance, fit3add$df.residual, lower.tail = FALSE) &lt; 0.05</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>The second line is just to show you how to (a) extract the statistics
+from the model, and (b) reduce hte p-value to a yes-no, i.e. if it is
+less than 0.05.</p>
+<p>We can see that the test is significant, i.e. the model does not
+appear to be good.</p>
 </details>
 <p><strong>b)</strong> Look at the plot of fitted values vs. deviance
 residuals. <span class="question">Do you see a trend?</span></p>
@@ -2410,11 +2445,8 @@ residuals. <span class="question">Do you see a trend?</span></p>
 <summary>
 Answer
 </summary>
-</details>
-<details>
-<summary>
-Answer
-</summary>
+I don’t. With 16 data points, random can look weird in all sorts of
+ways.
 </details>
 <pre class="r"><code>library(ggplot2)
 plotdf &lt;- data.frame(dres = fit3add$residuals, fitted = fit3add$fitted.values, age = ds$age)
@@ -2440,18 +2472,49 @@ that from the fitted points)? Do you also see that for the observed
 values? Implication? Any other observations?</span></p>
 <details>
 <summary>
-Answer
+Hint
 </summary>
+<p>If it helps, write Age as continuous, and ask how the line changes
+when factor levels change.</p>
+For the observed values, are there clear patterns? Note that this is a
+subjective judgement!
 </details>
 <details>
 <summary>
 Answer
 </summary>
+<p>If the model is additive on the scale here, the plots should look
+similar: the relative effects of age should be the same, i.e. the effect
+of going from high to low education should be to change the age effect
+by the same amount. So, with some obvious notation we can go from</p>
+<p><span class="math display">\[
+\eta_i = \beta_0 + \beta_{age25-29} + \beta_{educationHigh}
+\]</span></p>
+<p>to</p>
+<p><span class="math display">\[
+\eta_i = \beta_0 + \beta_{age25-29} + \beta_{educationLow} = \beta_1 +
+\beta_{age25-29}
+\]</span></p>
+<p>and changing age changes <span class="math inline">\(\beta_{age}\)</span>, but not <span class="math inline">\(\beta_1\)</span>.</p>
+<p>For the observed values this is not so clear. For
+<code>no, low</code> (i.e. not wanting more children and low education)
+the residuals are close to the fitted line. But for
+<code>no, high</code> the line seems steeper, and <code>yes, low</code>
+has a lower value for ages 40-59.</p>
+<p>The problem with interpreting these is that it is easy to
+over-interpret random noise (this is called <a href="https://en.wikipedia.org/wiki/Pareidolia">Pareidolia</a>). But we
+know from the test of the residual deviance that this model does not fit
+the data well enough, so perhaps there is something going on. Or perhaps
+this extra variation is random noise (Robert Abelson <a href="https://www.routledge.com/Statistics-As-Principled-Argument/Abelson/p/book/9780805805284?srsltid=AfmBOorgdpIjsLBH9mVBbOE2WUZ5JI3EKTQHbX9lTqNT7otypBln3TOK">in
+his book</a> summarised this as “chance is lumpy”).</p>
 </details>
-<p>To see what Rodríguez have found to be the best model, look at the
-bottom of <a href="http://data.princeton.edu/wws509/R/c3s6.html" class="uri">http://data.princeton.edu/wws509/R/c3s6.html</a>.</p>
-<p><strong>Note:</strong> This exercise is based on the excellent notes
-of Germán Rodríguez at Princeton, see in particular the R logs at <a href="http://data.princeton.edu/wws509/R/c3s1.html" class="uri">http://data.princeton.edu/wws509/R/c3s1.html</a>.</p>
+<!---
+These links are dead. *sniff*
+
+To see what Rodríguez have found to be the best model, look at the bottom of <http://data.princeton.edu/wws509/R/c3s6.html>.
+  
+**Note:** This exercise is based on the excellent notes of Germán Rodríguez at Princeton, see in particular the R logs at <http://data.princeton.edu/wws509/R/c3s1.html>.
+--->
 <!--
 We will use a data set on embryogenic anters of the plant species Dutura innoxia (as described in Dobson and Barnett, 2008), given as
 
