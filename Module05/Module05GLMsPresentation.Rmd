@@ -219,7 +219,7 @@ As a general result we have $E(s_i(\theta_i)) = 0$
 
 Proof: 
 
-$E(s_i(\theta_i)) = \int \frac{d l(\theta)}{d\theta} f(y|\theta) d\theta$
+$E(s_i(\theta_i)) = \int \frac{d l(\theta)}{d\theta} f(y|\theta) dy$
 
 and because $d \log(y)/dx = 1/y dy/dx$, we get
 
@@ -281,19 +281,20 @@ $$
 
 # Likelihood inference set-up
 
+We want to estimate $\boldsymbol{\beta}$, going from $f(Y|\theta)$: 
+
 $\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \boldsymbol{\beta}$
 
 $$
 \begin{aligned}
 f(y_i | \theta_i) &= exp \left(\frac{y_i \theta - b(\theta_i)}{\phi/w_i} + c(y_i, \phi, w_i) \right) \\
-\mu_i &= b'(\theta_i) (=E(Y_i))\\
-\mu_i &= h(\eta_i), = g^{-1}(\eta_i)\\
+\theta_i &= b^{'-1}(\mu) (\text{from } \mu_i = b'(\theta_i) (=E(Y_i)))\\\\
+ \mu_i &= g^{-1}(\eta_i) \\
 \eta_i &= x_i' \boldsymbol{\beta}
 \end{aligned}
 $$
 
-Canonical link: $\eta_i=\theta_i$, so $g(\mu_i)=\theta_i$, otherwise it gets messy
-
+$b^{'-1}(\mu)$ is horrible. With the canonical link, $\eta_i=\theta_i$, so $g(\mu_i)=\theta_i$.
 
 See class notes or Fahrmeir et al (2015), Section 5.8.2 for the derivation of the loglikelihood, score and expected Fisher information matrix.
 
@@ -310,6 +311,8 @@ $$\sum_{i=1}^n y_i \theta_i=\sum_{i=1}^n y_i {\bf x}_i^T\beta=\sum_{i=1}^n y_i \
 ---
 
 ## Score function
+
+$\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \boldsymbol{\beta}$
 
 What is the score function as a function of $\beta$? We need a long chain rule...
 
