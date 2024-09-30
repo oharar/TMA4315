@@ -162,22 +162,136 @@ There are a few formal requirements for the mathematics to work, in particular:
 
 ---
 
-### Properties
+## $\text{E}(Y)$ and $\text{Var}(Y)$
 
-$\text{E}(Y_i)=b'(\theta_i)$ and $\text{Var}(Y_i)=b''(\theta_i)\frac{\phi}{w_i}$
+These are the main results: $\text{E}(Y_i)=b'(\theta_i)$ and $\text{Var}(Y_i)=b''(\theta_i)\frac{\phi}{w_i}$. But how do we get there?
 
-In class we study the handwritten proof together: [Proof](https://www.math.ntnu.no/emner/TMA4315/2018h/M5ExpFamProofEVar.pdf)
+These are both derivatives with respect to $\theta$. But the expectations are over the random variables, $Y$. To derive these we differentiate once and twice w.r.t. $\theta$, integrate over $Y$  $f(Y)$, and look hard enough for the useful terms. So, take a deep breath...
+
+To start off, we show that $\int \frac{\partial f(Y| \theta)}{\partial \theta} dy =0$, and also $\int \frac{\partial^2 f(Y| \theta)}{\partial \theta^2} dy =0$.
+
+We do this by reversing the integration and differentiation (which we can because the necessary conditions are met):
+
+$$
+\int \frac{\partial f(Y|\theta)}{\partial \theta} dy = \frac{\partial \int f(Y|\theta) dy}{\partial \theta} = \frac{\partial1}{\partial \theta} =0
+$$
+Differentiating this again also gives us 0.
+
+Now we know that these equal 0, we can evaluate them to see what equals 0: these will include $E(Y)$ and $Var(Y)$, so we can then solve to find the mean and variance.
+
+### $\text{E}(Y_i)=b'(\theta_i)$
+
+This is a video of the proof.
+
+<!---
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=07e586c1-9553-42ac-a503-b1f8009f25d6&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5BEY" ></iframe>
+--->
+
+To calculate $\frac{\partial f(Y|\theta)}{\partial \theta}$ (and end up finding $\text{E}(Y_i)$) we start with the pdf for $Y$:
+
+$$
+f(Y|\theta) = \exp \left( (y\theta - b(\theta))\frac{w}{\phi} + c(Y, \phi, w) \right)
+$$
+
+and the score:
+
+$$
+s(\theta_i) = \frac{\partial \log f(Y|\theta)}{\partial \theta} = (y_i - b'(\theta_i))\frac{w}{\phi}.
+$$
+
+Then using the chain rule
+
+$$
+\begin{aligned}
+\frac{\partial f(Y|\theta)}{\partial \theta} &= \frac{\partial e^{l(\theta|Y)}}{\partial \theta} \\
+&= \frac{\partial e^{l(\theta|Y)}}{\partial l(\theta|Y)} \frac{\partial l(\theta|Y)}{\partial \theta} \\ 
+&= e^{l(\theta|Y)} s(\theta) \\
+&= f(y|\theta) (y - b'(\theta))\frac{w}{\phi}
+\end{aligned}
+$$
+
+
+Now we integrate this over y (and noting that $\int f(y) y dy = E(y)$ and $\int f(y) dy=1$):
+
+$$
+\begin{aligned}
+\int \frac{\partial f(Y|\theta)}{\partial \theta} dy &= \int f(y) (y - b'(\theta))\frac{w}{\phi} dy \\
+&= \frac{w}{\phi} \left( \int f(y) y dy - b'(\theta)) \int f(y) dy \right) \\
+&= \frac{w}{\phi} \left( E(y) - b'(\theta) \right) \\
+\end{aligned}
+$$
+
+This, as we showed above, equals 0, so $\frac{w}{\phi} \left( E(y) - b'(\theta) \right) = 0$, and thus $E(y) = b'(\theta)$
+
+### $\text{Var}(Y_i)=b''(\theta_i)\frac{\phi}{w_i}$
+
+First up, a video:
+
+<!---
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=572171ec-cde7-4d12-9655-b1f800f02fa8&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5CVarY" ></iframe>
+--->
+
+Oscars all round!
+
+First we calculate the second derivative w.r.t $\theta$, and again then integrate over $Y$. To start, we plug in the first derivative:
+
+$$
+\begin{aligned}
+\frac{\partial^2 f(Y|\theta)}{\partial \theta^2} &= \frac{\partial \left(f(y) (y - b'(\theta))\frac{w}{\phi}\right)}{\partial \theta}
+\end{aligned}
+$$
+
+We can now use the product rule, $\frac{d u v}{dx} = u \frac{d v}{dx} + v \frac{d u}{dx}$ (and where we see $f'(\theta)$ note that we have just calculated it):
+
+$$
+\begin{aligned}
+\frac{\partial^2 f(Y|\theta)}{\partial \theta^2} &= \frac{\partial \left(f(y) (y - b'(\theta))\frac{w}{\phi}\right)}{\partial \theta} \\
+&= \frac{w}{\phi} \left(f(y) \frac{\partial (y - b'(\theta))}{\partial \theta}  + (y - b'(\theta)) f'(\theta) \right)\\
+&= \frac{w}{\phi} \left(-f(y) b''(\theta)  + (y - b'(\theta)) f(y) (y - b'(\theta))\frac{w}{\phi} \right)\\
+&= f(y)\frac{w}{\phi} \left( (y - b'(\theta))^2\frac{w}{\phi} -b''(\theta)\right)\\
+\end{aligned}
+$$
+
+We now integrate this over $y$. We need to notice that $b'(\theta)=E(y)$ (as we have just calculated), so $\int f(y)(y - b'(\theta))^2dy = \int f(y)(y - E(y))^2dy = \text{Var}(y)$, and also $\int f(y)  dy=1$:
+
+$$
+\begin{aligned}
+\int \frac{\partial^2 f(Y|\theta)}{\partial \theta^2} dy &= \int f(y)\frac{w}{\phi} \left((y - b'(\theta))^2\frac{w}{\phi} -b''(\theta)\right) dy\\
+&=  \left(\frac{w}{\phi}\right)^2 \int f(y)(y - b'(\theta))^2  dy - \frac{w}{\phi}\int f(y) b''(\theta) dy\\
+&=  \left(\frac{w}{\phi}\right)^2 Var(y) - \frac{w}{\phi}b''(\theta)\int f(y)  dy\\
+&=  \left(\frac{w}{\phi}\right)^2 Var(y) - \frac{w}{\phi}b''(\theta)\\
+\end{aligned}
+$$
+
+Above we saw that $\int \frac{\partial^2 f(Y|\theta)}{\partial \theta^2} dy = 0$, and so
+
+$$
+\begin{aligned}
+\left(\frac{w}{\phi}\right)^2 Var(y) - \frac{w}{\phi}b''(\theta) &= 0\\
+Var(y) &= \frac{\phi}{w} b''(\theta)
+\end{aligned}
+$$
+
+Phew.
 
 $b''(\theta_i)$ is often called the variance function $v(\mu_i)$.
 
-## Proof that $\text{E}(Y_i)=b'(\theta_i)$
 
+## Another Proof that $\text{E}(s(\theta_i))=0$
+
+Via the score
+
+<!---
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=220f27e5-502a-41a8-956a-b1f500d10ad5&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5AExpectedScore" ></iframe>
+--->
+
+Easy $\text{E}(s(\theta_i))=0$ and $s(\theta_i) = (y_i - b'(\theta_i))\frac{w_i}{\phi}$
 
 ---
 
 # Likelihood inference set-up
 
-The likelihood hgas to go through a few steps to get to something that can be maximised for $\beta$:
+The likelihood has to go through a few steps to get to something that can be maximised for $\beta$:
 $\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \mathbf{\beta}$
 
 See class notes or Fahrmeir et al (2015), Section 5.8.2 for the derivation of the loglikelihood, score and expected Fisher information matrix.

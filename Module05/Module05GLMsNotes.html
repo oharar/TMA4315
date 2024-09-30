@@ -1726,25 +1726,153 @@ information matrix)</li>
 </ul>
 <hr />
 </div>
-<div id="properties" class="section level3">
-<h3>Properties</h3>
-<p><span class="math inline">\(\text{E}(Y_i)=b&#39;(\theta_i)\)</span>
-and <span class="math inline">\(\text{Var}(Y_i)=b&#39;&#39;(\theta_i)\frac{\phi}{w_i}\)</span></p>
-<p>In class we study the handwritten proof together: <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/M5ExpFamProofEVar.pdf">Proof</a></p>
+</div>
+<div id="textey-and-textvary" class="section level2">
+<h2><span class="math inline">\(\text{E}(Y)\)</span> and <span class="math inline">\(\text{Var}(Y)\)</span></h2>
+<p>These are the main results: <span class="math inline">\(\text{E}(Y_i)=b&#39;(\theta_i)\)</span> and <span class="math inline">\(\text{Var}(Y_i)=b&#39;&#39;(\theta_i)\frac{\phi}{w_i}\)</span>.
+But how do we get there?</p>
+<p>These are both derivatives with respect to <span class="math inline">\(\theta\)</span>. But the expectations are over the
+random variables, <span class="math inline">\(Y\)</span>. To derive
+these we differentiate once and twice w.r.t. <span class="math inline">\(\theta\)</span>, integrate over <span class="math inline">\(Y\)</span> <span class="math inline">\(f(Y)\)</span>, and look hard enough for the useful
+terms. So, take a deep breath…</p>
+<p>To start off, we show that <span class="math inline">\(\int
+\frac{\partial f(Y| \theta)}{\partial \theta} dy =0\)</span>, and also
+<span class="math inline">\(\int \frac{\partial^2 f(Y| \theta)}{\partial
+\theta^2} dy =0\)</span>.</p>
+<p>We do this by reversing the integration and differentiation (which we
+can because the necessary conditions are met):</p>
+<p><span class="math display">\[
+\int \frac{\partial f(Y|\theta)}{\partial \theta} dy = \frac{\partial
+\int f(Y|\theta) dy}{\partial \theta} = \frac{\partial1}{\partial
+\theta} =0
+\]</span> Differentiating this again also gives us 0.</p>
+<p>Now we know that these equal 0, we can evaluate them to see what
+equals 0: these will include <span class="math inline">\(E(Y)\)</span>
+and <span class="math inline">\(Var(Y)\)</span>, so we can then solve to
+find the mean and variance.</p>
+<div id="textey_ibtheta_i" class="section level3">
+<h3><span class="math inline">\(\text{E}(Y_i)=b&#39;(\theta_i)\)</span></h3>
+<p>This is a video of the proof.</p>
+
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=07e586c1-9553-42ac-a503-b1f8009f25d6&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5BEY" ></iframe>
+
+<p>To calculate <span class="math inline">\(\frac{\partial
+f(Y|\theta)}{\partial \theta}\)</span> (and end up finding <span class="math inline">\(\text{E}(Y_i)\)</span>) we start with the pdf for
+<span class="math inline">\(Y\)</span>:</p>
+<p><span class="math display">\[
+f(Y|\theta) = \exp \left( (y\theta - b(\theta))\frac{w}{\phi} + c(Y,
+\phi, w) \right)
+\]</span></p>
+<p>and the score:</p>
+<p><span class="math display">\[
+s(\theta_i) = \frac{\partial \log f(Y|\theta)}{\partial \theta} = (y_i -
+b&#39;(\theta_i))\frac{w}{\phi}.
+\]</span></p>
+<p>Then using the chain rule</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial f(Y|\theta)}{\partial \theta} &amp;= \frac{\partial
+e^{l(\theta|Y)}}{\partial \theta} \\
+&amp;= \frac{\partial e^{l(\theta|Y)}}{\partial l(\theta|Y)}
+\frac{\partial l(\theta|Y)}{\partial \theta} \\
+&amp;= e^{l(\theta|Y)} s(\theta) \\
+&amp;= f(y|\theta) (y - b&#39;(\theta))\frac{w}{\phi}
+\end{aligned}
+\]</span></p>
+<p>Now we integrate this over y (and noting that <span class="math inline">\(\int f(y) y dy = E(y)\)</span> and <span class="math inline">\(\int f(y) dy=1\)</span>):</p>
+<p><span class="math display">\[
+\begin{aligned}
+\int \frac{\partial f(Y|\theta)}{\partial \theta} dy &amp;= \int f(y) (y
+- b&#39;(\theta))\frac{w}{\phi} dy \\
+&amp;= \frac{w}{\phi} \left( \int f(y) y dy - b&#39;(\theta)) \int f(y)
+dy \right) \\
+&amp;= \frac{w}{\phi} \left( E(y) - b&#39;(\theta) \right) \\
+\end{aligned}
+\]</span></p>
+<p>This, as we showed above, equals 0, so <span class="math inline">\(\frac{w}{\phi} \left( E(y) - b&#39;(\theta)
+\right) = 0\)</span>, and thus <span class="math inline">\(E(y) =
+b&#39;(\theta)\)</span></p>
+</div>
+<div id="textvary_ibtheta_ifracphiw_i" class="section level3">
+<h3><span class="math inline">\(\text{Var}(Y_i)=b&#39;&#39;(\theta_i)\frac{\phi}{w_i}\)</span></h3>
+<p>First up, a video:</p>
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=572171ec-cde7-4d12-9655-b1f800f02fa8&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5CVarY" ></iframe>
+<p>Oscars all round!</p>
+<p>First we calculate the second derivative w.r.t <span class="math inline">\(\theta\)</span>, and again then integrate over
+<span class="math inline">\(Y\)</span>. To start, we plug in the first
+derivative:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial^2 f(Y|\theta)}{\partial \theta^2} &amp;= \frac{\partial
+\left(f(y) (y - b&#39;(\theta))\frac{w}{\phi}\right)}{\partial \theta}
+\end{aligned}
+\]</span></p>
+<p>We can now use the product rule, <span class="math inline">\(\frac{d
+u v}{dx} = u \frac{d v}{dx} + v \frac{d u}{dx}\)</span> (and where we
+see <span class="math inline">\(f&#39;(\theta)\)</span> note that we
+have just calculated it):</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial^2 f(Y|\theta)}{\partial \theta^2} &amp;= \frac{\partial
+\left(f(y) (y - b&#39;(\theta))\frac{w}{\phi}\right)}{\partial \theta}
+\\
+&amp;= \frac{w}{\phi} \left(f(y) \frac{\partial (y -
+b&#39;(\theta))}{\partial \theta}  + (y - b&#39;(\theta)) f&#39;(\theta)
+\right)\\
+&amp;= \frac{w}{\phi} \left(-f(y) b&#39;&#39;(\theta)  + (y -
+b&#39;(\theta)) f(y) (y - b&#39;(\theta))\frac{w}{\phi} \right)\\
+&amp;= f(y)\frac{w}{\phi} \left( (y - b&#39;(\theta))^2\frac{w}{\phi}
+-b&#39;&#39;(\theta)\right)\\
+\end{aligned}
+\]</span></p>
+<p>We now integrate this over <span class="math inline">\(y\)</span>. We
+need to notice that <span class="math inline">\(b&#39;(\theta)=E(y)\)</span> (as we have just
+calculated), so <span class="math inline">\(\int f(y)(y -
+b&#39;(\theta))^2dy = \int f(y)(y - E(y))^2dy = \text{Var}(y)\)</span>,
+and also <span class="math inline">\(\int f(y)  dy=1\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\int \frac{\partial^2 f(Y|\theta)}{\partial \theta^2} dy &amp;= \int
+f(y)\frac{w}{\phi} \left((y - b&#39;(\theta))^2\frac{w}{\phi}
+-b&#39;&#39;(\theta)\right) dy\\
+&amp;=  \left(\frac{w}{\phi}\right)^2 \int f(y)(y -
+b&#39;(\theta))^2  dy - \frac{w}{\phi}\int f(y) b&#39;&#39;(\theta) dy\\
+&amp;=  \left(\frac{w}{\phi}\right)^2 Var(y) -
+\frac{w}{\phi}b&#39;&#39;(\theta)\int f(y)  dy\\
+&amp;=  \left(\frac{w}{\phi}\right)^2 Var(y) -
+\frac{w}{\phi}b&#39;&#39;(\theta)\\
+\end{aligned}
+\]</span></p>
+<p>Above we saw that <span class="math inline">\(\int \frac{\partial^2
+f(Y|\theta)}{\partial \theta^2} dy = 0\)</span>, and so</p>
+<p><span class="math display">\[
+\begin{aligned}
+\left(\frac{w}{\phi}\right)^2 Var(y) - \frac{w}{\phi}b&#39;&#39;(\theta)
+&amp;= 0\\
+Var(y) &amp;= \frac{\phi}{w} b&#39;&#39;(\theta)
+\end{aligned}
+\]</span></p>
+<p>Phew.</p>
 <p><span class="math inline">\(b&#39;&#39;(\theta_i)\)</span> is often
 called the variance function <span class="math inline">\(v(\mu_i)\)</span>.</p>
 </div>
 </div>
-<div id="proof-that-textey_ibtheta_i" class="section level2">
-<h2>Proof that <span class="math inline">\(\text{E}(Y_i)=b&#39;(\theta_i)\)</span></h2>
+<div id="another-proof-that-textestheta_i0" class="section level2">
+<h2>Another Proof that <span class="math inline">\(\text{E}(s(\theta_i))=0\)</span></h2>
+<p>Via the score</p>
+
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=220f27e5-502a-41a8-956a-b1f500d10ad5&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5AExpectedScore" ></iframe>
+
+<p>Easy <span class="math inline">\(\text{E}(s(\theta_i))=0\)</span> and
+<span class="math inline">\(s(\theta_i) = (y_i -
+b&#39;(\theta_i))\frac{w_i}{\phi}\)</span></p>
 <hr />
 </div>
 </div>
 <div id="likelihood-inference-set-up" class="section level1">
 <h1>Likelihood inference set-up</h1>
-<p>The likelihood hgas to go through a few steps to get to something
-that can be maximised for <span class="math inline">\(\beta\)</span>:
-<span class="math inline">\(\theta_i\leftrightarrow \mu_i\leftrightarrow
+<p>The likelihood has to go through a few steps to get to something that
+can be maximised for <span class="math inline">\(\beta\)</span>: <span class="math inline">\(\theta_i\leftrightarrow \mu_i\leftrightarrow
 \eta_i \leftrightarrow \mathbf{\beta}\)</span></p>
 <p>See class notes or Fahrmeir et al (2015), Section 5.8.2 for the
 derivation of the loglikelihood, score and expected Fisher information
