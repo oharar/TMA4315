@@ -126,7 +126,8 @@ $$\eta_i=g(\mu_i)$$
 Response function
 $$\mu_i=h(\eta_i)$$
 
-Canonical link: $\eta_i=\theta_i$, so $g(\mu_i)=\theta_i$
+Note that this is a link between $\eta_i$ and $\mu_i$, but the exponential family is written as a funciton of $\theta_i$. For the canonical link  $\eta_i=\theta_i$, so $g(\mu_i)=\theta_i$, so this is not a problem. We will see the more general form below.
+
 <!-- then minimal sufficient statistic exist $\sum_{j=1}^p \beta_j \sum_{i=1}^n y_i x_{ij}$. -->
 When the canonical link is used some of the results for the GLM (to be studied in the next sections) are simplified. 
 
@@ -291,8 +292,25 @@ Easy $\text{E}(s(\theta_i))=0$ and $s(\theta_i) = (y_i - b'(\theta_i))\frac{w_i}
 
 # Likelihood inference set-up
 
-The likelihood has to go through a few steps to get to something that can be maximised for $\beta$:
-$\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \mathbf{\beta}$
+The likelihood has to go through a few steps to get to something that can be maximised for $\beta$. 
+
+We have 
+
+$$
+\begin{aligned}
+l(y_i|\theta_i) &= (y_i\theta_i - b(\theta_i))\frac{w_i}{\phi} + c(y_i, w_i, \phi) \\
+\mu_i &= g^{-1}(\eta_i) \\
+\eta_i &= \mathbf{x}_i' \beta
+\end{aligned}
+$$
+
+But how do we get from $\mu_i$ to $\theta_i$? With a canonical link $\mu_i=\theta_i$, but more generally we have to use $b'(\theta_i) = \mu_i$, which we proved above. So the route between $\theta_i$ and $\mathbf{\beta}$ is:
+
+$$
+\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \mathbf{\beta}
+$$
+
+We need to take this route to get to an expression for the score, which we then use to get the maximum likelihood estimates of $\beta$, i.e. $\hat{\beta}$.
 
 See class notes or Fahrmeir et al (2015), Section 5.8.2 for the derivation of the loglikelihood, score and expected Fisher information matrix.
 
@@ -300,20 +318,73 @@ See class notes or Fahrmeir et al (2015), Section 5.8.2 for the derivation of th
 
 ## Loglikelihood
 
-$$l(\beta)=\sum_{i=1}^n l_i(\beta)=\sum_{i=1}^n\frac{1}{\phi}(y_i\theta_i-b(\theta_i))w_i+\sum_{i=1}^n c(y_i,\phi,w_i)$$
+Now let's work out the log-likelihood as a function of $\beta$
+
+$$l(\theta)=\sum_{i=1}^n l_i(\theta)=\sum_{i=1}^n\frac{1}{\phi}(y_i\theta_i-b(\theta_i))w_i+\sum_{i=1}^n c(y_i,\phi,w_i)$$
+
+Getting from there to $\boldsymbol{\beta}$ takes a few steps:
+
+$$
+\begin{aligned}
+f(y_i | \theta_i) &= exp \left(\frac{y_i \theta - b(\theta_i)}{\phi/w_i} + c(y_i, \phi, w_i) \right) \\
+\theta_i &= b^{'-1}(\mu) (\text{from } \mu_i = b'(\theta_i) (=E(Y_i)))\\\\
+ \mu_i &= g^{-1}(\eta_i) \\
+\eta_i &= x_i' \boldsymbol{\beta}
+\end{aligned}
+$$
 
 Remark: the part of the loglikelihood involving both the data and the parameter of interest is for a _canonical link_ equal to
 
 $$\sum_{i=1}^n y_i \theta_i=\sum_{i=1}^n y_i {\bf x}_i^T\beta=\sum_{i=1}^n y_i \sum_{j=1}^p x_{ij}\beta_j=\sum_{j=1}^p \beta_j \sum_{i=1}^n y_i  x_{ij}$$
 
+Which makes things easier
+
+
 ---
 
 ## Score function
 
-$$s(\beta)=\sum_{i=1}^n \frac{(y_i-\mu_i){\bf x}_i h'(\eta_i)}{\text{Var}(Y_i)}={\bf X}^T {\bf D} \Sigma^{-1}({\bf y}-{\mathbf \mu})$$
+<!---
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=92968a46-ea31-4d06-9f67-b1fc00e02c35&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m5DTheScore" ></iframe>
+--->
+
+What is the score function as a function of $\beta$? We need to use this chain:
+
+$\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \boldsymbol{\beta}$
+
+And thus a long chain rule...
+
+
+$$
+s(\beta)= \frac{\partial l}{\partial \beta} = \frac{\partial l(\theta)}{\partial \theta} \frac{\partial \theta}{\partial \mu} \frac{\partial \mu}{\partial \eta} \frac{\partial \eta}{\partial \beta}
+$$
+
+We already have $\partial l/\partial \theta = (y_i - b'(\theta))\frac{w_i}{\phi}$ above ,so we need the rest. Most are easy:
+
+- $\partial l/\partial \theta = (y_i - b'(\theta))\frac{w_i}{\phi}$ from above
+- $\frac{\partial \theta_i}{\partial \mu_i} = \frac{\phi}{w_i \text{Var}(y_i)}$ see below.
+- $\frac{\partial \mu_i}{\partial \eta_i} = \frac{\partial h(\eta_i)}{\partial \eta_i} = h'(\eta_i)$ and will obviously depend on the link function.
+- $\frac{\partial \eta_i}{\partial \beta} = \frac{\partial \mathbf{x}_i' \beta}{\partial \beta} = \mathbf{x}_i$ is easy.
+
+We get $\frac{\partial \theta_i}{\partial \mu_i}$ by inverting it, i.e. calculating $\frac{\partial \mu_i}{\partial \theta_i}$:
+
+$$
+\frac{\partial \mu_i}{\partial \theta_i} = \frac{\partial b'(\theta_i)}{\partial \theta_i} = b''(\theta_i) = \frac{w_i \text{Var}(y_i)}{\phi}
+$$
+
+So we can put it all together (and cancel $w_i$ and $\phi$):
+
+$$
+s_i(\beta) = (y_i - b'(\theta_i))\frac{w_i}{\phi} \frac{\phi}{w_i \text{Var}(y_i)} h'(\eta_i) \mathbf{x}_i =  \frac{(y_i - b'(\theta_i))}{\text{Var}(y_i)} h'(\eta_i) \mathbf{x}_i
+$$
+
+Now the total score is the sum of these components:
+
+$$s(\beta)=\sum_{i=1}^n \frac{(y_i-\mu_i){\bf x}_i h'(\eta_i)}{\text{Var}(Y_i)} = {\bf X}^T {\bf D} \Sigma^{-1}({\bf y}-{\mathbf \mu})$$
+
 where $\Sigma=\text{diag}(\text{Var}(Y_i))$ and ${\bf D}=\text{diag}(h'(\eta_i))$ (derivative wrt $\eta_i$). 
 
-Remark: observe that $s(\beta)=0$ only depends on the distribution of $Y_i$ through $\mu_i$ and $\text{Var}(Y_i)$.
+Observe that $s(\beta)=0$ only depends on the distribution of $Y_i$ through $\mu_i$ and $\text{Var}(Y_i)$.
 
 ---
 
@@ -322,14 +393,31 @@ Canonical link:
 $$
 s(\beta)=\sum_{i=1}^n \frac{(y_i-\mu_i){\bf x}_i w_i}{\phi}
 $$
+
 since $\frac{\partial \mu_i}{\partial \eta_i}=b''(\theta_i)$. 
 
 
 ---
 
-## Expected Fisher information matrix for the GLM and covariance for $\hat{\beta}$
+## Expected Fisher information matrix for the GLM and covariance for ${\hat\beta}$
+
+The exprect Fisher information matrix is $F_{[h,l]}(\boldsymbol{\beta}) =\text{E}(\mathbf{s}_i(\boldsymbol{\beta}) \mathbf{s}_i'(\boldsymbol{\beta}))$:
+
+$$
+\begin{aligned}
+F_{i}(\boldsymbol{\beta}) &=\text{E}(\mathbf{s}_i(\boldsymbol{\beta}) \mathbf{s}_i'(\boldsymbol{\beta})) \\
+&= E \left( \frac{(y_i-\mu_i){\bf x}_i h'(\eta_i)}{\text{Var}(Y_i)} \left(\frac{(y_i-\mu_i){\bf x}_i h'(\eta_i)}{\text{Var}(Y_i)}'\right)\right) \\
+&= {\bf x}_i {\bf x}'_i E \left( \frac{(y_i-\mu_i)^2 (h'(\eta_i))^2}{\text{Var}^2(Y_i)}\right) \\
+&= {\bf x}_i {\bf x}'_i E(y_i-\mu_i)^2 \frac{ (h'(\eta_i))^2}{\text{Var}^2(Y_i)} \\
+&= {\bf x}_i {\bf x}'_i \frac{ (h'(\eta_i))^2}{\text{Var}(Y_i)}
+\end{aligned}
+$$
+
+Or 
 
 $$F_{[h,l]}(\beta)=\sum_{i=1}^n \frac{x_{ih}x_{il}(h'(\eta_i))^2}{\text{Var}(Y_i)}$$
+
+or 
 
 $$F(\beta)={\bf X}^T {\bf W} {\bf X}$$
 
@@ -347,20 +435,100 @@ which do not contain any random variables, so the observed must be equal to the 
 
 ---
 
-## Fisher scoring and iterated reweighted least squares (IRWLS)
+## Fisher scoring and iterated reweighted least squares (IWLS)
 
-Details on the derivation: [IRWLS](https://www.math.ntnu.no/emner/TMA4315/2018h/M5irwls.pdf) 
+STILL UNDER CONSTRUCTION. WE HAVE NOT CONVERGED ON A SOLUTION YET
 
-$$\beta^{(t+1)}=\beta^{(t)} + F(\beta^{(t)})^{-1} s(\beta^{(t)})$$
-Insert formulas for expected Fisher information and score function.
+Details on the derivation: [IWLS](https://www.math.ntnu.no/emner/TMA4315/2018h/M5irwls.pdf) 
 
-$$\beta^{(t+1)}=({\bf X}^T {\bf W}(\beta^{(t)}) {\bf X})^{-1} {\bf X}^T {\bf W}(\beta^{(t)})\tilde{\bf y}_i^{(t)}$$
-where ${\bf W}$ is as before ${\bf W}=\text{diag}(\frac{h'(\eta_i)^2}{\text{Var}(Y_i)})$ - but now the current version of ${\boldsymbol{\beta}}^{(t)}$ is used. The diagonal elements are called the _working weights_. The $\tilde{\bf y}_i^{(t)}$ is called the _working response vector_
-and has element $i$ given as
+IWLS uses the Newton-Raphson algorithm, via Fisher scoring. The idea is to replace the matrix of derivatives, the observed Fisher information, by the expected Fisher information. For a canonical link these are the same, of course. The reason this is called iterated reweighted least squares is that each iteration is a weighted least squares calculation. To remind you, for known weights the weighted least squares solution is $\hat{\beta} = (X' W X)^{-1} X'W{\bf y}$, where $W$ is a diagonal matrix of known weights (if there are off-diagonal terms, the name changes to generalised least squares). So we will be looking for something that looks like this.
 
-$$\tilde{\bf y}_i^{(t)}={\bf x}_i^T\beta^{(t)}+\frac{y_i-h({\bf x}_i^T\beta^{(t)})}{h'({\bf x}_i^T\beta^{(t)})}.$$
+In general, Newton-Raphson solves the equation $f(x)=0$ for $x$. It does this by starting with an initial guess, $(x^{(0)}, f(x^{(0)}$, finding the tangent and extrapolating this to the x-axis to find $x^{(1)}$. Then from $(x^{(1)}, f(x^{(1)}))$ it does the same thing, and continues until $f(x^{(t+1)})$ is close enough to 0.
 
-Remark: Convergens? With full rank of ${\bf X}$ and positive diagonal elements of ${\bf W}$ we are certain that the inverse will exist, but there might be that the temporary version of ${\bf W}$ can cause problems.
+```{r, echo=FALSE}
+X <- 1:100
+Pars <- c(-10, 0.2,  0.02)
+CalcFX <- function(x) Pars%*%rbind(1, x, x^2)
+CalcTangentX <- function(x) {
+  slo <- as.vector(Pars%*%rbind(0, 1, 2*x))
+  int <-  CalcFX(x) - slo*x
+  cbind(int, slo)
+}
+
+fX <- CalcFX(X)
+SlopeX <- CalcTangentX(X)
+
+X0 <- 83; TanX0 <- CalcTangentX(X0)
+X1 <- -TanX0[1]/TanX0[2]; TanX1 <- CalcTangentX(X1)
+X2 <- -TanX1[1]/TanX1[2]; TanX2 <- CalcTangentX(X2)
+
+par(mfrow=c(2,1), mar=c(2,2,1,1))
+plot(X, fX, type="l")
+points(X0, CalcFX(X0), col=2); text(X0, CalcFX(X0), expression(x^(0)), cex=2, adj=c(1.1, -0.1), col=2)
+abline(TanX0[1], TanX0[2], col=2, lwd=1.5)
+points(X1, 0, col=4); text(X1, 0, expression(x^(1)), cex=2, adj=c(1.1, -0.1), col=4)
+text(1, 200, "Iteration 1",  adj=0)
+abline(h=0)
+
+plot(X, fX, type="l")
+points(X1, CalcFX(X1), col=4); text(X1, CalcFX(X1), expression(x^(1)), cex=2, adj=c(1.1, -0.1), col=4)
+abline(TanX1[1], TanX1[2], col=4, lwd=1.5)
+points(X2, 0, col=5); text(X2, 0, expression(x^(2)), cex=2, adj=c(1.1, -0.1), col=5)
+text(1, 200, "Iteration 2",  adj=0)
+abline(h=0)
+``` 
+
+In practice this means that at each iteration we start with $x^{(t)}$, and update with $x^{(t+1)} = x^{(t)} - \frac{f(x^{(t)})}{f'(x^{(t)})}$. We keep doing this until the change is sm all enough, i.e. $|f(x_{t+1})-f(x_{t})| < \epsilon$ for some $f()$ (e.g. the deviance).
+
+For a GLM we need to solve $s(\boldsymbol{\beta})=0$. We now have a vector we want to solve, but the idea is still the same. Of course, for a GLM $f'(x)$ is the observed Fisher information. But it can be easier to use the expected Fisher information, $F(\boldsymbol{\beta}) = {\bf X}^T {\bf W} {\bf X}$. So we get 
+
+
+$$
+\begin{aligned}
+\boldsymbol{\beta}^{(t+1)}&=\boldsymbol{\beta}^{(t)} + F(\boldsymbol{\beta}^{(t)})^{-1} s(\boldsymbol{\beta}^{(t)}) \\
+&= \boldsymbol{\beta}^{(t)} + ({\bf X}^T {\bf W(\boldsymbol{\beta}^{(t)})} {\bf X})^{-1} {\bf X}^T {\bf D}(\boldsymbol{\beta}^{(t)}) \Sigma^{-1}(\boldsymbol{\beta}^{(t)})({\bf y}-{\mathbf \mu(\boldsymbol{\beta}^{(t)})}) \\
+\end{aligned}
+$$
+
+Where now we have to write ${\bf W(\boldsymbol{\beta}^{(t)})}$,  ${\bf D}(\boldsymbol{\beta}^{(t)})$ and  $\Sigma^{-1}(\boldsymbol{\beta}^{(t)})$ because they all depend on $\boldsymbol{\beta}$, and this changes every iteration. To make it easier to read, we will drop the $(\boldsymbol{\beta}^{(t)})$ for now, and come back to it later.
+
+From above, ${\bf W}=\text{diag}(\frac{h'(\eta_i)^2}{\text{Var}(Y_i)})$, $\Sigma=\text{diag}(\text{Var}(Y_i))$ and ${\bf D}=\text{diag}(h'(\eta_i))$ (derivative wrt $\eta_i$). We can thus write ${\bf W}= \Sigma^{-1}{\bf D}^2$, i.e. ${\bf D} \Sigma^{-1} = {\bf W}{\bf D}^{-1}$ (diagonal matrices are so cooperative), and get 
+
+$$
+\begin{aligned}
+\boldsymbol{\beta}^{(t+1)}&=\boldsymbol{\beta}^{(t)} + F(\boldsymbol{\beta}^{(t)})^{-1} s(\boldsymbol{\beta}^{(t)}) \\
+&= \boldsymbol{\beta}^{(t)} + ({\bf X}^T {\bf W} {\bf X})^{-1} {\bf X}^T {\bf W} {\bf D}^{-1}({\bf y}-{\mathbf \mu}) \\
+\end{aligned}
+$$
+
+We now have a $({\bf X}^T {\bf W} {\bf X})^{-1} {\bf X}^T {\bf W}$ term, of the sort that would appear in weighted least squares. But we need to pre-multiply everything by it. Without looking down, can you see the trick to do this?
+
+No? OK then.
+
+We can pre-multiply $\boldsymbol{\beta}^{(t+1)} = I \boldsymbol{\beta}^{(t+1)}$ and use $I = ({\bf X}^T {\bf W} {\bf X})^{-1} ({\bf X}^T {\bf W} {\bf X})$:
+
+$$
+\begin{aligned}
+\boldsymbol{\beta}^{(t+1)}&=\boldsymbol{\beta}^{(t)} + F(\boldsymbol{\beta}^{(t)})^{-1} s(\boldsymbol{\beta}^{(t)}) \\
+&= ({\bf X}^T {\bf W} {\bf X})^{-1} ({\bf X}^T {\bf W} {\bf X}) \boldsymbol{\beta}^{(t)} + ({\bf X}^T {\bf W} {\bf X})^{-1} {\bf X}^T {\bf W} {\bf D}^{-1}({\bf y}-{\mathbf \mu}) \\
+&= ({\bf X}^T {\bf W} {\bf X})^{-1} ({\bf X}^T {\bf W}) ({\bf X} \boldsymbol{\beta}^{(t)} + {\bf D}^{-1}({\bf y}-{\mathbf \mu}))
+\end{aligned}
+$$
+
+Which is the same as weighed least squares with $W = \text{diag}(\frac{h'(\eta_i)^2}{\text{Var}(Y_i)})$, and ${\bf \tilde{y}} = {\bf X} \boldsymbol{\beta}^{(t)} + {\bf D}^{-1}({\bf y}-{\mathbf \mu})$
+
+Inserting the dependence on $\boldsymbol{\beta}(t)$, we get 
+
+$$\beta^{(t+1)}=({\bf X}^T {\bf W}(\beta^{(t)}) {\bf X})^{-1} {\bf X}^T {\bf W}(\beta^{(t)})\bf{\tilde y}_i^{(t)}$$
+
+where
+
+- ${\bf W^{(t)}}=\text{diag}(\frac{h'(\eta^{(t)}_i)^2}{\text{Var}(Y^{(t)}_i)})$ and the elements are called the **working weights**
+- $\tilde{\bf y}_i^{(t)} = {\bf X} \boldsymbol{\beta}^{(t)} + {\bf D}^{-1}({\bf y}-{\mathbf \mu})$ is called the **working response vector**
+
+In practice, we use our current value of $\boldsymbol{\beta}^{(t)}$ to calculate the working weights and working response vector, put those into the weighted least squares, get a new value of $\boldsymbol{\beta}^{(t+1)}$, and re-calculate the working weights and working response vector etc. We stop when the change in deviance between iterations is small (as a default R uses $\frac{|\text{Dev}(t+1) - \text{Dev}(t)|}{|\text{Dev}(t+1)| +0.1}<10^{-8}$).
+
+With full rank of ${\bf X}$ and positive diagonal elements of ${\bf W}$ we are certain that the inverse will exist, so the algorithm will converge, but there might be that the temporary version of ${\bf W}$ can cause problems.
 
 ---
 
@@ -376,7 +544,6 @@ fitgrouped$residuals
 ---
 
 ## Estimator for dispersion parameter
-
 
 Let data be grouped as much as possible. With G groups (covariate pattern) with $n_i$ observations for each group (then $n=\sum^G n_i=n$):
 

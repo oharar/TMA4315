@@ -1,7 +1,7 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 2: Logistic regression and Poisson regression" 
-date: "Deadline: Friday, October 13, 2023 at midnight" 
+date: "Deadline: Friday, October 11, 2024 at midnight" 
 output: # 3rd letter intentation hierarchy
   html_document:
     toc: true
@@ -104,22 +104,22 @@ Here are some tips and suggestions that can make the implementation of the funct
 # To get data, go to https://www.fotball.no/turneringer/eliteserien/
 #  Then click on "Se terminlisten": that takes you to the right page 
 #  (or right-click and ciopy link)
-Webpage <- "https://www.fotball.no/fotballdata/turnering/terminliste/?fiksId=186850"
-eliteserie.t <- rvest::html_table(read_html(Webpage))
+Webpage <- "https://www.fotball.no/fotballdata/turnering/terminliste/?fiksId=192924"
+eliteserie.t <- rvest::html_table(rvest::read_html(Webpage))
 eliteserie.df <- data.frame(
   home = eliteserie.t[[1]]$Hjemmelag,
   away = eliteserie.t[[1]]$Bortelag,
   yh = as.numeric(gsub(" -.*", "", eliteserie.t[[1]]$Resultat)),
   ya = as.numeric(gsub(".* - ", "", eliteserie.t[[1]]$Resultat))
 )
-write.csv(eliteserie.df, file="Exercises/eliteserien2023.csv")
+write.csv(eliteserie.df, file="Exercises/eliteserien2024.csv")
 
 ```
 
 Load the data set in R:
 
 ```{r}
-filepath <- "https://www.math.ntnu.no/emner/TMA4315/2023h/eliteserien2023.csv"
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2024h/eliteserien2024.csv"
 eliteserie <- read.csv(file = filepath)
 
 NGames <- table(c(eliteserie$home[!is.na(eliteserie$yh)],

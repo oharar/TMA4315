@@ -138,14 +138,14 @@ $$
 
 This is easier than it appears: `cigarPipeOnly` is the reference class, so $\beta_{s_1}=0$ and we only need the `cigaretteOnly` effect. From above this is 0.36915, with a standard error of 0.03791.
 
-So $r(a, s_1, s_2) = e^{0.36915} = 1.45$. And the the 90% confidence interval is 
-$e^{0.36915 \pm 1.645\times0.03791} = (1.393, 1.502)$
+So $r(a, s_1, s_2) = e^{-0.36915} = 0.69$. And the the 90% confidence interval is 
+$e^{-0.36915 \mp 1.645\times0.03791} = (0.65, 0.74)$
 
 We can compare this with the values from R:
 
 ```{r}
-exp(coef(model1)["smokecigarretteOnly"])
-exp(confint(model1, level=0.9)["smokecigarretteOnly",])
+exp(-coef(model1)["smokecigarretteOnly"])
+exp(-confint(model1, level=0.9)["smokecigarretteOnly",])
 
 ```
 </details>
@@ -168,6 +168,15 @@ model3 <- glm(dead ~ ageLevel + smoke, family = "poisson", data = smoking, offse
 summary(model2)
 summary(model3)
 ```
+
+
+<span class="question">In `model3` we have `ageLevel`, which is continuous, as described above it is the age group as numbers from 1 to 9 (1 corresponds to 40-44, 2 to 45-59, and so on). So how do you interpret the estimated effect?</span>
+
+<details><summary>Answer</summary>
+The age classes are all 5 years wide, so going up 1 class is the same as aging 5 years (on average). Thus the estimated effect is the of of the increase in death rate for doctors 5 years of age apart. There are a few equivalent ways of expressing this, so your answer might be a bit different, but still be correct.
+
+This is the sort of weird things people do in analyses, for reasons which made sense at the time. So working out the interpretation can mean a bit of poking around.
+</details>
 
 <span class="question">Why does `model2` and `model3` have 32 and 31 degrees of freedom, respectively?</span>
 

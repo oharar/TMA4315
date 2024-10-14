@@ -1,0 +1,241 @@
+"","home","away","yh","ya"
+"1","Odd","Haugesund",1,2
+"2","Fredrikstad","Bodø/Glimt",0,2
+"3","Lillestrøm","Kristiansund",2,3
+"4","Molde","Strømsgodset",4,0
+"5","Rosenborg","Sandefjord Fotball",2,0
+"6","Tromsø","Brann",2,4
+"7","Viking","Sarpsborg 08",1,0
+"8","KFUM","HamKam",1,1
+"9","Bodø/Glimt","Viking",1,0
+"10","Kristiansund","KFUM",1,1
+"11","HamKam","Molde",0,1
+"12","Haugesund","Lillestrøm",0,2
+"13","Sarpsborg 08","Odd",0,1
+"14","Strømsgodset","Rosenborg",1,0
+"15","Brann","Fredrikstad",0,2
+"16","Sandefjord Fotball","Tromsø",1,2
+"17","Fredrikstad","Sarpsborg 08",2,2
+"18","Viking","Brann",1,1
+"19","Molde","Kristiansund",2,0
+"20","Odd","Sandefjord Fotball",2,2
+"21","Rosenborg","HamKam",1,0
+"22","Tromsø","Haugesund",0,1
+"23","Lillestrøm","Bodø/Glimt",0,5
+"24","KFUM","Strømsgodset",1,3
+"25","HamKam","Strømsgodset",0,1
+"26","Brann","Odd",2,0
+"27","Haugesund","Rosenborg",1,3
+"28","Kristiansund","Tromsø",1,0
+"29","Sandefjord Fotball","Lillestrøm",0,1
+"30","Sarpsborg 08","KFUM",0,2
+"31","Viking","Fredrikstad",1,1
+"32","Bodø/Glimt","Molde",1,1
+"33","Rosenborg","Bodø/Glimt",1,3
+"34","Fredrikstad","Sandefjord Fotball",1,0
+"35","KFUM","Brann",0,0
+"36","Lillestrøm","HamKam",1,1
+"37","Molde","Haugesund",2,1
+"38","Strømsgodset","Kristiansund",2,2
+"39","Tromsø","Sarpsborg 08",0,3
+"40","Odd","Viking",3,3
+"41","Brann","Rosenborg",3,0
+"42","Bodø/Glimt","Strømsgodset",1,0
+"43","Haugesund","KFUM",0,1
+"44","Kristiansund","HamKam",1,1
+"45","Odd","Fredrikstad",0,2
+"46","Sandefjord Fotball","Molde",3,1
+"47","Sarpsborg 08","Lillestrøm",1,0
+"48","Viking","Tromsø",2,1
+"49","Molde","Rosenborg",2,2
+"50","Kristiansund","Bodø/Glimt",2,4
+"51","HamKam","Haugesund",2,2
+"52","KFUM","Fredrikstad",1,4
+"53","Sandefjord Fotball","Sarpsborg 08",4,1
+"54","Strømsgodset","Viking",0,1
+"55","Tromsø","Odd",4,0
+"56","Lillestrøm","Brann",0,2
+"57","Bodø/Glimt","Tromsø",4,0
+"58","Brann","Sandefjord Fotball",2,1
+"59","Fredrikstad","Strømsgodset",4,1
+"60","Haugesund","Kristiansund",1,0
+"61","Odd","Molde",0,4
+"62","Rosenborg","KFUM",1,3
+"63","Sarpsborg 08","HamKam",1,7
+"64","Viking","Lillestrøm",1,4
+"65","HamKam","Bodø/Glimt",1,0
+"66","KFUM","Odd",0,0
+"67","Kristiansund","Brann",2,2
+"68","Lillestrøm","Fredrikstad",0,3
+"69","Molde","Sarpsborg 08",2,4
+"70","Sandefjord Fotball","Viking",0,3
+"71","Strømsgodset","Haugesund",2,0
+"72","Tromsø","Rosenborg",3,2
+"73","Bodø/Glimt","KFUM",2,2
+"74","Fredrikstad","Tromsø",0,0
+"75","Haugesund","Sandefjord Fotball",2,1
+"76","Odd","Lillestrøm",2,1
+"77","Rosenborg","Kristiansund",2,1
+"78","Sarpsborg 08","Strømsgodset",1,3
+"79","Viking","HamKam",3,0
+"80","Brann","Molde",1,3
+"81","HamKam","Brann",1,2
+"82","Molde","Viking",2,2
+"83","Haugesund","Bodø/Glimt",0,1
+"84","KFUM","Sandefjord Fotball",3,3
+"85","Kristiansund","Sarpsborg 08",3,1
+"86","Strømsgodset","Odd",1,1
+"87","Tromsø","Lillestrøm",1,2
+"88","Rosenborg","Fredrikstad",1,1
+"89","Sandefjord Fotball","HamKam",1,2
+"90","Lillestrøm","KFUM",2,1
+"91","Brann","Strømsgodset",0,0
+"92","Odd","Kristiansund",1,1
+"93","Sarpsborg 08","Bodø/Glimt",1,2
+"94","Tromsø","Molde",0,2
+"95","Viking","Rosenborg",4,2
+"96","Fredrikstad","Haugesund",1,0
+"97","Bodø/Glimt","Brann",5,1
+"98","HamKam","Tromsø",0,0
+"99","Haugesund","Sarpsborg 08",1,2
+"100","KFUM","Viking",1,2
+"101","Molde","Lillestrøm",3,0
+"102","Rosenborg","Odd",2,1
+"103","Kristiansund","Fredrikstad",3,1
+"104","Strømsgodset","Sandefjord Fotball",1,1
+"105","Sarpsborg 08","Rosenborg",4,1
+"106","Fredrikstad","Molde",0,0
+"107","Lillestrøm","Strømsgodset",3,1
+"108","Odd","HamKam",1,2
+"109","Sandefjord Fotball","Bodø/Glimt",2,1
+"110","Viking","Kristiansund",2,0
+"111","Brann","Haugesund",1,1
+"112","Tromsø","KFUM",1,2
+"113","Bodø/Glimt","Odd",3,1
+"114","Sarpsborg 08","Brann",1,1
+"115","Molde","KFUM",2,3
+"116","Strømsgodset","Tromsø",0,1
+"117","HamKam","Fredrikstad",0,1
+"118","Haugesund","Viking",1,0
+"119","Rosenborg","Lillestrøm",4,0
+"120","Kristiansund","Sandefjord Fotball",NA,NA
+"121","Brann","HamKam",1,0
+"122","KFUM","Bodø/Glimt",1,1
+"123","Fredrikstad","Rosenborg",2,2
+"124","Lillestrøm","Sarpsborg 08",2,2
+"125","Odd","Strømsgodset",2,0
+"126","Sandefjord Fotball","Haugesund",4,3
+"127","Tromsø","Kristiansund",0,0
+"128","Viking","Molde",1,0
+"129","Molde","Odd",1,2
+"130","Bodø/Glimt","Haugesund",4,2
+"131","Fredrikstad","KFUM",0,0
+"132","HamKam","Viking",3,3
+"133","Kristiansund","Lillestrøm",2,1
+"134","Sarpsborg 08","Sandefjord Fotball",2,1
+"135","Strømsgodset","Brann",2,3
+"136","Rosenborg","Tromsø",1,0
+"137","Brann","Kristiansund",2,1
+"138","Tromsø","Fredrikstad",3,0
+"139","Sandefjord Fotball","Strømsgodset",2,2
+"140","Haugesund","HamKam",0,1
+"141","Viking","Bodø/Glimt",1,1
+"142","KFUM","Rosenborg",1,0
+"143","Odd","Sarpsborg 08",1,1
+"144","Lillestrøm","Molde",1,2
+"145","Bodø/Glimt","Sandefjord Fotball",1,1
+"146","Strømsgodset","Lillestrøm",3,2
+"147","Fredrikstad","Brann",0,4
+"148","HamKam","Odd",1,0
+"149","KFUM","Tromsø",0,1
+"150","Sarpsborg 08","Haugesund",2,2
+"151","Rosenborg","Viking",2,1
+"152","Kristiansund","Molde",0,4
+"153","Bodø/Glimt","Sarpsborg 08",6,0
+"154","Lillestrøm","Tromsø",0,1
+"155","Haugesund","Fredrikstad",1,0
+"156","Molde","HamKam",3,0
+"157","Sandefjord Fotball","Kristiansund",1,0
+"158","Viking","Strømsgodset",5,2
+"159","Odd","Rosenborg",1,3
+"160","Brann","KFUM",2,0
+"161","KFUM","Lillestrøm",2,0
+"162","Fredrikstad","Odd",2,0
+"163","HamKam","Sandefjord Fotball",1,1
+"164","Kristiansund","Haugesund",2,2
+"165","Rosenborg","Molde",2,1
+"166","Strømsgodset","Bodø/Glimt",0,1
+"167","Tromsø","Viking",2,2
+"168","Brann","Sarpsborg 08",1,3
+"169","Bodø/Glimt","HamKam",3,0
+"170","Viking","KFUM",1,0
+"171","Molde","Fredrikstad",6,1
+"172","Odd","Tromsø",1,0
+"173","Haugesund","Strømsgodset",0,0
+"174","Sandefjord Fotball","Brann",2,2
+"175","Sarpsborg 08","Kristiansund",0,2
+"176","Lillestrøm","Rosenborg",1,1
+"177","Strømsgodset","Sarpsborg 08",2,1
+"178","HamKam","Lillestrøm",5,0
+"179","Brann","Bodø/Glimt",4,1
+"180","Kristiansund","Odd",0,0
+"181","Rosenborg","Haugesund",4,0
+"182","Tromsø","Sandefjord Fotball",3,0
+"183","Fredrikstad","Viking",3,2
+"184","KFUM","Molde",1,1
+"185","Molde","Tromsø",5,3
+"186","Haugesund","Brann",0,1
+"187","Sarpsborg 08","Fredrikstad",0,1
+"188","Strømsgodset","HamKam",1,1
+"189","Bodø/Glimt","Kristiansund",4,0
+"190","Lillestrøm","Viking",1,4
+"191","Odd","KFUM",1,3
+"192","Sandefjord Fotball","Rosenborg",0,1
+"193","Molde","Sandefjord Fotball",NA,NA
+"194","Tromsø","Bodø/Glimt",NA,NA
+"195","Rosenborg","Brann",NA,NA
+"196","HamKam","Sarpsborg 08",NA,NA
+"197","KFUM","Haugesund",NA,NA
+"198","Kristiansund","Strømsgodset",NA,NA
+"199","Viking","Odd",NA,NA
+"200","Fredrikstad","Lillestrøm",NA,NA
+"201","Strømsgodset","Fredrikstad",NA,NA
+"202","HamKam","Kristiansund",NA,NA
+"203","Haugesund","Molde",NA,NA
+"204","Lillestrøm","Odd",NA,NA
+"205","Sandefjord Fotball","KFUM",NA,NA
+"206","Sarpsborg 08","Viking",NA,NA
+"207","Brann","Tromsø",NA,NA
+"208","Bodø/Glimt","Rosenborg",NA,NA
+"209","Viking","Sandefjord Fotball",NA,NA
+"210","Fredrikstad","Kristiansund",NA,NA
+"211","KFUM","Sarpsborg 08",NA,NA
+"212","Lillestrøm","Haugesund",NA,NA
+"213","Molde","Bodø/Glimt",NA,NA
+"214","Odd","Brann",NA,NA
+"215","Tromsø","HamKam",NA,NA
+"216","Rosenborg","Strømsgodset",NA,NA
+"217","Brann","Lillestrøm",NA,NA
+"218","HamKam","Rosenborg",NA,NA
+"219","Haugesund","Tromsø",NA,NA
+"220","Kristiansund","Viking",NA,NA
+"221","Sandefjord Fotball","Odd",NA,NA
+"222","Sarpsborg 08","Molde",NA,NA
+"223","Strømsgodset","KFUM",NA,NA
+"224","Bodø/Glimt","Fredrikstad",NA,NA
+"225","Fredrikstad","HamKam",NA,NA
+"226","KFUM","Kristiansund",NA,NA
+"227","Lillestrøm","Sandefjord Fotball",NA,NA
+"228","Molde","Brann",NA,NA
+"229","Odd","Bodø/Glimt",NA,NA
+"230","Rosenborg","Sarpsborg 08",NA,NA
+"231","Tromsø","Strømsgodset",NA,NA
+"232","Viking","Haugesund",NA,NA
+"233","Bodø/Glimt","Lillestrøm",NA,NA
+"234","Brann","Viking",NA,NA
+"235","HamKam","KFUM",NA,NA
+"236","Haugesund","Odd",NA,NA
+"237","Kristiansund","Rosenborg",NA,NA
+"238","Sandefjord Fotball","Fredrikstad",NA,NA
+"239","Sarpsborg 08","Tromsø",NA,NA
+"240","Strømsgodset","Molde",NA,NA

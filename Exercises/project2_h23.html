@@ -1480,7 +1480,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">TMA4315 Generalized Linear Models</h1>
 <h3 class="subtitle">Compulsory exercise 2: Logistic regression and
 Poisson regression</h3>
-<h4 class="date">Deadline: Friday, October 13, 2023 at midnight</h4>
+<h4 class="date">Deadline: Friday, October 11, 2024 at midnight</h4>
 
 </div>
 
@@ -1654,7 +1654,7 @@ method that uses the gradient, see documentation for
 <code>optim</code>).</li>
 </ol>
 <p>Load the data set in R:</p>
-<pre class="r"><code>filepath &lt;- &quot;https://www.math.ntnu.no/emner/TMA4315/2023h/eliteserien2023.csv&quot;
+<pre class="r"><code>filepath &lt;- &quot;https://www.math.ntnu.no/emner/TMA4315/2024h/eliteserien2024.csv&quot;
 eliteserie &lt;- read.csv(file = filepath)
 
 NGames &lt;- table(c(eliteserie$home[!is.na(eliteserie$yh)], eliteserie$away[!is.na(eliteserie$yh)]))
@@ -1674,8 +1674,8 @@ teams twice during the season. Once as the home team, and once as the
 away team. Hence, a league contested by <span class="math inline">\(n\)</span> teams will consist of <span class="math inline">\(n(n-1)\)</span> matches. In our case, <span class="math inline">\(n = 16\)</span>, so there will be played 240
 matches during the season.</p>
 <p>As of the afternoon of the 1st of October, the day the data were
-collected, 179 matches have been played in this season, and each team
-have played between 22 and 22 matches. Note that the number of home
+collected, 191 matches have been played in this season, and each team
+have played between 23 and 23 matches. Note that the number of home
 matches and away matches vary between the teams as the season is not
 finished. <em>Do NOT update the dataset during the season when more
 games are played!</em> See the <a href="https://en.wikipedia.org/wiki/2023_Eliteserien">Wikipedia article
@@ -1779,9 +1779,9 @@ advantage, and simulate <span class="math inline">\(1\,000\)</span> full
 seasons.</p>
 <p><strong>New:</strong> Choose whether you want to</p>
 <ol style="list-style-type: decimal">
-<li>simulate the full season, also the first 179 matches, or</li>
-<li>simulate only the last 61 games, and use the known results from the
-179 first games.</li>
+<li>simulate the full season, also the first 191 matches, or</li>
+<li>simulate only the last 49 games, and use the known results from the
+191 first games.</li>
 </ol>
 <p>The following command will extract a dataframe with the unplayed
 matches in the 2023 season, which you may find useful.</p>

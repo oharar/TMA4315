@@ -1711,16 +1711,16 @@ r(a, s_1, s_2) &amp;= \frac{\lambda(a, s_1)}{\lambda(a, s_2)}\\
 reference class, so <span class="math inline">\(\beta_{s_1}=0\)</span>
 and we only need the <code>cigaretteOnly</code> effect. From above this
 is 0.36915, with a standard error of 0.03791.</p>
-<p>So <span class="math inline">\(r(a, s_1, s_2) = e^{0.36915} =
-1.45\)</span>. And the the 90% confidence interval is <span class="math inline">\(e^{0.36915 \pm 1.645\times0.03791} = (1.393,
-1.502)\)</span></p>
+<p>So <span class="math inline">\(r(a, s_1, s_2) = e^{-0.36915} =
+0.69\)</span>. And the the 90% confidence interval is <span class="math inline">\(e^{-0.36915 \mp 1.645\times0.03791} = (0.65,
+0.74)\)</span></p>
 <p>We can compare this with the values from R:</p>
-<pre class="r"><code>exp(coef(model1)[&quot;smokecigarretteOnly&quot;])
-exp(confint(model1, level = 0.9)[&quot;smokecigarretteOnly&quot;, ])</code></pre>
+<pre class="r"><code>exp(-coef(model1)[&quot;smokecigarretteOnly&quot;])
+exp(-confint(model1, level = 0.9)[&quot;smokecigarretteOnly&quot;, ])</code></pre>
 <pre><code>## smokecigarretteOnly 
-##            1.446509 
-##      5 %     95 % 
-## 1.359415 1.540004</code></pre>
+##           0.6913196 
+##       5 %      95 % 
+## 0.7356105 0.6493489</code></pre>
 </details>
 <p><span class="question">Is there a significant difference in the
 expected number of lung cancer deaths for individuals that smoke
@@ -1790,6 +1790,23 @@ summary(model3)</code></pre>
 ## AIC: 325.76
 ## 
 ## Number of Fisher Scoring iterations: 4</code></pre>
+<p><span class="question">In <code>model3</code> we have
+<code>ageLevel</code>, which is continuous, as described above it is the
+age group as numbers from 1 to 9 (1 corresponds to 40-44, 2 to 45-59,
+and so on). So how do you interpret the estimated effect?</span></p>
+<details>
+<summary>
+Answer
+</summary>
+<p>The age classes are all 5 years wide, so going up 1 class is the same
+as aging 5 years (on average). Thus the estimated effect is the of of
+the increase in death rate for doctors 5 years of age apart. There are a
+few equivalent ways of expressing this, so your answer might be a bit
+different, but still be correct.</p>
+This is the sort of weird things people do in analyses, for reasons
+which made sense at the time. So working out the interpretation can mean
+a bit of poking around.
+</details>
 <p><span class="question">Why does <code>model2</code> and
 <code>model3</code> have 32 and 31 degrees of freedom,
 respectively?</span></p>
