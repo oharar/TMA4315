@@ -315,6 +315,10 @@ One motivation for inserting this new random intercept was to make sure that obs
 
 $$ Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\varepsilon_{ij}$$
 
+- marginal over the random effects
+- what is the distribution of $Y_{ij}$ for a new beach?
+- Treat the model as $Y_{ij}=\beta_0+\beta_1x_{ij}+\varepsilon^{*}_{ij}$, where $\varepsilon^{*}_{ij}=\gamma_{0i}+\varepsilon_{ij}$ are not iid
+
 ---
 
 # What is the marginal distribution for $Y_{ij}$?
@@ -437,6 +441,8 @@ $${\bf Y}_i= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} 
 * ${\boldsymbol \gamma}_i$: $(q+1) \times 1$ random vector
 * ${\boldsymbol \varepsilon}_i$: $n_i \times 1$ random vector
 
+$p$ fixed effect covariates, $q$ random effect covariates
+
 ---
 
 ## Distributional assumptions
@@ -494,6 +500,7 @@ for the response for cluster $8$, ${\bf Y}_i$ (Laird and Ware (1982) formulation
 {\boldsymbol \varepsilon}^{*}_i &\sim N({\bf 0},{\bf V}_i)\\
 \end{align*}
 which gives
+
 $${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
 
 ---
@@ -531,7 +538,7 @@ Let $N=\sum_{i=1}^m n_i$, then dimensions are:
 * ${\bf Y}, {\boldsymbol \varepsilon}$: $N \times 1$
 * ${\bf X}$: $N\times p$
 * ${\boldsymbol \beta}$: $p\times 1$
-* ${\bf U}$_: $N \times m(q+1)$
+* ${\bf U}$: $N \times m(q+1)$
 * ${\boldsymbol \gamma}$: $m(q+1)\times 1$
 
 ---
