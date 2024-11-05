@@ -268,7 +268,7 @@ In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen
 
 ---
 
-###Structural assumptions
+### Structural assumptions
 (previously "2. Systematic component" and "3. Link function")
 
 * The _conditional mean_ $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is linked to 
@@ -279,7 +279,7 @@ In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen
 
 ---
 
-###Distributional assumptions for random effects
+### Distributional assumptions for random effects
 
 * The random effects $\gamma_i$, $i=1,\ldots,m$ are independent and identically distributed
 $$ \gamma_i \sim N({\bf 0}, {\bf Q})$$
