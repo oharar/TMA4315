@@ -1175,7 +1175,10 @@ A: $F(\boldsymbol{\beta})=\frac{1}{\sigma^2}{\bf X}^T{\bf X}$, and the inverse $
 Let ${\bf A}(\boldsymbol{\beta})=F^{-1}(\hat{\boldsymbol{\beta}})$, and $a_{kk}(\hat{\boldsymbol{\beta}})$ is diagonal element number $k$.
 
 For one element of the parameter vector:
-$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}$$
+
+$$
+Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}
+$$
 is asymptotically standard normal. We will use this now!
 
 **Q**: Where can you find $\hat{\boldsymbol{\beta}}$ and $F^{-1}(\hat{\boldsymbol{\beta}})$ in the print-out below?
@@ -1208,8 +1211,11 @@ Let $z_{\alpha/2}$ be such that $P(Z_k>z_{\alpha/2})=\alpha/2$. REMARK: our text
 We then use 
 $$ P(-z_{\alpha/2}\le Z_k \le z_{\alpha/2})=1-\alpha$$
 insert $Z_k$ and solve for $\beta_k$ to get
-$$ P(\hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\beta})}
-\le \beta_k \le \hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})})=1-\alpha$$
+
+$$
+P(\hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\beta})}
+\le \beta_k \le \hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})})=1-\alpha
+$$
 
 A $(1-\alpha)$% CI for $\beta_k$ is when we insert numerical values for the upper and lower limits.
 
