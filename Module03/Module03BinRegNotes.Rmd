@@ -1177,8 +1177,11 @@ Let ${\bf A}(\boldsymbol{\beta})=F^{-1}(\hat{\boldsymbol{\beta}})$, and $a_{kk}(
 For one element of the parameter vector:
 
 $$
-Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}
+Z_k=\frac{\hat{\boldsymbol{\beta}}_k - \boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}
 $$
+
+
+
 is asymptotically standard normal. We will use this now!
 
 **Q**: Where can you find $\hat{\boldsymbol{\beta}}$ and $F^{-1}(\hat{\boldsymbol{\beta}})$ in the print-out below?

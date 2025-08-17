@@ -677,3 +677,433 @@ Remark: the conditional mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\gamma_{
 (If the link function chosen had been the identity link then the marginal mean would have been ${\bf x}_{ij}^T{\boldsymbol \beta}$.)
 
 ---
+
+
+
+
+# Parameter estimation
+
+The most popular method for parameter estimation for regression is maximum likelihood. The likelihood of the data is given by the marginal distribution of all $Y_{ij}$s jointly. However, this can not be found analytically (as we saw above), so we must resort to numerial methods to evaluate the likelihood of a general GLMM.
+
+The parameters we want to estimate are the fixed effects ${\boldsymbol \beta}$s, and the parameters in ${\bf Q}$ for the random effects - denoted by $\vartheta$.
+
+The contribution from observations in the $i$th cluster is
+
+$$
+f({\bf y}_i\mid {\boldsymbol \beta},\vartheta) = 
+\int_{\boldsymbol \gamma_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+$$
+
+And the likelihood is then (since the clusters are independent)
+$$L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {\boldsymbol \beta},\vartheta)$$
+
+---
+
+To arrive at parameter estimates we need to maximize the likelihood with respect to ${\boldsymbol \beta}$ and $\vartheta$, which is a complicated numerical problem.
+
+There are several solution to this, and the `glmer` function in `lme4` uses the Laplace approximation. Other solutions are adaptive Gaussian quadratures, penalized quasilikelihood and various Bayesian methods (study the posterior distribution of the parameters). This is an active area of research.
+
+---
+
+## Gauss-Hermite Quadrature
+
+<!---
+If the dimension of ${\boldsymbol \gamma}_i$ is small, for example our random intercept model, then the Gauss-Hermite quadrature may be used to approximate the integral above. This will be of the form 
+--->
+
+$$\int_{-\infty}^{\infty} h(\gamma)\exp(-\gamma^2)d\gamma$$
+which can be written as a sum of weights and quadrature points that are roots of Hermite polynomials. This can then be maximized using Newton-Raphson methods.
+
+<!---
+When the dimension of ${\boldsymbol \gamma}$ gets more than two, other methods are used. 
+--->
+---
+
+## Laplace approximation (for the interested student)
+The notation in this section is taken from Kristensen et al (2016): "TMB: Automatic Differentiation and Laplace Approximation", _Journal of Statistical Software_, 70, 5. doi:10.18637/jss.v070.i05, which is the background for the `glmmTMB` package. The notation is different from what is used in this module, but this reflects that often different notation is used for the same models.
+
+Let $f(u,\theta)$ be the _joint log-likelihood of the data and the random effects_. This will in our case be related to $\ln[f({\bf y}_i \mid \gamma_i,{\boldsymbol \beta}) f(\gamma_i \mid {\bf Q})]$.
+
+Observe that $f(u,\theta)$ depends on the unknown random effects $u$ and the parameters in $\theta$ (here we have the fixed effects and the parameters in ${\bf Q}$ for the random effects).
+
+---
+
+The maximum likelihood estimate for $\theta$ maximized 
+$$ L(\theta)=\int_{u} \exp(f(u,\theta))du$$
+with respect to $\theta$.
+Observe that the random effects $u$ are now integrated out and the marginal likelihood $L(\theta)$ is the likelihood of the data as a function of the parameters only. 
+
+Let $\hat{u}(\theta)$ be the minimizer of $f(u,\theta)$, and $H(\theta)$ is the Hessian (matrix of partial second derivatives) of $f(u,\theta)$ evaluated at $\hat{u}(\theta)$.
+
+The Laplace approximation for the marginal likelihood $L(\theta)$ is 
+$$ L^{*}(\theta)=(2\pi)^{n/2} \text{det}(H(\theta))^{-1/2} \exp(f(\hat{u},\theta))$$
+
+---
+
+Some more details: Let $g(u)=\ln(f(y\mid u)f(u))$, and look at the second order Taylor expansion around $\hat{u}(\theta)$:
+$$g(u) \approx \tilde{g}(u)=g(\hat{u})+(u-\hat{u})g`(\hat{u})+\frac{1}{2}(u-\hat{u})^2 g''(\hat{u})=g(\hat{u})-\frac{1}{2}(u-\hat{u})^2 (-g''(\hat{u}))$$
+This means that $\exp(\tilde{g}(u))$ is proportional to the normal density with mean $\mu=\hat{u}$ and variance $\sigma^2=-1/g''(\hat{u})$.
+Putting this back into our integral
+$$L(\theta)=\int_{u} \exp(g(u))du \approx\int_{u} \exp(\tilde{g}(u))du=\exp(g(\hat{u}))\int_u \exp(-\frac{1}{2 \sigma^2}(u-\mu)^2)du=\exp(g(\hat{u})\sqrt{2\pi \sigma^2}$$
+This last part was taken from <http://people.math.aau.dk/~rw/Undervisning/Topics/Handouts/6.hand.pdf>.
+
+
+# What have we not covered?
+
+* We have skipped a lot of technicalities about the parameter estimation.
+* How to predict the random effects $\gamma_i$: "the conditional modes" of the random effects.
+* What is fitted values, and how are residuals calculated.
+* How to test hypotheses?
+* AIC to compare models (very similar to LMM).
+* And, surely, much more.
+
+# Summing up - what have we learned about the GLMM?
+
+* The GLMM can be formulated using three ingredients: 
+    + distributional assumption: $f(y_{ij}\mid \gamma_i)$ from exponential family
+    + structural assumptions: linear predictor $\eta_{ij}={\bf x}_{ij}^T {\boldsymbol \beta}+{\bf u}_{ij}\gamma_i$ and link function $\eta_{ij}=g(\mu_{ij})$ where $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$.
+    + distributional assumptions for the random effects: $\gamma_i\sim N({\bf 0},{\bf Q})$.
+* The GLMM likelihood function is expressed as an integral with respect to the random effects and does (in general) not have a closed form solution.
+* Numerical approximation methods need to be used to find parameter estimates, and one possibility is to use the Laplace approximation, but many competing method exists.
+
+---
+
+* Three `R` packages that can be investigated is `lme4`(function `glmer`) and `glmmTMB` (template model builder), and the NTNU-flagship `inla`. How to use these three packages on a simulated data set (binary data, logit link, random intercept and slope) is shown in the end of the module page (NOT on our reading list but for the interested student).
+
+# <a id="interactive">Interactive session week</a>
+
+This is the last interactive session of the course.
+
+* First hour: Problem 1
+* 15 min before end first hour (or if you finish earlier): answer the following questions in your group (togehter) and fill in [this Google form](https://goo.gl/forms/lcW6AXDgcXpIMHsG3)
+    + What was the top 5 (or so) concepts in this course that you feel that you need to work more to understand? (input to summing-up last lecture)
+    + You are here today - you are the students that come to the IL, even the last one. Why do you attend the IL? What is good about the IL? What can be challenging?
+* If you want: [here is the draft for the summing-up](https://www.math.ntnu.no/emner/TMA4315/2018h/Summingup2018draft.pdf) (module 6 on categorical missing and some QC needed) - any comments?
+
+* Second hour: continue the work above, or work on (and get help)  with Compulsory 3!
+
+---
+
+## Problem 1: Taken from UiO, STK3100, 2011, problem 2
+
+**a)** Show that the binomial distribution is a member of the exponential family of distributions. What do we mean with canonical link, and which advantages do we get when using canonical link? What is the canonical link for the binomial distibution?
+
+Remark: this has been done several times before. Instead of doing the maths on the board, focus on the concepts. Also discuss this relationship:
+$\theta_i\leftrightarrow \mu_i\leftrightarrow \eta_i \leftrightarrow \mathbf{\beta}$
+and fill in what is over the arrows, and the missing arrow for the canonical link.
+
+**b)** *This excercise is modified!*
+
+Assume the following model:
+
+$$y_{ij} \sim \text{Bin}(1, \pi_{ij})$$
+
+$$ g(\pi_{ij}) = \beta_0 + \beta_1x_{1,ij} + \beta_2x_{2,i} $$
+
+where $g(\cdot)$ is a suitable link function and all $y_{ij}$ are independent. What kind of model is this?  
+The table below shows AIC-values for three different link functions often used with binary response data:
+
+```{r, echo = FALSE}
+
+set.seed(357); x1 <- rnorm(100, 0, 1)
+set.seed(456); x2 <- rep(rnorm(10, 0, 2), each = 10)
+eta <- 3 -2*x1 + x2
+pr <- 1/(1+exp(-eta))
+set.seed(347); y <- rbinom(100, size = 1, prob = pr)
+
+formula <- y ~ x1 + x2
+myglm <- list()
+myglm[[1]] <- glm(formula, data = list(y = y, x1 = x1, x2 = x2), family = binomial(link = "probit"))
+myglm[[2]] <- glm(formula, data = list(y = y, x1 = x1, x2 = x2), family = binomial(link = "cloglog"))
+myglm[[3]] <- glm(formula, data = list(y = y, x1 = x1, x2 = x2), family = binomial(link = "logit"))
+aicvec <- unlist(lapply(myglm, AIC))
+
+df <- data.frame(lf = c("probit", "cloglog", "logit"),
+                 AIC = aicvec)
+names(df)[1] <- "Link function"
+library(knitr)
+kable(df)
+
+```
+
+Explain what AIC is, and argue why it is reasonable to use such criteria in this situation (instead of other tests from this course). Based on these three values, which link-function do you prefer? Why?
+
+Remark: what is the take home message here? Hint: nested models?
+
+---
+
+We will, as we did a few weeks back, look at a fish dataset  consisting of observations of cod from the year 2000, but we are now interested in the age of each fish, rather than the weight. The dataset is from Havforskningsinstituttet in Bergen, and we use only a subset of a large dataset with information about fish in Barentshavet. The following variables are available on a random sample within each catch (a draft of trawl (trål)):
+
+* `length`: the length of fish (in cm)
+* `weight`: the weight of fish (in grams)
+* `age`: the age of fish (in years)
+* `haulsize`: the size of the total catch (in ton (1000 kg))
+
+Let $i$ be the index for catch, and $j$ be the index for an individual fish in a given catch.
+
+Age is a categorical variable between 2 and 12, but we create a new variable $A_{ij}$:
+
+$$ A_{ij} = \begin{cases} 1 \text{ if age}_{ij} > 6 \\ 0 \text{ else} \end{cases} $$
+
+which is a binary variable, and we use this for the response. 
+
+**Remark: before we used weight as response (normal), but now we use  dichotomized age as a binary response**.
+
+We look at the following model:
+
+$$ A_{ij}|\gamma_{0i} \sim \text{Bin}(1, \pi_{ij}) $$
+$$ g(\pi_{ij}) = \beta_0 + \beta_1\log(\texttt{length}_{ij}) + \beta_2\log(\texttt{haulsize}_i) + \gamma_{0i} $$
+
+$$ \gamma_{0i} \sim N(0, \tau_0^2) $$
+
+where $g(\cdot)$ is the logit link function, and all $A_{ij}$ are conditional independent (given $\gamma_i$).
+
+**c1)** *New:* What kind of model is this? What is $\gamma_{0i}$? Compare to the linear mixed effects model- similarities and differences.
+
+Below you find an excerpt of this model:
+
+```{r, echo = FALSE}
+
+library(lme4)
+
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/fishdata.dat"
+fish <- read.table(filepath, header = TRUE)
+fish$A <- fish$age > 6
+
+fit1 <- glmer(A ~ log(length) + log(haulsize) + (1 | haul), data = fish, family = binomial(link = "logit")) 
+fit0 <- glm(A ~ log(length) + log(haulsize), data = fish, family = binomial(link = "logit")) 
+
+summary(fit1)
+
+```
+
+
+
+**c2)** *New:* Explain what it means that the model is fitted by maximum likelihood. What does Laplace approximation has to do with the model fit? 
+
+**Skip d)- not in our reading list to test random effects - so too advanced. ** Instead discuss why this is difficult.
+
+**d)** The log-likelihood value for the corresponding model without any random effects (which corresponds to a model with $\tau_0^2 = 0$) is `r round(logLik(fit0),2)`. Use this to perform a likelihood ratio test with $H_0: \tau_0^2 = 0$. Calculate the corresponding p-value and draw a conclusion.
+
+**e)** The Havforskningsinstituttet believes that the haulsize is important in the modelling of age and length of the fish (read: as a fixed effect). Based on the excerpts above (on dichotomized age) and below (on weight), what do you think about this?
+
+```{r, echo = FALSE}
+
+summary(lmer(log(weight) ~ log(length) + log(haulsize) + (1 | haul), data = fish))
+
+```
+
+**Remark**: It is in general a very bad idea to do a dichotomization of a continuous variable - like what is done here for transforming the age into $A_{ij}$, because then information is lost. In a hypothesis testing set-up this will in general give substantial loss of power to detect the effect of a covariate. 
+
+
+
+# <a id="additional">Software for GLMM: demonstration of `glmer`, `glmmTMB` and `inla` for analysing GLMMs</a>
+
+This is **NOT** on the reading list, but an extra service to the interested students.
+
+```{r, eval=FALSE}
+# install.packages("arm")
+#install.packages("reshape2")
+#install.packages("sp")
+#install.packages("glmmTBM")
+#install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable", dep=TRUE)
+```
+
+
+```{r,eval=TRUE}
+library(ggplot2)
+library(ggpubr)
+library(lme4)
+library(glmmTMB)
+library(INLA)
+library(reshape2)
+# library(arm)
+```
+
+For this demonstration, we will simulate a dataset with one fixed effect (x) and random intercept and random slope (always nice to know the true values for parameters to compare with estimates).
+
+**Q**: What is the model that we simulate from?
+
+
+```{r, tidy = FALSE,eval=TRUE}
+
+set.seed(90) # to get reproduciability
+
+no.gr <- 15
+x1 <- runif(200, 0, 1)
+
+y <- matrix(NA, nrow = 200, ncol = 15)
+
+Q <- matrix(c(0.5, 0.3, 0.3, 0.5), nrow = 2)
+random_both <- mvrnorm(no.gr, c(0,0), Q)
+random_int <- random_both[,1]; random_slope <- random_both[,2]
+
+# to test out
+#random_int <- runif(15, -2, 2) # when we want to simulate from a model that does not fit exactly
+#random_slope <- runif(15, -2, 2)
+
+beta_0 <- -0.45
+beta_1 <- 0.76
+
+for (i in 1:15){
+  y[,i] <- beta_0 + beta_1*x1 + random_int[i] + random_slope[i]*x1 + rnorm(200, 0, 1)
+}
+
+y_binom <- as.numeric(c(y) > 0)
+
+ggplot(cbind(melt(data.frame(y)), x = rep(x1, 15), y = as.factor(y_binom)), 
+       mapping = aes(x = x, y = value)) +
+  geom_point(aes(col = y)) + geom_smooth(method = "lm", col = "black", se = FALSE) +
+  facet_wrap(~ variable) + labs(x = "x", y = "y") 
+
+mydata <- data.frame(y = y_binom, x = x1, group = rep(1:15, each = 200))
+
+head(mydata)
+
+```
+
+
+Use a binary regression with logit link to model the probability. That is, we have one covariate and make the following assumptions.
+
+1. Distributional assumptions: $Y_{ij}\mid \gamma_i \sim \text{Bin}(n_{i}, \pi_{ij}) \text{ for } i = 1, \dots, 15, \ j = 1, \dots, n_i = 200, \ N = \sum_i n_i = 3000$.
+
+2. Structural assumptions: The linear predictor (with random effects) with one fixed covariate: 
+$$\eta_{ij} = \beta_0+\beta_1 x_{ij} + \gamma_{0i}+\gamma_{1i}x_{ij} $$
+where we will choose $x_{ij}=u_{ij}$.
+The link function is: 
+$$\eta_{ij} = \ln \left(\frac{\pi_i}{1-\pi_i}\right)$$
+
+3. Distributional assumptions for random effects
+$$\begin{pmatrix} \gamma_{0i}\\ \gamma_{1i} \end{pmatrix} \sim N \left( \begin{pmatrix}0\\ 0 \end{pmatrix},\begin{pmatrix} \tau_0^2 & \tau_{01} \\ \tau_{01} &\tau_1^2 \end{pmatrix} \right)$$
+
+Now we will look at three common ways of analysing such models. For each type we will fit the model and look at results.
+
+```{r, tidy = FALSE,eval=TRUE}
+
+fit_glmer <- glmer(y ~ x + (1 + x | group), data = mydata, family = binomial(link = "logit"))
+
+fit_glmmTMB <- glmmTMB(y ~ x + (1 + x | group), data = mydata, family = binomial(link = "logit"))
+
+n.gr <- max(mydata$group)
+mydata$group2 <- mydata$group + n.gr
+fit_inla <- inla(y ~ x + f(group, model = "iid2d", n = 2*n.gr) + f(group2, x, copy = "group"),
+                 data = mydata, family = "binomial",
+                 control.compute = list(dic = TRUE),
+                 control.family = list(link = "logit"))
+
+
+```
+
+```{r, tidy = FALSE,eval=TRUE}
+
+coefdf <- data.frame(mean = 
+                       c(summary(fit_glmer)$coefficients[,1], 
+                         summary(fit_glmmTMB)$coefficients$cond[,1], 
+                         fit_inla$summary.fixed[,1]),
+                     sd = 
+                       c(summary(fit_glmer)$coefficients[,2], 
+                         summary(fit_glmmTMB)$coefficients$cond[,2], 
+                         fit_inla$summary.fixed[,2]),
+                     mod = rep(c("glmer", "glmmTMB", "INLA"), each = length(fit_inla$names.fixed)),
+                     par = rep(fit_inla$names.fixed, 3))
+
+true_frame <- data.frame(par = fit_inla$names.fixed, beta = c(beta_0, beta_1))
+
+critval <- qnorm(0.025, lower.tail = FALSE)
+ggplot(coefdf) + geom_point(aes(x = mod, y = mean)) + 
+  geom_hline(aes(yintercept = 0), col = "#D55E00") +
+  geom_hline(data = true_frame, aes(yintercept = beta), col = "forestgreen", size = 1) +
+  geom_errorbar(aes(x = mod, ymin = mean-critval*sd, ymax = mean+critval*sd)) +
+  facet_wrap(~ par, scales = "free_y") + labs (x = "", y = "")
+
+randdf_intercept <- data.frame(mean = 
+                      c(ranef(fit_glmer)$group[,1],
+                        ranef(fit_glmmTMB)$cond$group[,1],
+                        fit_inla$summary.random$group$mean[unique(mydata$group)],
+                        random_int),
+                    mod = rep(c("glmer", "glmmTMB", "INLA", "true"), each = length(unique(mydata$group))),
+                    x = paste0("y", sprintf("%02d", rep(1:length(unique(mydata$group)), 4))))
+
+critval <- qnorm(0.025, lower.tail = FALSE)
+randdf_intercept$low <- c(se.ranef(fit_glmer)$group[,1]*(-critval) + ranef(fit_glmer)$group[,1],
+                          ranef(fit_glmmTMB)$cond$group[,1], # do not know how to get these values for glmmTMB
+                          fit_inla$summary.random$group$`0.025quant`[unique(mydata$group)],
+                          rep(0, 15))
+randdf_intercept$high <- c(se.ranef(fit_glmer)$group[,1]*(critval) + ranef(fit_glmer)$group[,1],
+                          ranef(fit_glmmTMB)$cond$group[,1], # do not know how to get these values for glmmTMB
+                          fit_inla$summary.random$group$`0.975quant`[unique(mydata$group)],
+                          rep(0, 15))
+randdf_intercept$x2 <- rep(1:15, 4) + rep(c(-0.15,-0.05,0.05,0.15), each = 15)
+
+ggplot(randdf_intercept) + geom_point(aes(x = mean, y = x2, col = mod)) + geom_vline(xintercept = 0, lty = 2) +
+  geom_segment(aes(x = low, xend = high, y = x2, yend = x2, col = mod)) +
+  labs(x = "random intercept", y = "") + 
+  scale_y_continuous(breaks = 1:15, labels = paste0("y", sprintf("%02d", rep(1:length(unique(mydata$group))))))
+
+
+randdf_slope <- data.frame(mean =
+                      c(ranef(fit_glmer)$group[,2],
+                        ranef(fit_glmmTMB)$cond$group[,2],
+                        fit_inla$summary.random$group$mean[unique(mydata$group2)],
+                        random_slope),
+                    mod = rep(c("glmer", "glmmTMB", "INLA", "true"), each = length(unique(mydata$group))),
+                    x = paste0("y", sprintf("%02d", rep(1:length(unique(mydata$group)), 4))))
+
+
+critval <- qnorm(0.025, lower.tail = FALSE)
+randdf_slope$low <- c(se.ranef(fit_glmer)$group[,2]*(-critval) + ranef(fit_glmer)$group[,2],
+                          ranef(fit_glmmTMB)$cond$group[,2], # do not know how to get these values for glmmTMB
+                          fit_inla$summary.random$group$`0.025quant`[unique(mydata$group2)],
+                          rep(0, 15))
+randdf_slope$high <- c(se.ranef(fit_glmer)$group[,2]*(critval) + ranef(fit_glmer)$group[,2],
+                          ranef(fit_glmmTMB)$cond$group[,2], # do not know how to get these values for glmmTMB
+                          fit_inla$summary.random$group$`0.975quant`[unique(mydata$group2)],
+                          rep(0, 15))
+randdf_slope$x2 <- rep(1:15, 4) + rep(c(-0.15,-0.05,0.05,0.15), each = 15)
+
+ggplot(randdf_slope) + geom_point(aes(x = mean, y = x2, col = mod)) + geom_vline(xintercept = 0, lty = 2) +
+  geom_segment(aes(x = low, xend = high, y = x2, yend = x2, col = mod)) +
+  labs(x = "random slope", y = "") + 
+  scale_y_continuous(breaks = 1:15, labels = paste0("y", sprintf("%02d", rep(1:length(unique(mydata$group))))))
+
+
+
+fittedvalues <- data.frame(mean = 
+                             c(fitted.values(fit_glmer),
+                               fitted.values(fit_glmmTMB),
+                               fit_inla$summary.fitted.values$mean),
+                           mod = rep(c("glmer", "glmmTMB", "INLA"), each = nrow(mydata)),
+                           x = rep(mydata$x, 3),
+                           group = rep(mydata$group,3))
+
+ggplot(fittedvalues) + geom_count(data = mydata, aes(x = y*0.8+0.1, y = y*0.8+0.1), col = grey(0.4)) + scale_size_area() +
+  geom_point(aes(x = x, y = mean, col = mod, pch = mod, size = 1.5)) + 
+  facet_wrap(~ group) + labs(x = "x", y = expression(hat(y)))
+
+
+```
+
+The results are quite similar (as approximation is necessary in the computations, some differences are expected). We can make more complicated models, and (especially from INLA) we also get much more information about the model, but this is way out of the scope of this course. Models like this require computer intenisve methods, and if you are interested in learning more about this, you can take the course TMA4300 - Computer Intensive Statistical Methods in the spring semester. 
+
+# R packages
+
+```{r, eval=FALSE}
+# install.packages("arm")
+install.packages("reshape2")
+install.packages("sp")
+install.packages("glmmTBM")
+install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable", dep=TRUE)
+install.packages("lme4")
+install.packages("devtools")
+library(devtools)
+# install_github("romunov/AED")
+install.packages("sjPlot")
+install.packages("sjmisc")
+```
+
+# Further reading
+
+* [Bolker et al. (2008):_Generalized linear mixed models: a practical guide for ecology and evolution_](http://avesbiodiv.mncn.csic.es/estadistica/curso2011/regm26.pdf)
+* Zuur et al. (2009): "Mixed Effects Models and Extensions in Ecology with R", chapter 13 (pages 323-341). Available as free ebook from Springer for NTNU students. More explanations and less mathematics than Fahrmeir et al (2013), more focus on understanding. [Link to ebook Chapter 13](https://link.springer.com/chapter/10.1007/978-0-387-87458-6_13)
+* Agresti (2015): Foundations of linear and generalized linear models, Chapter 9.
