@@ -687,12 +687,13 @@ The parameters we want to estimate are the fixed effects ${\boldsymbol \beta}$s,
 
 The contribution from observations in the $i$th cluster is
 
+<!---
 $$
 f({\bf y}_i\mid {\boldsymbol \beta},\vartheta) = 
 \int_{{\boldsymbol \gamma_i}} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
 $$
 
-<!---=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
 --->
 And the likelihood is then (since the clusters are independent)
 $$L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {\boldsymbol \beta},\vartheta)$$
