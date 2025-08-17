@@ -70,7 +70,13 @@ Data: 45 observations, taken at 9 beaches:
 ```{r,echo=FALSE}
 # library("AED")
 # data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+# devtools::install_github("https://github.com/romunov/AED")
+# write.csv( RIKZ, file="RIKZ.csv")
+  
+# RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+
+RIKZ <- read.csv("RIKZ.csv")
+
 library(lme4)
 library(arm)
 library(ggplot2)
@@ -653,9 +659,17 @@ In the special case that $f(y_{ij}\mid \gamma_i)$ is normal we saw in Module LMM
 Another special case is the log-linear Poisson random intercept where all $n_i=1$. See pages 393-394 in our textbook to see the solution (that can be used to handle overdispersion in Poisson regression).
 
 Remark: for the random intercept Poisson GLMM with log-link the expected marginal mean is (Agresti, 2015, page 309)
-$$ \text{E}(Y_{ij})=\text{E}[\text{E}(Y_{ij}\mid \gamma_{0i})]=\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$$
+
+$$
+\text{E}(Y_{ij})=\text{E}[\text{E}(Y_{ij}\mid \gamma_{0i})]=\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)
+$$
+
 The solid line in the plot to the left above gives this curve, while the dashed is $\exp({\bf x}_{ij}^T{\boldsymbol \beta})$. In Agresti (2015, page 310) the variance of the marginal distribution is given as
-$$\text{Var}(Y_{ij})=\cdots = \text{E}(Y_{ij})+[\text{E}(Y_{ij})^2(\exp(\tau_0^2)-1)]$$
+
+$$
+\text{Var}(Y_{ij})=\cdots = \text{E}(Y_{ij})+[\text{E}(Y_{ij})^2(\exp(\tau_0^2)-1)]
+$$
+
 so we see that the variance is larger than that of a Poisson distribution.
 
 Remark: the conditional mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\gamma_{0i})$, while the marginal mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$.
