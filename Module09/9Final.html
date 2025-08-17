@@ -1508,7 +1508,6 @@ assessment (deviance and residuals)</li>
 </ul></li>
 <li>exam and exam preparation</li>
 <li>suggestions for statistics-related courses in year 4 and 5</li>
-<li>questionnaire</li>
 </ul>
 <hr />
 </div>
@@ -1551,21 +1550,26 @@ possible extensions).</p>
 </div>
 <div id="learning-outcome" class="section level2">
 <h2>Learning outcome</h2>
-<p>###Knowledge The student can assess whether a generalised linear
-model can be used in a given situation and can further carry out and
-evaluate such a statistical analysis. The student has substantial
-theoretical knowledge of generalised linear models and associated
-inference and evaluation methods. This includes regression models for
-normal data, logistic regression for binary data and Poisson regression.
-The student has theoretical knowledge about linear mixed models and
-generalised linear mixed effects models, both concerning model
-assumptions, inference and evaluation of the models. Main emphasis is on
-normal, binomial and Poisson models with random intercept and random
-slope.</p>
-<p>###Skills The student can assess whether a generalised linear model
-or a generalised linear mixed model can be used in a given situation,
-and can further carry out and evaluate such a statistical analysis.</p>
+<div id="knowledge" class="section level3">
+<h3>Knowledge</h3>
+<p>The student can assess whether a generalised linear model can be used
+in a given situation and can further carry out and evaluate such a
+statistical analysis. The student has substantial theoretical knowledge
+of generalised linear models and associated inference and evaluation
+methods. This includes regression models for normal data, logistic
+regression for binary data and Poisson regression. The student has
+theoretical knowledge about linear mixed models and generalised linear
+mixed effects models, both concerning model assumptions, inference and
+evaluation of the models. Main emphasis is on normal, binomial and
+Poisson models with random intercept and random slope.</p>
+</div>
+<div id="skills" class="section level3">
+<h3>Skills</h3>
+<p>The student can assess whether a generalised linear model or a
+generalised linear mixed model can be used in a given situation, and can
+further carry out and evaluate such a statistical analysis.</p>
 <hr />
+</div>
 </div>
 <div id="final-reading-list" class="section level2">
 <h2>Final reading list</h2>
@@ -1683,11 +1687,6 @@ models</strong> (nested=LRT or AIC, not nested=AIC),</p></li>
 <p>The print-outs below are from LM <code>lm</code>, GLM
 <code>glm</code>, mvGLM <code>vglm</code>, LMM <code>lmer</code> and
 GLMM <code>glmer</code>.</p>
-<p><em>For H2018: at the exam venue the <code>vglm</code>,
-<code>lmer</code> and <code>glmer</code> functions are not available
-(not installed), this means that you do not need to be able to run
-analyses with these, but you still need to be able to interpret
-output!</em></p>
 <hr />
 <p>Below we have fit a model to a data set, and then printed the
 <code>summary</code> of the model. For each of the print-outs you need
@@ -1838,8 +1837,7 @@ fit.main = vglm(cbind(y2, y3, y4, y5, y1) ~ size + factor(lake), family = multin
     data = ali)
 summary(fit.main)
 pchisq(deviance(fit.main), df.residual(fit.main), lower.tail = FALSE)</code></pre>
-<pre><code>## 
-## Call:
+<pre><code>## Call:
 ## vglm(formula = cbind(y2, y3, y4, y5, y1) ~ size + factor(lake), 
 ##     family = multinomial, data = ali)
 ## 
@@ -1896,8 +1894,7 @@ library(VGAM)
 fit.imp = vglm(impair ~ life + ses, family = cumulative(parallel = T), data = mental)
 # parallell=T gives proportional odds structure - only intercepts differ
 summary(fit.imp)</code></pre>
-<pre><code>## 
-## Call:
+<pre><code>## Call:
 ## vglm(formula = impair ~ life + ses, family = cumulative(parallel = T), 
 ##     data = mental)
 ## 
@@ -1999,31 +1996,30 @@ summary(fitRI)</code></pre>
 </div>
 <div id="exam-and-exam-preparation" class="section level1">
 <h1>Exam and exam preparation</h1>
-<p>We take look at the information posted at Blackboard, and the
-relevant exams are found on the bottom of each module page.</p>
-<p>Dates for supervision are also found on Bb.</p>
+<p>The exam: 27th November 9am</p>
+<p>Aids “Specified printed and hand-written support material is allowed.
+A specific basic calculator is allowed.”</p>
+<p>(= a yellow sheet. You can get these from the department offices on
+the 7th floor)</p>
+<p>Relevant exams are found on the bottom of each module page, and
+linked to from the wiki page.</p>
+<p>There will be a revision session in R4 on Tuesday 26th November
+10:00-12:00 (R4 is behind the cafe in Realfagbygget)</p>
 </div>
 <div id="after-tma4315" class="section level1">
 <h1>After TMA4315</h1>
-<p>What is next in the spring semester?</p>
+<p>What is next in the spring semester? (this list is not
+exhaustive)</p>
 <p><strong>For the 4th year student</strong></p>
 <ul>
 <li><a href="https://www.math.ntnu.no/emner/TMA4250">TMA4250 Spatial
 statistics</a></li>
-<li><a href="https://www.math.ntnu.no/emner/TMA4268">TMA4268 Statistical
-learning</a></li>
-<li><a href="https://www.math.ntnu.no/emner/TMA4275/">TMA4275 Survival
-analysis</a></li>
-<li><a href="https://www.math.ntnu.no/emner/TMA4300/">TMA4300
-Computational statistics</a></li>
-<li><a href="https://www.ntnu.no/studier/emner/KLMED8008/">KLMED8005
-Analysis of repeated measurements</a></li>
+<li><a href="https://www.math.ntnu.no/emner/TMA4300/">TMA4300 Computer
+Intensive Statistical Methods</a></li>
 <li><a href="https://www.ntnu.no/studier/emner/SMED8002/">SMED8002
 Epidemiology 2</a></li>
-<li><a href="https://www.ntnu.no/studier/emner/TDT4300/">TDT4300
-Datavarehus og datagruvedrift</a></li>
-<li><a href="https://www.ntnu.no/studier/emner/TDT4173/">TDT4173 Machine
-learning and case-based reasoning</a> (Big overlap with TMA4268)</li>
+<li><a href="https://www.ntnu.edu/studies/courses/TDT4300/">TDT4300 Data
+warehousing and data mining</a></li>
 <li><a href="https://www.ntnu.no/studier/emner/NEVR3004/">NEVR3004
 Neural networks (in the brain)</a></li>
 </ul>
@@ -2031,24 +2027,10 @@ Neural networks (in the brain)</a></li>
 <p><strong>For the 5th year student</strong></p>
 <!-- * [Computational statistics 2](http://www.ntnu.no/studier/emner/MA8702/) Phd course -->
 <ul>
-<li><a href="https://wiki.math.ntnu.no/ma8701/2019v">MA8701 General
-statistical models</a> Phd course with selected topics relevant for
-statistical learning and inference.</li>
+<li><a href="https://wiki.math.ntnu.no/ma8701/">MA8701 Advanced
+statistical methods in inference and learning</a> Phd course with
+selected topics relevant for statistical learning and inference.</li>
 </ul>
-<p>Also, for the autumn of 2019 the Deep learning course at IDI which up
-to now was 3.75STP is planned to be an ordinary 7.5STP course.</p>
-</div>
-<div id="course-evaluation-in-tma4315" class="section level1">
-<h1>Course evaluation in TMA4315</h1>
-<p>Please answer the course evaluation (anonymous): <a href="https://kvass.svt.ntnu.no/TakeSurvey.aspx?SurveyID=tma4315h2018" class="uri">https://kvass.svt.ntnu.no/TakeSurvey.aspx?SurveyID=tma4315h2018</a></p>
-<hr />
-<p>From my heart – I thank all the students for their active
-participation at the lectures and for being so positive! I really hope
-this course has given you skills that you will need and use in your
-future academic life! I look forward to meeting you as
-<code>statisticians</code> in the future! Good luck on your future
-endeavours!</p>
-<p>-Mette</p>
 </div>
 
 

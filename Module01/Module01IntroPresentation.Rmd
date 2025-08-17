@@ -1,8 +1,8 @@
 ---
-subtitle: "TMA4315 Generalized linear models H2024"
+subtitle: "TMA4315 Generalized linear models H2025"
 title: "Module 1: INTRODUCTION"
 author: "Bob O'Hara, Department of Mathematical Sciences, NTNU"
-date: "20.08 [PL] and 21.08 [IL]"
+date: "18.08 [PL] and 20.08 [IL]"
 output: #3rd letter intentation hierarchy
   # html_document:
   #   toc: true
@@ -249,7 +249,7 @@ The student can assess whether a generalised linear model or a generalized linea
 
 # How we will teach
 
-Two principles used in developnig this course
+Two principles used in developing this course
 
 - learning styles
 - active learning
@@ -329,7 +329,7 @@ The course is divided into modular units with specific focus, in order to use sm
 * A webpage version (output: html_document) used in the (so-called) interactive lectures.
 * A document version (output: pdf_document) used for student self study.
 * The Rmd version — used as notebook to investigate changes to the R code.
-* Additional class notes (written in class) linked in.
+* Additional class notes (written in class) and videos.
 
 The module pages are the backbone of the course!
 
@@ -349,9 +349,11 @@ The plenary lectures is rather passive in nature - for the students - and held i
 
 ## Questions
 
-What are advantages of attending a plenary lecture (as compared to reading the text book or the module pages, or watching videos)? 
-
 Do you plan to attend the plenary lectures?
+
+How would you like them to run?
+
+What do you think they are good for?
 
 ---
 
@@ -379,7 +381,6 @@ Has focus on student activity and understanding though discussing with fellow st
 
 **Questions:**
 
-* Who are the interactive lectures for? 
 * What are advantages of attending an interactive lecture? 
 * When you finish your studies and head for a job - go you think the skills developed in the interactive lectures will be in demand? 
 * Do you think the interactive lectures will be challenging for you to attend? Why? 

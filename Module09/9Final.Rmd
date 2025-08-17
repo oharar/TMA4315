@@ -36,7 +36,6 @@ showsol<-FALSE
     + incoming questions: overview of models (including categorical regression), exponential family and canonical link (why?), likelihood-score-Fisher information, which tests for what, model assessment (deviance and residuals)
 * exam and exam preparation 
 * suggestions for statistics-related courses in year 4 and 5
-* questionnaire
 
 ---
 
@@ -62,11 +61,13 @@ H2018: Lectured multinomial data (categorical regression), but did still not cov
 
 ## Learning outcome
 
-###Knowledge
+### Knowledge
+
 The student can assess whether a generalised linear model can be used in a given situation and can further carry out and evaluate such a statistical analysis. The student has substantial theoretical knowledge of generalised linear models and associated inference and evaluation methods. This includes regression models for normal data, logistic regression for binary data and Poisson regression. 
 The student has theoretical knowledge about linear mixed models and generalised linear mixed effects models, both concerning model assumptions, inference and evaluation of the models. Main emphasis is on normal, binomial and Poisson models with random intercept and random slope. 
 
-###Skills
+### Skills
+
 The student can assess whether a generalised linear model or a generalised linear mixed model can be used in a given situation, and can further carry out and evaluate such a statistical analysis.
 
 ---
@@ -152,7 +153,6 @@ In addition to the Fahrmeir et al book, on the reading list is also:
 
 The print-outs below are from LM `lm`, GLM `glm`, mvGLM `vglm`, LMM `lmer` and GLMM `glmer`.
 
-_For H2018: at the exam venue the `vglm`, `lmer` and `glmer` functions are not available (not installed), this means that you do not need to be able to run analyses with these, but you still need to be able to interpret output!_
 
 ---
 
@@ -256,24 +256,27 @@ summary(fitRI)
 
 # Exam and exam preparation
 
-We take look at the information posted at Blackboard, and the relevant exams are found on the bottom of each module page.
+The exam: 27th November 9am
 
-Dates for supervision are also found on Bb.
+Aids "Specified printed and hand-written support material is allowed. A specific basic calculator is allowed."
+
+(= a yellow sheet. You can get these from the department offices on the 7th floor)
+
+Relevant exams are found on the bottom of each module page, and linked to from the wiki page.
+
+There will be a revision session in R4 on Tuesday 26th November 10:00-12:00
+(R4 is behind the cafe in Realfagbygget)
 
 # After TMA4315
 
-What is next in the spring semester?
+What is next in the spring semester? (this list is not exhaustive)
 
 **For the 4th year student**
 
 * [TMA4250 Spatial statistics](https://www.math.ntnu.no/emner/TMA4250)
-* [TMA4268 Statistical learning](https://www.math.ntnu.no/emner/TMA4268)
-* [TMA4275 Survival analysis](https://www.math.ntnu.no/emner/TMA4275/)
-* [TMA4300 Computational statistics](https://www.math.ntnu.no/emner/TMA4300/)
-* [KLMED8005 Analysis of repeated measurements](https://www.ntnu.no/studier/emner/KLMED8008/)
+* [TMA4300  Computer Intensive Statistical Methods](https://www.math.ntnu.no/emner/TMA4300/)
 * [SMED8002 Epidemiology 2](https://www.ntnu.no/studier/emner/SMED8002/)
-* [TDT4300 Datavarehus og datagruvedrift](https://www.ntnu.no/studier/emner/TDT4300/)
-* [TDT4173 Machine learning and case-based reasoning](https://www.ntnu.no/studier/emner/TDT4173/) (Big overlap with TMA4268)
+* [TDT4300 Data warehousing and data mining](https://www.ntnu.edu/studies/courses/TDT4300/)
 * [NEVR3004 Neural networks (in the brain)](https://www.ntnu.no/studier/emner/NEVR3004/)
 
 ---
@@ -281,19 +284,5 @@ What is next in the spring semester?
 **For the 5th year student**
 
 <!-- * [Computational statistics 2](http://www.ntnu.no/studier/emner/MA8702/) Phd course -->
-* [MA8701 General statistical models](https://wiki.math.ntnu.no/ma8701/2019v) Phd course with selected topics relevant for statistical learning and inference. 
-
-Also, for the autumn of 2019 the Deep learning course at IDI which up to now was 3.75STP is planned to be an ordinary 7.5STP course.
-
-# Course evaluation in TMA4315 
-
-Please answer the course evaluation (anonymous):
-<https://kvass.svt.ntnu.no/TakeSurvey.aspx?SurveyID=tma4315h2018>
-
----
-
-From my heart -- I thank all the students for their active participation at the lectures and for being so positive! I really hope this course has given you skills that you will need and use in your future academic life! I look forward to meeting you as `statisticians` in the future! Good luck on your future endeavours!
-
--Mette
-
+* [MA8701 Advanced statistical methods in inference and learning](https://wiki.math.ntnu.no/ma8701/) Phd course with selected topics relevant for statistical learning and inference. 
 
