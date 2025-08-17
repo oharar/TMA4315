@@ -708,13 +708,16 @@ There are several solution to this, and the `glmer` function in `lme4` uses the 
 
 ## Gauss-Hermite Quadrature
 
+<!---
 If the dimension of ${\boldsymbol \gamma}_i$ is small, for example our random intercept model, then the Gauss-Hermite quadrature may be used to approximate the integral above. This will be of the form 
+--->
 
 $$\int_{-\infty}^{\infty} h(\gamma)\exp(-\gamma^2)d\gamma$$
 which can be written as a sum of weights and quadrature points that are roots of Hermite polynomials. This can then be maximized using Newton-Raphson methods.
 
+<!---
 When the dimension of ${\boldsymbol \gamma}$ gets more than two, other methods are used. 
-
+--->
 ---
 
 ## Laplace approximation (for the interested student)
