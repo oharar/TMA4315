@@ -71,7 +71,8 @@ Data: 45 observations, taken at 9 beaches:
 ```{r,echo=FALSE}
 # library("AED")
 # data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+# RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+RIKZ <- read.csv("RIKZ.csv")
 library(lme4)
 library(arm)
 library(ggplot2)
@@ -681,8 +682,8 @@ The most popular method for parameter estimation for regression is maximum likel
 The parameters we want to estimate are the fixed effects ${\boldsymbol \beta}$s, and the parameters in ${\bf Q}$ for the random effects - denoted by $\vartheta$.
 
 The contribution from observations in the $i$th cluster is
-$$f({\bf y}_i\mid {\boldsymbol \beta},\vartheta)=\int_{{\boldsymbol \gamma}_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
-=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i$$
+$$f({\bf y}_i\mid {\boldsymbol \beta},\vartheta)=\int_{ {\boldsymbol \gamma}_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+=\int_{ {\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i$$
 
 And the likelihood is then (since the clusters are independent)
 $$L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {\boldsymbol \beta},\vartheta)$$
