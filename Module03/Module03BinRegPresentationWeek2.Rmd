@@ -542,7 +542,7 @@ In addition to providing a parameter estimate for each element of our parameter 
 We focus on element $k$ of $\boldsymbol{\beta}$, called $\boldsymbol{\beta}_k$. It is known that asympotically 
 
 $$
-Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{{a}_{kk}(\hat{\beta})}} \sim N(0,1)
+Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{ {a}_{kk}(\hat{\beta})}} \sim N(0,1)
 $$
 
 We use that to form confidence intervals.
@@ -618,7 +618,7 @@ by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column
 The Wald test statistic is given as:
 
 $$
-w=({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})
+w=({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d})
 $$
 and measures the distance between the estimate ${\bf C}\hat{\boldsymbol{\beta}}$ and the value under then null hypothesis ${\bf d}$, weighted by the asymptotic covariance matrix of ${\bf C}\hat{\boldsymbol{\beta}}$.
 
