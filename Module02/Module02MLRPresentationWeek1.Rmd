@@ -473,7 +473,7 @@ We have:
 
 * ${\bf Y}\sim N_n({\bf X}{\boldsymbol \beta},\sigma^2{\bf I})$
 
-* ${\bf AY}=\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf X})^{-1}{\bf X}^T {\bf Y}$, and
+* ${\bf AY}=\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf X})^{-1}{\bf X}^T {\bf Y}$, and
 
 * ${\bf BY}=({\bf I}-{\bf H}){\bf Y}$.
 
@@ -481,11 +481,11 @@ We have:
 
 * since ${\bf X}({\bf I}-{\bf H})={\bf X}-{\bf HX}={\bf X}-{\bf X}={\bf 0}$.
 
-* We conclude that $\hat{{\boldsymbol \beta}}$ is independent of $({\bf I}-{\bf H}){\bf Y}$,
+* We conclude that $\hat{ {\boldsymbol \beta}}$ is independent of $({\bf I}-{\bf H}){\bf Y}$,
 
 * and, since SSE=function of $({\bf I}-{\bf H}){\bf Y}$: SSE=${\bf Y}^T({\bf I}-{\bf H}){\bf Y}$,
 
-* then $\hat{{\boldsymbol \beta}}$ and SSE are independent, and the result with $T_j$ being t-distributed with $n-p$ degrees of freedom is correct.
+* then $\hat{ {\boldsymbol \beta}}$ and SSE are independent, and the result with $T_j$ being t-distributed with $n-p$ degrees of freedom is correct.
 
 Remark: a similar result will exist for GLMs, using the concept of _orthogonal parameters_. 
 

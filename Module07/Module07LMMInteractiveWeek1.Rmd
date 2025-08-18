@@ -166,7 +166,7 @@ ICC <- numerator/denominator
 ICC
 ```
 
-Then, $$\widehat{\frac{\tau_0^2}{\tau_0^2 + \sigma^2}} = \frac{{`r numerator`}}{{`r denominator`}}={`r ICC`}$$
+Then, $$\widehat{\frac{\tau_0^2}{\tau_0^2 + \sigma^2}} = \frac{ {`r numerator`} }{ {`r denominator`} }={`r ICC`}$$
 
 </details>
 

@@ -4,10 +4,10 @@ subtitle: "Module 4: Count and continuous positive response data (Poisson and ga
 author: "Mette Langaas, Department of Mathematical Sciences, NTNU -- with contributions from Ingeborg Hem"
 date: " 27.09.2018 and 04.10.2018 [PL], 28.09.2018 and 05.10.2018 [IL]"
 output: #3rd letter intentation hierarchy
-  html_document:
-    toc: true
-    toc_float: true
-    toc_depth: 2
+ html_document:
+   toc: true
+   toc_float: true
+   toc_depth: 2
    css: "../TMA4315RMarkdown.css"
  # pdf_document:
  #   toc: true
@@ -543,7 +543,7 @@ and/or where we define
 ### The Wald test
 
 The Wald test statistic is given as:
-$$w=({\bf C}\hat{{\bf \beta}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\beta}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \beta}}-{\bf d}) $$
+$$w=({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\beta}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d}) $$
 and measures the distance between the estimate ${\bf C}\hat{\beta}$ and the value under then null hypothesis ${\bf d}$, weighted by the asymptotic covariance matrix of ${\bf C}\hat{\beta}$, and under the null follows a $\chi^2$ distribution with $r$ degrees of freedom (where $r$ is the number of hypotheses tested). 
 
 $P$-values are calculated in the upper tail of the $\chi^2$-distribution.

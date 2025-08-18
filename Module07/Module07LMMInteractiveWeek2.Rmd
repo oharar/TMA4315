@@ -39,7 +39,7 @@ Below is an excerpt from the output from fitting a linear mixed model (LMM) with
 
 $$ \texttt{bone}_{ij} = \beta_0 + \beta_1 \texttt{redage}_{ij} + \gamma_{0i} + \gamma_{1i}\texttt{redage}_{ij} + \varepsilon_{ij} \ i = 1, \dots, 20, \ j = 1,2,3,4 $$
 
-where $\mathbf{{\boldsymbol \gamma}}_i = (\gamma_{0i}, \gamma_{1i})^T$, $i = 1, \dots, 20$ represent the random effects.
+where $\mathbf{ {\boldsymbol \gamma}}_i = (\gamma_{0i}, \gamma_{1i})^T$, $i = 1, \dots, 20$ represent the random effects.
 
 ```{r,eval=TRUE}
 filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/bonedata.txt"

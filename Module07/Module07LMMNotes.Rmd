@@ -149,7 +149,7 @@ This is a count, so we could have used _Poisson regression_, but to make things 
 \footnotesize
 ```{r}
 # library("AED")
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+RIKZ <- read.csv("../Module08/RIKZ.csv")
 summary(RIKZ)
 ```
 \normalsize
@@ -293,8 +293,6 @@ ${\boldsymbol \gamma}_0, \beta_1, \sigma^2, \tau_0^2$. Remark that the $\gamma_{
 
 \tiny
 ```{r,echo=FALSE}
-# library("AED")
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -362,8 +360,6 @@ Inserted parameter estimates this is called the _intra class correlation (ICC)_ 
 
 \tiny
 ```{r,echo=FALSE}
-# library("AED")
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -597,10 +593,10 @@ $$\hat{\boldsymbol \beta}=({\bf X}^{\bullet T}{\bf X}^{\bullet})^{-1}{\bf X}^{\b
 
 Inserting then for ${\bf X}^{\bullet T}$ and ${\bf Y}^{\bullet}$ leads to the weighted least squares solution for ${\boldsymbol \beta}$
 
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
 
 Since we have independence between clusters, we had block-diagonal ${\bf V}$ and then 
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
 
 But, we really don't know ${\bf V}$ so an estimate must be inserted (week 2 with REML).
 
@@ -611,9 +607,6 @@ But, we really don't know ${\bf V}$ so an estimate must be inserted (week 2 with
 \tiny
 
 ```{r,echo=FALSE}
-#library("AED")
-#data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -623,7 +616,7 @@ summary(fit)
 <span class="question">Question: Where is the parameter estimat for effect of NAP, with standard deviation? What is the interpretation of "Correlation of Fixed Effects"? </span>
 
 <details><summary>Answer</summary>
-"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{{\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
+"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{ {\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
 
 </details>
 
@@ -632,19 +625,19 @@ summary(fit)
 
 ## Properties of parameters estimators
 
-Since $\hat{{\boldsymbol \beta}}$ is a linear function of ${\bf Y}_i$, it has a multivariate normal distribution -
+Since $\hat{ {\boldsymbol \beta}}$ is a linear function of ${\bf Y}_i$, it has a multivariate normal distribution -
 let us write with
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}={\bf A} {\bf Y}$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}={\bf A} {\bf Y}$$
 
 Mean:
-$$\text{E}(\hat{{\boldsymbol \beta}})={\bf A}\text{E}({\bf Y})=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf X}{\boldsymbol\beta}={\boldsymbol \beta}$$
+$$\text{E}(\hat{ {\boldsymbol \beta}})={\bf A}\text{E}({\bf Y})=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf X}{\boldsymbol\beta}={\boldsymbol \beta}$$
 
-so $\hat{{\boldsymbol \beta}}$ is unbiased.
+so $\hat{ {\boldsymbol \beta}}$ is unbiased.
 
 ---
 
 Variance-covariance matrix:
-$$\text{Cov}(\hat{{\boldsymbol \beta}}={\bf A}\text{Cov}({\bf Y}){\bf A}^T={\bf A}{\bf V}{\bf A}^T$$
+$$\text{Cov}(\hat{ {\boldsymbol \beta}}={\bf A}\text{Cov}({\bf Y}){\bf A}^T={\bf A}{\bf V}{\bf A}^T$$
 $$=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf V}{\bf V}^{-1}{\bf X}({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}$$
 
 Since ${\bf V}$ is block diagonal this can be written as a sum with the clusters:
@@ -653,7 +646,7 @@ $$ \text{Cov}(\hat{\boldsymbol \beta})= (\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{
 ---
 
 Also, if we insert $\hat{\bf V}$ as an estimate for ${\bf V}$ then 
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
 
 is asymptotic multivariate normal (under regularity conditions).
 
@@ -666,9 +659,6 @@ In this course we will only use the asymptotic normality for confidence interval
 ### Beach-example: confidence interval for fixed effects
 
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 confint(fit)
@@ -859,9 +849,6 @@ $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I
 
 \tiny
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -910,14 +897,14 @@ estimated using maximum likelihood, with the marginal distribution as starting p
 $${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
 We assume that the parameters in ${\bf V}$ are **known**, then we get the weighted least squares solution for ${\boldsymbol \beta}$.
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
-$$\hat{{\boldsymbol \beta}}\sim N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}\sim N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
 
 ---
 
 We insert estimates for ${\bf V}_i$ (which we will find next), and the same distribution - but only asymptotically - to be used for inference for the fixed effects.
 
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
 
 $$ \approx N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
 
@@ -941,11 +928,11 @@ There are two ways to explain the REML - a transformation method (we start with 
 ### Transformation method
 
 To aid in our understanding we start by looking at the REML solution for **multippel linear regression (Module 2)**,
-$${\bf Y=X {\boldsymbol \beta}}+{{\boldsymbol \varepsilon}} \text{ with } {\boldsymbol \varepsilon} \sim N({\bf 0},\sigma^2 {\bf I})$$
+$${\bf Y=X {\boldsymbol \beta}}+{ {\boldsymbol \varepsilon}} \text{ with } {\boldsymbol \varepsilon} \sim N({\bf 0},\sigma^2 {\bf I})$$
 where ${\bf X}$ is a $n\times p$ design matrix.
 Remember that $\text{SSE}={\bf Y}^T({\bf I}-{\bf H}){\bf{Y}}$ where the hat matrix is ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
 
-* We found that the maximum likelihood estimator for $\sigma^2$ was $\hat{\sigma}^2=\frac{\text{SSE}}{n}$, which is found from maximizing the likelihood inserted our estimate of $\hat{{\boldsymbol \beta}}$ (i.e. disregarding the uncertainty in the estimation). 
+* We found that the maximum likelihood estimator for $\sigma^2$ was $\hat{\sigma}^2=\frac{\text{SSE}}{n}$, which is found from maximizing the likelihood inserted our estimate of $\hat{ {\boldsymbol \beta}}$ (i.e. disregarding the uncertainty in the estimation). 
 
 ---
 
@@ -978,9 +965,9 @@ $${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf
 
 * The maximization does not give a closed form solution, but we get a new $\hat{\bf V}$ - which now will be less biased (sadly only unbiased in "simple and balanced cases").
 * Even if ${\boldsymbol \beta}$ is not estimated in this optimization we already know that
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
 and now we have a new $\hat{\bf V}$ which we insert in this equation, and thus get a new REML-estimator for ${\boldsymbol \beta}$:
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T\hat{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T \hat{\bf V}^{-1}{\bf Y}$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T\hat{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T \hat{\bf V}^{-1}{\bf Y}$$
 
 * This means, that when using REML-estimation for our linear mixed effects model this will influence both the fixed effects and the random effects parameters. However, asymptotically we will still have the same asymptotic distribution for the fixed effects as with ML estimation.
 
@@ -1006,10 +993,6 @@ and also by [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.
 
 \footnotesize
 ```{r,echo=-(1:5)}
-# library("AED")
-# data(RIKZ)
-# library(lme4)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(knitr)
 library(kableExtra)
 fitREML=lmer(Richness~NAP +(1|Beach),data=RIKZ)
@@ -1062,9 +1045,6 @@ Maximizing of $l_{\text{REML}}(\vartheta)$ provides the REML estimator for $\var
 \tiny
 
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(knitr)
 library(kableExtra)
@@ -1081,9 +1061,6 @@ summary(fitREML)
 \tiny
 
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(knitr)
 library(kableExtra)
@@ -1104,12 +1081,12 @@ summary(fitML)
 
 **Model check** can also use this to check that ${\boldsymbol \gamma}$ is normal is in agreement with our fitted model (same as when using residuals to check distribution of errors).
 
-### Best Linear Unbiased Predictor (BLUP) $\hat{{\boldsymbol \gamma}_i}$ 
+### Best Linear Unbiased Predictor (BLUP) $\hat{ {\boldsymbol \gamma}_i}$ 
 
 * linear function in ${\bf Y}$ (linear)
-* $\text{E}(\hat{{\boldsymbol \gamma}}_i)={\bf 0}$ (unbiased)
+* $\text{E}(\hat{ {\boldsymbol \gamma}}_i)={\bf 0}$ (unbiased)
 * for any linear combination ${\bf a}^T{\boldsymbol \gamma}_i$ of random effects 
-$[\text{E}({\bf a}^T\hat{{\boldsymbol \gamma}}_i-{\bf a}^T{\boldsymbol \gamma}_i)]^2$ is minimized among all such linear unbiased predictors (best)
+$[\text{E}({\bf a}^T\hat{ {\boldsymbol \gamma}}_i-{\bf a}^T{\boldsymbol \gamma}_i)]^2$ is minimized among all such linear unbiased predictors (best)
 
 ---
 
@@ -1122,9 +1099,6 @@ library(sjmisc)
 library(ggplot2)
 #library("AED")
 library(spcadjust)
-# data(RIKZ)
-# library(lme4)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 plot_model(fit, type="re")
 ```
@@ -1145,12 +1119,12 @@ N(\begin{pmatrix} {\bf X}{\boldsymbol \beta} \\ {\bf 0}\end{pmatrix},
 ### Maximizing the likelihood based on the joint distribution
 
 This is maximized with respect to ${\boldsymbol \beta}$ and ${\boldsymbol \gamma}$, to give
-$$\hat{{\boldsymbol \gamma}}={\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{{\boldsymbol \beta}})$$
+$$\hat{ {\boldsymbol \gamma}}={\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{ {\boldsymbol \beta}})$$
 
 
 But, here the elements of ${\bf G}$ and ${\bf V}$ needs to be estimated, and we get:
-$$\hat{{\boldsymbol \gamma}}=\hat{\bf G}{\bf U}^T\hat{\bf V}^{-1}({\bf Y}-{\bf X}\hat{{\boldsymbol \beta}})$$
-$$\hat{{\boldsymbol \gamma}}_i=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}({\bf Y}_i-{\bf X}_i\hat{{\boldsymbol \beta}})$$
+$$\hat{ {\boldsymbol \gamma}}=\hat{\bf G}{\bf U}^T\hat{\bf V}^{-1}({\bf Y}-{\bf X}\hat{ {\boldsymbol \beta}})$$
+$$\hat{ {\boldsymbol \gamma}}_i=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}({\bf Y}_i-{\bf X}_i\hat{ {\boldsymbol \beta}})$$
 
 Remark: For details on this calculation - involving the Henderson's mixed model equations, see pages 371-372 of Fahrmeir et al (2013), or pages 98-99 in 
 [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.com/book/10.1007%2F978-1-4419-0300-6) (free ebook from Springer for NTNU students).
@@ -1181,7 +1155,7 @@ which can be used (inserted parameter estimates) to give our estimated random ef
 
 ---
 
-We may find the covariance matrix of ${\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{{\boldsymbol \beta}})$ (directly), and for each $\hat{{\boldsymbol \gamma}}_i$ this is given as
+We may find the covariance matrix of ${\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{ {\boldsymbol \beta}})$ (directly), and for each $\hat{ {\boldsymbol \gamma}}_i$ this is given as
 $$ {\bf Q}{\bf U}_i^T\left( {\bf V}_i^{-1}-{\bf V}_i^{-1}{\bf X}_i (\sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1} {\bf X}_i)^{-1} {\bf X}_i^T {\bf V}_i^{-1} \right) {\bf U}_i {\bf Q} $$
 (according to Verbeke and Molenberghs (2000), page 78).
 We insert estimates ${\bf Q}$ and ${\bf V}_i$ (thus underestimating the variability)
@@ -1189,7 +1163,7 @@ and get the estimated covariance matrix for the random effect. Such an estimate 
 
 ---
 
-## Random intercept models: $\hat{{\boldsymbol \gamma}}_i$
+## Random intercept models: $\hat{ {\boldsymbol \gamma}}_i$
 
 For $i=1, \ldots, m$:
 $$ {\bf Y}_i = {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{0i}+{\boldsymbol \varepsilon}_i $$
@@ -1206,13 +1180,13 @@ and the off-diagonal entries are $-\tau_0^2$.
 ---
 
 The fixed effect estimate use this inverse matrix as the weighting matrix ${\bf V}_i^{-1}$ in
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
 
 The predicted random intercepts are
 $$\hat{\gamma}_{0i}=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}
-({\bf Y}_i-{\bf X}_i\hat{{\boldsymbol \beta}})=\cdots =\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}e_i$$
+({\bf Y}_i-{\bf X}_i\hat{ {\boldsymbol \beta}})=\cdots =\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}e_i$$
 where $e_i$ is the average (raw, level 0 - see below) residual
-$$ e_i=\frac{1}{n_i} \sum_{j=1}^{n_i} (Y_{ij}-{\bf x}_{ij}^T\hat{{\boldsymbol \beta}})$$
+$$ e_i=\frac{1}{n_i} \sum_{j=1}^{n_i} (Y_{ij}-{\bf x}_{ij}^T\hat{ {\boldsymbol \beta}})$$
 
 ---
 
@@ -1250,9 +1224,6 @@ For our beach-example: First the predicted values for the estimated random effec
 library(sjPlot)
 library(sjmisc)
 library(ggplot2)
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 plot_model(fit,type="re",y.offset=0.4)
@@ -1290,10 +1261,10 @@ library(ggplot2)
 Let $\mu_i$ denote $\text{E}({\bf Y}_i)$. Fitted values for the LMM can be made on two levels:
 
 \begin{align*}
-\text{Level 0, marginal} &: \hat{\mu}_i={\bf X}_i \hat{{\boldsymbol \beta}}\\
+\text{Level 0, marginal} &: \hat{\mu}_i={\bf X}_i \hat{ {\boldsymbol \beta}}\\
 & e_i={\bf Y}_i-{\bf X}_i {\boldsymbol \beta}\\
-\text{Level 1, conditional} &: \tilde{\mu}_i={\bf X}_i \hat{{\boldsymbol \beta}}+{\bf U}_i\hat{{\boldsymbol \gamma}}_i\\
-& e_i={\bf Y}_i-{\bf X}_i {\boldsymbol \beta}-{\bf U}_i\hat{{\boldsymbol \gamma}}_i
+\text{Level 1, conditional} &: \tilde{\mu}_i={\bf X}_i \hat{ {\boldsymbol \beta}}+{\bf U}_i\hat{ {\boldsymbol \gamma}}_i\\
+& e_i={\bf Y}_i-{\bf X}_i {\boldsymbol \beta}-{\bf U}_i\hat{ {\boldsymbol \gamma}}_i
 \end{align*}
 
 For `lmer` the function  `fitted` gives the level 1 fitted values (for our two-level models).
@@ -1308,9 +1279,6 @@ The residuals can be used in the same way as for the Multiple linear model (modu
 \footnotesize
 ```{r tidy = TRUE,fig.width=16, fig.height=8,echo=-(1:4)}
 library(lme4); library(ggplot2); 
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 df=data.frame(fitted=fitted(fit),resid=residuals(fit,scaled=TRUE))
 ggplot(df, aes(fitted,resid)) + 
@@ -1438,14 +1406,14 @@ $$\text{Corr}(Y_{ij},Y_{il})=\frac{\text{Cov}(Y_{ij},Y_{il})}{\sqrt{\text{Var}(Y
 # Hypothesis testing
 
 ## Testing fixed effects
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i\approx N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i\approx N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
 
 ### Approximate Wald tests for fixed effects
 
 $${\bf C}{\boldsymbol \beta}={\bf d} \text{ vs. } {\bf C}{\boldsymbol \beta}\neq {\bf d} $$
 where ${\bf C}$ is a $r \times p$ constant matrix and ${\bf d}$ a $r \times 1$ constant vector.
 Then:
-$$(\hat{{\boldsymbol \beta}}-{\boldsymbol \beta})^T {\bf C}^T [{\bf C}(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1} {\bf C}^T]^{-1}{\bf C}(\hat{{\boldsymbol \beta}}-{\boldsymbol \beta})$$
+$$(\hat{ {\boldsymbol \beta}}-{\boldsymbol \beta})^T {\bf C}^T [{\bf C}(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1} {\bf C}^T]^{-1}{\bf C}(\hat{ {\boldsymbol \beta}}-{\boldsymbol \beta})$$
 asymptotically follows a $\chi^2$-distribution with $r$-degrees of freedom.
 
 ---
@@ -1453,10 +1421,7 @@ asymptotically follows a $\chi^2$-distribution with $r$-degrees of freedom.
 ### Beach-example: Hypothesis testing with normal approximation
 
 \tiny
-```{r,echo=-(1:3),results="hold"}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+```{r, results="hold"}
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
 summary(fit)
@@ -1477,7 +1442,7 @@ Notation:
 The random effects parts of these models are assumed to be the same, while the changes are only to the fixed effects part.
 
 The likelihood ratio statistic is defined as
-$$- 2\ln \lambda=-2(\ln L(\hat{{\boldsymbol \beta}}_B)-\ln L(\hat{{\boldsymbol \beta}}_A)) $$
+$$- 2\ln \lambda=-2(\ln L(\hat{ {\boldsymbol \beta}}_B)-\ln L(\hat{ {\boldsymbol \beta}}_A)) $$
 which under the null is asymptotically $\chi^2$-distributed with degrees of freedom equal the difference in the number of parameters in the large and the small model. Again, $p$-values are calculated in the upper tail of the $\chi^2$-distribution.
 
 Remark: this is the log-likelihood, not the REML version.
@@ -1492,10 +1457,7 @@ Remark: this is the log-likelihood, not the REML version.
 ### Beach-example: Hypothesis testing with likelihood ratio test 
 
 \footnotesize
-```{r,echo=-(1:3)}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+```{r}
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
 fit0=lmer(Richness~1+(1|Beach),data=RIKZ,REML=FALSE)
@@ -1580,12 +1542,12 @@ There are two main strategies:
 
 ## AIC and BIC for Maximum likelihood estimation (ML)
 
-$$ \text{AIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +2\cdot r$$
-$$ \text{BIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +\ln(N)\cdot r$$
+$$ \text{AIC}= -2\cdot l(\hat{ {\boldsymbol \beta}},\hat{\vartheta}) +2\cdot r$$
+$$ \text{BIC}= -2\cdot l(\hat{ {\boldsymbol \beta}},\hat{\vartheta}) +\ln(N)\cdot r$$
 
 * $r$: number of parameters in the model, both the ${\boldsymbol \beta}$s and the parameters in the variance of the random effects, i.e. the $\sigma^2$ from our error and then all variances and covariances for the random effects in ${\bf Q}$.
 * $N=\sum_{i=1}^m n_i$
-* $l(\hat{{\boldsymbol \beta}},\hat{\vartheta})$ is the maximum log-likelihood inserted the parameter estimates
+* $l(\hat{ {\boldsymbol \beta}},\hat{\vartheta})$ is the maximum log-likelihood inserted the parameter estimates
 
 This can be used directly in the ML estimation, and as before BIC will give a smaller model than AIC.
 
@@ -1593,11 +1555,11 @@ This can be used directly in the ML estimation, and as before BIC will give a sm
 
 ## AIC and BIC for Restricted Maximum likelihood estimation (REML)
 
-$$ \text{AIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +2\cdot r$$
-$$ \text{BIC}= -2\cdot l(\hat{{\boldsymbol \beta}},\hat{\vartheta}) +\ln(N-p)\cdot r$$
+$$ \text{AIC}= -2\cdot l(\hat{ {\boldsymbol \beta}},\hat{\vartheta}) +2\cdot r$$
+$$ \text{BIC}= -2\cdot l(\hat{ {\boldsymbol \beta}},\hat{\vartheta}) +\ln(N-p)\cdot r$$
 
 * $r$: number of parameters in the model, both the ${\boldsymbol \beta}$s and the parameters in the variance of the random effects, i.e. the $\sigma^2$ from our error and then all variances and covariances for the random effects in ${\bf Q}$.
-* $l(\hat{{\boldsymbol \beta}},\hat{\vartheta})$ is now the restricted maximum log-likelihood inserted the parameter estimates
+* $l(\hat{ {\boldsymbol \beta}},\hat{\vartheta})$ is now the restricted maximum log-likelihood inserted the parameter estimates
  
 Remember:
 $$l_{\text{REML}}(\vartheta)= l_{P}(\vartheta)-\frac{1}{2}\ln \lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert $$
@@ -1656,15 +1618,12 @@ This example is taken from Zuur et al. (2009), pages 127-128.
 2. Fit the fixed model from 1 to "no random effect", "random intercept" and "random interept and slope for `NAP`". Use REML. 
 
 \footnotesize
-```{r,echo=-(1:7)}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+```{r}
 library(lme4)
 library(nlme)
 RIKZ$fExp=RIKZ$Exposure
 RIKZ$fExp[RIKZ$fEx==8]=10
-RIKZ$fExp=factor(RIKZ$fExp,levels=c(1,2))
+RIKZ$fExp=factor(RIKZ$fExp)
 B1=gls(Richness~1+NAP*fExp,data=RIKZ,method="REML")
 B2=lmer(Richness~1+NAP*fExp+(1|Beach),data=RIKZ)
 B3=lmer(Richness~1+NAP*fExp+(1+NAP|Beach),data=RIKZ)
@@ -1913,7 +1872,7 @@ Below is an excerpt from the output from fitting a linear mixed model (LMM) with
 
 $$ \texttt{bone}_{ij} = \beta_0 + \beta_1 \texttt{redage}_{ij} + \gamma_{0i} + \gamma_{1i}\texttt{redage}_{ij} + \varepsilon_{ij} \ i = 1, \dots, 20, \ j = 1,2,3,4 $$
 
-where $\mathbf{{\boldsymbol \gamma}}_i = (\gamma_{0i}, \gamma_{1i})^T$, $i = 1, \dots, 20$ represent the random effects.
+where $\mathbf{ {\boldsymbol \gamma}}_i = (\gamma_{0i}, \gamma_{1i})^T$, $i = 1, \dots, 20$ represent the random effects.
 
 ```{r,eval=TRUE}
 filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/bonedata.txt"

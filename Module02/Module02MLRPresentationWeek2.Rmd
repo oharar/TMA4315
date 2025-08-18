@@ -341,9 +341,9 @@ by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column
 The test statistic for performing the test is called $F_{obs}$ and can be formulated in two ways:
 \begin{eqnarray}
 F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
-F_{obs}&=&\frac{1}{r}({\bf C}\hat{{\boldsymbol \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{{\boldsymbol \beta}}-{\bf d}) \label{FobsCbeta}
+F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d}) \label{FobsCbeta}
 \end{eqnarray}
-where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{{\boldsymbol \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
+where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\boldsymbol \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
 
 ----
 
@@ -399,7 +399,7 @@ summary(fit)$fstatistic
 
 Since $\text{Cov}(\hat{\beta})=\sigma^2 ({\bf X}^T{\bf X})^{-1}$, then $\text{Cov}({\bf C}\hat{\beta})={\bf C}\sigma^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$, so that ${\bf C}\hat{\sigma}^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$ can be seen as an estimate of $\text{Cov}({\bf C}\hat{\beta})$. Therefore, $F_{obs}$ can be written
 
-$$F_{obs}=\frac{1}{r}({\bf C}\hat{{\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\hat{\beta})]^{-1}({\bf C}\hat{{\bf \beta}}-{\bf d})=\frac{1}{r}W$$
+$$F_{obs}=\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\hat{\beta})]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d})=\frac{1}{r}W$$
 where $W$ is a so-called Wald test. It is known that $W\sim \chi^2_r$ asymptotically as $n$ becomes large. We will study the Wald test in more detail later in this course.
 
 ---

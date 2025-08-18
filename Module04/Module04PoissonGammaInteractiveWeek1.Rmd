@@ -106,7 +106,7 @@ $$
 i.e. $C=\{0,0-1,-1,-1 \}$ (the 0s are for the intercept and `W` term), and $\beta = \{-2.92, 0.15, 0.27, 0.07, -0.17\}$ so we test if $-(0.27 + 0.07 - 0.17) = -0.17$ is different from 0. We can use the Wald statistic:
 
 $$
-w=({\bf C} \hat{\boldsymbol{\beta}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\beta}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\boldsymbol \beta}}-{\bf d})
+w=({\bf C} \hat{\boldsymbol{\beta}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\beta}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d})
 $$
 
 where $F^{-1}(\hat{\beta})$ is the covariance matrix, which we can extract with `vcov()`:

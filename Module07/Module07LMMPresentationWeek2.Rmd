@@ -5,9 +5,7 @@ author: Mette Langaas, Department of Mathematical Sciences, NTNU, with contibuti
 date: "01.11 and 08.11 [PL], 02.11 and 09.11 [IL]"
 output: #3rd letter intentation hierarchy
   beamer_presentation:
-    keep_tex: yes
     fig_caption: false
-    latex_engine: xelatex
 
 ---
 
@@ -122,10 +120,12 @@ $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I
 ### Beach-example: Parameter estimation
 
 \tiny
-```{r,echo=FALSE}
+```{r GetData, echo=FALSE}
 # library("AED")
 # data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+# RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+
+RIKZ <- read.csv("../Module08/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -273,7 +273,7 @@ and also by [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.
 # library("AED")
 # data(RIKZ)
 # library(lme4)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+# RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(knitr)
 library(kableExtra)
 fitREML=lmer(Richness~NAP +(1|Beach),data=RIKZ)
@@ -327,9 +327,6 @@ Maximizing of $l_{\text{REML}}(\vartheta)$ provides the REML estimator for $\var
 \tiny
 
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(knitr)
 library(kableExtra)
@@ -346,9 +343,6 @@ summary(fitREML)
 \tiny
 
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(knitr)
 library(kableExtra)
@@ -389,9 +383,6 @@ library(sjmisc)
 library(ggplot2)
 #library("AED")
 library(spcadjust)
-# data(RIKZ)
-# library(lme4)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 plot_model(fit, type="re")
 ```
@@ -517,9 +508,6 @@ For our beach-example: First the predicted values for the estimated random effec
 library(sjPlot)
 library(sjmisc)
 library(ggplot2)
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 plot_model(fit,type="re",y.offset=0.4)
@@ -575,9 +563,6 @@ The residuals can be used in the same way as for the Multiple linear model (modu
 \footnotesize
 ```{r tidy = TRUE,fig.width=16, fig.height=8,echo=-(1:4)}
 library(lme4); library(ggplot2); 
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 df=data.frame(fitted=fitted(fit),resid=residuals(fit,scaled=TRUE))
 ggplot(df, aes(fitted,resid)) + 
@@ -719,9 +704,6 @@ asymptotically follows a $\chi^2$-distribution with $r$-degrees of freedom.
 
 \tiny
 ```{r,echo=-(1:3),results="hold"}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
 summary(fit)
@@ -758,9 +740,6 @@ Remark: this is the log-likelihood, not the REML version.
 
 \footnotesize
 ```{r,echo=-(1:3)}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ,REML=FALSE)
 fit0=lmer(Richness~1+(1|Beach),data=RIKZ,REML=FALSE)
@@ -925,14 +904,11 @@ This example is taken from Zuur et al. (2009), pages 127-128.
 
 \footnotesize
 ```{r,echo=-(1:7)}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 library(nlme)
 RIKZ$fExp=RIKZ$Exposure
 RIKZ$fExp[RIKZ$fEx==8]=10
-RIKZ$fExp=factor(RIKZ$fExp,levels=c(1,2))
+RIKZ$fExp=factor(RIKZ$fExp)
 B1=gls(Richness~1+NAP*fExp,data=RIKZ,method="REML")
 B2=lmer(Richness~1+NAP*fExp+(1|Beach),data=RIKZ)
 B3=lmer(Richness~1+NAP*fExp+(1+NAP|Beach),data=RIKZ)

@@ -175,7 +175,7 @@ $$P(Y_i=c+1)=\pi_{i,c+1}=1-\pi_{i1}-\cdots \pi_{ic}=\frac{1}{1+\sum_{s=1}^{c}\ex
 
 This is a multivariate GLM and the multinomial distribution is _a multivariate exponential family_.
 
-$$f({\bf y}_i,{\boldsymbol \theta}_i,\phi)=\exp(\frac{{\bf y}_i^T{\boldsymbol \theta}_i-b({\boldsymbol \theta}_i)}{\phi}w_i+c({\bf y}_i,\phi,w_i))$$
+$$f({\bf y}_i,{\boldsymbol \theta}_i,\phi)=\exp(\frac{ {\bf y}_i^T{\boldsymbol \theta}_i-b({\boldsymbol \theta}_i)}{\phi}w_i+c({\bf y}_i,\phi,w_i))$$
 
 where ${\boldsymbol \theta}$ has dimension $c$.
 
@@ -248,7 +248,7 @@ General formulas for the score function and expected Fisher information matrix f
 ### Deviance
 
 The derivation used for the binary GLM model generalizes directly ot the multinomial GLM. The fitted probabilities are $\hat\pi_{ij}$ (group $i$ and category $j$) and the saturated model (grouped data) is $n_i \tilde\pi_{ij}=y_{ij}$. 
-$$D=2 \sum_{i=1}^G \sum_{s=1}^{c+1} y_{is}\ln(\frac{{y}_{is}}{n_i \hat{\pi}_{is}})$$
+$$D=2 \sum_{i=1}^G \sum_{s=1}^{c+1} y_{is}\ln(\frac{ {y}_{is}}{n_i \hat{\pi}_{is}})$$
 
 The asymptotic distribution is as before $\chi^2$ with "the number of groups times number of categories minus 1 (Gc)" minus "the number of covariates (cp)", giving $Gc-cp=c(G-p)$ degrees of freedom for the nominal model.
 
@@ -671,7 +671,7 @@ $${\bf s}({\boldsymbol \beta})=\sum_{i=1}^G {\bf X}_i^T {\bf D}_i {\boldsymbol \
 
 where 
 
-* ${\bf D}_i=\frac{\partial {\boldsymbol h}({\boldsymbol \eta})}{\partial {\boldsymbol \eta}}\lvert_{{\boldsymbol \eta}={\boldsymbol \eta}_i}$ has dimension $c \times c$
+* ${\bf D}_i=\frac{\partial {\boldsymbol h}({\boldsymbol \eta})}{\partial {\boldsymbol \eta}}\lvert_{ {\boldsymbol \eta}={\boldsymbol \eta}_i}$ has dimension $c \times c$
 * ${\boldsymbol \Sigma}_i=\text{Cov}({\bf Y}_i)$ 
 
 ---

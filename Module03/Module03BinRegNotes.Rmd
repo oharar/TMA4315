@@ -1203,7 +1203,7 @@ Note: `cov.unscaled` is the estimated covariance matrix for the estimated coeffi
 In addition to providing a parameter estimate for each element of our parameter vector $\boldsymbol{\beta}$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element.
 
 We focus on element $k$ of $\boldsymbol{\beta}$, called $\boldsymbol{\beta}_k$. It is known that asympotically 
-$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{{a}_{kk}(\hat{\beta})}}$$
+$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{ {a}_{kk}(\hat{\beta})}}$$
 is asymptotically standard normal. 
 We use that to form confidence intervals.
 
@@ -1273,7 +1273,7 @@ by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column
 ### The Wald test
 
 The Wald test statistic is given as:
-$$w=({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d}) $$
+$$w=({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d}) $$
 and measures the distance between the estimate ${\bf C}\hat{\boldsymbol{\beta}}$ and the value under then null hypothesis ${\bf d}$, weighted by the asymptotic covariance matrix of ${\bf C}\hat{\boldsymbol{\beta}}$.
 Remember: $\text{Cov}({\bf C}\hat{\boldsymbol{\beta}})={\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}$.
 

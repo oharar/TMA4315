@@ -71,7 +71,7 @@ Data: 45 observations, taken at 9 beaches:
 ```{r,echo=FALSE}
 # library("AED")
 # data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+RIKZ <- read.csv("RIKZ.csv")
 library(lme4)
 #library(arm)
 library(ggplot2)
@@ -586,9 +586,9 @@ The contribution from observations in the $i$th cluster is
 
 $$
 \begin{aligned}
-f({\bf y}_i\mid {\boldsymbol \beta},\vartheta) &= \int_{{\boldsymbol \gamma}_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+f({\bf y}_i\mid {\boldsymbol \beta},\vartheta) &= \int_{ {\boldsymbol \gamma}_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
 \\
-&=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+&=\int_{ {\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
 \end{aligned}
 $$
 
@@ -662,7 +662,7 @@ Putting this back into our integral:
 $$
 \begin{aligned}
 L(\theta) &= \int_{\boldsymbol{\gamma}} \exp(l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}))d\boldsymbol{\gamma} \approx\int_{\boldsymbol{\gamma}} \exp(\tilde{l}({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}))d\boldsymbol{\gamma} \\
-&=\exp(l(\bf{y}_i, \hat{{\boldsymbol \gamma}} \mid \boldsymbol{\theta}))
+&=\exp(l(\bf{y}_i, \hat{ {\boldsymbol \gamma}} \mid \boldsymbol{\theta}))
 \int_{\boldsymbol{\gamma}} \exp(-\frac{1}{\sigma^2} (\boldsymbol{\gamma}-\hat{\boldsymbol{\gamma}})^2) d\boldsymbol{\gamma} \\
 &=\exp(l({\bf y}_i, \hat{\boldsymbol{\gamma}} \mid {\boldsymbol \theta}))\sqrt{-2\pi/g''(\hat{\gamma_i})}
 \end{aligned}

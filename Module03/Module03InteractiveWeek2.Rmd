@@ -433,15 +433,15 @@ Because $D = -2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))$, we can just w
 \begin{aligned}
 l_j({\hat{\pi}}_j)-l_j({\tilde{\pi}}_j) &= \left( y_j \ln {\hat{\pi}}_j + (1-y_j) \ln(n_j-{\hat{\pi}}_j) \right)
 - \left( y_j \ln {\tilde{\pi}}_j + (1-y_j) \ln(n_j-{\tilde{\pi}}_j) \right) \\
-&= y_j \ln \frac{{\hat{\pi}}_j}{{\tilde{\pi}}_j} + (1-y_j) \ln \frac{{n_j-\hat{\pi}}_j}{{1-\tilde{\pi}}_j} \\
-&= y_j \ln \frac{{\hat{\pi}}_j}{{\tilde{\pi}}_j} + (1-y_j) \ln \frac{{n_j-\hat{\pi}}_j}{{1-\tilde{\pi}}_j} \\
-&= y_j \ln \frac{n_j {\hat{\pi}}_j}{{y_j}} + (n_j-y_j) \ln \frac{n_j (1-{\hat{\pi}}_j)}{n_j-y_j}= y_j \ln \frac{n_j {\hat{\pi}}_j}{{y_j}} + (n_j-y_j) \ln \frac{n_j-n_j {\hat{\pi}}_j}{n_j-y_j}
+&= y_j \ln \frac{ {\hat{\pi}}_j}{ {\tilde{\pi}}_j} + (1-y_j) \ln \frac{ {n_j-\hat{\pi}}_j}{ {1-\tilde{\pi}}_j} \\
+&= y_j \ln \frac{ {\hat{\pi}}_j}{ {\tilde{\pi}}_j} + (1-y_j) \ln \frac{ {n_j-\hat{\pi}}_j}{ {1-\tilde{\pi}}_j} \\
+&= y_j \ln \frac{n_j {\hat{\pi}}_j}{ {y_j}} + (n_j-y_j) \ln \frac{n_j (1-{\hat{\pi}}_j)}{n_j-y_j}= y_j \ln \frac{n_j {\hat{\pi}}_j}{ {y_j}} + (n_j-y_j) \ln \frac{n_j-n_j {\hat{\pi}}_j}{n_j-y_j}
 \end{aligned}
 
 So now we can plug this into $-2\sum D_j$ to get
 
 $$
-D = -2 \sum_{j=1}^G  y_j \ln \frac{n_j {\hat{\pi}}_j}{{y_j}} + (1-y_j) \ln \frac{n_j-n_j {\hat{\pi}}_j}{n_j-y_j}
+D = -2 \sum_{j=1}^G  y_j \ln \frac{n_j {\hat{\pi}}_j}{ {y_j}} + (1-y_j) \ln \frac{n_j-n_j {\hat{\pi}}_j}{n_j-y_j}
 $$
 
 

@@ -454,8 +454,8 @@ As before we have that maximum likelihood estimator $\hat{\beta}$ asymptotically
 
 $$\hat{\beta} \approx N_p(\beta,F^{-1}(\hat{\beta}))$$
 and with 
-$$F(\hat{\beta})={\bf X}^T \hat{{\bf W}} {\bf X}$$
-where $\hat{{\bf W}}$ denotes that $\hat{\beta}$ is used then calculating ${\bf W}=\text{diag}(\frac{h'(\eta_i)^2}{\text{Var}(Y_i)})$.
+$$F(\hat{\beta})={\bf X}^T \hat{ {\bf W}} {\bf X}$$
+where $\hat{ {\bf W}}$ denotes that $\hat{\beta}$ is used then calculating ${\bf W}=\text{diag}(\frac{h'(\eta_i)^2}{\text{Var}(Y_i)})$.
 
 ---
 
