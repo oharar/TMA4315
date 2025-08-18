@@ -7,10 +7,14 @@ Material originally developed by Mette Langaas with help from Thea Bjørnland. S
 
 Please consider the licence for this repo to be [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+### Module 1
+[Notes](Module01/Module01Intro.html)
+
 
 ## Notes on improvement
 
 ### Module 1
+
 
 Lesson plan for lecture could be more explicit?
 
