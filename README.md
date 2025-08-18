@@ -8,7 +8,65 @@ Material originally developed by Mette Langaas with help from Thea Bjørnland. S
 Please consider the licence for this repo to be [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ### Module 1
-[Notes](Module01/Module01Intro.html)
+[Notes](Module01/Module01Intro.html) 
+
+[Presentation slides](Module01/Module01IntroPresentation.pdf): [Interactive](Module01/Module01IntroInteractive.html)
+
+### Module 2
+[Notes](Module02/Module02MLRNotes.html) 
+
+Week 1: [Presentation slides](Module02/Module02MLRPresentationWeek1.pdf): [Interactive](Module02/Module02MLRInteractiveWeek1.html)
+
+Week 2: [Presentation slides](Module02/Module02MLRPresentationWeek2.pdf): [Interactive](Module02/Module02MLRInteractiveWeek2.html)
+
+### Module 3
+
+[Notes](Module03/Module03BinRegNotes.html) 
+
+Week 1: [Presentation slides](Module03/Module03BinRegPresentationWeek1.pdf): [Interactive](Module03/Module03BinRegInteractiveWeek1.html)
+
+Week 2: [Presentation slides](Module03/Module03BinRegPresentationWeek2.pdf): [Interactive](Module03/Module03BinRegInteractiveWeek2.html)
+
+### Module 4
+
+[Notes](Module04/Module04PoissonGammaNotes.html) 
+
+Week 1: [Presentation slides](Module04/Module04PoissonGammaPresentationWeek1.pdf): [Interactive](Module04/Module04PoissonGammaInteractiveWeek1.html)
+
+Week 2: [Presentation slides](Module04/Module04PoissonGammaPresentationWeek2.pdf): [Interactive](Module04/Module04PoissonGammaInteractiveWeek2.html)
+
+### Module 5
+
+[Notes](Module05/Module05GLMsNotes.html) 
+
+[Presentation slides](Module05/Module05GLMsPresentation.pdf): [Interactive](Module05/Module05GLMsInteractive.html)
+
+### Module 6
+
+[Notes](Module06/Module06MultinomNotes.html) 
+
+[Presentation slides](Module06/Module06MultinomPresentation.pdf): [Interactive](Module06/Module06MultinomInteractive.html)
+
+### Module 7
+
+[Notes](Module07/Module07LMMNotes.html) 
+
+Week 1: [Presentation slides](Module07/Module07LMMPresentationWeek1.pdf): [Interactive](Module07/Module07LMMInteractiveWeek1.html)
+
+Week 2: [Presentation slides](Module07/Module07LMMPresentationWeek2.pdf): [Interactive](Module07/Module07LMMInteractiveWeek2.html)
+
+### Module 8
+
+[Notes](Module08/Module08GLMMNotes.html) 
+
+[Presentation slides](Module08/Module08GLMMPresentation.pdf): [Interactive](Module08/Module08GLMMInteractive.html)
+
+
+### Module 9
+
+[Notes](Module09/9Final.html) 
+
+[Presentation slides](Module09/9FinalBEAMER.pdf)
 
 
 ## Notes on improvement
