@@ -22,6 +22,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
  
 
+# Introduction: Links
+
+Course: https://www.ntnu.edu/studies/courses/TMA4315#tab=omEmnet
+
+Wiki: https://wiki.math.ntnu.no/tma4315/2025h/start
+
+GitHub: https://github.com/oharar/TMA4315
+
+![](WikiTMA4315_2025.png){height=40%}
+
 # Introduction: Aim of this module
 
 * Introduction (to the introduction...)
