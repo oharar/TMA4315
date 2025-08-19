@@ -32,26 +32,33 @@ The exam style questions are optional, but will be helpful for, well, the exam. 
 (source: [Barry Rowlingson on Twitter. Sorry, X](https://x.com/geospacedman/status/1825255764719726607))
 
 In this course we will look at models where the distribution of the response variable, $y_i$, can be written in the form of a _univariate exponential family_
-\[ f(y_i\mid \theta_i)=\exp \left( \frac{y_i \theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right) \]
+
+$$
+f(y_i\mid \theta_i)=\exp \left( \frac{y_i \theta_i-b(\theta_i)}{\phi}\cdot w_i + c(y_i, \phi, w_i) \right)
+$$
+
 where
 
-* $\theta_i$ is called the canonical parameter and is a parameter of interest
+* $\theta_i$ is called the canonical parameter and is a parameter of interest (and will later be a function of covariates)
 
-* $\phi$ is called a nuisance parameter (and is not of interest to us=therefore a nuisance (plage))
+* $\phi$ is called a nuisance parameter: it is not of interest to us and thus a nuisance (plage)
 
 * $w_i$ is a weight function, in most cases $w_i=1$
 
-* b and c are known functions.
+* b() and c() are known functions.
 
 It can be shown that $\text{E}(Y_i)=b'(\theta_i)$ and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.
 
-Remark: slightly different versions of writing the exponential family exists, but we will use this version in our course (a different version might be used in TMA4295, but the basic findings are the same).
+Slightly different ways of writing the exponential family exists, but we will use this version in our course.
 
 ## Theoretical questions (first hour)
 
 We will work with the exponential family, but to make the notation easier for these tasks, we omit the $i$ subscript.
 
-\[ f(y \mid \theta)=\exp \left( \frac{y \theta-b(\theta)}{\phi}\cdot w + c(y, \phi, w) \right) \]
+
+$$
+f(y \mid \theta)=\exp \left( \frac{y \theta-b(\theta)}{\phi}\cdot w + c(y, \phi, w) \right)
+$$
 
 ### Problem 1: 
 
@@ -66,14 +73,14 @@ Choose (discuss and then talk to lecturer/TA) if you will work on a) binomial, b
 
 You may first use $n=1$ in the binomial (which then is called Bernoulli) - since that is much easier than a general $n$.
 
-Hint: <https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete> and nearly the same parameterization for showing the binomial is member of exponential <https://www.youtube.com/watch?v=7mNrsFr7P_A>.
+Hint: [TMA4245]https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete) and nearly the same parameterization for showing the binomial is member of exponential ([watch this YouTube video for more](https://www.youtube.com/watch?v=7mNrsFr7P_A>).
 
 Also: $x = e^{\ln x}$
 
 </details>
 
 <details><summary>Hints for Poisson distribution</summary>
-Hint: <https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete> and first part of [Sannsynlighetsmaksimering](https://mediasite.ntnu.no/Mediasite/Play/db9c6fbc45bf48abb8a4dd00ff146e081d?catalog=0fce6173-7a98-4db7-84b7-50cba3a3a341)
+Hint: [TMA4245](https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete) and first part of [Sannsynlighetsmaksimering](https://ntnu.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=735b839f71ed49d99fc3af1f013345fb) might help
 </details>
 
 <!-- ## The Poission process -->
@@ -97,7 +104,7 @@ There are a few parameterisations for the Gamma. Try this one:
 
 $$ f(y)=\frac{1}{\Gamma(\nu)} (\frac{\nu}{\mu})^{\nu} y^{\nu-1}\exp(-\frac{\nu}{\mu}y) \text{ for }y>0$$
 
-Hint: <https://wiki.math.ntnu.no/tma4245/tema/begreper/continuous>
+[Hint](https://wiki.math.ntnu.no/tma4245/tema/begreper/continuous)
 
 </details>
 
@@ -113,9 +120,16 @@ Mettes solution to 1a-d:  <https://www.math.ntnu.no/emner/TMA4315/2017h/Module1E
 
 Alternative a: 
 
-<span class="question">Prove that $\text{E}(Y_i)=b'(\theta_i)$ ($b'(\theta_i)= \frac{d b(\theta_i)}{d \theta_i}$) and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.</span>
+<span class="question">Prove that $\text{E}(Y_i)=b'(\theta_i)$, ($b'(\theta_i)= \frac{d b(\theta_i)}{d \theta_i}$) and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.</span>
 
-**Hint: take a sideways approach: integration by parts, and investigate what is $\int_{-\infty}^{\infty} \frac{df}{dy}dy$?**
+<details><summary>Hints for the strategy</summary>
+Take a sideways approach: differentiate with respect to $\theta$ (to get expressions involving $b'(\theta_i)$ & $b''(\theta_i)$), and integrate over $y$.
+</details>
+
+<details><summary>Hints for the implementing the strategy</summary>
+Integration by parts, and investigate what $\int_{-\infty}^{\infty} \frac{df}{dy}dy$ is
+</details>
+
 
 Alternative b: 
 
@@ -131,27 +145,71 @@ We have covered the Poisson and gamma in the problem sets above, but not the neg
 
 ### Exam December 2017, Problem 1a: Poisson regression
 
-(Remark: last question can not be answered before module 4.)
-
 Consider a random variable $Y$. In our course we have considered the univariate exponential family having distribution (probability density function for continuous variables and probability mass function for discrete variables)
-$$ f(y)=\exp(\frac{y \theta +b(\theta)}{\phi}w + c(y,\phi,w))$$
+
+$$
+f(y)=\exp(\frac{y \theta -b(\theta)}{\phi}w + c(y,\phi,w))
+$$
 where $\theta$ is called the _natural parameter_ (or parameter of interest) and $\phi$ the _dispersion parameter_. 
 
 The Poisson distribution is a discrete distribution with probability mass function
-$$ f(y)=\frac{\lambda^{y}}{y!}\exp(- \lambda), \text{ for } y=0,1,...,$$
+
+$$
+f(y)=\frac{\lambda^{y}}{y!}\exp(- \lambda), \text{ for } y=0,1,...,
+$$
+
 where $\lambda>0$.
 
-**a**) [10 points] 
+**a**) 
 
 <span class="question">Show that the Poisson distribution is a univariate exponential family, and specify what are the elements of the exponential family $(\theta,\phi,b(\theta),w,c(y,\phi,w))$.</span>
 
+<details><summary>Solution</summary>
+
+First, 
+
+$$
+\log( f(y|\theta)) = y \log\lambda - log(y!) - \lambda = \frac{y \log\lambda - \lambda}{1} - log(y!)
+$$
+Which might look odd, but means we can easily pick out the terms:
+$$
+\begin{align}
+\theta &= \log \lambda \\
+\phi &= 1 \\
+b(\theta) &= \lambda = e^\theta \\
+w &= 1 \\
+c(y,\phi,w) &=  - log(y!)
+\end{align}
+$$
+
+</details>
+
 <span class="question">What is the connection between $\text{E}(Y)$ and the elements of the exponential family?</span>
+
+<details><summary>Solution</summary>
+$\text{E}(Y_i)=b'(\theta_i)$
+</details>
 
 <span class="question">What is the connection between $\text{Var}(Y)$ and the elements of the exponential family?</span>
 
+<details><summary>Solution</summary>
+$\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.
+</span>
+
+</details>
+
 <span class="question">Use these connections to derive the mean and variance for the Poisson distribution.</span>
 
-<span class="question">If the Poisson distribution is used as the distribution for the response in a generalized linear model, what is then the _canonical link_ function?</span>
+<details><summary>Solution</summary>
+
+From above,
+
+$b(\theta) = \lambda = e^\theta$ 
+
+so $b'(\theta) = e^\theta = \lambda$ and $b''(\theta) = e^\theta = \lambda$
+
+</details>
+
 
 ### Exam 2012, Problem 3: Precipitation in Trondheim, amount 
 
@@ -170,14 +228,61 @@ In this problem we consider $N$ observations, each gamma distributed with $Y_i \
 ### Exam 2010, Problem 2: Negative binomial distribution
 
 The probability density function for a negative binomial random variable is
-$$f_y(y; \theta, r) = \frac{\Gamma(y + r)}{y! \Gamma(r)} (1-\theta)^r \theta^y$$
-for $y = 0,1,2,\ldots,$, $r>0$ and $\theta \in (0,1)$, and where $\Gamma()$ denotes the gamma function. (There
+$$f_y(y; p, r) = \frac{\Gamma(y + r)}{y! \Gamma(r)} (1-p)^r p^y$$
+for $y = 0,1,2,\ldots,$, $r>0$ and $p \in (0,1)$, and where $\Gamma()$ denotes the gamma function. (There
 are also other parameterizations of the negative binomial distributions, but use this for now.)
 
 <span class="question">a) Show that the negative binomial distribution is an exponential family. You
 can in this question consider $r$ as a known constant.</span>
 
-<span class="question">b) Use the general formulas for a exponential family to show that $\text{E}(Y)=\mu=r\frac{\theta}{1-\theta}$ and $\text{Var}(Y)=\mu \frac{1}{1-\theta}$.</span>
+<details><summary>Solution</summary>
+
+$$
+\begin{align}
+\log f(y|r, p) &=  \log \Gamma(y + r) - \log y! - \log \Gamma(r) + r \log(1-p) + y \log p \\
+&= \frac{y \log p + r \log(1-p)}{1} + \log \Gamma(y + r) - \log y! - \log \Gamma(r)
+\end{align}
+$$
+So 
+
+$$
+\begin{align}
+\theta &= \log p, so p=e^\theta \\
+\phi &= 1 \\
+b(\theta) &= -r \log(1-p) = -r \log(1-e^\theta)\\
+w &= 1 \\
+c(y,\phi,w) &=  \log \Gamma(y + r) - \log y! - \log \Gamma(r)
+\end{align}
+$$
+
+</details>
+
+<span class="question">b) Use the general formulas for a exponential family to show that $\text{E}(Y)=\mu=r\frac{p}{1-p}$ and $\text{Var}(Y)=\mu \frac{1}{1-p}$.</span>
+
+<details><summary>Solution</summary>
+
+Starting with $E(y) = b'(\theta)$, where $b(\theta)=-r \log(1-\theta) = -r \log(A)$ (with $A=1-e^\theta$)
+
+
+\begin{align}
+E(y) &= \frac{d (-r \log(1-e^\theta))}{d\theta} =-r \frac{d \log(A)}{dA}\frac{d A}{d\theta} \\
+&=-r \frac{1}{1-e^\theta} (-e^\theta) \\
+&=r \frac{e^\theta}{1-e^\theta} \\
+&= r \frac{p}{1-p}
+\end{align}
+
+And now to show that $\text{Var}(Y)=\mu \frac{1}{1-p}$, using $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$. Note that  $\phi=w=1$, so 
+
+\begin{align}
+\text{Var}(y) &= \frac{d^2 (-r \log(1-e^\theta))}{d\theta^2}  \\
+&=r \frac{d \frac{e^\theta}{1-e^\theta}}{d\theta} \\
+&=r \frac{(1-e^\theta ) e^\theta - e^\theta (-e^\theta)}{(1-e^\theta)^2} \\
+&= r \frac{e^\theta}{1-e^\theta} \frac{1-e^\theta+e^\theta}{1-e^\theta} \\
+&= \mu \frac{1}{1-p} \\
+\end{align}
+
+
+</details>
 
 ## Focus on R-related topics (second hour)
 
