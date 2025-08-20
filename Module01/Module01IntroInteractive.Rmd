@@ -120,7 +120,7 @@ Mettes solution to 1a-d:  <https://www.math.ntnu.no/emner/TMA4315/2017h/Module1E
 
 Alternative a: 
 
-<span class="question">Prove that $\text{E}(Y_i)=b'(\theta_i)$, ($b'(\theta_i)= \frac{d b(\theta_i)}{d \theta_i}$) and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.</span>
+<span class="question">Prove that $\text{E}(Y_i)=b'(\theta_i)$ (where $b'(\theta_i)= \frac{d b(\theta_i)}{d \theta_i}$) and $\text{Var}(Y_i)=b''(\theta_i)\cdot \frac{\phi}{w}$.</span>
 
 <details><summary>Hints for the strategy</summary>
 Take a sideways approach: differentiate with respect to $\theta$ (to get expressions involving $b'(\theta_i)$ & $b''(\theta_i)$), and integrate over $y$.

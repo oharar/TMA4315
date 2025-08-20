@@ -98,14 +98,9 @@ Please consider the licence for this repo to be [CC BY-NC-SA](https://creativeco
 
 ### Module 1
 
-
-Lesson plan for lecture could be more explicit?
-
-Add solutions to exercises in folds
-
 ### Module 2
 
-
+Explain score & Wald tests
 
 ### Module 3
 
