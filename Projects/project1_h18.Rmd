@@ -1,7 +1,7 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 1: Linear models for Gaussian data" 
-date: "Deadline: Friday, September 28, 2018 at 16.00" 
+date: "Deadline: Friday 12th September 2025 at midnight" 
 output: # 3rd letter intentation hierarchy
   html_document:
     toc: true
@@ -28,7 +28,7 @@ You shall deliver a document that answers all questions, using print-outs from `
 
 *Please write the names of the group members and the group number you have on Blackboard on top of your document!*
 
-Guidance by the teaching assistant (Ingeborg) will be given Tuesdays and Thursdays from 10:15-12:00 in room 922 at the 9th floor of Sentralbygg 2. She will be there from the beginning, but leaves if no one shows up. If you know you will be arriving very late, send her an email (ingeborg.hem@ntnu.no) to ensure that she will be in 922.
+Help will be given during the exercise session on Monday, but you can also seek help in the Wednesday interactive session, or email me for help. 
 
 In this project you will create your own `R`-package to handle linear models for Gaussian data and use this package to analyse a dataset. You can find more information about the package system and classes in `R` at https://cran.r-project.org/doc/contrib/Leisch-CreatingPackages.pdf. The text below describes how the package can be created using R-Studio since it makes it easy to rebuild and reload the package. The description is reasonably platform-independent, and should work on Windows, Mac and Linux. R-Studio is a useful integrated development environment (IDE) for `R`. 
 
