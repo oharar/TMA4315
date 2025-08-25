@@ -40,7 +40,7 @@ $$
 
 with $\frac{(n-p)\hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p}$.
 
----
+## Statistic for inference
 
 Statistic for inference about $\beta_j$, $c_{jj}$ is diagonal element $j$ of $({\bf X}^T{\bf X})^{-1}$.
 
@@ -50,17 +50,14 @@ $$
 
 This requires that $\hat{\beta}_j$ and $\hat{\sigma}$ are independent.
 
-# Inference
+## Inference
 
 We will consider confidence intervals and prediction intervals, and then test single and linear hypotheses.
 
----
 
 ## Confidence intervals (CI)
 
 In addition to providing a parameter estimate for each element of our parameter vector $\beta$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element. (We will not consider simultanious confidence regions in this course.)
-
----
 
 ## Confidence intervals (CI)
 
@@ -76,7 +73,8 @@ Let $t_{\alpha/2,n-p}$ be such that $P(T_j>t_{\alpha/2,n-p})=\alpha/2$.
 Since the $t$-distribution is symmetric around 0, then $P(T_j< -t_{\alpha/2,n-p})=\alpha/2$. We may then write
 $$P(-t_{\alpha/2,n-p}\le T_j \le t_{\alpha/2,n-p})=1-\alpha$$
 
----
+
+## ff
 
 ```{r,eval=FALSE,echo=FALSE}
 # with old fashion plotting
@@ -115,7 +113,7 @@ ggplot(data.frame(x=c(-4,4)), aes(x))+
 
 (Blue lines at $\pm t_{\alpha/2,n-p}$.)
 
-----
+## ff
 
 Inserting $T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}$ and solving so $\beta_j$ is in the middle gives:
 
@@ -124,7 +122,7 @@ $$ P(\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}
 
 A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: $[\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}]$.
 
----
+## CIs
 
 CIs can be found in R using `confint` on an `lm` object. (Here dummy variable coding is used for `location`, with average as reference location.)
 
@@ -146,15 +144,13 @@ confint(fit)
 3. <span class="question">How can we in practice find a CI for `location1` (average location) - when that is not printed above? (Yes, may use formula, but in R without maths?) 
 <!-- A: relevel to give good as reference. -->
 
-----
-
 ## Prediction intervals
 
 One aim for regression was to construct a model to predict the response from a set of (one or several) explanatory variables 
 
 Assume we want to make a prediction ($Y_0$) given specific values for the covariates, ${\bf x}_0$. An intuitive point estimate is $\hat{Y}_0={\bf x}_0^T \hat{\beta}$ - but to give a hint of the uncertainty in this prediction we also want to present a prediction interval for the $Y_0$.
 
-----
+## Prediction intervals
 
 First, assume the unobserved response at covariate ${\bf x}_0$ follows the same distribution, i.e. $Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)$ and is independent of our previous observations. Further, 
 
@@ -169,14 +165,15 @@ $$\text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T
 so that 
 $$Y_0-{\bf x}_0^T \hat{\beta}\sim N(0,\sigma^2 (1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0)) $$
 
----
+## Prediction intervals
+
 
 Inserting our REML estimate for $\sigma^2$ gives 
 
 
 $$T=\frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}}\sim t_{n-p}.$$
 
----
+## Prediction intervals
 
 Then, we start with 
 $$ P(-t_{\alpha/2,n-p}\le \frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}} \le t_{\alpha/2,n-p})=1-\alpha$$
@@ -185,7 +182,8 @@ $$P({\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf
 
 A $(1-\alpha)$% PI for $Y_0$ is when we insert numerical values for the upper and lower limits: $[{\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}, {\bf x}_0^T \hat{\beta}+t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}]$.
 
-----
+## Prediction intervals
+
 
 PIs can be found in R using `predict` on an `lm` object, but make sure that `newdata` is a `data.frame` with the same names as the original data. 
 
@@ -202,9 +200,9 @@ predict(fit,newdata=newobs,interval="prediction",
         type="response")
 ```
 
---- 
 
-### Questions: 
+
+## Questions: 
 
 1. <span class="question">When is a prediction interval of interest? </span>
 <!-- A: Always? Gives useful information in addition to a point prediction. -->
@@ -214,31 +212,72 @@ predict(fit,newdata=newobs,interval="prediction",
 3. <span class="question">What is the interpretation of a 95% prediction interval? </span>
 <!-- A: [see Classnotes 04.09.2017](https://www.math.ntnu.no/emner/TMA4315/2017h/M2_Classnotes20170904.pdf) -->
 
----
+
+## Hypothesis Testing
+
+ff
+
+## General Strategy
+
+- Invent a hypothesis
+    - Then derive $H_0$ and $H_1$
+- find a test statistic to distinguish between $H_0$ and $H_1$
+- work out the distribution of test statistic under $H_0$
+- Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$
+- Report the result of the test
 
 ## Single hypothesis testing set-up
 
-In single hypothesis testing we are interesting in testing one null hypothesis against an alternative hypothesis. In linear regression the hypothesis is often about a regression parameter $\beta_j$:
-$$H_0: \beta_j=0 \text{ vs. } H_1: \beta_j\neq 0$$
+In single hypothesis testing we are interesting in testing one null hypothesis against an alternative hypothesis. In linear regression the hypothesis is often about a regression parameter $\beta_j$.
 
-Remark: we implicitly say that our test is done given that the other variables are present in the model, that is, the other $\beta_i$s ($j\neq i$) are not zero.
 
----
+## Invent a hypothesis
 
-### Two types of errors:
+In linear regression the hypothesis is often about a regression parameter $\beta_j$, i.e. 
 
-* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error"
+$$
+H_0: \beta_j=0 \text{ vs. } H_1: \beta_j\neq 0
+$$
 
-* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"
 
----
+## find a test statistic to distinguish between $H_0$ and $H_1$
+
+In linear regression models one test statistic for testing $H_0: \beta_j=0$ is 
+
+$$
+T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}_{\varepsilon}}
+$$
+
+where $c_{jj}\hat{\sigma}_{\varepsilon}^2=\widehat{\text{Var}}(\hat{\beta}_j)$.
+
+Inserted observed values (and estimates) we have $t_0$.
+
+(more on test statistics shortly)
+
+## Work out the distribution of test statistic under $H_0$
+
+We know that
+
+$$
+T_0\sim t_{n-2}
+$$
+
+so this is easy.
+
+
+## Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$
+
+```{r, eval=FALSE}
+pt(...)
+```
+
+## Reporting the Result: Strict interpretation
+
+We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test is smaller than the chosen significance level.
+We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
 
 ## Strict Interpretations of significance tests
 
-We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test (see below) is smaller than the chosen significance level.
-We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
-
----
 
 **Q**: <span class="question">Draw a 2 by 2 table showing the connection between 
 
@@ -249,11 +288,20 @@ and place the two types of errors in the correct position within the table.
 
 What else should be written in the last two cells?
 
----
+## Two types of errors:
 
-### Hypothesis test on $\beta_j$ (t-test)
+* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error"
 
-In linear regression models our test statistic for testing $H_0: \beta_j=0$ is 
+* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"
+
+
+
+## STOPPED HERE
+
+
+## Hypothesis test on $\beta_j$ (t-test)
+
+In linear regression models one test statistic for testing $H_0: \beta_j=0$ is 
 $$T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}_{\varepsilon}}\sim t_{n-2}$$
 where $c_{jj}\hat{\sigma}_{\varepsilon}^2=\widehat{\text{Var}}(\hat{\beta}_j)$.
 
@@ -261,9 +309,8 @@ Inserted observed values (and estimates) we have $t_0$.
 
 We would in a two-sided setting reject $H_0$ for large values of $\text{abs}(t_0)$. We may rely on calculating a $p$-value. 
 
----
 
-### The p-value
+## The p-value
 
 A p-value is a test statistic satisfying $0 \leq p({\bf Y}) \leq 1$ for every vector of observations ${\bf Y}$. 
 
@@ -275,9 +322,7 @@ for all $\alpha$, $0 \leq \alpha \leq 1$, whenever $H_0$ is true.
 
 * If $P(p({\bf Y}) \leq \alpha) = \alpha$ for all $\alpha$, $0 \leq \alpha \leq 1$, the $p$-value is called an _exact_ p-value.  
 
-
-
----
+## DD
 
 In our linear regression we use the $t$-distibution to calculate p-values for our two-sided test situation $H_0: \beta_j=0$ vs. $H_1: \beta_j \neq 0$. Assume we have observed that our test statistic $T_0$ takes the numerical value $t_0$. Since the $t$-distribution is symmetric around $0$ we have
 
@@ -285,9 +330,9 @@ $$p\text{-value}=P(T_0>\text{abs}(t_0))+P(T_0<-\text{abs}(t_0))=2\cdot P(T_0>\te
 
 We reject $H_0$ if our calculated $p$-value is below our chosen signficance level. We often choose as significance level $\alpha=0.05$.
 
----
 
-### Munich rent index hypothesis test
+## Munich rent index hypothesis test
+
 We look at print-out using `summary` from fitting `lm`. 
 ```{r}
 library(gamlss.data)
@@ -295,7 +340,7 @@ fit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
 knitr::kable(summary(fit)$coefficients, digits=3)
 ```
 
---- 
+## Question
 
 **Q** (and A):
 
@@ -317,9 +362,9 @@ confint(fit)
 --->
 <!-- A: If a $(1-\alpha)$ 100% CI covers the hypothsized value (here 0) then this is a sensible value for the parameter it can be shown that then the $p$-value will be larger than $\alpha$. And, if a $(1-\alpha)$ 100% CI does not cover the hypothsized value (here 0) then this is not a sensible value for the parameter it can be shown that then the $p$-value will be smaller than $\alpha$. -->
 
----
 
 ## Testing linear hypotheses in regression
+
 We study a normal linear regression model with $p=k+1$ covariates, and refer to this as model A (the larger model). We then want  to investigate the null and alternative hypotheses of the following type(s):
 \begin{eqnarray*}
  H_0: \beta_{j}&=&0 \text{ vs. } H_1:\beta_j\neq 0\\
@@ -328,7 +373,7 @@ We study a normal linear regression model with $p=k+1$ covariates, and refer to 
  \end{eqnarray*}
 We call the restricted model (when the null hypothesis is true) model B, or the smaller model.
 
----
+## Hypotheses
 
 These null hypotheses and alternative hypotheses can all be rewritten as a linear hypothesis 
 
@@ -345,9 +390,8 @@ F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d})^{\text T}[\hat{
 \end{eqnarray}
 where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\boldsymbol \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
 
-----
+## Testing a set of parameters - what is ${\bf C}$ and ${\bf d}$?
 
-### Testing a set of parameters - what is ${\bf C}$ and ${\bf d}$?
 We consider a regression model with intercept and five covariates, $x_1, \ldots, x_5$. Assume that we want to know if the covariates $x_3$, $x_4$, and $x_5$ can be dropped (due to the fact that none of the corresponding $\beta_j$s are different from zero). This means that we want to test:
 
 $$H_0: \beta_{3}=\beta_{4}=\beta_{5}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0$$
@@ -358,9 +402,8 @@ $$ {\bf C}=\begin{pmatrix} 0 &0 &0 &1 &0&0 \\
 \end{pmatrix} \text{ and } 
 {\bf d} \begin{pmatrix} 0\\0\\0\\ \end{pmatrix}$$
 
-----
 
-### Testing one regression parameter
+## Testing one regression parameter
 
 If we set ${\bf C}=(0,1, 0, \cdots, 0)^T$, a row vector with 1 in position 2 and 0 elsewhere, and ${\bf d}=(0,0,\ldots,0)$, a column vector with 0s, then we test
 $$ H_0: \beta_1=0 \text{ vs. } H_1: \beta_1\neq 0.$$
@@ -371,10 +414,8 @@ Repeat the argument with $\beta_j$ instead of $\beta_1$.
 
 Remark: Remember that $T_{\nu}^2=F_{1,\nu}$.
 
----
 
-
-### Testing "significance of the regression"
+## Testing "significance of the regression"
 
 If we set ${\bf C}=(0,1,1, \cdots ,1)^T$, a row vector with 0 in position 1 and 0 elsewhere, and ${\bf d}=(0,0,\ldots,0)$, a column vector with 0s, then we test
 $$ H_0: \beta_1=\beta_2=\cdots= \beta_k =0 \text{ vs. } H_1: \text{at least one different from zero}.$$
@@ -382,7 +423,7 @@ This means we test if at least one of the regression parameters (in addition to 
 $$ F_{obs}=\frac{\frac{1}{k}(\text{SST}-\text{SSE})}{\frac{\text{SSE}}{n-p}}$$
 with $k$ and $n-p$ degrees of freedom under $H_0$.
 
----
+## Significant??
 
 Is the regression significant? 
 
@@ -393,18 +434,15 @@ summary(fit)$fstatistic
 
 <!-- A: Yes, the F-test is given in the last row of the `summary` print-out and gives a $p$-value clearly below any sensible signficance level. -->
 
-----
 
-### Relation to Wald test
+## Relation to Wald test
 
 Since $\text{Cov}(\hat{\beta})=\sigma^2 ({\bf X}^T{\bf X})^{-1}$, then $\text{Cov}({\bf C}\hat{\beta})={\bf C}\sigma^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$, so that ${\bf C}\hat{\sigma}^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$ can be seen as an estimate of $\text{Cov}({\bf C}\hat{\beta})$. Therefore, $F_{obs}$ can be written
 
 $$F_{obs}=\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\hat{\beta})]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d})=\frac{1}{r}W$$
 where $W$ is a so-called Wald test. It is known that $W\sim \chi^2_r$ asymptotically as $n$ becomes large. We will study the Wald test in more detail later in this course.
 
----
-
-### Asympotic result
+## Asympotic result
 
 It can in general be shown that 
 $$r F_{r,n-p}\stackrel{n\rightarrow \infty}{\longrightarrow} \chi^2_r.$$
@@ -412,21 +450,22 @@ That is, if we have a random variable $F$ that is distributed as Fisher with $r$
 
 Also, if our error terms are not normally distributed then we can assume that when the number of observation becomes very large then $rF_{r,n-p}$ is approximately $\chi^2_r$.
 
-# Focus on likelihood: Likelihood ratio test and deviance
+## Focus on likelihood: Likelihood ratio test and deviance
 
 ## The likelihood ratio test
+
 An alternative to the Wald test is the likelihood ratio test (LRT), which compares the likelihood of _two models_.
 
 We use the following notation. A: the larger model and B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
 
----
+## mm
 
 * First we maximize the likelihood for model A (the larger model) and find the parameter estimate $\hat{\beta}_A$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\hat{\beta}_A)$.
 * Then we maximize the likelihood for model B (the smaller model) and find the parameter estimate $\hat{\beta}_B$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\hat{\beta}_B)$.
 
 The likelihood of the larger model (A) will always be larger or equal to the likelihood of the smaller model (B). Why? 
 
----
+## mm
 
 The likelihood ratio statistic is defined as
 $$- 2\ln \lambda=-2(\ln L(\hat{\beta}_B)-\ln L(\hat{\beta}_A)) $$ 
@@ -438,7 +477,7 @@ $P$-values are calculated in the upper tail of the $\chi^2$-distribution.
 
 Observe: to perform the test you need to fit both the small and the large model.
 
----
+## mm
 
 Notice: asymptotically the Wald and likelihood ratio test statistics have the same distribution, but the value of the test statistics might be different. 
 
@@ -447,8 +486,6 @@ Notice: asymptotically the Wald and likelihood ratio test statistics have the sa
 ```
 
 The LRT can be performed using `anova()`.
-
----
 
 ## Deviance (something new!)
 
@@ -464,7 +501,7 @@ This would be a model where each observation was given its own parameter.
 **Candidate model:**
 The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood and get $\hat{\beta}$.
 
----
+## Deviance
 
 The _deviance_ is then defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
 
@@ -477,7 +514,7 @@ $$
 
 (because $\hat{\theta_i}=y_i$, something you may work out for yourselves)
 
----
+## Deviance
 
 The deviance is then
 
@@ -492,9 +529,8 @@ Note the connection with the RSS! Under the null hypothesis that the model fits 
 well, $D\sim \chi^2_{n-p}$ exactly (in this case). 
 
 
----
 
-# Analysis of variance decomposition and coefficient of determination, $R^2$
+## Analysis of variance decomposition and coefficient of determination, $R^2$
 
 It is possible to decompose the total variability in the data, called SST (sums-of-squares total), into a part that is explained by the regression SSR (sums-of-squares regression), and a part that is not explained by the regression SSE (sums-of-squares error, or really residual).
 
@@ -506,7 +542,7 @@ Let $\bar{Y}=\frac{1}{n}\sum_{i=1}^n Y_i$, and $\hat{Y}_i={\bf x}_i^T\hat{\beta}
 \text{SSE}&=\sum_{i=1}^n (Y_i-\hat{Y}_i)^2=\sum_{i=1}^n \hat{\varepsilon}_i^2={\bf Y}^T({\bf I}-{\bf H}){\bf Y}.\\
 \end{align*}
 
----
+## $R^2$
 
 Based on this decomposition we may define the _coefficient of determination_ ($R^2$) as the ratio between SSR and SST, that is 
 $$R^2=\text{SSR}/\text{SST}=1-\text{SSE}/\text{SST}$$
@@ -519,9 +555,8 @@ $$ R^2_{M_1}\ge R^2_{M_2}.$$
 This can be explained from the fact that $\text{SSE}_{M_1}\le \text{SSE}_{M_2}$.
 (More in the Theoretical questions.)
 
-----
 
-## <a id="seqanova">Analysis of variance tables - with emphasis on sequential Type I ANOVA</a>
+## Analysis of variance tables - with emphasis on sequential Type I ANOVA
 
 It is possible to call the function `anova` on an `lm`-object. What does that function do?
 ```{r}
@@ -530,7 +565,7 @@ fit1=lm(rent~area+location+bath,data=rent99)
 anova(fit1)
 ```
 
-----
+## Sequential
 
 What is produced is a _sequential_ table of _the reductions in residual sum of squares (SSE) as each term in the regression formula is added in turn_. This type of ANOVA is often referred to as "Type 1" (not to be confused with type I errors). 
 
@@ -545,7 +580,8 @@ fit2 <- update(fit1, . ~ . + location)
 fit3 <- update(fit2, . ~ . + bath)
 
 ```
----
+
+## ANOVAs
 
 ```{r}
 anova(fit0, fit1, fit2, fit3,  test = "F")
@@ -553,17 +589,15 @@ anova(fit0, fit1, fit2, fit3,  test = "F")
 #anova(fit0,fit5) # compare model 0 and 5 - NOT sequential
 ```
 
----
+## Change the Order
 
 If we had changed the order of adding the covariates to the model, then our anova table might also change. You might check that if you want.
 
----
+## Notes
 
 See the last page of the [classnotes 04.09.2017](https://www.math.ntnu.no/emner/TMA4315/2017h/M2_Classnotes20170904.pdf) for mathematical notation on the sequential test in `anova`, and details on the print-out comes next - NEW: now with formulas!
 
-----
-
-### Details on the test `anova(fit)`
+## Details on the test `anova(fit)`
 
 When running `anova` on one fitted regression the $F$-test in `anova` is calculated as for "testing linear hypotheses" - but with a slight twist. Our large model is still the full regression model (from the fitted object), but the smaller model is replaced by the _the change from one model to the next_.
 
@@ -572,11 +606,11 @@ For our rent example the denominator will be SSE/(n-p)=64819547/3075 (see above)
 
 The logic is that the full model provides an estimate of $\sigma^2$: the others may not.
 
----
+## T to Normality
 
 For the numerator we are not comparing one small model with the full (large) one, we are instead looking at the change in SSE between two (smaller) models (called model B1 and B2). So, now we have in the numerator the difference in SSE between models B1 and B2, scaled with the difference in number of parameters estimated in model B1 and B2 ="number in B2 minus in B1" (which is the same as the difference in degrees of freedom for the two models).
 
----
+## Test Stats
 
 This means that the test statistics we use are:
 
@@ -589,13 +623,13 @@ To produce a $p$-value to the test that
 $$H_0: \text{"Model B1 and B2 are equally good" vs }H_1:\text{"Model B2 is better than B1}$$
 and then the $F\sim {\text{df}_{B1}-\text{df}_{B2},\text{df}_A}$. 
 
----
+## Example
 
 In our example we compare to an F-distribution with 1 and 3075 degrees of freedom. The $p$-value is the "probability of observing a test statistic at least as extreme as we have" so we calculate the $p$-value as $P(F>f_0)$. This gives a $p$-value that is practically 0.
 
 If you then want to use the asymptotic version (relating to a chi-square instead of the F), then multiply your F-statistic with $\text{df}_{B1}-\text{df}_{B2}$ and relate to a $\chi^2$ distribution with $\text{df}_{B1}-\text{df}_{B2}$ degrees of freedom, where $\text{df}_{B1}-\text{df}_{B2}$ is the difference in number of parameters in models B1 and B2. In our example $\text{df}_{B1}-\text{df}_{B2}=1$. 
 
----
+## Anova
 
 For the anova table we do this sequentially for all models from starting with only intercept to the full model A. This means you need to calculate SSE and df for models of all sizes to calculate lots of these $F_0$s. Assume that we have 4 covariates that are added to the model, and call the 5 possible models (given the order of adding the covariates) 
 
@@ -605,7 +639,7 @@ For the anova table we do this sequentially for all models from starting with on
 * model 4: model with intercept and covariate 1 and covariate 2 and covariate 3
 * model 5: model with intercept and covariate 1 and covariate 2 and covariate 3 and covariate 4
 
----
+## Output
 
 Fit a linear model (lm) for each model 1-5, and store SSE and degrees of freedom=df (number of observations minus number of covariates estimated) for each of the models. Call these SSE$_1$ to SSE$_5$ and df$_1$ to $df$_5$.
 
@@ -623,7 +657,7 @@ In R the p-value is calculated as `1-pf(f0,Df)` or as `1-pchisq(Df*f0,Df)` if th
 
 This is what is presented - a sequential record of the effect of adding a new covariate.
 
----
+## Question
 
 **Q*: What if you change the order of the covariates into the model? 
 
@@ -631,7 +665,7 @@ This is what is presented - a sequential record of the effect of adding a new co
 Yes, then everything changes. That is the drawback of Type I (sequential) thinking.
 --->
 
----
+## Type III ANOVA
 
 A competing way of thinking is called _type 3 ANOVA_ and instead of looking sequentially at adding terms, we (like in `summary`) calculated the contribution to a covariate (or factor) given that all other covariates are present in the regression model. Type 3 ANOVA is available from library `car` as function `Anova` (possible to give type of anova as input).
 
@@ -639,8 +673,6 @@ A competing way of thinking is called _type 3 ANOVA_ and instead of looking sequ
 
 If we had orthogonal columns for our different covariates the type 1 and type 3 ANOVA tables would have been equal.
 
-
----
 
 <!---
 #### Optional (beyond the scope of this course)
@@ -660,25 +692,21 @@ If we consider two models with the same model complexity then SSE can be used to
 
 But, if we want to compare models with different model complexity we need to look at other measures of quality for the regression.
 
----
 
-### $R^2$ adjusted (corrected) 
+## $R^2$ adjusted (corrected) 
 $$R^2_{\text{adj}}=1-\frac{\frac{SSE}{n-p}}{\frac{SST}{n-1}}=1-\frac{n-1}{n-p}(1-R^2)$$
 Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
 But, if we are choosing model, we should use hypothesis tests, or techniques to comapre models!
 
-----
 
-### Information Criteria
+## Information Criteria
 
 Rather than find the best model by hypothesis testing, we can instead use a measure of model adequacy (defined somehow!) to compare models.
 
 There are different ways of defining model adequacy, which lead to different statistics
 
-----
-
-### AIC Akaike information criterion 
+## AIC Akaike information criterion 
 
 AIC is one of the most widely used criteria, and is designed for likelihood-based prediction.
 Let $l(\hat{\beta}_M,\tilde{\sigma}^2)$ be the maximum of the log-likelihood of the data inserted the maximum likelihood estimates for the regression and nuisance parameter. Further, let $\lvert M \rvert$ be the number of estimated regression parameters in our model.
@@ -691,9 +719,8 @@ Remark that $\tilde{\sigma}^2=SSE/n$ - our ML estimator (not our unbiased REML),
 
 Choose the model with the minimum AIC. 
 
----
 
-### BIC  Bayesian information criterion.
+## BIC  Bayesian information criterion.
 
 The BIC is also based on the likelihood, nad is designed for inference (finding the "true" model).
 
@@ -707,7 +734,6 @@ BIC has a larger penalty than AIC ($\log(n)$ vs. $2$), and will often give a sma
 
 In general we would not like a model that is too complex.
 
----
 
 ## Model selection strategies
 
@@ -719,16 +745,15 @@ In general we would not like a model that is too complex.
 
 * Stepwise selection: combine forward and backward.
 
----
 
-# R packages
+## R packages
 
 ```{r, eval=FALSE}
 install.packages(c("gamlss.data","tidyverse", "GGally", 
                    "Matrix", "nortest"))
 ```
 
-# References and further reading
+## References and further reading
 
 * Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 2:  Regression (by Mette Langaas).](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
 * And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA] (http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)

@@ -1427,51 +1427,46 @@ cat("3. see ILw2.\n")
 
 ---
 
+# Hypothesis Testing
+
+Hypothesis testing is an area of statistics that can cause far too many arguments. We will not discuss these, instead we will look at how to carry them out in the event you feel you need to use one.
+
+## General Strategy for hypothesis testing
+
+- Invent a hypothesis, i.e. decide what question you are asking.
+    - Then derive $H_0$ and $H_1$
+- find a test statistic to distinguish between $H_0$ and $H_1$
+- work out the distribution of test statistic, either under $H_0$ or $H_1$
+- Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$
+- Report the result of the test
+
+
 ## Single hypothesis testing set-up
 
-In single hypothesis testing we are interesting in testing one null hypothesis against an alternative hypothesis. In linear regression the hypothesis is often about a regression parameter $\beta_j$:
-$$H_0: \beta_j=0 \text{ vs. } H_1: \beta_j\neq 0$$
+In single hypothesis testing we are interesting in testing one null hypothesis against an alternative hypothesis. In linear regression the hypothesis is often about a regression parameter $\beta_j$.
 
-Remark: we implicitly say that our test is done given that the other variables are present in the model, that is, the other $\beta_i$s ($j\neq i$) are not zero. 
 
-###Two types of errors:
+- Invent a hypothesis
 
-* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error" ="miscarriage of justice".
-These are our _fake news_, which are very important for us to avoid.
+In linear regression the hypothesis is often about a regression parameter $\beta_j$, e.g. $H_0: \beta_j=0 \text{ vs. } H_1: \beta_j\neq 0$. We can of course compare it to other numbers, not just 0.
 
-* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"= "guilty criminal go free".
+- find a test statistic to distinguish between $H_0$ and $H_1$
 
----
-
-We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test (see below) is smaller than the chosen significance level.
-We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
-
-**Q**: Draw a 2 by 2 table showing the connection between 
-
-* "truth" ($H_0$ true or $H_0$ false) - rows in the table, and 
-* "action" (reject $H_0$ and accept $H_0$) - columns in the table,
-
-and place the two types of errors in the correct position within the table. 
-
-What else should be written in the last two cells?
-
----
-
-### Hypothesis test on $\beta_j$ (t-test)
-
-In linear regression models our test statistic for testing $H_0: \beta_j=0$ is 
-$$T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p}$$
-where $c_{jj}\hat{\sigma}^2=\widehat{\text{Var}}(\hat{\beta}_j)$.
+In linear regression models one test statistic for testing $H_0: \beta_j=0$ is $T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}_{\varepsilon}}$ where $c_{jj}\hat{\sigma}_{\varepsilon}^2=\widehat{\text{Var}}(\hat{\beta}_j)$. 
 
 Inserted observed values (and estimates) we have $t_0$.
 
-We would in a two-sided setting reject $H_0$ for large values of $\text{abs}(t_0)$. We may rely on calculating a $p$-value. 
+(more on test statistics shortly)
 
-**Q**: what if we want an asymptotic test statistics?
+- Work out the distribution of test statistic under $H_0$
 
----
+For example, we know that $T_0\sim t_{n-2}$ so this is easy. Sometimes we cannot work the distribution out, so we simulate it.
 
-### The p-value
+- Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$
+
+```{r, eval=FALSE}
+pt(...)
+```
 
 A p-value is a test statistic satisfying $0 \leq p({\bf Y}) \leq 1$ for every vector of observations ${\bf Y}$. 
 
@@ -1482,17 +1477,86 @@ $$ P(p({\bf Y}) \leq \alpha) \leq \alpha$$
 for all $\alpha$, $0 \leq \alpha \leq 1$, whenever $H_0$ is true, that is, if the $p$-value is valid, rejection on the basis of the $p$-value ensures that the probability of type I error does not exceed $\alpha$.
 * If $P(p({\bf Y}) \leq \alpha) = \alpha$ for all $\alpha$, $0 \leq \alpha \leq 1$, the $p$-value is called an _exact_ p-value.  
 
----
-
 In our linear regression we use the $t$-distibution to calculate p-values for our two-sided test situation $H_0: \beta_j=0$ vs. $H_1: \beta_j \neq 0$. Assume we have observed that our test statistic $T_0$ takes the numerical value $t_0$. Since the $t$-distribution is symmetric around $0$ we have
 
 $$p\text{-value}=P(T_0>\text{abs}(t_0))+P(T_0<-\text{abs}(t_0))=2\cdot P(T_0>\text{abs}(t_0)).$$
 
-We reject $H_0$ if our calculated $p$-value is below our chosen signficance level. We often choose as significance level $\alpha=0.05$.
+- Reporting the Result
 
-**Q**: what if we want an asymptotic $p$-value?
+The strict interpretation: We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test is smaller than the chosen significance level.
+We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
 
----
+Two types of errors:
+
+* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error"
+* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"
+
+(there is a less formal approach to p-values, where they are regarded as measures of evidence, i.e. a p-value of 0.001 suggests there is more evidence against a null than a value of 0.04. Whether this is agood appraoch or not is one of the smaller arguments about p-values)
+
+## Complex Hypotheses
+
+Above we looked at one parameter, but we can also ask questions about several parameters. For example, if we have a factor with $p$ levels, we can ask if $\beta_1 = \beta_2 = \dots \beta_p = 0$. We can do this by writing the null hypotheses and alternative hypotheses as a linear hypothesis:
+
+$$
+H_0: {\bf C}{\bf \beta}={\bf d} \text{ vs. } {\bf C}{\bf \beta}\neq {\bf d}
+$$
+
+by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column vector of length $r$. 
+
+To help, we can illustrate with an example of ${\bf C}$ and ${\bf d}$. We consider a regression model with intercept and five covariates, $x_1, \ldots, x_5$. Assume that we want to know if the covariates $x_3$, $x_4$, and $x_5$ can be dropped (due to the fact that none of the corresponding $\beta_j$s are different from zero). This means that we want to test:
+
+$$H_0: \beta_{3}=\beta_{4}=\beta_{5}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0$$
+This means that our ${\bf C}$ is a $3\times 6$ matrix and ${\bf d}$ a $3 \times 1$ column vector
+$$ {\bf C}=\begin{pmatrix} 0 &0 &0 &1 &0&0 \\
+0&0&0&0&1&0\\
+0&0&0&0&0& 1\\
+\end{pmatrix} \text{ and } 
+{\bf d} =\begin{pmatrix} 0\\0\\0\\ \end{pmatrix}$$
+
+## Test Statistics
+
+Above we used a t-statistic as a test statistic. But did not explain why. Here we will explain three approaches to developing test statistics. For a simple linear regression they all lead to the same place (well, almost), but in other problems they can be different.
+
+### Wald Statistics
+
+Wald Statistics lead to Wald tests. Wald statistics measure the distance between $H_0$ and $H_1$ in the parameter space, i.e. between $\beta_j=0$ and $\hat{\beta}_j$. If this is weighted (i.e. standardised) by the standard error, then the statistic becomes a pivot, i.e. its distribution does not depend on anything unknown.
+
+So, for our regression we use 
+$$
+\frac{\hat{\beta}_j - \beta_j}{\sqrt{\widehat{\text{Var}}(\hat{\beta}_j)}},
+$$
+
+and we know this follows a t distribution.
+
+Note that the statistics are all calculated at the MLE of the full model, so we only need to calculate the statistics at the full model. This makes it easier to do several tests at the same time. We will also note in passing that $(\hat{\beta}_j - \beta_j)^2/\widehat{\text{Var}}(\hat{\beta}_j)$ follows an F distribution 
+
+Wald statistics can also be calculated for more the complex tests. In essence, we measure the distance between ${\bf C}\hat{ {\bf \beta}}$ and ${\bf d}$, and standardise this:
+
+$$
+\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[{\hat{\sigma}} ^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d})
+$$
+
+And we know that this follows an F distribution.
+
+The test statistic for performing the test is called $F_{obs}$ and can be formulated in two ways:
+\begin{eqnarray}
+F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
+F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d}) \label{FobsCbeta}
+\end{eqnarray}
+where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\bf \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
+
+
+
+### Likelihood Ratio Tests
+
+
+The test statistic for performing the test is called $F_{obs}$ and can be formulated in two ways:
+\begin{eqnarray}
+F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
+F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d}) \label{FobsCbeta}
+\end{eqnarray}
+where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\bf \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
+
 
 ### Munich rent index hypothesis test
 We look at print-out using `summary` from fitting `lm`. 
@@ -1542,29 +1606,6 @@ We call the restricted model (when the null hypotesis is true) model B, or the s
 
 ---
 
-These null hypotheses and alternative hypotheses can all be rewritten as a linear hypothesis 
-\[H_0: {\bf C}{\bf \beta}={\bf d} \text{ vs. } {\bf C}{\bf \beta}\neq {\bf d} \]
-by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column vector of length $r$.
-
-The test statistic for performing the test is called $F_{obs}$ and can be formulated in two ways:
-\begin{eqnarray}
-F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
-F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d}) \label{FobsCbeta}
-\end{eqnarray}
-where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\bf \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
-
-----
-
-### Testing a set of parameters - what is ${\bf C}$ and ${\bf d}$?
-We consider a regression model with intercept and five covariates, $x_1, \ldots, x_5$. Assume that we want to know if the covariates $x_3$, $x_4$, and $x_5$ can be dropped (due to the fact that none of the corresponding $\beta_j$s are different from zero). This means that we want to test:
-
-$$H_0: \beta_{3}=\beta_{4}=\beta_{5}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0$$
-This means that our ${\bf C}$ is a $3\times 6$ matrix and ${\bf d}$ a $3 \times 1$ column vector
-$$ {\bf C}=\begin{pmatrix} 0 &0 &0 &1 &0&0 \\
-0&0&0&0&1&0\\
-0&0&0&0&0& 1\\
-\end{pmatrix} \text{ and } 
-{\bf d} =\begin{pmatrix} 0\\0\\0\\ \end{pmatrix}$$
 
 ----
 
