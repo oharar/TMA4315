@@ -1577,18 +1577,43 @@ Note that the statistics are all calculated at the MLE of the full model, so we 
 
 We will also note in passing that $\sqrt{W}$ follows a $t_{n-p}$ distribution, and sometimes this is considered the Wald statistic instead.
 
-Wald statistics can also be calculated for more the complex tests. In essence, we measure the distance between ${\bf C}\widehat{ {\bf \beta}}$ and ${\bf d}$, and standardise this (with $\widehat{\text{Var}}(C\widehat{\beta}_j)$):
+Wald statistics can also be calculated for more the complex tests. In essence, we measure the squared distance between ${\bf C}\widehat{ {\bf \beta}}$ and ${\bf d}$, and standardise this (with $\widehat{\text{Var}}(C\widehat{\beta}_j)$):
 
 $$
-\frac{1}{r}({\bf C}\widehat{ {\bf \beta}}-{\bf d})^{\text T}[{\widehat{\sigma}} ^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\widehat{ {\bf \beta}}-{\bf d}).
+({\bf C}\widehat{ {\bf \beta}}-{\bf d})^{\text T}[{\widehat{\sigma}} ^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\widehat{ {\bf \beta}}-{\bf d}).
 $$
 
+We know that this also follows an F distribution. If ${\widehat{\sigma}}^2$ was known, this would follow a $\chi^2$ distribution.
 
-We know that this also follows an F distribution. If ${\widehat{\sigma}}^2$ was known, this would follow a $\chi^2$ distribution, and its square root would follow a (wrapped-)normal distribution. We will see this idea in the wild later.
+### Likelihood Ratio Tests and Deviance
 
-### Likelihood Ratio Tests
+An alternative to the Wald test is the likelihood ratio test (LRT), which compares the likelihood of _two models_. We will use $-2 l(\theta)$ in place of the likelihood: for the normal distribution this replaces the SSE (sums of squares of errors, aka residual sums of squares) in the GLM setting. 
 
-An alternative to the Wald test (based on the F-test shown previously) is the likelihood ratio test (LRT), which compares the likelihood of _two models_.
+
+#### The Deviance 
+
+The _deviance_ is used to assess model fit and also for model choice, and is based on the likelihood 
+ratio test statistic. It is used for all GLMs in general. The deviance is based on teh likelihood for two models:
+
+**Saturated model:**
+If we were to provide a perfect fit to our data. This means that we have $\widehat{\mu}_i=y_i$.
+So, each observation is given its own parameter. 
+
+**Candidate model:**
+The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood and get $\widehat{\beta}$.
+
+The _deviance_ is then defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
+
+$$D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))$$
+
+The deviance compares the proposed model to the saturated model, and then ask "can we use a more parsimonious model to describe the data as well as the most general model does?".
+
+For the MLR it turns out that the deviance is
+$$D=\frac{1}{\sigma^2} \sum_{i=1}^n (y_i-{\bf x}_i^T \widehat{\boldsymbol\beta})^2=\frac{\text{SSE}}{\sigma^2}$$
+
+This is sometimes called the _scaled deviance_ while the _unscaled deviance_ is $\phi D$, where $\phi$ is the dispersion parameter. For the normal model the unscaled deviance is thus $\sigma^2 D=\text{SSE}$. 
+
+Warning: both the scaled and unscaled deviance is referred to as the deviance, and called $D$ in different sources. Our textbook use the scaled version, while R use the unscaled. 
 
 We use the following notation. A: the larger model (this is $H_1$) and B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
 
@@ -1602,9 +1627,7 @@ $$
 - 2\ln \lambda=-2(\ln L(\widehat{\beta}_B,\tilde{\sigma}_B)-\ln L(\widehat{\beta}_A,\tilde{\sigma}_A))
 $$ 
 
-(so, $-2$ times small minus large). $-2 l(\theta)$ is called the **deviance**. It is used frequently: we will discuss it more below.
-
-After a bit of work, the statistic becomes
+(so, $-2$ times small minus large). After a bit of work, the statistic becomes
 
 $$
 F_{obs}=\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}}
@@ -1616,11 +1639,9 @@ Under weak regularity conditions the test statistic is approximately $\chi^2$-di
 
 $P$-values are calculated in the upper tail of the $\chi^2$-distribution.
 
-Observe: to perform the test you need to fit both the small and the large model.
-
 Note: _asymptotically_ the Wald and likelihood ratio test statistics have the same distribution, but the value of the test statistics might be different. 
 
-For the normal distribution, these results are exact, i.e. the test statistic exactly follows a $\chi^2$ distribution **if we know $\sigma^2$**. If we estimate $\sigma^2$ (see above), the statistic follows an F distribution, and it identical to the Wald statistic. 
+For the normal distribution, these results are exact, i.e. the test statistic exactly follows a $\chi^2$ distribution **if we know $\sigma^2$**. If we estimate $\sigma^2$ (see above), the statistic follows an F distribution, and it is identical to the Wald statistic. 
 
 ## Score Tests
 
@@ -1631,7 +1652,8 @@ More formally, the test statistic for a score test is
 $$
 u(\beta_0) = s^T(\beta_0)F^{-1}(\beta_0)s(\beta_0)
 $$
-where $s(\beta_0)$ is the score, and $F(\beta_0)$ the expected Fisher information. Note that these are calulated at the value of $\beta_0$ from the null hypothesis.
+
+where $s(\beta_0)$ is the score, and $F(\beta_0)$ the expected Fisher information. Note that these are calulated at the value of $\beta_0$ from the null hypothesis, we do not need to calculate it at $\widehat{ {\bf \beta}}$.
 
 For the normal distribution the score is $s(\beta) = \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y})$ and the Fisher infoprmation is $\Sigma^{-1} (X^TX)$
 
@@ -1682,6 +1704,7 @@ cat("3. A: If a $(1-\alpha)$ 100% CI covers the hypothsized value (here 0) then 
 ---
 
 ## Testing linear hypotheses in regression
+
 We study a normal linear regression model with $p=k+1$ covariates, and refer to this as model A (the larger model). We then want  to investigate the null and alternative hypotheses of the following type(s):
 \begin{eqnarray*}
  H_0: \beta_{j}&=&0 \text{ vs. } H_1:\beta_j\neq 0\\
@@ -1691,13 +1714,9 @@ We study a normal linear regression model with $p=k+1$ covariates, and refer to 
  
 We call the restricted model (when the null hypotesis is true) model B, or the smaller model.
 
----
-
-
-----
-
 ### Testing one regression parameter
-If we set ${\bf C}=(0,1, 0, \cdots, 0)^T$, a row vector with 1 in position 2 and 0 elsewhere, and ${\bf d}=(0,0,\ldots,0)$, a column vector with 0s, then we test
+
+We can use a Wald test: we set ${\bf C}=(0,1, 0, \cdots, 0)^T$, a row vector with 1 in position 2 and 0 elsewhere, and ${\bf d}=(0,0,\ldots,0)$, a column vector with 0s, then we test
 $$ H_0: \beta_1=0 \text{ vs. } H_1: \beta_1\neq 0.$$
 Now ${\bf C}\widehat{\beta}=\beta_1$ and ${\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}=c_{11}$, so that $F_{obs}$ then is equal to the square of the $t$-statistics for testing a single regression parameter.
 $$F_{obs}=(\widehat{\beta}_1-0)^T[\widehat{\sigma}^2 c_{jj}]^{-1}(\widehat{\beta}_1-0)=T_1^2$$
@@ -1709,7 +1728,8 @@ Remark: Remember that $T_{\nu}^2=F_{1,\nu}$.
 ---
 
 ### Testing "significance of the regression"
-If we set ${\bf C}=(0,1,1, \cdots ,1)^T$, a row vector with 0 in position 1 and 0 elsewhere, and ${\bf d}=0$, a scalar, then we test
+
+Again, using a Wald test, if we set ${\bf C}=(0,1,1, \cdots ,1)^T$, a row vector with 0 in position 1 and 0 elsewhere, and ${\bf d}=0$, a scalar, then we test
 $$ H_0: \beta_1=\beta_2=\cdots= \beta_k =0 \text{ vs. } H_1: \text{at least one different from zero}.$$
 This means we test if at least one of the regression parameters (in addition to the intercept) is different from 0. The small model is then the model with only the intercept, and for this model the SSE$_{H_0}$ is equal to SST (sums of squares total, see below). Let SSE be the sums-of-squares of errors for the full model. If we have $k$ regression parameters (in addition to the intercept) then the F-statistic becomes
 $$ F_{obs}=\frac{\frac{1}{k}(\text{SST}-\text{SSE})}{\frac{\text{SSE}}{n-p}}$$
@@ -1731,28 +1751,6 @@ summary(fit)
 
 ----
 
-### Relation to Wald test
-
-Since $\text{Cov}(\widehat{\beta})=\sigma^2 ({\bf X}^T{\bf X})^{-1}$, then $\text{Cov}({\bf C}\widehat{\beta})={\bf C}\sigma^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$, so that ${\bf C}\widehat{\sigma}^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$ can be seen as an estimate of $\text{Cov}({\bf C}\widehat{\beta})$. Therefore, $F_{obs}$ can be written
-
-$$F_{obs}=\frac{1}{r}({\bf C}\widehat{ {\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\widehat{\beta})]^{-1}({\bf C}\widehat{ {\bf \beta}}-{\bf d})=\frac{1}{r}W$$
-where $W$ is a socalled Wald test. It is known that $W\sim \chi^2_r$ asymptotically as $n$ becomes large. We will study the Wald test in more detail later in this course.
-
----
-
-### Asymptotic result
-It can in general be shown that 
-$$r F_{r,n-p}\stackrel{n\rightarrow \infty}{\longrightarrow} \chi^2_r.$$
-That is, if we have a random variable $F$ that is distributed as Fisher with $r$ (numerator) and $n-p$ (denominator) degrees of freedom, then when $n$ goes to infinity ($p$ kept fixed), then $rF$ is approximately $\chi^2$-distributed with $r$ degrees of freedom.
-
-Also, if our error terms are not normally distributed then we can assume that when the number of observation becomes very large then $rF_{r,n-p}$ is approximately $\chi^2_r$.
-
-# Introducing deviance
-
-The deviance will replace the SSE (sums of squares of errors, aka residual sums of squares) in the GLM setting, and now we take a first look at the deviance, but to do that we first look at the likelihood ratio test.
-
----
-
 
 ### Example: Munich rent data
 
@@ -1773,32 +1771,6 @@ Observe that the LRT can be performed using `anova` with `test="Chisq".
 
 ---
 
-## Deviance
-
-The _deviance_ (new!) is used to assess model fit and also for model choice, and is based on the likelihood 
-ratio test statistic. It is used for all GLMs in general - and replaces using SSE in multiple linear regression.
-
-First: a covariate pattern is a unique combination of the covariates in our model, for continuous covariates we often have $n$ covariate patterns if we have $n$ observations. Let us assume that for now.
-
-**Saturated model:**
-If we were to provide a perfect fit to our data. This means that we have $\widehat{\mu}_i=y_i$.
-So, each observation is given its own parameter. 
-
-**Candidate model:**
-The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood and get $\widehat{\beta}$.
-
-The _deviance_ is then defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
-
-$$D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))$$
-
-The deviance compares the proposed model to the saturated model, and then ask "can we use a more parsimonious model to describe the data as well as the most general model does?".
-
-For the MLR it turns out that the deviance is
-$$D=\frac{1}{\sigma^2} \sum_{i=1}^n (y_i-{\bf x}_i^T \widehat{\boldsymbol\beta})^2=\frac{\text{SSE}}{\sigma^2}$$
-
-This is sometimes called the _scaled deviance_ while the _unscaled deviance_ is $\phi D$, where $\phi$ is the dispersion parameter. For the normal model the unscaled deviance is thus $\sigma^2 D=\text{SSE}$. 
-
-Warning: both the scaled and unscaled deviance is referred to as the deviance, and called $D$ in different sources. Our textbook use the scaled version, while R use the unscaled. 
 
 # Analysis of variance decomposition and coefficient of determination, $R^2$
 
@@ -1953,8 +1925,8 @@ If we consider two models with the same model complexity then SSE can be used to
 
 But, if we want to compare models with different model complexity we need to look at other measures of quality for the regression.
 
-
 ### $R^2$ adjusted (corrected) 
+
 $$R^2_{\text{adj}}=1-\frac{\frac{SSE}{n-p}}{\frac{SST}{n-1}}=1-\frac{n-1}{n-p}(1-R^2)$$
 Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
