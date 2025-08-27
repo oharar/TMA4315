@@ -234,7 +234,7 @@ $$L(\boldsymbol{\beta})=\prod_{i=1}^n L_i(\boldsymbol{\beta})=\prod_{i=1}^n f(y_
 
 ---
 
-###Loglikelihood $l(\boldsymbol{\beta})$
+### Loglikelihood $l(\boldsymbol{\beta})$
 The log-likelihood is just the natural log of the likelihood, and we work with the log-likelihood because this makes the mathematics simpler - since we work with exponential families.
 The main aim with the likelihood is to maximize it to find the maximum likelihood estimate, and since the log is a monotone function the maximum of the log-likelihood will be in the same place as the maximum of the likelihood.
 
@@ -310,8 +310,8 @@ $$
 
 ---
 
-To find the maximum likelihood estimate $\hat{\beta}$ we solve the set of $p$ equations:
-$$s(\hat{\boldsymbol{\beta}})=0$$
+To find the maximum likelihood estimate $\widehat{\beta}$ we solve the set of $p$ equations:
+$$s(\widehat{\boldsymbol{\beta}})=0$$
 
 **Q**: fill in for the multiple linear regression model. Specify what the _normal equations_ are.
 
@@ -332,7 +332,7 @@ Using Rule 1 and Rule 2 above.
 
 </details>
 
-For the normal linear regression model, these equations $s(\hat{\beta})=0$ have a solution to be written on closed form. 
+For the normal linear regression model, these equations $s(\widehat{\beta})=0$ have a solution to be written on closed form. 
 
 <details><summary>Solution</summary>
 The score is $\frac{\partial l(\beta)}{\partial \beta}$. We can write $\psi = \mathbf{y} - X \mathbf{\beta}$, and then from the chain rule have 
@@ -342,7 +342,7 @@ $$
 s(\beta) &= \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y}) = 0 \\
 &= X^TX \mathbf{\beta} - X^T \mathbf{y}\\
 (X^TX)^{-1}X^TX \mathbf{\beta} &= (X^TX)^{-1} X^T \mathbf{y}\\
-\mathbf{\hat{\beta}} &= (X^TX)^{-1} X^T \mathbf{y}
+\mathbf{\widehat{\beta}} &= (X^TX)^{-1} X^T \mathbf{y}
 
 \end{align}
 $$
@@ -353,7 +353,7 @@ $$
 
 ### Least squares and maximum likelihood (ML) estimator for ${\bf \beta}$:
 
-$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+$$ \widehat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
 
 **Q**: Least squares is found by minimizing $\sum_{i=1}^n (y_i-{\bf x}_i^T \boldsymbol{\beta})^2$. How can you see that least squares and ML gives the same estimator?
 
@@ -361,7 +361,7 @@ $$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
 
 ### Looking ahead: Hessian and Fisher information
 
-For other distribution than the normal we get a set of non-linear equations when we look at $s(\hat{\beta})=0$, and then we will use the Newton-Raphson or Fisher Scoring iterative methods.
+For other distribution than the normal we get a set of non-linear equations when we look at $s(\widehat{\beta})=0$, and then we will use the Newton-Raphson or Fisher Scoring iterative methods.
 
 
 
@@ -386,7 +386,7 @@ $$F(\beta) = E\left( -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T} \r
 
 **Q:** Calculate this for the multiple linear regression model. What is the dimension of $F(\beta)$?
 
-In Module 3 we need the Fisher information matrix in the Newton-Raphson method, and also to find the (asympotic) covariance matrix of our estimated coefficents $\hat{\beta}$ - so much more about this then.
+In Module 3 we need the Fisher information matrix in the Newton-Raphson method, and also to find the (asympotic) covariance matrix of our estimated coefficents $\widehat{\beta}$ - so much more about this then.
 
 ---
 
@@ -414,19 +414,19 @@ print(betahat)
 ## Projection matrices: idempotent, symmetric/orthogonal 
 (Optional - known from TMA4267)
 
-First, we define predictions as $\hat{\bf Y}={\bf X}\hat{\beta}$, and inserted the ML (and LS) estimate we get $\hat{\bf Y}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T{\bf Y}$. 
+First, we define predictions as $\widehat{\bf Y}={\bf X}\widehat{\beta}$, and inserted the ML (and LS) estimate we get $\widehat{\bf Y}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T{\bf Y}$. 
 
 We define the projection matrix
 $$  {\bf H}={\bf X}({\bf X}^T{\bf X})^{-1} {\bf X}^T$$
 called the _hat matrix_. This simplifies the notation for the predictions, 
-$$\hat{\bf Y}={\bf H}{\bf Y}$$ so the hat matrix is putting the hat on the response ${\bf Y}$.
+$$\widehat{\bf Y}={\bf H}{\bf Y}$$ so the hat matrix is putting the hat on the response ${\bf Y}$.
 
 ---
 
 In addition we define residuals as 
 \begin{align*}
-\hat{\varepsilon}&={\bf Y}-\hat{\bf Y} \\
-\hat{\varepsilon}&={\bf Y}-{\bf HY}=({\bf I-H}){\bf Y}\\
+\widehat{\varepsilon}&={\bf Y}-\widehat{\bf Y} \\
+\widehat{\varepsilon}&={\bf Y}-{\bf HY}=({\bf I-H}){\bf Y}\\
 \end{align*}
 so we have a second projection matrix
 $$ {\bf I-H}={\bf I}-{\bf X}({\bf X}^T{\bf X})^{-1} {\bf X}^T $$
@@ -444,11 +444,11 @@ $$ {\bf I-H}={\bf I}-{\bf X}({\bf X}^T{\bf X})^{-1} {\bf X}^T $$
 * Due to random error (and unobserved covariates),
         ${\bf Y}$ is not exactly a linear combination of the
         columns of ${\bf X}$.
-* LS-estimation chooses $\hat{\beta}$ such that
-        ${\bf X}\hat{\beta}$ is  the point in
+* LS-estimation chooses $\widehat{\beta}$ such that
+        ${\bf X}\widehat{\beta}$ is  the point in
         the column-space of ${\bf X}$ that is closes to ${\bf Y}$. 
 * The residual vector
-        $\hat{\varepsilon}={\bf Y}-\hat{ {\bf Y}}=({\bf I-H}){\bf Y}$ is perpendicular
+        $\widehat{\varepsilon}={\bf Y}-\widehat{ {\bf Y}}=({\bf I-H}){\bf Y}$ is perpendicular
         to the column-space of ${\bf X}$.
 * Multiplication by
         ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$ projects a
@@ -465,7 +465,7 @@ $$ {\bf I-H}={\bf I}-{\bf X}({\bf X}^T{\bf X})^{-1} {\bf X}^T $$
 
 ## Restricted maximum likelihood estimator for ${\bf \sigma}^2$
 
-$$ \hat{\sigma}^2=\frac{1}{n-p}({\bf Y}-{\bf X}{\hat{\beta}})^T({\bf Y}-{\bf X}{\bf \hat{\beta}})=\frac{\text{SSE}}{n-p}$$
+$$ \widehat{\sigma}^2=\frac{1}{n-p}({\bf Y}-{\bf X}{\widehat{\beta}})^T({\bf Y}-{\bf X}{\bf \widehat{\beta}})=\frac{\text{SSE}}{n-p}$$
 
 In the generalized linear models setting (remember exponential family from Module 1) we will look at the parameter $\sigma^2$ as a nuisance parameter = parameter that is not of interest to us. Our our focus will be on the parameters of interest - which will be related to the mean of the response, which is modelled using our covariate - so the regression parameters $\beta$ are therefore our prime focus.
 
@@ -473,19 +473,19 @@ However, to perform inference we need an estimator for $\sigma^2$.
 
 ---
 
-The maximum likelihood estimator for $\sigma^2$ is $\frac{\text{SSE}}{n}$, which is found from maximizing the likelihood inserted our estimate of $\hat{\beta}$
-$$L(\hat{\beta},{\sigma^2})=(\frac{1}{2\pi})^{n/2}(\frac{1}{\sigma^2})^{n/2}\exp(-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta}))$$
+The maximum likelihood estimator for $\sigma^2$ is $\frac{\text{SSE}}{n}$, which is found from maximizing the likelihood inserted our estimate of $\widehat{\beta}$
+$$L(\widehat{\beta},{\sigma^2})=(\frac{1}{2\pi})^{n/2}(\frac{1}{\sigma^2})^{n/2}\exp(-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\widehat{\beta})^T({\bf y}-{\bf X}\widehat{\beta}))$$
 $$
 \begin{align}
-l(\hat{\beta},{\sigma^2})&=\text{ln}(L(\hat{\beta},{\sigma^2}))\\
-&=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})
+l(\widehat{\beta},{\sigma^2})&=\text{ln}(L(\widehat{\beta},{\sigma^2}))\\
+&=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\widehat{\beta})^T({\bf y}-{\bf X}\widehat{\beta})
 \end{align}
 $$
 
 The score vector with respect to $\sigma^2$ is
-$$\frac{\partial l}{\partial \sigma^2}=0-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta}) $$
+$$\frac{\partial l}{\partial \sigma^2}=0-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}({\bf y}-{\bf X}\widehat{\beta})^T({\bf y}-{\bf X}\widehat{\beta}) $$
 Solving $\frac{\partial l}{\partial \sigma^2}=0$ gives us the estimator
-$$ \frac{1}{n}({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})=\frac{\text{SSE}}{n}$$ But, this estimator is biased.
+$$ \frac{1}{n}({\bf y}-{\bf X}\widehat{\beta})^T({\bf y}-{\bf X}\widehat{\beta})=\frac{\text{SSE}}{n}$$ But, this estimator is biased.
 
 ---
 
@@ -496,11 +496,11 @@ But, the estimator is _asympotically_ unbiased (unbiased when the sample size $n
 ---
 
 When an unbiased version is preferred, it is found using _restricted maximum likelihood_ (REML). We will look into REML-estimation in Module 7. In our case the (unbiased) REML estimate is
-$$ \hat{\sigma}^2=\frac{1}{n-p}({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})=\frac{\text{SSE}}{n-p}$$
+$$ \widehat{\sigma}^2=\frac{1}{n-p}({\bf y}-{\bf X}\widehat{\beta})^T({\bf y}-{\bf X}\widehat{\beta})=\frac{\text{SSE}}{n-p}$$
 
 The restricted maximum likelihood estimate is used in `lm`.
 
-**Q:** What does it mean that the REML estimate is unbiased? Where is the estimate $\hat{\sigma}$ in the regression output? (See output from `lm` for the rent index example.)
+**Q:** What does it mean that the REML estimate is unbiased? Where is the estimate $\widehat{\sigma}$ in the regression output? (See output from `lm` for the rent index example.)
 
 ```{r , echo=FALSE, eval=showsol, warning=FALSE, message=FALSE}
 cat("Answer: \n")
@@ -511,7 +511,7 @@ cat("Residual standard error: 2.031 is sigmahat")
 
 <!-- ## Orthogonal parameters -->
 
-<!-- **Q**: Why can we find $\hat{\boldsymbol{\beta}}$ first (from maximizing the likelihood wrt $\boldsymbol{\beta}$), and then replace $\boldsymbol{\beta}$ by $\hat{\boldsymbol{\beta}}$ in the likelihood and then maximize wrt $\sigma^2$? Why do we not have to maximize wrt both $\boldsymbol{\beta}$ and $\sigma^2$ simultaneously? That is, solve -->
+<!-- **Q**: Why can we find $\widehat{\boldsymbol{\beta}}$ first (from maximizing the likelihood wrt $\boldsymbol{\beta}$), and then replace $\boldsymbol{\beta}$ by $\widehat{\boldsymbol{\beta}}$ in the likelihood and then maximize wrt $\sigma^2$? Why do we not have to maximize wrt both $\boldsymbol{\beta}$ and $\sigma^2$ simultaneously? That is, solve -->
 
 <!-- $$ \begin{pmatrix} -->
 <!-- \sum_{i=1}^n \frac{\partial l_i(\boldsymbol{\beta},\sigma^2)}{\partial \boldsymbol{\beta}} \\ \sum_{i=1}^n \frac{\partial l_i(\boldsymbol{\beta},\sigma^2)}{\partial \sigma^2} -->
@@ -528,16 +528,16 @@ cat("Residual standard error: 2.031 is sigmahat")
 To be able to do inference (=make confidence intervals, prediction intervals, test hypotheses) we need to know about the properties of our parameter estimators in the (normal) linear model.
 
 * Least squares and maximum likelihood estimator for ${\bf \beta}$:
-\[ \hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
-with $\hat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
+\[ \widehat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
+with $\widehat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
 
 * Restricted maximum likelihood estimator for ${\bf \sigma}^2$:
-\[ \hat{\sigma}^2=\frac{1}{n-p}({\bf Y}-{\bf X}\hat{\beta})^T({\bf Y}-{\bf X}\hat{\beta})=\frac{\text{SSE}}{n-p}\]
-with $\frac{(n-p)\hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p}$.
+\[ \widehat{\sigma}^2=\frac{1}{n-p}({\bf Y}-{\bf X}\widehat{\beta})^T({\bf Y}-{\bf X}\widehat{\beta})=\frac{\text{SSE}}{n-p}\]
+with $\frac{(n-p)\widehat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p}$.
 
 * Statistic for inference about $\beta_j$, $c_{jj}$ is diagonal element $j$ of $({\bf X}^T{\bf X})^{-1}$.
-$T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p}$
-This requires that $\hat{\beta}_j$ and $\hat{\sigma}$ are independent (see below).
+$T_j=\frac{\widehat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\widehat{\sigma}}\sim t_{n-p}$
+This requires that $\widehat{\beta}_j$ and $\widehat{\sigma}$ are independent (see below).
 
 ---
 
@@ -546,16 +546,16 @@ However, when we work with _large samples_ then $n-p$ becomes large and the $t$ 
 ---
 
 **Asymptotically** we have:
-$$\hat{\beta}\sim N_{p}(\beta,\tilde{\sigma}^2({\bf X}^T{\bf X})^{-1})$$
+$$\widehat{\beta}\sim N_{p}(\beta,\tilde{\sigma}^2({\bf X}^T{\bf X})^{-1})$$
 and
-$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\tilde{\sigma}}\sim N(0,1)$$
+$$ T_j=\frac{\widehat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\tilde{\sigma}}\sim N(0,1)$$
 where $\tilde{\sigma}^2=\frac{\text{SSE}}{n}$ (the ML estimator).
 
-**Q:** Pointing forwards: do you see any connection between the covariance matrix of $\hat{\boldsymbol{\beta}}$ and the Fisher information?
+**Q:** Pointing forwards: do you see any connection between the covariance matrix of $\widehat{\boldsymbol{\beta}}$ and the Fisher information?
 
 ----
 
-## Are $\hat{ {\bf \beta}}$ and SSE are independent? (optional)
+## Are $\widehat{ {\bf \beta}}$ and SSE are independent? (optional)
 
 Independence:  Let ${\bf X}_{(p \times 1)}$ be a random vector from
     $N_p({\bf \mu},{\boldsymbol \Sigma})$. Then ${\bf A}{\bf X}$ and ${\bf B}{\bf X}$ are independent 
@@ -563,7 +563,7 @@ iff ${\bf A}{\boldsymbol \Sigma}{\bf B}^T={\bf 0}$.
 
 * ${\bf Y}\sim N_n({\bf X}{\bf \beta},\sigma^2{\bf I})$
 
-* ${\bf AY}=\hat{ {\bf \beta}}=({\bf X}^T{\bf X})^{-1}{\bf X}^T {\bf Y}$, and
+* ${\bf AY}=\widehat{ {\bf \beta}}=({\bf X}^T{\bf X})^{-1}{\bf X}^T {\bf Y}$, and
 
 * ${\bf BY}=({\bf I}-{\bf H}){\bf Y}$.
 
@@ -571,11 +571,11 @@ iff ${\bf A}{\boldsymbol \Sigma}{\bf B}^T={\bf 0}$.
 
 * since ${\bf X}({\bf I}-{\bf H})={\bf X}-{\bf HX}={\bf X}-{\bf X}={\bf 0}$.
 
-* We conclude that $\hat{ {\bf \beta}}$ is independent of $({\bf I}-{\bf H}){\bf Y}$,
+* We conclude that $\widehat{ {\bf \beta}}$ is independent of $({\bf I}-{\bf H}){\bf Y}$,
 
 * and, since SSE=function of $({\bf I}-{\bf H}){\bf Y}$: SSE=${\bf Y}^T({\bf I}-{\bf H}){\bf Y}$,
 
-* then $\hat{ {\bf \beta}}$ and SSE are independent, and the result with $T_j$ being t-distributed with $n-p$ degrees of freedom is correct.
+* then $\widehat{ {\bf \beta}}$ and SSE are independent, and the result with $T_j$ being t-distributed with $n-p$ degrees of freedom is correct.
 
 Remark: a similar result will exist for GLMs, using the concept of _orthogonal parameters_. 
 
@@ -613,14 +613,14 @@ Go to separate R Markdown or html document: [QQ--plot as Rmd](https://www.math.n
 ## Residuals
 
 If we assume the normal linear model then we know that the  residuals ($n\times 1$ vector)
-$$\hat{\varepsilon}={\bf Y}-{\bf \hat{Y}}=({\bf I}-{\bf H}){\bf Y}$$
-has a normal (singular) distribution with mean $\text{E}(\hat{\varepsilon})={\bf 0}$ and covariance matrix $\text{Cov}(\hat{ \varepsilon})=\sigma^2({\bf I}-{\bf H})$ where ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
+$$\widehat{\varepsilon}={\bf Y}-{\bf \widehat{Y}}=({\bf I}-{\bf H}){\bf Y}$$
+has a normal (singular) distribution with mean $\text{E}(\widehat{\varepsilon})={\bf 0}$ and covariance matrix $\text{Cov}(\widehat{ \varepsilon})=\sigma^2({\bf I}-{\bf H})$ where ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
 
 This means that the residuals (possibly) have different variance, and may also be correlated.
 
 ---
 
-Our best guess for the error $\varepsilon$ is the residual vector $\hat{\varepsilon}$, and we may think of the residuals as _predictions of the errors_. 
+Our best guess for the error $\varepsilon$ is the residual vector $\widehat{\varepsilon}$, and we may think of the residuals as _predictions of the errors_. 
 Be aware: don't mix errors (the unobserved) with the residuals ("observed"). 
 
 But, we see that the residuals are not independent and may have different variance, therefore we will soon define variants of the residuals that we may use to assess model assumptions after a data set is fitted.
@@ -635,17 +635,17 @@ That is, we want to check that our errors are independent, homoscedastic (same v
 
 ---
 
-###Standardized residuals:
+### Standardized residuals:
 
-$$r_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}\sqrt{1-h_{ii}}}$$
+$$r_i=\frac{\widehat{\varepsilon}_i}{\widehat{\sigma}\sqrt{1-h_{ii}}}$$
 where $h_ii$ is the $i$th diagonal element of the hat matrix ${\bf H}$.
 
 In R you can get the standardized residuals from an `lm`-object (named `fit`) by `rstandard(fit)`.
 
-###Studentized residuals:
+### Studentized residuals:
 
-$$r^*_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}_{(i)}\sqrt{1-h_{ii}}}$$
-where $\hat{\sigma}_{(i)}$ is the estimated error variance in a model with observation number $i$ omitted. This seems like a lot of work, but it can be shown that it is possible to calculated the studentized residuals directly from the standardized residuals:
+$$r^*_i=\frac{\widehat{\varepsilon}_i}{\widehat{\sigma}_{(i)}\sqrt{1-h_{ii}}}$$
+where $\widehat{\sigma}_{(i)}$ is the estimated error variance in a model with observation number $i$ omitted. This seems like a lot of work, but it can be shown that it is possible to calculated the studentized residuals directly from the standardized residuals:
 $$r^*_i=r_i (\frac{n-p-1}{n-p-r_i^2})^{1/2}$$
 
 In R you can get the studentized residuals from an `lm`-object (named `fit`) by `rstudent(fit)`.
@@ -655,7 +655,7 @@ In R you can get the studentized residuals from an `lm`-object (named `fit`) by 
 ### Plotting residuals - and what to do when assumptions are violated?
 Some important plots
 
-1. Plot the residuals, $r^*_i$ against the predicted values, $\hat{y}_i$.
+1. Plot the residuals, $r^*_i$ against the predicted values, $\widehat{y}_i$.
 
 - Dependence of the residuals on the predicted value: wrong regression model?
                 
@@ -767,7 +767,7 @@ This plot can reveal influential outliers. Not all outliers are influential in l
 
 ---
 
-Cook's distance is the Euclidean distance between the $\mathbf{\hat{y}}$ (the fitted values) and $\mathbf{\hat{y}}_{(i)}$ (the fitted values calculated when the $i$-th observation is omitted from the regression). This is then a measure on how much the model is influences by observation $i$. The distance is scaled, and a rule of thumb is to examine observations with Cook's distance larger than 1, and give some attention to those with Cook's distance above 0.5.
+Cook's distance is the Euclidean distance between the $\mathbf{\widehat{y}}$ (the fitted values) and $\mathbf{\widehat{y}}_{(i)}$ (the fitted values calculated when the $i$-th observation is omitted from the regression). This is then a measure on how much the model is influences by observation $i$. The distance is scaled, and a rule of thumb is to examine observations with Cook's distance larger than 1, and give some attention to those with Cook's distance above 0.5.
 
 Leverage is defined as the diagonal elements of the hat matrix, i.e., the leverage of the $i$-th data point is $h_{ii}$ on the diagonal of $\mathbf{H = X(X^TX)^{-1}X^T}$. A large leverage indicated that the observation ($i$) has a large influence on the estimation results, and that the covariate values ($\mathbf{x}_i$) are unusual.
 
@@ -931,16 +931,16 @@ Below we see that the interaction term is highly significant. The $p$-value is v
 
 *Interpretation of the interaction term:*
 
-* If we now increase the `temperature` by $10^{\circ}$ F, the increase in `wind` speed will be $$(\hat \beta_1+\hat \beta_3 \cdot x_w) \cdot 10 = (4.0 -0.22 \cdot x_w) \cdot 10 = 40-2.2 x_w \text{ units}.$$
+* If we now increase the `temperature` by $10^{\circ}$ F, the increase in `wind` speed will be $$(\widehat \beta_1+\widehat \beta_3 \cdot x_w) \cdot 10 = (4.0 -0.22 \cdot x_w) \cdot 10 = 40-2.2 x_w \text{ units}.$$
 
-* If we increase the `wind` speed by 10 mph, the increase in `temperature` will be $$(\hat \beta_2 + \hat \beta_3 \cdot x_t) \cdot 10 = (14 -0.22 \cdot x_t) \cdot 10 = 140-2.2 x_t \text{ units}.$$
+* If we increase the `wind` speed by 10 mph, the increase in `temperature` will be $$(\widehat \beta_2 + \widehat \beta_3 \cdot x_t) \cdot 10 = (14 -0.22 \cdot x_t) \cdot 10 = 140-2.2 x_t \text{ units}.$$
 
 
 **The hierarchical principle**
 
 It is possible that the interaction term is higly significant, but the main effects are not.
 
-In our `ozone.int` model above: the main effects are `temperature` and `wind`. The hierarchical principle states that if we include an interaction term in our model, the main effects are also to be included, even if they are not significant. This means that if the coefficients $\hat \beta_1$ or $\hat \beta_2$ would be insignificant, while the coefficient $\hat \beta_3$ is significant, $\hat \beta_1$ and $\hat \beta_2$ should still be included in the model.
+In our `ozone.int` model above: the main effects are `temperature` and `wind`. The hierarchical principle states that if we include an interaction term in our model, the main effects are also to be included, even if they are not significant. This means that if the coefficients $\widehat \beta_1$ or $\widehat \beta_2$ would be insignificant, while the coefficient $\widehat \beta_3$ is significant, $\widehat \beta_1$ and $\widehat \beta_2$ should still be included in the model.
 
 There reasons for this is that a model with interaction terms, but without the main effects is hard to interpret.
 
@@ -983,11 +983,11 @@ What is the set of equations we solve to find parameter estimates? What if we co
 
 ---
 
-4. A core finding is $\hat \beta$. 
-\[ \hat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
-with $\hat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
+4. A core finding is $\widehat \beta$. 
+\[ \widehat{\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
+with $\widehat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
 
-Show that $\hat{\beta}$ has this distribution with the given mean and covariance matrix. What does this imply for the distribution of the $j$th element of $\hat{\beta}$? In particular, how can we calculate the variance of $\hat{\beta}_j$?
+Show that $\widehat{\beta}$ has this distribution with the given mean and covariance matrix. What does this imply for the distribution of the $j$th element of $\widehat{\beta}$? In particular, how can we calculate the variance of $\widehat{\beta}_j$?
 
 5. Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this?
 
@@ -1196,7 +1196,7 @@ $\mu_i=\eta_i$.
 
 * Likelihood $L(\beta)=\prod_{i=1}^n f(y_i; \beta)$.
 * Loglikelihood $l(\beta)=\ln L(\beta)$.
-* Score function $s(\beta)=\frac{\partial l(\beta)}{\partial \beta}$. Find ML estimates by solving $s(\hat{\boldsymbol \beta})={\bf 0}$.
+* Score function $s(\beta)=\frac{\partial l(\beta)}{\partial \beta}$. Find ML estimates by solving $s(\widehat{\boldsymbol \beta})={\bf 0}$.
 * Observed $H(\boldsymbol{\beta}) = -\frac{\partial^2l(\beta)}{\partial\beta\partial\beta^T}$ and expected Fisher information $F(\beta) =\text{E}(H(\boldsymbol{\beta}))$
 
 ---
@@ -1204,25 +1204,25 @@ $\mu_i=\eta_i$.
 ### Parameter estimators with properties
 
 * Parameter of interest is $\beta$ and $\sigma^2$ is a nuisance. Maximum likelihood estimator 
-$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
-has distribution: $\hat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
+$$ \widehat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+has distribution: $\widehat{\beta}\sim N_{p}(\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
 * Restricted maximum likelihood estimator for ${\bf \sigma}^2$:
-\[ \hat{\sigma}^2=\frac{1}{n-p}({\bf Y}-{\bf X}\hat{\beta})^T({\bf Y}-{\bf X}\hat{\beta})=\frac{\text{SSE}}{n-p}\]
-with $\frac{(n-p)\hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p}$.
+\[ \widehat{\sigma}^2=\frac{1}{n-p}({\bf Y}-{\bf X}\widehat{\beta})^T({\bf Y}-{\bf X}\widehat{\beta})=\frac{\text{SSE}}{n-p}\]
+with $\frac{(n-p)\widehat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p}$.
 
 ---
 
 * Statistic for inference about $\beta_j$, $c_{jj}$ is diagonal element $j$ of $({\bf X}^T{\bf X})^{-1}$.
-\[ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p}\]
-This requires that $\hat{\beta}_j$ and $\hat{\sigma}$ are independent.
+\[ T_j=\frac{\widehat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\widehat{\sigma}}\sim t_{n-p}\]
+This requires that $\widehat{\beta}_j$ and $\widehat{\sigma}$ are independent.
 * Asymptotically
-\[ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\approx N(0,1)\]
+\[ T_j=\frac{\widehat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\widehat{\sigma}}\approx N(0,1)\]
 
-Sums of squares of error (SSE): $\text{SSE}=({\bf Y}-{\bf X}{\hat{\beta}})^T({\bf Y}-{\bf X}{\bf \hat{\beta}})=\hat{\varepsilon}^T \hat{\varepsilon}=\sum_{i=1}^n(Y_i-{\bf x}_i^T\boldsymbol{\beta})^2$.
+Sums of squares of error (SSE): $\text{SSE}=({\bf Y}-{\bf X}{\widehat{\beta}})^T({\bf Y}-{\bf X}{\bf \widehat{\beta}})=\widehat{\varepsilon}^T \widehat{\varepsilon}=\sum_{i=1}^n(Y_i-{\bf x}_i^T\boldsymbol{\beta})^2$.
 
 # Parameter estimation in practice
 
-$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+$$ \widehat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
 
 **Q**: How is this done in `lm`?
 
@@ -1253,12 +1253,12 @@ We need analysis tools that are
 
 If the number of observations, $n$, is large a parallel formulation is valuable.
 
-In the simple case where we want to calculate an average, $\hat{\mu}=\sum_{i=1}^n y_i$, we may divide the dataset into $G$ groups (with $n_g$ observations in each group) and calculate sums (or averages) in each group.
-Group sums: $\hat{\mu}_g=\frac{1}{n_g}\sum_{i:g_i=g} y_i$.
-$$ \hat{\mu}=\frac{1}{n}\sum_{i=1}^n y_i=\frac{1}{n}\sum_{g=1}^G \sum_{i:g_i=g} y_i=\frac{1}{n}\sum_{g=1}^G n_g \hat{\mu}_g$$
+In the simple case where we want to calculate an average, $\widehat{\mu}=\sum_{i=1}^n y_i$, we may divide the dataset into $G$ groups (with $n_g$ observations in each group) and calculate sums (or averages) in each group.
+Group sums: $\widehat{\mu}_g=\frac{1}{n_g}\sum_{i:g_i=g} y_i$.
+$$ \widehat{\mu}=\frac{1}{n}\sum_{i=1}^n y_i=\frac{1}{n}\sum_{g=1}^G \sum_{i:g_i=g} y_i=\frac{1}{n}\sum_{g=1}^G n_g \widehat{\mu}_g$$
 This makes it possible to calculate the average in parallell operations and put the result together again.
 
-**Q**: Can this also be done for $\hat{\beta}$?
+**Q**: Can this also be done for $\widehat{\beta}$?
 
 ---
 
@@ -1267,7 +1267,7 @@ This makes it possible to calculate the average in parallell operations and put 
 * `lm` requires memory of order $O(np + p^2)$, which causes problems when $n$ is large.
 * The solution `biglm` needs memory of the order $O(p^2)$ where computations are performed in blocks.
 
-Remark: for GLM in general we have no closed form solutions to the $s(\hat{\boldsymbol \beta})={\bf 0}$ so we will use numerical optimization to handle this, and the ´biglm´ also solves the GLM.
+Remark: for GLM in general we have no closed form solutions to the $s(\widehat{\boldsymbol \beta})={\bf 0}$ so we will use numerical optimization to handle this, and the ´biglm´ also solves the GLM.
 
 # Inference
 We will consider confidence intervals and prediction intervals, and then test single and linear hypotheses. Most of this should be known to you from earlier regression courses. We will only focus on the results, and you need to read the details in the derivation by yourself. 
@@ -1278,7 +1278,7 @@ In addition to providing a parameter estimate for each element of our parameter 
 
 ---
 
-We focus on element $j$ of $\beta$, called $\beta_j$. It is known that $T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}$ follows a $t$-distribution with $n-p$ degrees of freedom. Let $t_{\alpha/2,n-p}$ be such that $P(T_j>t_{\alpha/2,n-p})=\alpha/2$. REMARK: our textbook would here look at area to the left instead of to the right - but we stick with this notation.
+We focus on element $j$ of $\beta$, called $\beta_j$. It is known that $T_j =\frac{\widehat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\widehat{\sigma}}$ follows a $t$-distribution with $n-p$ degrees of freedom. Let $t_{\alpha/2,n-p}$ be such that $P(T_j>t_{\alpha/2,n-p})=\alpha/2$. REMARK: our textbook would here look at area to the left instead of to the right - but we stick with this notation.
 Since the $t$-distribution is symmetric around 0, then $P(T_j< -t_{\alpha/2,n-p})=\alpha/2$. We may then write
 $$ P(-t_{\alpha/2,n-p}\le T_j \le t_{\alpha/2,n-p})=1-\alpha$$
 
@@ -1322,13 +1322,13 @@ ggplot(data.frame(x=c(-4,4)), aes(x))+
 
 ---
 
-Inserting $T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}$ and solving so $\beta_j$ is in the middle gives:
-$$ P(\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}
-\le \beta_j \le \hat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma})=1-\alpha$$
+Inserting $T_j =\frac{\widehat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\widehat{\sigma}}$ and solving so $\beta_j$ is in the middle gives:
+$$ P(\widehat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\widehat{\sigma}
+\le \beta_j \le \widehat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\widehat{\sigma})=1-\alpha$$
 
 ---
 
-A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: $[\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}]$.
+A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: $[\widehat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\widehat{\sigma},\widehat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\widehat{\sigma}]$.
 
 CIs can be found in R using `confint` on an `lm` object. (Here dummy variable coding is used for `location`, with average as reference location.)
 
@@ -1346,7 +1346,7 @@ confint(fit)
 **Q** (and A): 
 
 1. What is the interpretation of a 95% confidence interval? 
-2. Does the CI for $\hat{\beta}_{\text{area}}$ change if we change the regression model (e.g. not include `cheating`)? 
+2. Does the CI for $\widehat{\beta}_{\text{area}}$ change if we change the regression model (e.g. not include `cheating`)? 
 3. How can we in practice find a CI for `location1` (average location) - when that is not printed above? (Yes, may use formula, but in R without maths?) 
 4. What if we go for an asymptotic confidence interval - what will change?
 
@@ -1364,34 +1364,34 @@ cat("4. Only quantiles of normal instead of $t$.\n")
 
 Remember, one aim for regression was to "construct a model to predict the reponse from a set of (one or several) explanatory variables- more or less black box". 
 
-Assume we want to make a prediction (of the response - often called $Y_0$) given specific values for the covariates - often called ${\bf x}_0$. An intuitive point estimate is $\hat{Y}_0={\bf x}_0^T \hat{\beta}$ - but to give a hint of the uncertainty in this prediction we also want to present a prediction interval for the $Y_0$.
+Assume we want to make a prediction (of the response - often called $Y_0$) given specific values for the covariates - often called ${\bf x}_0$. An intuitive point estimate is $\widehat{Y}_0={\bf x}_0^T \widehat{\beta}$ - but to give a hint of the uncertainty in this prediction we also want to present a prediction interval for the $Y_0$.
 
 ---
 
-To arrive at such an estimate we start with the difference between the unobserved response $Y_0$ (for a given covariate vector ${\bf x}_0$) and the point prediction $\hat{Y}_0$, $Y_0-\hat{Y}_0$. 
+To arrive at such an estimate we start with the difference between the unobserved response $Y_0$ (for a given covariate vector ${\bf x}_0$) and the point prediction $\widehat{Y}_0$, $Y_0-\widehat{Y}_0$. 
 First, we assume that the unobserved response at covariate ${\bf x}_0$ is independent of our previous observations and follows the same distibution, that is 
 $Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)$. Further, 
 
-$$\hat{Y}_0={\bf x}_0^T \hat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).$$
+$$\widehat{Y}_0={\bf x}_0^T \widehat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).$$
 
-Then, for $Y_0-{\bf x}_0^T \hat{\beta}$ we have
-$$\text{E}(Y_0-{\bf x}_0^T \hat{\beta})=0 \text{ and } \text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \hat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0$$
+Then, for $Y_0-{\bf x}_0^T \widehat{\beta}$ we have
+$$\text{E}(Y_0-{\bf x}_0^T \widehat{\beta})=0 \text{ and } \text{Var}(Y_0-{\bf x}_0^T \widehat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \widehat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0$$
 so that 
-$$Y_0-{\bf x}_0^T \hat{\beta}\sim N(0,\sigma^2 (1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0)) $$
+$$Y_0-{\bf x}_0^T \widehat{\beta}\sim N(0,\sigma^2 (1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0)) $$
 ---
 
 Inserting our REML-estimate for $\sigma^2$ gives 
 
-$$T=\frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}}\sim t_{n-p}.$$
+$$T=\frac{Y_0-{\bf x}_0^T \widehat{\beta}}{\widehat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}}\sim t_{n-p}.$$
 
 Then, we start with 
-$$ P(-t_{\alpha/2,n-p}\le \frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}} \le t_{\alpha/2,n-p})=1-\alpha$$
+$$ P(-t_{\alpha/2,n-p}\le \frac{Y_0-{\bf x}_0^T \widehat{\beta}}{\widehat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}} \le t_{\alpha/2,n-p})=1-\alpha$$
 and solve so that $Y_0$ is in the middle, which gives
-$$P({\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0} \le Y_0 \le {\bf x}_0^T \hat{\beta}+t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0})=1-\alpha$$
+$$P({\bf x}_0^T \widehat{\beta}-t_{\alpha/2,n-p}\widehat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0} \le Y_0 \le {\bf x}_0^T \widehat{\beta}+t_{\alpha/2,n-p}\widehat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0})=1-\alpha$$
 
 ---
 
-A $(1-\alpha)$% PI for $Y_0$ is when we insert numerical values for the upper and lower limits: $[{\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}, {\bf x}_0^T \hat{\beta}+t_{\alpha/2,n-p}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}]$.
+A $(1-\alpha)$% PI for $Y_0$ is when we insert numerical values for the upper and lower limits: $[{\bf x}_0^T \widehat{\beta}-t_{\alpha/2,n-p}\widehat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}, {\bf x}_0^T \widehat{\beta}+t_{\alpha/2,n-p}\widehat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}]$.
 
 ----
 
@@ -1436,8 +1436,11 @@ Hypothesis testing is an area of statistics that can cause far too many argument
 - Invent a hypothesis, i.e. decide what question you are asking.
     - Then derive $H_0$ and $H_1$
 - find a test statistic to distinguish between $H_0$ and $H_1$
+    - We will look at three below
 - work out the distribution of test statistic, either under $H_0$ or $H_1$
+    - Take your pick from normal or $t$, or $\chi^2$ or $F$
 - Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$
+    - Take your pick from normal or $t$, or $\chi^2$ or $F$
 - Report the result of the test
 
 
@@ -1445,24 +1448,23 @@ Hypothesis testing is an area of statistics that can cause far too many argument
 
 In single hypothesis testing we are interesting in testing one null hypothesis against an alternative hypothesis. In linear regression the hypothesis is often about a regression parameter $\beta_j$.
 
-
-- Invent a hypothesis
+- *Invent a hypothesis*
 
 In linear regression the hypothesis is often about a regression parameter $\beta_j$, e.g. $H_0: \beta_j=0 \text{ vs. } H_1: \beta_j\neq 0$. We can of course compare it to other numbers, not just 0.
 
-- find a test statistic to distinguish between $H_0$ and $H_1$
+- *find a test statistic to distinguish between $H_0$ and $H_1$*
 
-In linear regression models one test statistic for testing $H_0: \beta_j=0$ is $T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}_{\varepsilon}}$ where $c_{jj}\hat{\sigma}_{\varepsilon}^2=\widehat{\text{Var}}(\hat{\beta}_j)$. 
+In linear regression models one test statistic for testing $H_0: \beta_j=0$ is $T_0=\frac{\widehat{\beta}_j-0}{\sqrt{c_{jj}}\widehat{\sigma}_{\varepsilon}}$ where $c_{jj}\widehat{\sigma}_{\varepsilon}^2=\widehat{\text{Var}}(\widehat{\beta}_j)$. 
 
 Inserted observed values (and estimates) we have $t_0$.
 
 (more on test statistics shortly)
 
-- Work out the distribution of test statistic under $H_0$
+- *Work out the distribution of test statistic under $H_0$*
 
 For example, we know that $T_0\sim t_{n-2}$ so this is easy. Sometimes we cannot work the distribution out, so we simulate it.
 
-- Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$
+- *Calculate the p-value, i.e. the probability of the data (or something more extreme) under $H_0$*
 
 ```{r, eval=FALSE}
 pt(...)
@@ -1481,7 +1483,7 @@ In our linear regression we use the $t$-distibution to calculate p-values for ou
 
 $$p\text{-value}=P(T_0>\text{abs}(t_0))+P(T_0<-\text{abs}(t_0))=2\cdot P(T_0>\text{abs}(t_0)).$$
 
-- Reporting the Result
+- *Reporting the Result*
 
 The strict interpretation: We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test is smaller than the chosen significance level.
 We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
@@ -1517,46 +1519,131 @@ $$ {\bf C}=\begin{pmatrix} 0 &0 &0 &1 &0&0 \\
 
 Above we used a t-statistic as a test statistic. But did not explain why. Here we will explain three approaches to developing test statistics. For a simple linear regression they all lead to the same place (well, almost), but in other problems they can be different.
 
+The three statistics are:
+
+* the Wald statistic: the difference between parameter values at $H_0$ and $H_1$
+* the likelihood ratio: the ratio of the likelihoods at $H_0$ and $H_1$
+* the score statistic: the slope of the likelihood at $H_1$ (i.e. the score at $H_1$)
+
+We can summarise the tests in a neat figure^[redrawn from Fig. 6.2 of D.R. Cox's Principles of Statistical Inference]:
+
+```{r TestStats, echo=FALSE}
+
+Calclh <- function(x, theta0) -(x-theta0)^2
+CalcScore <- function(x, theta0) -2*x+2*theta0
+
+theta <- seq(0,1, length=30)
+theta0=0.23
+thetahat=0.55
+
+lhood <- Calclh(theta, theta0=thetahat)
+
+plot(theta, lhood, type="l", xaxt="n", yaxt="n",
+     xlab=expression(theta), ylab=expression(l(theta)))
+
+lines(rep(thetahat,2), c(-50, Calclh(thetahat, theta0=thetahat)))
+lines(rep(theta0,2), c(-50, Calclh(theta0, theta0=thetahat)))
+lines(c(theta0-1,theta0+1), Calclh(theta0,thetahat)+c(-1,1)*CalcScore(theta0,thetahat))
+
+arrows(x0=theta0, y0=Calclh(theta0, theta0=thetahat), 
+       x1=thetahat, y1=Calclh(theta0, theta0=thetahat), code=3, length=0.1)
+arrows(x0=thetahat, y0=Calclh(theta0, theta0=thetahat), 
+       x1=thetahat, y1=Calclh(thetahat, theta0=thetahat), code=3, length=0.1)
+text((theta0 +thetahat)/2, Calclh(theta0, theta0=thetahat),
+     "Wald", adj=c(0.5, -1))
+text(thetahat, sum(Calclh(c(theta0,thetahat), theta0=thetahat))/2,
+     "LRT", adj=c(-0.2,0.5))
+text(theta0, Calclh(theta0, theta0=thetahat),
+     "Score", adj=c(1.2,0.5))
+
+axis(1, c(thetahat, theta0), labels=c(expression(hat(theta)), expression(theta[0])))
+
+
+```
+
 ### Wald Statistics
 
-Wald Statistics lead to Wald tests. Wald statistics measure the distance between $H_0$ and $H_1$ in the parameter space, i.e. between $\beta_j=0$ and $\hat{\beta}_j$. If this is weighted (i.e. standardised) by the standard error, then the statistic becomes a pivot, i.e. its distribution does not depend on anything unknown.
+Wald Statistics lead to Wald tests. Wald statistics measure the distance between $H_0$ and $H_1$ in the parameter space, i.e. between $\beta_j=0$ and $\widehat{\beta}_j$. Wald used the squared distance, and weighted (i.e. standardised) it by the variance of $\widehat{\beta}_j$, so that the statistic becomes a pivot, i.e. its distribution does not depend on anything unknown.
 
-So, for our regression we use 
-$$
-\frac{\hat{\beta}_j - \beta_j}{\sqrt{\widehat{\text{Var}}(\hat{\beta}_j)}},
-$$
-
-and we know this follows a t distribution.
-
-Note that the statistics are all calculated at the MLE of the full model, so we only need to calculate the statistics at the full model. This makes it easier to do several tests at the same time. We will also note in passing that $(\hat{\beta}_j - \beta_j)^2/\widehat{\text{Var}}(\hat{\beta}_j)$ follows an F distribution 
-
-Wald statistics can also be calculated for more the complex tests. In essence, we measure the distance between ${\bf C}\hat{ {\bf \beta}}$ and ${\bf d}$, and standardise this:
+For our single regression parameter we can use 
 
 $$
-\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[{\hat{\sigma}} ^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d})
+W=\frac{(\widehat{\beta}_j - \beta_j)^2}{\widehat{\text{Var}}(\widehat{\beta}_j)},
 $$
 
-And we know that this follows an F distribution.
+and we know this follows an $F_{1,n-p}$ distribution ($n$ observations, $p$ parameters)., and is the square of the t statistic above.
 
-The test statistic for performing the test is called $F_{obs}$ and can be formulated in two ways:
-\begin{eqnarray}
-F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
-F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d}) \label{FobsCbeta}
-\end{eqnarray}
-where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\bf \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
+Note that the statistics are all calculated at the MLE of the full model, so we only need to calculate the statistics at the full model. This makes it easier to do several tests at the same time. 
+
+We will also note in passing that $\sqrt{W}$ follows a $t_{n-p}$ distribution, and sometimes this is considered the Wald statistic instead.
+
+Wald statistics can also be calculated for more the complex tests. In essence, we measure the distance between ${\bf C}\widehat{ {\bf \beta}}$ and ${\bf d}$, and standardise this (with $\widehat{\text{Var}}(C\widehat{\beta}_j)$):
+
+$$
+\frac{1}{r}({\bf C}\widehat{ {\bf \beta}}-{\bf d})^{\text T}[{\widehat{\sigma}} ^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\widehat{ {\bf \beta}}-{\bf d}).
+$$
 
 
+We know that this also follows an F distribution. If ${\widehat{\sigma}}^2$ was known, this would follow a $\chi^2$ distribution, and its square root would follow a (wrapped-)normal distribution. We will see this idea in the wild later.
 
 ### Likelihood Ratio Tests
 
+An alternative to the Wald test (based on the F-test shown previously) is the likelihood ratio test (LRT), which compares the likelihood of _two models_.
 
-The test statistic for performing the test is called $F_{obs}$ and can be formulated in two ways:
-\begin{eqnarray}
-F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
-F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d}) \label{FobsCbeta}
-\end{eqnarray}
-where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\hat{ {\bf \beta}}$ and $\hat{\sigma}^2$ are estimators from the larger model A.
+We use the following notation. A: the larger model (this is $H_1$) and B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
 
+* First we maximize the likelihood for model A (the larger model) and find the maximum likelihood parameter estimates $\widehat{\beta}_A$ and $\tilde{\sigma}_A$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\widehat{\beta}_A, \tilde{\sigma}_A)$.
+* Then we maximize the likelihood for model B (the smaller model) and find the maximum likelihood parameter estimates $\widehat{\beta}_B$ and $\tilde{\sigma}_B$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\widehat{\beta}_B,\tilde{\sigma}_B)$.
+
+The likelihood of the larger model (A) will always be larger or equal to the likelihood of the smaller model (B). (Why?)
+
+The likelihood ratio statistic is defined as
+$$
+- 2\ln \lambda=-2(\ln L(\widehat{\beta}_B,\tilde{\sigma}_B)-\ln L(\widehat{\beta}_A,\tilde{\sigma}_A))
+$$ 
+
+(so, $-2$ times small minus large). $-2 l(\theta)$ is called the **deviance**. It is used frequently: we will discuss it more below.
+
+After a bit of work, the statistic becomes
+
+$$
+F_{obs}=\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}}
+$$
+
+where $SSE$ is from the larger model A, $SSE_{H_0}$ from the smaller model B, and $\widehat{ {\bf \beta}}$ and $\widehat{\sigma}^2$ are estimators from the larger model A.
+
+Under weak regularity conditions the test statistic is approximately $\chi^2$-distributed with degrees of freedom equal the difference in the number of parameters in the large and the small model. This is general - and not related to the GLM!
+
+$P$-values are calculated in the upper tail of the $\chi^2$-distribution.
+
+Observe: to perform the test you need to fit both the small and the large model.
+
+Note: _asymptotically_ the Wald and likelihood ratio test statistics have the same distribution, but the value of the test statistics might be different. 
+
+For the normal distribution, these results are exact, i.e. the test statistic exactly follows a $\chi^2$ distribution **if we know $\sigma^2$**. If we estimate $\sigma^2$ (see above), the statistic follows an F distribution, and it identical to the Wald statistic. 
+
+## Score Tests
+
+Our third test is a *score test*. This uses (as you might have guessed) the score, i.e. the partial derivative of the log likelihood. the intuition is that at the MLE the slope is 0, so if the score at the null hypothesis is too large, we can reject the null.
+
+More formally, the test statistic for a score test is 
+
+$$
+u(\beta_0) = s^T(\beta_0)F^{-1}(\beta_0)s(\beta_0)
+$$
+where $s(\beta_0)$ is the score, and $F(\beta_0)$ the expected Fisher information. Note that these are calulated at the value of $\beta_0$ from the null hypothesis.
+
+For the normal distribution the score is $s(\beta) = \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y})$ and the Fisher infoprmation is $\Sigma^{-1} (X^TX)$
+
+So 
+
+\begin{aligned}
+u(\beta_0) &= \sigma^{-2}(X^TX \mathbf{\beta} - X^T \mathbf{y})^T\sigma^{-2} ((X^TX))^{-1}(\sigma^{-2}X^TX \mathbf{\beta} - X^T \mathbf{y}) \\
+&= \sigma^{-2} (X^T \mu - X^T \mathbf{y})^T (X^TX)^{-1}(X^T \mu - X^T \mathbf{y}) \\
+&= \sigma^{-2} (\mu - \mathbf{y})^T X(X^TX)^{-1}X^T (\mu - \mathbf{y})
+\end{aligned}
+
+(because $\sigma^{-2}$ is a scalar, and $X \mathbf{\beta}$ is the predicted value of $y$)
 
 ### Munich rent index hypothesis test
 We look at print-out using `summary` from fitting `lm`. 
@@ -1612,8 +1699,8 @@ We call the restricted model (when the null hypotesis is true) model B, or the s
 ### Testing one regression parameter
 If we set ${\bf C}=(0,1, 0, \cdots, 0)^T$, a row vector with 1 in position 2 and 0 elsewhere, and ${\bf d}=(0,0,\ldots,0)$, a column vector with 0s, then we test
 $$ H_0: \beta_1=0 \text{ vs. } H_1: \beta_1\neq 0.$$
-Now ${\bf C}\hat{\beta}=\beta_1$ and ${\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}=c_{11}$, so that $F_{obs}$ then is equal to the square of the $t$-statistics for testing a single regression parameter.
-$$F_{obs}=(\hat{\beta}_1-0)^T[\hat{\sigma}^2 c_{jj}]^{-1}(\hat{\beta}_1-0)=T_1^2$$
+Now ${\bf C}\widehat{\beta}=\beta_1$ and ${\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}=c_{11}$, so that $F_{obs}$ then is equal to the square of the $t$-statistics for testing a single regression parameter.
+$$F_{obs}=(\widehat{\beta}_1-0)^T[\widehat{\sigma}^2 c_{jj}]^{-1}(\widehat{\beta}_1-0)=T_1^2$$
 
 Repeat the argument with $\beta_j$ instead of $\beta_1$.
 
@@ -1646,9 +1733,9 @@ summary(fit)
 
 ### Relation to Wald test
 
-Since $\text{Cov}(\hat{\beta})=\sigma^2 ({\bf X}^T{\bf X})^{-1}$, then $\text{Cov}({\bf C}\hat{\beta})={\bf C}\sigma^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$, so that ${\bf C}\hat{\sigma}^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$ can be seen as an estimate of $\text{Cov}({\bf C}\hat{\beta})$. Therefore, $F_{obs}$ can be written
+Since $\text{Cov}(\widehat{\beta})=\sigma^2 ({\bf X}^T{\bf X})^{-1}$, then $\text{Cov}({\bf C}\widehat{\beta})={\bf C}\sigma^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$, so that ${\bf C}\widehat{\sigma}^2({\bf X}^T{\bf X})^{-1}{\bf C}^T$ can be seen as an estimate of $\text{Cov}({\bf C}\widehat{\beta})$. Therefore, $F_{obs}$ can be written
 
-$$F_{obs}=\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\hat{\beta})]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d})=\frac{1}{r}W$$
+$$F_{obs}=\frac{1}{r}({\bf C}\widehat{ {\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\widehat{\beta})]^{-1}({\bf C}\widehat{ {\bf \beta}}-{\bf d})=\frac{1}{r}W$$
 where $W$ is a socalled Wald test. It is known that $W\sim \chi^2_r$ asymptotically as $n$ becomes large. We will study the Wald test in more detail later in this course.
 
 ---
@@ -1666,32 +1753,6 @@ The deviance will replace the SSE (sums of squares of errors, aka residual sums 
 
 ---
 
-## The likelihood ratio test
-
-An alternative to the Wald test (based on the F-test shown previously) is the likelihood ratio test (LRT), which compares the likelihood of _two models_.
-
-We use the following notation. A: the larger model (this is $H_1$) and B: the smaller model (under $H_0$), and the smaller model is nested within the larger model (that is, B is a submodel of A).
-
-* First we maximize the likelihood for model A (the larger model) and find the maximum likelihood parameter estimates $\hat{\beta}_A$ and $\tilde{\sigma}_A$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\hat{\beta}_A, \tilde{\sigma}_A)$.
-* Then we maximize the likelihood for model B (the smaller model) and find the maximum likelihood parameter estimates $\hat{\beta}_B$ and $\tilde{\sigma}_B$. The maximum likelihood is achieved at this parameter estimate and is denoted $L(\hat{\beta}_B,\tilde{\sigma}_B)$.
-
-The likelihood of the larger model (A) will always be larger or equal to the likelihood of the smaller model (B). Why? 
-
----
-
-The likelihood ratio statistic is defined as
-$$- 2\ln \lambda=-2(\ln L(\hat{\beta}_B,\tilde{\sigma}_B)-\ln L(\hat{\beta}_A,\tilde{\sigma}_A)) $$ 
-(so, $-2$ times small minus large).
-
-Under weak regularity conditions the test statistic is approximately $\chi^2$-distributed with degrees of freedom equal the difference in the number of parameters in the large and the small model. This is general - and not related to the GLM! More about this result in TMA4295 Statistical Inference!
-
-$P$-values are calculated in the upper tail of the $\chi^2$-distribution.
-
-Observe: to perform the test you need to fit both the small and the large model.
-
-Notice: _asymptotically_ the Wald and likelihood ratio test statistics have the same distribution, but the value of the test statistics might be different. 
-
----
 
 ### Example: Munich rent data
 
@@ -1720,11 +1781,11 @@ ratio test statistic. It is used for all GLMs in general - and replaces using SS
 First: a covariate pattern is a unique combination of the covariates in our model, for continuous covariates we often have $n$ covariate patterns if we have $n$ observations. Let us assume that for now.
 
 **Saturated model:**
-If we were to provide a perfect fit to our data. This means that we have $\hat{\mu}_i=y_i$.
+If we were to provide a perfect fit to our data. This means that we have $\widehat{\mu}_i=y_i$.
 So, each observation is given its own parameter. 
 
 **Candidate model:**
-The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood and get $\hat{\beta}$.
+The model that we are investigated can be thought of as a _candidate_ model. Then we maximize the likelihood and get $\widehat{\beta}$.
 
 The _deviance_ is then defined as the likelihood ratio statistic, where we put the saturated model in place of the larger model A and our candidate model in place of the smaller model B:
 
@@ -1733,7 +1794,7 @@ $$D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))$$
 The deviance compares the proposed model to the saturated model, and then ask "can we use a more parsimonious model to describe the data as well as the most general model does?".
 
 For the MLR it turns out that the deviance is
-$$D=\frac{1}{\sigma^2} \sum_{i=1}^n (y_i-{\bf x}_i^T \hat{\boldsymbol\beta})^2=\frac{\text{SSE}}{\sigma^2}$$
+$$D=\frac{1}{\sigma^2} \sum_{i=1}^n (y_i-{\bf x}_i^T \widehat{\boldsymbol\beta})^2=\frac{\text{SSE}}{\sigma^2}$$
 
 This is sometimes called the _scaled deviance_ while the _unscaled deviance_ is $\phi D$, where $\phi$ is the dispersion parameter. For the normal model the unscaled deviance is thus $\sigma^2 D=\text{SSE}$. 
 
@@ -1745,12 +1806,12 @@ Warning: both the scaled and unscaled deviance is referred to as the deviance, a
 
 It is possible to decompose the total variability in the data, called SST (sums-of-squares total), into a part that is explained by the regression SSR (sums-of-squares regression), and a part that is not explained by the regression SSE (sums-of-squares error, or really residual).
 
-Let $\bar{Y}=\frac{1}{n}\sum_{i=1}^n Y_i$, and $\hat{Y}_i={\bf x}_i^T\hat{\beta}$. Then,
+Let $\bar{Y}=\frac{1}{n}\sum_{i=1}^n Y_i$, and $\widehat{Y}_i={\bf x}_i^T\widehat{\beta}$. Then,
 \begin{align*} 
 \text{SST}&=\text{SSR}+\text{SSE}\\ 
 \text{SST}&=\sum_{i=1}^n (Y_i-\bar{Y})^2={\bf Y}^T({\bf I}-\frac{1}{n}{\bf 1 1}^T){\bf Y}\\
-\text{SSR}&=\sum_{i=1}^n (\hat{Y}_i-\bar{Y})^2={\bf Y}^T({\bf H}-\frac{1}{n}{\bf 1 1}^T){\bf Y}\\
-\text{SSE}&=\sum_{i=1}^n (Y_i-\hat{Y}_i)^2=\sum_{i=1}^n \hat{\varepsilon}_i^2={\bf Y}^T({\bf I}-{\bf H}){\bf Y}.\\
+\text{SSR}&=\sum_{i=1}^n (\widehat{Y}_i-\bar{Y})^2={\bf Y}^T({\bf H}-\frac{1}{n}{\bf 1 1}^T){\bf Y}\\
+\text{SSE}&=\sum_{i=1}^n (Y_i-\widehat{Y}_i)^2=\sum_{i=1}^n \widehat{\varepsilon}_i^2={\bf Y}^T({\bf I}-{\bf H}){\bf Y}.\\
 \end{align*}
 The proof can be found in Section 3.5 in our text book Regression.
 
@@ -1802,7 +1863,7 @@ If we had changed the order of adding the covariates to the model, then our anov
 
 ----
 
-###Details on the test `anova(fit)`
+### Details on the test `anova(fit)`
 
 When running `anova` on one fitted regression the $F$-test in `anova` is calculated as for "testing linear hypotheses" - but with a slight twist. Our large model is still the full regression model (from the fitted object), but the smaller model is replaced by the _the change from one model to the next_.
 
@@ -1816,7 +1877,7 @@ So, B1 could be the model with only intercept, and B2 could be the model with in
 This means that the test statistics we use are:
 
 $$ F_0=\frac{\frac{\text{SSE}_{B1}-\text{SSE}_{B2}}{\text{df}_{B1}-\text{df}_{B2}}}{\frac{\text{SSE}_A}{\text{df}_A}}$$
-Remark: notice that the denominator is just the $\hat{\sigma^2}$ from the larger model A.
+Remark: notice that the denominator is just the $\widehat{\sigma^2}$ from the larger model A.
 
 This makes our $F$-test statistic: $f_0=\frac{40299098/1}{64819547/3075}=1911.765$ (remember that we swap from capital to small letters when we insert numerical values).
 
@@ -1899,11 +1960,11 @@ Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
 ---
 
-###AIC Akaike information criterion 
+### AIC: Akaike information criterion 
 
 AIC is one of the most widely used criteria, and is designed for likelihood-based inference.
-Let $l(\hat{\beta}_M,\tilde{\sigma}^2)$ be the maximum of the log-likelihood of the data inserted the maximum likelihood estimates for the regression and nuisance parameter. Further, let $\lvert M \rvert$ be the number of estimated regression parameters (coefficients) in our model, and add 1 if we need to estimate a dispersion parameter (like we do for the normal model).
-$$\text{AIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+2(\lvert M\rvert +1)$$
+Let $l(\widehat{\beta}_M,\tilde{\sigma}^2)$ be the maximum of the log-likelihood of the data inserted the maximum likelihood estimates for the regression and nuisance parameter. Further, let $\lvert M \rvert$ be the number of estimated regression parameters (coefficients) in our model, and add 1 if we need to estimate a dispersion parameter (like we do for the normal model).
+$$\text{AIC} =-2 \cdot l(\widehat{\beta}_M,\tilde{\sigma}^2)+2(\lvert M\rvert +1)$$
 
 For a normal regression model this can be further elaborated on:
 $$\text{AIC} =n\ln(\tilde{\sigma}^2)+2(\lvert M\rvert +1)+C$$
@@ -1914,17 +1975,18 @@ Choose the model with the minimum AIC.
 
 ---
 
-###BIC  Bayesian information criterion.
+### BIC: Bayesian information criterion.
 
 The BIC is also based on the likelihood (see notation above).
-$$\text{BIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)$$
+$$\text{BIC} =-2 \cdot l(\widehat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)$$
 
 For a normal regression model:
 $$ \text{BIC}= n\ln(\tilde{\sigma}^2)+\ln(n)(\lvert M\rvert +1)$$
 Choose the model with the minimum BIC. 
 
 AIC and BIC are motivated in very different ways, but the final result for the normal regression model is very similar.
-BIC has a larger penalty than AIC ($\log(n)$ vs. $2$), and will often give a smaller model (=more parsimonious models) than AIC. 
+BIC has a larger penalty than AIC ($\log(n)$ vs. $2$), and will often give a smaller model (=more parsimonious models) than AIC.
+
 In general we would not like a model that is too complex.
 
 ---

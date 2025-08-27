@@ -87,12 +87,15 @@ CHECK THIS: THE SIGN OF \PSI NEEDS FOLLOWING, AND THE X^T SWAPS SIDES
 
 $$
 \begin{align}
-s_i(\beta) &= \frac{\partial l()}{\partial \psi} \frac{\partial \psi}{\partial \beta} \\
+s_i(\beta) &= \frac{\partial l(\beta)}{\partial \psi} \frac{\partial \psi}{\partial \beta} \\
 &= -\frac{1}{2} 2 \sigma^{-2} \psi x_i^T \\
 &= - \sigma^{-2} (y_i - x_i^T \mathbf{\beta}) x_i^T \\
 &= \sigma^{-2} (x_i^T x_i \mathbf{\beta} - x_i^T y_i) 
 \end{align}
 $$
+
+Note that we can also write the score as $s_i(\beta) = \sigma^{-2} (x_i^T \widehat{y}_i - x_i^T y_i) = \sigma^{-2} x_i^T \(widehat{y}_i - y_i)$
+
 
 </details>
 
