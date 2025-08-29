@@ -1593,7 +1593,7 @@ An alternative to the Wald test is the likelihood ratio test (LRT), which compar
 #### The Deviance 
 
 The _deviance_ is used to assess model fit and also for model choice, and is based on the likelihood 
-ratio test statistic. It is used for all GLMs in general. The deviance is based on teh likelihood for two models:
+ratio test statistic. It is used for all GLMs in general. The deviance is based on the likelihood for two models:
 
 **Saturated model:**
 If we were to provide a perfect fit to our data. This means that we have $\widehat{\mu}_i=y_i$.
