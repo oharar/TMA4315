@@ -22,9 +22,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
 showsol<-FALSE
 ```
 
-# Overview
-
-## Learning material
+## Overview
 
 * Textbook: Fahrmeir et al (2013): Chapter 2.3, 5.1, B4.1-3
 * [Classnotes 13.09.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/TMA4315M3H20180913.pdf) 
@@ -32,8 +30,7 @@ showsol<-FALSE
 
 ---
 
-## Topics
-### [First week](#firstweek)
+## Topics: First week
 
 * aim of binary regression
 * how to model a binary response 
@@ -46,9 +43,7 @@ showsol<-FALSE
     + score function
 
 
----
-
-### [Second week](#secondweek)
+## Second week
 
 * Parameter estimation
     + score function- and mean and covariance thereof, 
@@ -66,18 +61,12 @@ showsol<-FALSE
 * sampling stragegy: cohort, but also case-control data good for logit model
 
 
----
-
-# Aim of binary regression
-
-## Two aims
+## Aims of binary regression
 
 1. Construct a model to help understand the relationship between a "success probability" and one or several explanatory variables. The response measurements are binary (present/absent, true/false, healthy/diseased).
 2. Use the model for estimation and prediction of success probabilites.
 
 Two running examples: mortality of beetles and probability of respiratory infant disease.
-
----
 
 ## Example: Dose response of beetles
 
@@ -87,7 +76,7 @@ For each beetle is was recorded if the beetle was alive or killed at the given c
 
 Data for beetle $i$: $Y_i=0$ if beetle $i$ was alive and $Y_i=1$ if it was killed, and $x_i$ is then the log10-dose beetle $i$ was given. 
 
----
+## The Data
 
 The table below shows the 8 values of the log10-dose against the number of beetles alive and killed. The plot shows log10-dose on the horizontal axis and fraction of beetles killed (killed/total) for each log10-dose.
 
@@ -101,7 +90,7 @@ beetleds=data.frame("killed"=y,"ldose"=ldose)
 knitr::kable(table(beetleds), digits = 2)
 ```
 
----
+## The data in a figure
 
 ```{r,echo=showsol, fig.height=5}
 # plot from aggregated data
@@ -111,9 +100,8 @@ ggplot(dss,aes(ldose,fkilled))+
   geom_point()
 ```
 
----
 
-**Q**: 
+## Questions 
 
 a. What might be the effect (mathematical function) of the log10-dose on the probability of killing a beetle?
 b. How can this curve be part of a regression model?
@@ -125,9 +113,7 @@ cat("b) see item 3 below - the response function connects the mean of the respon
 ```
 
 
----
-
-# How to model a binary response?
+## How can we model a binary response?
 
 In multiple linear regression we have 
 
@@ -141,8 +127,6 @@ $\mu_i=\eta_i$.
 * It would not make sense to fit the continuous linear regression to $Y_i$ when $Y_i=\{0,1\}$ - since $Y_i$ is not a continuous random variable, and $Y_i$ is not normal.
 * So, we need to change 1. We keep 2. And, we make 3. more general.
 
----
-
 ## Binary regression
 
 1. $Y_i \sim \text{bin}(n_i,\pi_i)$. 
@@ -153,13 +137,11 @@ Our parameter of interest is $\pi_i$ which is the mean $\text{E}(Y_i)=\mu_i=\pi_
 
 **For a generalized linear model (GLM) we require that the distribution of the response is an exponential family. We have seen in M1 that the binomial distribution is an exponential family.**
 
----
 
 ## Linear Predictor
 
 $\eta_i={\bf x}_i^T \boldsymbol{\beta}$.
 
----
 
 ## Link Function
 
@@ -177,8 +159,6 @@ $$
 
 We thus also have to require that the link function is monotone, and we will soon see that we also need to require that it is twice differential.
 
----
-
 ## Response function for binary regression 
 
 Based on selecting a cumulative distribution function (cdf) as the response function.
@@ -193,7 +173,6 @@ The most popular response functions are:
 
 In this module we focus on the logit model.
 
----
 
 ## The logit model aka logistic regression
 
@@ -207,7 +186,7 @@ beta1=round(fit$coefficients[2],1)
 
 Assume that $\beta_0=$ `r beta0` and $\beta_1=$ `r beta1`. (These values are estimates from our data, and we will see later how to find these estimates using maximum likelihood estimation.)
 
----
+## The Response function
 
 Below the response function is plotted for $\eta_i=$`r beta0`+`r beta1`$x_i$.
 
@@ -229,9 +208,8 @@ ggplot(data.frame(eta=range(etas),mu=c(0,1)), aes(eta,mu))+
 On the x-axis is the linear predictor $\eta=\beta_0+\beta_1 x_1$ for the given values of $\beta_0$ and $\beta_1$ and values for $x_1$ is chosen from the range of the log10-dose values. On the y-axis is the model for the mean of the response, which also here is the probability of success. This is our non-linear relationship between the linear predictor and the mean = our response function.
 --->
 
----
 
-## <a id="logitlink">Link and reponse function</a>
+## Link and reponse function
 
 The logit model is based on the logistic cdf as the response function, given as 
 $$ \mu_i=\pi_i=h(\eta_i)=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$$
@@ -240,13 +218,12 @@ $$ g(\mu_i)=h^{-1}(\mu_i)=\ln(\frac{\mu_i}{1-\mu_i})=\ln(\frac{\pi_i}{1-\pi_i})$
 
 **Hands-on**: show this for yourself.
 
----
 
 ## Interpreting the logit model
 
 If the value of the linear predictor $\eta_i$ changes to $\eta_i+1$ the probability $\pi$ increases non-linearly from $\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ to $\frac{\exp(\eta_i+1)}{1+\exp(\eta_i+1)}$, as shown in the graph above.
 
----
+## Odds
 
 Before we go further: do you know about the odds?
 The ratio $\frac{P(Y_i=1)}{P(Y_i=0)}=\frac{\pi_i}{1-\pi_1}$ is called the _odds_. 
@@ -261,7 +238,7 @@ kable(t(data.frame(pivec,odds)),digits=c(2,2))%>%
   kable_styling()
 ```
 
----
+## Odd Odds
 
 ```{r,echo=FALSE}
 library(knitr)
@@ -273,7 +250,7 @@ plot(pivec,odds,type="b",ylab="odds",xlab="probability")
 
 Odds may be seen to be a better scale than probability to represent chance, and is used in betting. In addition, odds are unbounded above. 
 
----
+## Mulitplying Odds
 
 We look at the link function (inverse of the response function). Let us assume that our linear predictor has $k$ covariates present
 
@@ -287,7 +264,7 @@ We look at the link function (inverse of the response function). Let us assume t
 
 We have a _multiplicative model_ for the odds. 
 
----
+## Changing $x_{1i}$
 
 **So, what if we increase $x_{1i}$ to $x_{1i}+1$?**
 
@@ -302,7 +279,19 @@ If the covariate $x_{1i}$ increases by one unit (while all other covariates are 
 This means that if $x_{i1}$ increases by $1$ then: if $\beta_1<0$ we get a decrease in the odds, if $\beta_1=0$ no change, and if $\beta_1>0$ we have an increase.
 In the logit model $\exp(\beta_1)$ can be easier to interpret than $\beta_1$.
 
----
+## Odds Ratio
+
+We call $\exp(\beta_1)$ the **odds ratio**, and thus $\beta_1$ is the **log odd ratio**. This is because
+
+\begin{align*}
+\frac{\frac{P(Y_i=1\mid x_{i1}+1)}{P(Y_i=0)\mid x_{i1}+1)}}{\frac{P(Y_i=1\mid x_{i1})}{P(Y_i=0)\mid x_{i1})}} &= 
+\frac{\exp(\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k (x_{ik}+1)}{\exp(\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_k x_{ik})} \\
+&= \frac{\exp(\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots) \exp(\beta_k (x_{ik}+1))}{\exp(\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots) \exp(\beta_k x_{ik})} \\
+&= \exp(\beta_k (x_{ik}+1) - \beta_k x_{ik})\\ 
+&= \exp(\beta_k)
+\end{align*}
+
+
 
 ## To Sum Up
 
@@ -311,7 +300,6 @@ For the linear predictor we interpret effects in the same way as for the linear 
 **Q:** If $x_{i1}$ increases by $1$ AND$\beta_1$ is small, what is the relationship between the change in the odds, the change in the log odds and the change in the probability?
 
 
----
 
 <!-- ## Beetle mortality: interpretation of $\beta_0$ and $\beta_1$.
 In our beetle example let $\beta_0=$ `r beta0` and $\beta_1=$ `r beta1`.
@@ -334,7 +322,7 @@ We select a sample of newborn babies (girls and boys) where the parents had deci
 
 We fit a logistic regression to the data, and focus on the parameter estimates.
 
----
+## Infant respiratory disease data
 
 ```{r,echo=showsol}
 library(faraway)
@@ -343,14 +331,14 @@ data(babyfood)
 xtabs(disease/(disease+nondisease)~sex+food,babyfood)
 ```
 
----
+## Infant respiratory disease Model
+
 
 ```{r,echo=FALSE}
 fit=glm(cbind(disease, nondisease)~sex+food,family=binomial(link=logit),data=babyfood)
 knitr::kable(summary(fit)$coefficients, digits=2)
 ```
 
----
 
 ## Questions
 
@@ -364,8 +352,6 @@ Observe that the two factors by default is coded with dummy variable coding, and
 print(predict(fit,type="response"), digits=2) #gives predicted probabilites
 ```
 
-
----
 
 ## More response function plots for the logit model
 
@@ -390,7 +376,7 @@ ggplot(data.frame(x=c(-6,5)), aes(x))+
 
 <!--The function is steepest at $\eta=0$?? slope at steepest? $\beta_1/4$. MER I BOKA til Ingeborg-->
 
-# Grouped vs. individual data
+## Grouped vs. individual data
 
 So far we have only mentioned individual data. 
 
@@ -402,13 +388,13 @@ knitr::kable(babyfood) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
----
+## Grouped Data
 
 Here we have 6 groups of covariate patterns. The first group has covariates `Boy` and `Bottle`, there are 77+381= `r 77+381` babies with this combination and 77 of these got the disease.
 
 We prefer to group data if possible. Grouping is good because then data can be kept in a condensed form, it will speed up computations and makes model diagnosis easier (than for individual data).
 
----
+## To the Binomial
 
 For the grouped data we still have a binomial distribution, and possible generalization is to let
 
@@ -422,10 +408,8 @@ such that $\text{E}(n_j\bar{Y_j})=n_j \pi_j$ and $\text{Var}(n_j\bar{Y_j})=n_j \
 We then keep the linear predictor, and the link function is still
 $\eta_j=\ln(\frac{\pi_j}{1-\pi_j})$. That is, we do not model the mean $n_j \pi_j$ but $\pi_j$ directly.
 
---- 
 
-
-#  Likelihood and derivations thereof
+## Likelihood and derivations thereof
 
 Our parameter of interest is the vector $\boldsymbol{\beta}$ of regression coefficients, and we have no nuicance parameters (because the variance is related directly to the $\pi_j$ and $n_j$ is known). 
 
@@ -433,7 +417,6 @@ We would like to estimate $\boldsymbol{\beta}$ from maximizing the likelihood, b
 
 For simplicity we do the derivations for the case where $n_i=1$, but then include the results for the case where we have $G$ covariate patterns with $n_j$ observations of each pattern.
 
----
 
 ## Assumptions
 
@@ -447,7 +430,6 @@ $$\mu_i=\pi_i=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}=h(\eta_i)$$
 We will also need:
 $$(1-\pi_i)=1-\frac{\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1+\exp(\eta_i)-\exp(\eta_i)}{1+\exp(\eta_i)}=\frac{1}{1+\exp(\eta_i)}.$$
 
----
 
 ## Likelihood $L(\boldsymbol{\beta})$
 
@@ -473,9 +455,8 @@ $\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, reall
 <!-- Result with grouped data (that is, $G$ covariate patterns with $n_j$, $j=1,\ldots,G$ observations for each pattern) -->
 <!-- $$L(\boldsymbol{\beta})=\prod_{j=1}^G L_j(\boldsymbol{\beta})=\prod_{j=1}^G f(y_j; \boldsymbol{\beta})=\prod_{j=1}^G {n_j \choose y_j} \pi_j^{y_j}(1-\pi_j)^{n_j-y_j}$$ -->
 
----
 
-## Loglikelihood $l(\boldsymbol{\beta})$
+## Loglikelihood $l(\boldsymbol{\beta})$ I
 
 
 \begin{align}
@@ -490,7 +471,7 @@ Observe that the log-likelihood is a sum of invidual contributions for each obse
 
 <!-- $$l(\boldsymbol{\beta})=\sum_{j=1}^G[y_j \ln \pi_j-y_j\ln(1-\pi_j)+n_j\ln(1-\pi_j)+ \ln {n_j \choose y_j}]$$ -->
 
----
+## Loglikelihood $l(\boldsymbol{\beta})$ II
 
 The log-likelihood is now expressed as a function of $\pi_i$, but we want to make this a function of $\boldsymbol{\beta}$ and the connection between $\pi_i$ and $\boldsymbol{\beta}$ goes through $\eta_i$. We have that
 $\pi=\frac{\exp(\eta_i)}{1+\exp(\eta_i)}$ and in our log-likelihood we need
@@ -502,7 +483,7 @@ and
 
 $$\ln(\frac{\pi_i}{1-\pi_1})=\eta_i$$ (the last is our logit link function). 
 
----
+## Loglikelihood $l(\boldsymbol{\beta})$ III
 
 Then we get:
 
@@ -512,7 +493,8 @@ which is now our function of $\eta_i$.
 Finally, since $\eta_i={\bf x}_i^T \boldsymbol{\beta}$, 
 $$l(\boldsymbol{\beta})=\sum_{i=1}^n[y_i {\bf x}_i^T \boldsymbol{\beta} - \ln (1+\exp({\bf x}_i^T \boldsymbol{\beta}))].$$
 
----
+## Loglikelihood $l(\boldsymbol{\beta})$ plot?
+
 
 **Q**: What does the graph of $l$ look like as a function of $\boldsymbol{\beta}$? 
 
@@ -522,7 +504,6 @@ If we look at the beetle example we only have one covariate (in addition to the 
 
 <!-- Remark: this will be the general way of thinking for the GLMs, the only difference is that in general we use $\mu_i$ in place of $\pi_i$. -->
 
----
 
 ## Score function $s(\boldsymbol{\beta})$
 
@@ -530,7 +511,7 @@ The score function is a $p\times 1$ vector, $s(\boldsymbol{\beta})$, with the pa
 
 Solving $s(\boldsymbol{\beta})=0$ wil give us our MLEs
 
----
+## Help with the Score
 
 We will need the following:
 
@@ -546,7 +527,7 @@ Partial derivatives of scalar wrt a vector $\frac{\partial{\bf a}^T{\bf b}}{\par
 
 and later we will also need $\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}^T}=(\frac{\partial{\bf a}^T{\bf b}}{\partial {\bf b}})^T={\bf a}^T.$
 
---- 
+## Keeping Score
 
 Here we go:
 $$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=
@@ -555,7 +536,7 @@ $$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymb
 
 Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
 
----
+## Chain Rule
 
 We will use the chain rule to calculate $s_i(\boldsymbol{\beta})$.
 
@@ -563,7 +544,7 @@ $$s_i(\boldsymbol{\beta})=\frac{\partial l_i(\boldsymbol{\beta})}{\partial \bold
 
 $$s_i(\boldsymbol{\beta})=(y_i-\frac{\exp(\eta_i)}{1+\exp(\eta_i)})\cdot {\bf x}_i=(y_i-\pi_i) {\bf x}_i $$
 
----
+## The Score Function
 
 The score function is given as: 
 
@@ -574,7 +555,7 @@ $$s(\hat{\boldsymbol{\beta}})=0$$
 
 Next week we will see how we can do that using the Newton-Raphson or Fisher Scoring iterative methods, but first we will work on finding the mean and covariance matrix of the score vector - and the derivatives of the score vector (the Hessian, which is minus the observed Fisher matrix).
 
----
+## Looking Ahead
 
 **Remark**: in Module 5 we will see that the general formula for GLMs is:
 $$s(\boldsymbol{\beta})=\sum_{i=1}^n
@@ -582,6 +563,4 @@ $$s(\boldsymbol{\beta})=\sum_{i=1}^n
 [\frac{y_i-\mu_i}{\text{Var}(Y_i)}{\bf x}_i h'(\eta_i)]={\bf X}^T {\bf D} \Sigma^{-1} ({\bf y} -\mu)$$
 where ${\bf X}$ is the $n\times p$ design matrix, ${\bf D}=\text{diag}(h'(\eta_1),h'(\eta_2),\ldots,h'(\eta_n))$ is a diagonal matrix with the derivatives of the response function evaluated at each observation. Further, $\Sigma=\text{diag}(\text{Var}(Y_1),\text{Var}(Y_2),\ldots,\text{Var}(Y_n))$ is a diagonal matrix with the variance for each response, and ${\bf y}$ is the observed $n\times 1$ vector of responses and $\mu$ is the $n\times 1$ vector of individual expectations $\mu_i=\text{E}(Y_i)=h(\eta_i)$.
 
-
----
 

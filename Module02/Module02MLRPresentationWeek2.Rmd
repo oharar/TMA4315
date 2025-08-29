@@ -74,9 +74,9 @@ Since the $t$-distribution is symmetric around 0, then $P(T_j< -t_{\alpha/2,n-p}
 $$P(-t_{\alpha/2,n-p}\le T_j \le t_{\alpha/2,n-p})=1-\alpha$$
 
 
-## ff
+## Pretty Pictures
 
-```{r,eval=FALSE,echo=FALSE}
+```{r,eval=FALSE,echo=FALSE, fig.height=5}
 # with old fashion plotting
 df=10
 f<-function(x) dt(x,df)
@@ -113,7 +113,7 @@ ggplot(data.frame(x=c(-4,4)), aes(x))+
 
 (Blue lines at $\pm t_{\alpha/2,n-p}$.)
 
-## ff
+## Solving for a CI
 
 Inserting $T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}$ and solving so $\beta_j$ is in the middle gives:
 
@@ -122,7 +122,7 @@ $$ P(\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}
 
 A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: $[\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}]$.
 
-## CIs
+## CIs in R
 
 CIs can be found in R using `confint` on an `lm` object. (Here dummy variable coding is used for `location`, with average as reference location.)
 
@@ -196,8 +196,8 @@ fit=lm(rent~area+location+bath+kitchen+cheating,
        data=rent99)
 newobs=rent99[1,]
 newobs[1,]=c(NA,NA,50,NA,2,1,1,1,NA)
-predict(fit,newdata=newobs,interval="prediction",
-        type="response")
+predict(fit,newdata=newobs, 
+        interval="prediction")
 ```
 
 
@@ -215,7 +215,7 @@ predict(fit,newdata=newobs,interval="prediction",
 
 ## Hypothesis Testing
 
-ff
+
 
 ## General Strategy
 
