@@ -1,7 +1,7 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 1: Linear models for Gaussian data" 
-date: "Deadline: Friday, September 6th, 2024 at 23.59" 
+date: "Deadline: end of Friday, September 12th, 2025 (if this is not 2025 ignore this)" 
 output: # 3rd letter indentation hierarchy
   html_document:
     toc: true

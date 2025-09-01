@@ -436,7 +436,7 @@ $$
 (because $\sigma^{-2}$ is a scalar, and $X \mathbf{\beta}$ is the predicted value of $y$)
 
 
-## Summry of the Tests
+## Summary of the Tests
 
 ```{r TestStats, echo=FALSE, fig.height=5}
 

@@ -227,15 +227,15 @@ Since the \(t\)-distribution is symmetric around 0, then
 \[P(-t_{\alpha/2,n-p}\le T_j \le t_{\alpha/2,n-p})=1-\alpha\]
 \end{frame}
 
-\begin{frame}{ff}
-\phantomsection\label{ff}
+\begin{frame}{Pretty Pictures}
+\phantomsection\label{pretty-pictures}
 \pandocbounded{\includegraphics[keepaspectratio]{Module02MLRPresentationWeek2_files/figure-beamer/unnamed-chunk-2-1.pdf}}
 
 (Blue lines at \(\pm t_{\alpha/2,n-p}\).)
 \end{frame}
 
-\begin{frame}{ff}
-\phantomsection\label{ff-1}
+\begin{frame}{Solving for a CI}
+\phantomsection\label{solving-for-a-ci}
 Inserting
 \(T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\) and
 solving so \(\beta_j\) is in the middle gives:
@@ -248,8 +248,8 @@ for the upper and lower limits:
 \([\hat{\beta}_j-t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p}\sqrt{c_{jj}}\hat{\sigma}]\).
 \end{frame}
 
-\begin{frame}[fragile]{CIs}
-\phantomsection\label{cis}
+\begin{frame}[fragile]{CIs in R}
+\phantomsection\label{cis-in-r}
 CIs can be found in R using \texttt{confint} on an \texttt{lm} object.
 (Here dummy variable coding is used for \texttt{location}, with average
 as reference location.)
@@ -338,7 +338,7 @@ heating:
 \NormalTok{fit }\OtherTok{=} \FunctionTok{lm}\NormalTok{(rent }\SpecialCharTok{\textasciitilde{}}\NormalTok{ area }\SpecialCharTok{+}\NormalTok{ location }\SpecialCharTok{+}\NormalTok{ bath }\SpecialCharTok{+}\NormalTok{ kitchen }\SpecialCharTok{+}\NormalTok{ cheating, }\AttributeTok{data =}\NormalTok{ rent99)}
 \NormalTok{newobs }\OtherTok{=}\NormalTok{ rent99[}\DecValTok{1}\NormalTok{, ]}
 \NormalTok{newobs[}\DecValTok{1}\NormalTok{, ] }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\DecValTok{50}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\ConstantTok{NA}\NormalTok{)}
-\FunctionTok{predict}\NormalTok{(fit, }\AttributeTok{newdata =}\NormalTok{ newobs, }\AttributeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(fit, }\AttributeTok{newdata =}\NormalTok{ newobs, }\AttributeTok{interval =} \StringTok{"prediction"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -363,7 +363,6 @@ heating:
 
 \begin{frame}{Hypothesis Testing}
 \phantomsection\label{hypothesis-testing}
-ff
 \end{frame}
 
 \begin{frame}{General Strategy}
@@ -446,6 +445,27 @@ the data (or something more extreme) under \(H_0\)}
 \end{Shaded}
 \end{frame}
 
+\begin{frame}{The p-value}
+\phantomsection\label{the-p-value}
+A p-value is a test statistic satisfying \(0 \leq p({\bf Y}) \leq 1\)
+for every vector of observations \({\bf Y}\).
+
+\begin{itemize}
+\item
+  In single hypothesis testing, if the p-value is less than the chosen
+  significance level, then we reject the null hypothesis, \(H_0\). The
+  chosen significance level is often referred to as \(\alpha\).
+\item
+  A p-value is \emph{valid} if
+  \[ P(p({\bf Y}) \leq \alpha) \leq \alpha\] for all \(\alpha\),
+  \(0 \leq \alpha \leq 1\), whenever \(H_0\) is true.
+\item
+  If \(P(p({\bf Y}) \leq \alpha) = \alpha\) for all \(\alpha\),
+  \(0 \leq \alpha \leq 1\), the \(p\)-value is called an \emph{exact}
+  p-value.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Reporting the Result: Strict interpretation}
 \phantomsection\label{reporting-the-result-strict-interpretation}
 We choose to reject \(H_0\) at some significance level \(\alpha\) if the
@@ -489,54 +509,198 @@ What else should be written in the last two cells?
 \phantomsection\label{stopped-here}
 \end{frame}
 
-\begin{frame}{Hypothesis test on \(\beta_j\) (t-test)}
-\phantomsection\label{hypothesis-test-on-beta_j-t-test}
-In linear regression models one test statistic for testing
-\(H_0: \beta_j=0\) is
-\[T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}_{\varepsilon}}\sim t_{n-2}\]
-where
-\(c_{jj}\hat{\sigma}_{\varepsilon}^2=\widehat{\text{Var}}(\hat{\beta}_j)\).
-
-Inserted observed values (and estimates) we have \(t_0\).
-
-We would in a two-sided setting reject \(H_0\) for large values of
-\(\text{abs}(t_0)\). We may rely on calculating a \(p\)-value.
-\end{frame}
-
-\begin{frame}{The p-value}
-\phantomsection\label{the-p-value}
-A p-value is a test statistic satisfying \(0 \leq p({\bf Y}) \leq 1\)
-for every vector of observations \({\bf Y}\).
+\begin{frame}{Test Statistics}
+\phantomsection\label{test-statistics}
+We can use any statistic that will distinguish between \(H_0\) and
+\(H_1\), but some are better than others. A good test statistic will
 
 \begin{itemize}
+\tightlist
 \item
-  In single hypothesis testing, if the p-value is less than the chosen
-  significance level, then we reject the null hypothesis, \(H_0\). The
-  chosen significance level is often referred to as \(\alpha\).
+  be good at distinguishing between \(H_0\) and \(H_1\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    discussed as the power of the test
+  \end{itemize}
 \item
-  A p-value is \emph{valid} if
-  \[ P(p({\bf Y}) \leq \alpha) \leq \alpha\] for all \(\alpha\),
-  \(0 \leq \alpha \leq 1\), whenever \(H_0\) is true.
+  have a nice distribution under the null hypothesis
+
+  \begin{itemize}
+  \tightlist
+  \item
+    if not we can simulate our way to a solution
+  \end{itemize}
+\end{itemize}
+
+In this course we will use three approaches to developing test
+statistics:
+
+\begin{itemize}
+\tightlist
 \item
-  If \(P(p({\bf Y}) \leq \alpha) = \alpha\) for all \(\alpha\),
-  \(0 \leq \alpha \leq 1\), the \(p\)-value is called an \emph{exact}
-  p-value.
+  Wald tests
+\item
+  Likelihood Ratio Tests
+\item
+  Score Tests
 \end{itemize}
 \end{frame}
 
-\begin{frame}{DD}
-\phantomsection\label{dd}
-In our linear regression we use the \(t\)-distibution to calculate
-p-values for our two-sided test situation \(H_0: \beta_j=0\)
-vs.~\(H_1: \beta_j \neq 0\). Assume we have observed that our test
-statistic \(T_0\) takes the numerical value \(t_0\). Since the
-\(t\)-distribution is symmetric around \(0\) we have
+\begin{frame}{Wald Tests}
+\phantomsection\label{wald-tests}
+Wald statistics measure the standardised distance between \(H_0\) and
+\(H_1\) in the parameter space, i.e.~between \(\beta_j=0\) and
+\(\widehat{\beta}_j\).
 
-\[p\text{-value}=P(T_0>\text{abs}(t_0))+P(T_0<-\text{abs}(t_0))=2\cdot P(T_0>\text{abs}(t_0)).\]
+For our single regression parameter we can use
 
-We reject \(H_0\) if our calculated \(p\)-value is below our chosen
-signficance level. We often choose as significance level
-\(\alpha=0.05\).
+\[
+W=\frac{(\widehat{\beta}_j - \beta_j)^2}{\widehat{\text{Var}}(\widehat{\beta}_j)},
+\]
+
+Note that this is calculated at \(H_1\)
+\end{frame}
+
+\begin{frame}{Likelihood Ratio Tests}
+\phantomsection\label{likelihood-ratio-tests}
+An alternative to the Wald test is the likelihood ratio test (LRT),
+which compares the likelihood of \emph{two models}.
+
+We use the following notation. A: the larger model and B: the smaller
+model (under \(H_0\)), and the smaller model is nested within the larger
+model (that is, B is a submodel of A).
+\end{frame}
+
+\begin{frame}{LRT: model fitting}
+\phantomsection\label{lrt-model-fitting}
+\begin{itemize}
+\tightlist
+\item
+  First we maximize the likelihood for model A (the larger model) and
+  find the parameter estimate \(\hat{\beta}_A\). The maximum likelihood
+  is achieved at this parameter estimate and is denoted
+  \(L(\hat{\beta}_A)\).
+\item
+  Then we maximize the likelihood for model B (the smaller model) and
+  find the parameter estimate \(\hat{\beta}_B\). The maximum likelihood
+  is achieved at this parameter estimate and is denoted
+  \(L(\hat{\beta}_B)\).
+\end{itemize}
+
+The likelihood of the larger model (A) will always be larger or equal to
+the likelihood of the smaller model (B). Why?
+\end{frame}
+
+\begin{frame}[fragile]{Defining the LRT}
+\phantomsection\label{defining-the-lrt}
+The likelihood ratio statistic is defined as
+\[- 2\ln \lambda=-2(\ln L(\hat{\beta}_B)-\ln L(\hat{\beta}_A)) \] (so,
+\(-2\) times small minus large).
+
+Under weak regularity conditions the test statistic is approximately
+\(\chi^2\)-distributed with degrees of freedom equal the difference in
+the number of parameters in the large and the small model. This is
+general - and not related to the GLM! More in TMA4295 Statistical
+Inference!
+
+\(P\)-values are calculated in the upper tail of the
+\(\chi^2\)-distribution.
+
+The LRT can be performed using \texttt{anova()}.
+\end{frame}
+
+\begin{frame}{Deviance (something new!)}
+\phantomsection\label{deviance-something-new}
+The \emph{deviance} is used to assess model fit and also for model
+choice, and is based on the likelihood ratio test statistic. It is used
+for all GLMs in general - and replaces using SSE in multiple linear
+regression.
+
+\textbf{Saturated model:} If we were to provide a perfect fit to our
+data t
+
+This ``imaginary model'' is called the \emph{saturated} model. This
+would be a model where each observation was given its own parameter.
+
+\textbf{Candidate model:} The model that we are investigated can be
+thought of as a \emph{candidate} model. Then we maximize the likelihood
+and get \(\hat{\beta}\).
+\end{frame}
+
+\begin{frame}{Deviance}
+\phantomsection\label{deviance}
+The \emph{deviance} is then defined as the likelihood ratio statistic,
+where we put the saturated model in place of the larger model A and our
+candidate model in place of the smaller model B:
+
+\[D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))\]
+
+For the maximal model, we have parameters \(\theta_1, \dots, \theta_n\),
+where \(\theta_i = E[Y_i]\) The log-likelihood for this model is \[
+l(\hat{\beta},{\sigma^2})=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2-\frac{1}{2\sigma^2} ({\bf y}-{\boldsymbol \theta})^T({\bf y}-{\boldsymbol \theta}) = -\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2
+\]
+
+(because \(\hat{\theta_i}=y_i\), something you may work out for
+yourselves)
+\end{frame}
+
+\begin{frame}{Deviance}
+\phantomsection\label{deviance-1}
+The deviance is then
+
+\[
+\begin{aligned}
+D &= -2\left(-\frac{n}{2}\text{ln}(2\pi\sigma^2)-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta}) − (-\frac{n}{2}\text{ln}(2\pi\sigma^2)\right) \\
+  &= \frac{1}{\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})
+\end{aligned}
+\]
+
+Note the connection with the RSS! Under the null hypothesis that the
+model fits the data well, \(D\sim \chi^2_{n-p}\) exactly (in this case).
+\end{frame}
+
+\begin{frame}{Score Tests}
+\phantomsection\label{score-tests}
+Our third test is a \emph{score test}. This uses (as you might have
+guessed) the score, i.e.~the partial derivative of the log likelihood.
+the intuition is that at the MLE the slope is 0, so if the score at the
+null hypothesis is too large, we can reject the null.
+
+More formally, the test statistic for a score test is
+
+\[
+u(\beta_0) = s^T(\beta_0)F^{-1}(\beta_0)s(\beta_0)
+\]
+
+where \(s(\beta_0)\) is the score, and \(F(\beta_0)\) the expected
+Fisher information. Note that these are calulated at the value of
+\(\beta_0\) from the null hypothesis, we do not need to calculate it at
+\(\widehat{ {\bf \beta}}\).
+\end{frame}
+
+\begin{frame}{Normal Score tests}
+\phantomsection\label{normal-score-tests}
+For the normal distribution the score is
+\(s(\beta) = \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y})\) and
+the Fisher information is \(\Sigma^{-1} (X^TX)\)
+
+So \[
+\begin{aligned}
+u(\beta_0) &= \sigma^{-2}(X^TX \mathbf{\beta} - X^T \mathbf{y})^T\sigma^{-2} ((X^TX))^{-1}(\sigma^{-2}X^TX \mathbf{\beta} - X^T \mathbf{y}) \\
+&= \sigma^{-2} (X^T \mu - X^T \mathbf{y})^T (X^TX)^{-1}(X^T \mu - X^T \mathbf{y}) \\
+&= \sigma^{-2} (\mu - \mathbf{y})^T X(X^TX)^{-1}X^T (\mu - \mathbf{y})
+\end{aligned}
+\]
+
+(because \(\sigma^{-2}\) is a scalar, and \(X \mathbf{\beta}\) is the
+predicted value of \(y\))
+\end{frame}
+
+\begin{frame}{Summary of the Tests}
+\phantomsection\label{summary-of-the-tests}
+\pandocbounded{\includegraphics[keepaspectratio]{Module02MLRPresentationWeek2_files/figure-beamer/TestStats-1.pdf}}
 \end{frame}
 
 \begin{frame}[fragile]{Munich rent index hypothesis test}
@@ -585,17 +749,20 @@ cheating1 & 161.414 & 8.663 & 18.632 & 0.000 \\
 \end{enumerate}
 \end{frame}
 
-\begin{frame}{Testing linear hypotheses in regression}
-\phantomsection\label{testing-linear-hypotheses-in-regression}
+\begin{frame}{More Complex Testing of linear hypotheses in regression}
+\phantomsection\label{more-complex-testing-of-linear-hypotheses-in-regression}
 We study a normal linear regression model with \(p=k+1\) covariates, and
 refer to this as model A (the larger model). We then want to investigate
 the null and alternative hypotheses of the following type(s):
+
 \begin{eqnarray*}
  H_0: \beta_{j}&=&0 \text{ vs. } H_1:\beta_j\neq 0\\
  H_0: \beta_{1}&=&\beta_{2}=\beta_{3}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0\\
  H_0: \beta_{1}&=&\beta_{2}=\cdots=\beta_{k}=0 \text{ vs. } H_1:\text{ at least one of these }\neq 0\\
- \end{eqnarray*} We call the restricted model (when the null hypothesis
-is true) model B, or the smaller model.
+ \end{eqnarray*}
+
+We call the restricted model (when the null hypothesis is true) model B,
+or the smaller model.
 \end{frame}
 
 \begin{frame}{Hypotheses}
@@ -610,13 +777,17 @@ H_0: {\bf C}{\boldsymbol \beta}={\bf d} \text{ vs. } {\bf C}{\boldsymbol \beta}\
 by specifying \({\bf C}\) to be a \(r \times p\) matrix and \({\bf d}\)
 to be a column vector of length \(p\).
 
-The test statistic for performing the test is called \(F_{obs}\) and can
-be formulated in two ways: \begin{eqnarray}
+The Wald test and LRT statistics are the same: the test is called
+\(F_{obs}\) and so can be formulated in two ways:
+
+\begin{eqnarray}
 F_{obs}&=&\frac{\frac{1}{r} (SSE_{H_0}-SSE)}{\frac{SSE}{n-p}} \label{Fobsnested}\\
 F_{obs}&=&\frac{1}{r}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d})^{\text T}[\hat{\sigma}^2 {\bf C}({\bf X}^{\text T}{\bf X})^{-1}{\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d}) \label{FobsCbeta}
-\end{eqnarray} where \(SSE\) is from the larger model A, \(SSE_{H_0}\)
-from the smaller model B, and \(\hat{ {\boldsymbol \beta}}\) and
-\(\hat{\sigma}^2\) are estimators from the larger model A.
+\end{eqnarray}
+
+where \(SSE\) is from the larger model A, \(SSE_{H_0}\) from the smaller
+model B, and \(\hat{ {\boldsymbol \beta}}\) and \(\hat{\sigma}^2\) are
+estimators from the larger model A.
 \end{frame}
 
 \begin{frame}{Testing a set of parameters - what is \({\bf C}\) and
@@ -697,9 +868,6 @@ seen as an estimate of \(\text{Cov}({\bf C}\hat{\beta})\). Therefore,
 \(F_{obs}\) can be written
 
 \[F_{obs}=\frac{1}{r}({\bf C}\hat{ {\bf \beta}}-{\bf d})^{\text T}[\widehat{\text{Cov}}({\bf C}\hat{\beta})]^{-1}({\bf C}\hat{ {\bf \beta}}-{\bf d})=\frac{1}{r}W\]
-where \(W\) is a so-called Wald test. It is known that
-\(W\sim \chi^2_r\) asymptotically as \(n\) becomes large. We will study
-the Wald test in more detail later in this course.
 \end{frame}
 
 \begin{frame}{Asympotic result}
@@ -717,135 +885,18 @@ that when the number of observation becomes very large then
 \(rF_{r,n-p}\) is approximately \(\chi^2_r\).
 \end{frame}
 
-\begin{frame}{Focus on likelihood: Likelihood ratio test and deviance}
-\phantomsection\label{focus-on-likelihood-likelihood-ratio-test-and-deviance}
-\end{frame}
-
-\begin{frame}{The likelihood ratio test}
-\phantomsection\label{the-likelihood-ratio-test}
-An alternative to the Wald test is the likelihood ratio test (LRT),
-which compares the likelihood of \emph{two models}.
-
-We use the following notation. A: the larger model and B: the smaller
-model (under \(H_0\)), and the smaller model is nested within the larger
-model (that is, B is a submodel of A).
-\end{frame}
-
-\begin{frame}{mm}
-\phantomsection\label{mm}
-\begin{itemize}
-\tightlist
-\item
-  First we maximize the likelihood for model A (the larger model) and
-  find the parameter estimate \(\hat{\beta}_A\). The maximum likelihood
-  is achieved at this parameter estimate and is denoted
-  \(L(\hat{\beta}_A)\).
-\item
-  Then we maximize the likelihood for model B (the smaller model) and
-  find the parameter estimate \(\hat{\beta}_B\). The maximum likelihood
-  is achieved at this parameter estimate and is denoted
-  \(L(\hat{\beta}_B)\).
-\end{itemize}
-
-The likelihood of the larger model (A) will always be larger or equal to
-the likelihood of the smaller model (B). Why?
-\end{frame}
-
-\begin{frame}{mm}
-\phantomsection\label{mm-1}
-The likelihood ratio statistic is defined as
-\[- 2\ln \lambda=-2(\ln L(\hat{\beta}_B)-\ln L(\hat{\beta}_A)) \] (so,
-\(-2\) times small minus large).
-
-Under weak regularity conditions the test statistic is approximately
-\(\chi^2\)-distributed with degrees of freedom equal the difference in
-the number of parameters in the large and the small model. This is
-general - and not related to the GLM! More in TMA4295 Statistical
-Inference!
-
-\(P\)-values are calculated in the upper tail of the
-\(\chi^2\)-distribution.
-
-Observe: to perform the test you need to fit both the small and the
-large model.
-\end{frame}
-
-\begin{frame}[fragile]{mm}
-\phantomsection\label{mm-2}
-Notice: asymptotically the Wald and likelihood ratio test statistics
-have the same distribution, but the value of the test statistics might
-be different.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# TRY OUT BOTH Wald and LRT}
-\end{Highlighting}
-\end{Shaded}
-
-The LRT can be performed using \texttt{anova()}.
-\end{frame}
-
-\begin{frame}{Deviance (something new!)}
-\phantomsection\label{deviance-something-new}
-The \emph{deviance} is used to assess model fit and also for model
-choice, and is based on the likelihood ratio test statistic. It is used
-for all GLMs in general - and replaces using SSE in multiple linear
-regression.
-
-\textbf{Saturated model:} If we were to provide a perfect fit to our
-data t
-
-This ``imaginary model'' is called the \emph{saturated} model. This
-would be a model where each observation was given its own parameter.
-
-\textbf{Candidate model:} The model that we are investigated can be
-thought of as a \emph{candidate} model. Then we maximize the likelihood
-and get \(\hat{\beta}\).
-\end{frame}
-
-\begin{frame}{Deviance}
-\phantomsection\label{deviance}
-The \emph{deviance} is then defined as the likelihood ratio statistic,
-where we put the saturated model in place of the larger model A and our
-candidate model in place of the smaller model B:
-
-\[D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))\]
-
-For the maximal model, we have parameters \(\theta_1, \dots, \theta_n\),
-where \(\theta_i = E[Y_i]\) The log-likelihood for this model is \[
-l(\hat{\beta},{\sigma^2})=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2-\frac{1}{2\sigma^2} ({\bf y}-{\boldsymbol \theta})^T({\bf y}-{\boldsymbol \theta}) = -\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\sigma^2
-\]
-
-(because \(\hat{\theta_i}=y_i\), something you may work out for
-yourselves)
-\end{frame}
-
-\begin{frame}{Deviance}
-\phantomsection\label{deviance-1}
-The deviance is then
-
-\[
-\begin{aligned}
-D &= -2\left(-\frac{n}{2}\text{ln}(2\pi\sigma^2)-\frac{1}{2\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta}) − (-\frac{n}{2}\text{ln}(2\pi\sigma^2)\right) \\
-  &= \frac{1}{\sigma^2} ({\bf y}-{\bf X}\hat{\beta})^T({\bf y}-{\bf X}\hat{\beta})
-\end{aligned}
-\]
-
-Note the connection with the RSS! Under the null hypothesis that the
-model fits the data well, \(D\sim \chi^2_{n-p}\) exactly (in this case).
-\end{frame}
-
 \begin{frame}{Analysis of variance decomposition and coefficient of
 determination, \(R^2\)}
 \phantomsection\label{analysis-of-variance-decomposition-and-coefficient-of-determination-r2}
 It is possible to decompose the total variability in the data, called
 SST (sums-of-squares total), into a part that is explained by the
 regression SSR (sums-of-squares regression), and a part that is not
-explained by the regression SSE (sums-of-squares error, or really
-residual).
+explained by the regression SSE (sums-of-squares error).
 
 Let \(\bar{Y}=\frac{1}{n}\sum_{i=1}^n Y_i\), and
-\(\hat{Y}_i={\bf x}_i^T\hat{\beta}\). Then, \begin{align*} 
+\(\hat{Y}_i={\bf x}_i^T\hat{\beta}\). Then,
+
+\begin{align*} 
 \text{SST}&=\text{SSR}+\text{SSE}\\
 \text{SST}&=\sum_{i=1}^n (Y_i-\bar{Y})^2={\bf Y}^T({\bf I}-\frac{1}{n}{\bf 1 1}^T){\bf Y}\\
 \text{SSR}&=\sum_{i=1}^n (\hat{Y}_i-\bar{Y})^2={\bf Y}^T({\bf H}-\frac{1}{n}{\bf 1 1}^T){\bf Y}\\
