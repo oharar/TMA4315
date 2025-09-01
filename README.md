@@ -96,11 +96,13 @@ Please consider the licence for this repo to be [CC BY-NC-SA](https://creativeco
 
 ## Notes on improvement
 
+Repo: remove parts that are not needed. 
+
 ### Module 1
 
 ### Module 2
 
-Explain score & Wald tests
+Feels a bit long at end: remove. a lot of the ANOVA stuff?
 
 ### Module 3
 
