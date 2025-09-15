@@ -12,7 +12,7 @@ output: #3rd letter intentation hierarchy
  #   toc_depth: 2
  #   keep_tex: yes
   beamer_presentation:
-    keep_tex: yes
+    keep_tex: no
     fig_caption: false
     latex_engine: xelatex
 ---

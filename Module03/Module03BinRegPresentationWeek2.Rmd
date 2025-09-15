@@ -13,7 +13,7 @@ output: #3rd letter intentation hierarchy
  #   toc_depth: 2
  #   keep_tex: yes
   beamer_presentation:
-    keep_tex: yes
+    keep_tex: no
     fig_caption: false
     latex_engine: xelatex
 ---
@@ -23,7 +23,6 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
 showsol<-FALSE
 ```
 
-(Latest changes: 09.11: clarified one sentence on the devianc. 23.09: score test moved to M4. 20.09: typos, and added solutions to Qs in class. 18.09: typos and added sententence ILw2Problem3c. 16.09: edited and added material for week 2, 13.09 moved material not lectured to after the ILw1, and added one sentence to Problem 5 ILw1.)
 
 # Overview
 
@@ -374,9 +373,6 @@ In practice, the logit model most often causes problems, when (for grouped data)
 
 ---
 
-stopped here
-
----
 
 # Asymptotic properties of ML estimates
 
@@ -493,7 +489,7 @@ where $F^{-1}(\hat{\boldsymbol{\beta}}))$ is the inverse of the expected Fisher 
 
 For the logit model we found that 
 $$F(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \pi_j (1-\pi_j)$$
-So we would need to do $\pi_j=\frac{\exp(\eta-j)}{1+\exp(\eta_j)}$ and $\eta_j={\bf x}_j^T\boldsymbol{\beta}$ as "usual", and then replace $\boldsymbol{\beta}$ with $\hat{\boldsymbol{\beta}}$. 
+So we would need to do $\pi_j=\frac{\exp(\eta_j)}{1+\exp(\eta_j)}$ and $\eta_j={\bf x}_j^T\boldsymbol{\beta}$ as "usual", and then replace $\boldsymbol{\beta}$ with $\hat{\boldsymbol{\beta}}$. 
 
 The asymptotic distribution still holds when we replace $\boldsymbol{\beta}$ with $\hat{\boldsymbol{\beta}}$ in ${\bf F}$.
 
@@ -587,6 +583,7 @@ cbind(lower,upper)
 ## Hypothesis testing
 
 There are three methods that are mainly used for testing hypotheses in GLMs:
+
 - Wald test, 
 - likelihood ratio test and 
 - score test. 
