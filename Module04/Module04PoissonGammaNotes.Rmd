@@ -73,7 +73,7 @@ Jump to [week 2](#secondweek) and [interactive (week 2)](#interactivew2).
 * the number of automobile thefts pr city worldwide
 * the number of UFO sightings around the world
 * the number of visits at web pages
-* the number of male crabs (satellites) residing nearby a female crab 
+* the number of male horseshoe crabs (satellites) residing nearby a female horseshoe crab 
 * the number of goals by the home team and the number of goals for the away team in soccer
 * the number of newspapers sold at newsagents
 
@@ -89,18 +89,18 @@ Covariate data: type of outlet, but mainly calendar information= weekday, month,
 
 ---
 
-## Female crabs with satellites
+## Female horseshoe crabs with satellites
 
 The example is taken from Agresti (1996): "An Introduction to Categorical Data Analysis", and the data is from a study of nesting horseshoe crabs (J. Brockmann, Ethology 1996)
 
-First, the study objects were female crabs (horseshoe crabs). Each female crab had a male crab attached to her in her nest. The objective of the study was to investigate factors that affect whether the female crab had any other males, called satellites, residing near her. The following covariates were collected for 173 female crabs:
+First, the study objects were female horseshoe crabs. Each female horseshoe crab had a male horseshoe crab attached to her in her nest. The objective of the study was to investigate factors that affect whether the female horseshoe crab had any other males, called satellites, residing near her. The following covariates were collected for 173 female horseshoe crabs:
  
-* `C`: the color of the female crab (1=light medium, 2=medium, 3=dark medium, 4=dark)
+* `C`: the color of the female horseshoe crab (1=light medium, 2=medium, 3=dark medium, 4=dark)
 * `S`: spine condition (1=both good, 2=one worn or broken, 3=both worn or broken)
 * `W`: width of carapace (cm)
 * `Wt`: weight (kg)
 
-The response was the number of satellites, `Sa`= male crabs residing nearby.
+The response was the number of satellites, `Sa`= male horseshoe crabs residing nearby.
 
 ---
 
@@ -298,7 +298,7 @@ Thus, the covariates have a multiplicative effect on the rate $\lambda_i$.
 
 ---
 
-## Example: interpreting parameters for the female crabs with satellites
+## Example: interpreting parameters for the female horseshoe crabs with satellites
 
 We fit a log-linear model to `Sa`, assuming the number of satellites follows a Poisson distribution with log-link.
 
@@ -501,7 +501,7 @@ A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the uppe
 
 ---
 
-## Example: Female crabs with satellites
+## Example: Female horseshoe crabs with satellites
 
 **Q:** 
 
@@ -527,7 +527,7 @@ confint(model2)
 
 ## Hypothesis testing
 
-There are three methods that are mainly used for testing hypotheses in GLMs - these are called Wald test, likelihood ratio test and score test. In Module 3 we looked at the Wald and likelihood ratio test - and what we found there still applies for the Poisson GLM. We only repeat the previous findings, and then add an example with the crab data.
+There are three methods that are mainly used for testing hypotheses in GLMs - these are called Wald test, likelihood ratio test and score test. In Module 3 we looked at the Wald and likelihood ratio test - and what we found there still applies for the Poisson GLM. We only repeat the previous findings, and then add an example with the horseshoe crab data.
 
 We will look at null hypotheses and alternative hypotheses that can be written
 \[H_0: {\bf C}{\bf \beta}={\bf d} \text{ vs. } {\bf C}{\bf \beta}\neq {\bf d} \]
@@ -599,7 +599,7 @@ The score test is perhaps the the most complex and least studied of the three te
 ---
 
 
-### Example: Female crabs with satellites - the different tests.
+### Example: Female horseshoe crabs with satellites - the different tests.
 
 We fit a model with two covariates, one is categorical and we use effect coding. We want to test if we need to add these covariates.
 
@@ -687,19 +687,19 @@ scoreteststat
 
 # <a id="interactivew1">Interactive session - first week</a>
 
-## Problem 1: Exam 2005 (Problem 1d-f - slightly modified) - Female crabs and satellites
-(Only a subset of 20 crabs in the original data was used in the exam
-problems, but we will use the full data set of 173 crabs - so results
+## Problem 1: Exam 2005 (Problem 1d-f - slightly modified) - Female horseshoe crabs and satellites
+(Only a subset of 20 horseshoe crabs in the original data was used in the exam
+problems, but we will use the full data set of 173 horseshoe crabs - so results
 will not be the same. Permitted aids for the exam was "all printed and
 handwritten material and all calculators" - NB that is not the case for 2018!)
 
-We assume that the number of satellites for each female crab follows a
+We assume that the number of satellites for each female horseshoe crab follows a
 Poisson distribution and want to perform a Poisson regression using a
 log-link to find if there is a connection between the expected number of
 satellites `Sa` and the width `W` and colour `C` of the carapace of the
-female crab.
+female horseshoe crab.
 
-* `C`: the color of the female crab (1=light medium, 2=medium, 3=dark medium, 4=dark)
+* `C`: the color of the female horseshoe crab (1=light medium, 2=medium, 3=dark medium, 4=dark)
 * `W`: width of carapace (cm)
 
 The following model was fitted.
@@ -731,7 +731,7 @@ conclusion?
 **b)** 
 Make a sketch *by hand* illustrating the connection between the expected
 number of satellites and the width of the carapace for each of the four
-colours of the crab. 
+colours of the horseshoe crab. 
 
 The estimated multiplicative change in the
 expected number of satellites when the width of the carapace is changed
@@ -742,7 +742,7 @@ Also find a 95% confidence interval for this change.
 
 
 **c)**
-Let $\hat{\eta}(x_{W})$ be the estimated linear predictor when the width of the carapace is $x_{W}$ and the crab is "light medium". What is the distribution of $\hat{\eta}(x_{W})$? 
+Let $\hat{\eta}(x_{W})$ be the estimated linear predictor when the width of the carapace is $x_{W}$ and the horseshoe crab is "light medium". What is the distribution of $\hat{\eta}(x_{W})$? 
 Which value of $x_W$ would give estimated mean number of satellites equal to 5?
 
 Optional: Using R -- for this value of $x_W$, construct a 95% confidence interval for the mean number of satellites.
@@ -1013,13 +1013,13 @@ The Pearson $\chi^2$ statistic is asymptotically equivalent to the deviance stat
 
 **Remark**: See connection with Pearson residuals.
 
-**Remark**: the asymptotic distribution of both statistics (deviance and Pearson) are questionable when there are many low counts. Agresti (1996, page 990) suggest analysing grouped data, for example by grouping by width in the crab example.
+**Remark**: the asymptotic distribution of both statistics (deviance and Pearson) are questionable when there are many low counts. Agresti (1996, page 990) suggest analysing grouped data, for example by grouping by width in the horseshoe crab example.
 
 **Remark**: The Pearson statistic is also used for testing independence in contingency tables - we will do that in Compulsory Exercise 2.
 
 ---
 
-## Example: goodness of fit with female crabs
+## Example: goodness of fit with female horseshoe crabs
 
 **Q**: Comment on the print-out. Is this a good fit? What might a bad fit be due to? 
 
@@ -1057,7 +1057,7 @@ Example: newspaper sales with tourist bus.
 
 Our model states that the variance $\text{Var}(Y_i)=\lambda_i$. If we change the model to $\text{Var}(Y_i)=\phi\lambda_i$ we may allow for an increased variance due to heterogeniety among subjects.
 
-Agresti (1996, page 92) explains: "For our crab data set, what if width, weight, colour and spine affect the number of satellites for a female crab, and we only fitted a model with width as covariate. Then the crabs with a certain width are a mixture of crabs of various weights, colours and spine condition - that is, a mixture of several Poisson populations, each with its own mean for the response. This heterogeniety may give an overall response distribution where the variance is greater than the standard Poisson variance. "
+Agresti (1996, page 92) explains: "For our horseshoe crab data set, what if width, weight, colour and spine affect the number of satellites for a female horseshoe crab, and we only fitted a model with width as covariate. Then the horseshoe crabs with a certain width are a mixture of horseshoe crabs of various weights, colours and spine condition - that is, a mixture of several Poisson populations, each with its own mean for the response. This heterogeniety may give an overall response distribution where the variance is greater than the standard Poisson variance. "
  
 ---
 

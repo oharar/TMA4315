@@ -98,6 +98,10 @@ Please consider the licence for this repo to be [CC BY-NC-SA](https://creativeco
 
 Repo: remove parts that are not needed. 
 
+Overall: Use lectures to give overview. Use videos to presetn proofs etc., and link to in videos. 
+
+Use exercise sessions to go through proofs.
+
 ### Module 1
 
 ### Module 2
@@ -109,6 +113,11 @@ Feels a bit long at end: remove. a lot of the ANOVA stuff?
 Week 2 slides need more structure: very listy. Also, TMI. Didn't get to overdispersion & rushed residuals.
 
 Proof of asymptotic distribution: a bit of a mess. Should probably do as a video.
+
+Perhaps reduce the grouped data part to save time. And link to module 2 and videos in slides 
+(as a prompt to lecturer that they are there).
+
+
 
 
 

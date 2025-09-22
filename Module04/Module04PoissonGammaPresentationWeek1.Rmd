@@ -305,7 +305,7 @@ Observe that the log-likelihood is a sum of individual contributions for each ob
 ---
 
 If we want a function of $\eta_i=\ln(\lambda_i)$ or $\beta$:
-$$l(\beta)=\sum_{i=1}^n[y_i \eta_i-\exp(\eta_i)+C_i]=\sum_{i=1}^n y_i{\bf x}_i^T\beta-\sum_{i=1}^n \exp({\bf x}_i^T\beta) +C$$
+$$l(\beta)=\sum_{i=1}^n[y_i \eta_i-\exp(\eta_i)+C_i]=\sum_{i=1}^n y_i{\bf x}_i^T\beta-\sum_{i=1}^n  \exp({\bf x}_i^T\beta) +C$$
 
 ---
 

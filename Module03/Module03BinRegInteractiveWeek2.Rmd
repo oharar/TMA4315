@@ -73,7 +73,7 @@ fit0=glm(cbind(using,notUsing)~1,data=ds,family=binomial(link=logit))
 summary(fit0)
 ```
 
-We see some output. The estimate of the intercept is `r round(coef(fit0),2)`: this is less than 0.5, so the mean probability that a woman uses contraception is <0.5 (the response is written as `cbind(success, failure)`: there are other ways of writing it, see the help page for `glm`).
+We see some output. The estimate of the intercept is `r round(coef(fit0),2)`: this is less than 0, so the mean probability that a woman uses contraception is <0.5 (the response is written as `cbind(success, failure)`: there are other ways of writing it, see the help page for `glm`).
 
 The null and residual deviances are the same, because this is the null model.
 
