@@ -40,9 +40,8 @@ The exam style questions are optional, but will be helpful for, well, the exam. 
 ## Problem 1: Exam 2005 (Problem 1d-f - slightly modified) - Female horseshoe crabs and satellites
 
 (Only a subset of 20 horseshoe crabs in the original data was used in the exam
-problems, but we will use the full data set of 173 horseshoe crabs - so results
-will not be the same. Permitted aids for the exam was "all printed and
-handwritten material and all calculators" - NB that is not the case for 2018!)
+problems, but we will use the full data set of 173 horseshoe crabs, so results
+will not be the same)
 
 We assume that the number of satellites for each female horseshoe crab follows a
 Poisson distribution and want to perform a Poisson regression using a
@@ -89,7 +88,7 @@ The `summary()` gives Wald statistics and their associated p-values. The effects
 <span class="question">How would you proceed to evaluate the significance of the coefficient for the colour C4. Explain (but only do the calculation if you really feel like it).</span>
 
 <details><summary>Hint</summary>
-First, work out what the coefficient is. Then explain what test you would use, and where you would get the components of it.
+First, work out what the coefficient is, based on the sum to zero constraint. Then explain what test you would use, and where you would get the components of it.
 
 If you want to do the calculation, you will need to do a bit of matrix manipulation in R. 
 </details>
@@ -103,7 +102,7 @@ $$
 H_0: {\bf C}{\bf \beta}={\bf d} \text{ vs. } H_1: {\bf C}{\bf \beta}\neq {\bf d}
 $$
 
-i.e. $C=\{0,0-1,-1,-1 \}$ (the 0s are for the intercept and `W` term), and $\beta = \{-2.92, 0.15, 0.27, 0.07, -0.17\}$ so we test if $-(0.27 + 0.07 - 0.17) = -0.17$ is different from 0. We can use the Wald statistic:
+i.e. $C=\{0,0, -1,-1,-1 \}$ (the 0s are for the intercept and `W` term), and $\beta = \{-2.92, 0.15, 0.27, 0.07, -0.17\}$ so we test if $-(0.27 + 0.07 - 0.17) = -0.17$ is different from 0. We can use the Wald statistic:
 
 $$
 w=({\bf C} \hat{\boldsymbol{\beta}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\beta}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\boldsymbol \beta}}-{\bf d})
@@ -129,7 +128,7 @@ invF <- vcov(modelEXAM)
 
 (the calculation of `w` involves a bit of over-kill and matrix operations)
 
-We are testing one hypothesis , so $r=1$, so we compare this to a $\chi^1_1$ distribution:
+We are testing one hypothesis , so $r=1$, so we compare this to a $\chi^2_1$ distribution:
 
 ```{r}
 pchisq(w, 1, lower.tail = FALSE)
@@ -138,7 +137,8 @@ pchisq(w, 1, lower.tail = FALSE)
 So this is not significant at 5%.
 </details>
 
-<span class="question">Perform a test to evaluate the fit of the model. What is your conclusion?<span class="question">
+<span class="question">Perform a test to evaluate the fit of the model. What is your conclusion?</span class="question">
+
 Use a 5% significance level for your evaluations. 
 
 <details><summary>Hint</summary>

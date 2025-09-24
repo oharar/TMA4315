@@ -1526,9 +1526,7 @@ content.</p>
 horseshoe crabs and satellites</h2>
 <p>(Only a subset of 20 horseshoe crabs in the original data was used in
 the exam problems, but we will use the full data set of 173 horseshoe
-crabs - so results will not be the same. Permitted aids for the exam was
-“all printed and handwritten material and all calculators” - NB that is
-not the case for 2018!)</p>
+crabs, so results will not be the same)</p>
 <p>We assume that the number of satellites for each female horseshoe
 crab follows a Poisson distribution and want to perform a Poisson
 regression using a log-link to find if there is a connection between the
@@ -1612,8 +1610,9 @@ the calculation if you really feel like it).</span></p>
 <summary>
 Hint
 </summary>
-<p>First, work out what the coefficient is. Then explain what test you
-would use, and where you would get the components of it.</p>
+<p>First, work out what the coefficient is, based on the sum to zero
+constraint. Then explain what test you would use, and where you would
+get the components of it.</p>
 If you want to do the calculation, you will need to do a bit of matrix
 manipulation in R.
 </details>
@@ -1628,8 +1627,8 @@ Answer
 H_0: {\bf C}{\bf \beta}={\bf d} \text{ vs. } H_1: {\bf C}{\bf \beta}\neq
 {\bf d}
 \]</span></p>
-<p>i.e. <span class="math inline">\(C=\{0,0-1,-1,-1 \}\)</span> (the 0s
-are for the intercept and <code>W</code> term), and <span class="math inline">\(\beta = \{-2.92, 0.15, 0.27, 0.07,
+<p>i.e. <span class="math inline">\(C=\{0,0, -1,-1,-1 \}\)</span> (the
+0s are for the intercept and <code>W</code> term), and <span class="math inline">\(\beta = \{-2.92, 0.15, 0.27, 0.07,
 -0.17\}\)</span> so we test if <span class="math inline">\(-(0.27 + 0.07
 - 0.17) = -0.17\)</span> is different from 0. We can use the Wald
 statistic:</p>
@@ -1664,15 +1663,15 @@ invF &lt;- vcov(modelEXAM)
 ## [1,] 2.076764</code></pre>
 <p>(the calculation of <code>w</code> involves a bit of over-kill and
 matrix operations)</p>
-<p>We are testing one hypothesis , so <span class="math inline">\(r=1\)</span>, so we compare this to a <span class="math inline">\(\chi^1_1\)</span> distribution:</p>
+<p>We are testing one hypothesis , so <span class="math inline">\(r=1\)</span>, so we compare this to a <span class="math inline">\(\chi^2_1\)</span> distribution:</p>
 <pre class="r"><code>pchisq(w, 1, lower.tail = FALSE)</code></pre>
 <pre><code>##           [,1]
 ## [1,] 0.1495569</code></pre>
 So this is not significant at 5%.
 </details>
 <p><span class="question">Perform a test to evaluate the fit of the
-model. What is your conclusion?<span class="question"> Use a 5%
-significance level for your evaluations.</p>
+model. What is your conclusion?</span></p>
+<p>Use a 5% significance level for your evaluations.</p>
 <details>
 <summary>
 Hint
