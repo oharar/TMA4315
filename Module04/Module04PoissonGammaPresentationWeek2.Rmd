@@ -1,8 +1,7 @@
 ---
-title: "TMA4315 Generalized linear models H2018"
+title: "TMA4315 Generalized linear models"
 subtitle: "Module 4: Count and continuous positive response data (Poisson and gamma regression)"
 author: "Mette Langaas, Department of Mathematical Sciences, NTNU -- with contributions from Ingeborg Hem"
-date: " 27.09.2018 and 04.10.2018 [PL], 28.09.2018 and 05.10.2018 [IL]"
 output: #3rd letter intentation hierarchy
 #  html_document:
 #    toc: true
@@ -22,8 +21,6 @@ output: #3rd letter intentation hierarchy
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold")
 showsol<-TRUE
 ```
-
-(Latest changes: 06.10: solutions added. 01.10: small changes for second week. 27.09: added one Problem for ILw1, moved stuff to w2, added a few dimensions to score test.)
 
 # Overview
 
@@ -82,7 +79,10 @@ crab$S=as.factor(crab$S)
 
 What did we do last week?
 
-Examples — GLM model — loglikelihood, score function and Fisher information matrix — asympototic results for $\hat{\boldsymbol{\beta}}$ and Wald, score and LRT.
+- Examples 
+— GLM model 
+— loglikelihood, score function and Fisher information matrix 
+— asympototic results for $\hat{\boldsymbol{\beta}}$ and Wald, score and LRT.
 
 # Deviance
 
@@ -111,20 +111,21 @@ The (log-) likelihood ratio between two models is
 
 $$
 \begin{aligned}
-l(\bar{\bar{\theta}}) - l(\bar{\theta}) &=\sum_{i=1}^n [y_i \ln(\bar{\bar{y}}_i)-\bar{\bar{y}}_i-\ln(y!)] - \sum_{i=1}^n [y_i \ln(\bar{y}_i)-\bar{y}_i-\ln(y!)] \\
-&= \sum_{i=1}^n [y_i \left(\ln(\bar{\bar{y}}_i) - \ln(\bar{y}_i) \right)-\bar{\bar{y}}_i-\bar{y}_i] \\
-&= \sum_{i=1}^n [y_i \ln(\bar{\bar{y}}_i/\bar{y}_i)- (\bar{\bar{y}}_i-\bar{y}_i)] \\
+l(\hat{\lambda})-l(\tilde{\lambda})) &=\sum_{i=1}^n [y_i \ln(\hat{\lambda}_i)-\hat{\lambda}_i-\ln(y_i!)] - \sum_{i=1}^n [y_i \ln(\tilde{\lambda}_i)-\tilde{\lambda}_i-\ln(y_i!)] \\
+&= \sum_{i=1}^n [y_i \left(\ln(\hat{\lambda})_i - \ln(\tilde{\lambda}_i) \right)-\hat{\lambda}_i-\tilde{\lambda}_i] \\
+&= \sum_{i=1}^n [y_i \ln(\hat{\lambda}_i/\tilde{\lambda}_i)- (\hat{\lambda}_i-\tilde{\lambda}_i)] \\
 \end{aligned}
 $$
 
+($\lambda_i=E(y_i)$ for the model of interest)
 
 The Saturated Deviance is 
 
 $$
-D = -2 l(\theta)=-2\sum_{i=1}^n [y_i \ln(y_i)-y_i-\ln(y!)] 
+D = -2 l(\lambda)=-2\sum_{i=1}^n [y_i \ln(y_i)-y_i-\ln(y!)] 
 $$
 
-because $\hat{y}_i = y_i$ for this model
+because $\hat{\lambda}_i = y_i$ for this model
 
 ---
 
@@ -133,8 +134,8 @@ because $\hat{y}_i = y_i$ for this model
 $$
 \begin{aligned}
 D&=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model})) \\
-&=-2(l(\hat{\pi})-l(\tilde{\pi}))=
--2\sum_{j=1}^G(l_j(\hat{\pi}_j)-l_j(\tilde{\pi}_j))
+&=-2(l(\hat{\lambda})-l(\tilde{\lambda}))=
+-2\sum_{j=1}^G(l_j(\hat{\lambda}_j)-l_j(\tilde{\lambda}_j))
 \end{aligned}
 $$
 
@@ -146,8 +147,9 @@ The likelihood ratio test can be performed using the difference between two devi
 
 $$
 \begin{aligned}
-LRT &= D_1 - D_2 =-2(l_1(\hat{\pi}_1)-l(\tilde{\pi})) - (-2(l_2(\hat{\pi}_2)-l(\tilde{\pi}))) \\
-&=-2(l_1(\hat{\pi}_1)-l_2(\tilde{\pi}_2))
+LRT &= D_1 - D_2 =-2(l_1(\hat{\lambda}_1)-l(\tilde{\lambda})) -
+(-2(l_2(\hat{\lambda}_2)-l(\tilde{\lambda}))) \\
+&=-2(l_1(\hat{\lambda}_1)-l_2(\tilde{\lambda}_2))
 \end{aligned}
 $$
 
@@ -163,10 +165,10 @@ We may use the deviance test presented in Module 3 to test if the model under st
 <!-- http://thestatsgeek.com/2014/04/26/deviance-goodness-of-fit-test-for-poisson-regression/
 We are thus not guaranteed, even when the sample size is large, that the test will be valid (have the correct type 1 error rate). One of the few places to mention this issue is Venables and Ripley's book, Modern Applied Statistics with S. Venables and Ripley state that one situation where the chi-squared approximation may be ok is when the individual observations are close to being normally distributed and the link is close to being linear. Pawitan states in his book In All Likelihood that the deviance goodness of fit test is ok for Poisson data provided that the means are not too small. When the mean is large, a Poisson distribution is close to being normal, and the log link is approximately linear, which I presume is why Pawitan's statement is true (if anyone can shed light on this, please do so in a comment!).
 -->
-$$ D=2 \sum_{i=1}^n [y_i\ln(\frac{y_i}{\hat{y}_i})-(y_i-\hat{y}_i)]$$
+$$ D=2 \sum_{i=1}^n [y_i\ln(\frac{y_i}{\hat{\lambda}_i})-(y_i-\hat{\lambda}_i)]$$
 
-Remark: if $\sum_{i=1}^n y_i=\sum_{i=1}^n \hat{y}_i$ then deviance will be equal to 
-$$ D=2 \sum_{i=1}^n y_i\ln(\frac{y_i}{\hat{y}_i})$$
+Remark: if $\sum_{i=1}^n y_i=\sum_{i=1}^n \hat{\lambda}_i$ then deviance will be equal to 
+$$ D=2 \sum_{i=1}^n y_i\ln(\frac{y_i}{\hat{\lambda}_i})$$
 
 The deviance statistic approximately follows a $\chi^2_{n-p}$, at least when the counts are not low. 
 
@@ -177,8 +179,8 @@ The deviance statistic approximately follows a $\chi^2_{n-p}$, at least when the
 
 The Pearson $\chi^2$-goodness of fit statistic is given as the sum of the squared Pearson residuals
 
-$$ X_P^2=\sum_{i=1}^n r_i^2=\sum_{i=1}^n  \frac{(y_j-\hat{y}_i)^2}{\hat{y}_i}$$
-where $\hat{y}_i=\hat{\lambda}_i=\exp({\bf x}_i^T\hat{\beta})$.
+$$ X_P^2=\sum_{i=1}^n r_i^2=\sum_{i=1}^n  \frac{(y_j-\hat{\lambda}_i)^2}{\hat{\lambda}_i}$$
+where $\hat{\lambda}_i=\exp({\bf x}_i^T\hat{\beta})$.
 The Pearson $\chi^2$ statistic is asymptotically equivalent to the deviance statistic and thus is asymptotically $\chi^2_{n-p}$ (proof: do a Taylor series expansion of the deviance).
 
 ---
@@ -235,11 +237,11 @@ But the sign has to be included in the deviance residual
 The deviance residuals are given by a signed version of each element in the sum for the deviance, that is
 
 $$
-d_i=\text{sign}(y_i-\hat{y}_i)\cdot \left\{ 
-2[y_i\ln(\frac{y_i}{\hat{y}_i})-(y_i-\hat{y}_i)]\right\}^{1/2}
+d_i=\text{sign}(y_i-\hat{\lambda}_i)\cdot \left\{ 
+2[y_i\ln(\frac{y_i}{\hat{\lambda}_i})-(y_i-\hat{\lambda}_i)]\right\}^{1/2}
 $$
 
-where the term $\text{sign}(y_i-\hat{y}_i)$ makes negative residuals possible - and we get the same sign as the _Pearson residuals_
+where the term $\text{sign}(y_i-\hat{\lambda}_i)$ makes negative residuals possible - and we get the same sign as the _Pearson residuals_
 
 ---
 
@@ -248,7 +250,7 @@ where the term $\text{sign}(y_i-\hat{y}_i)$ makes negative residuals possible - 
 The Pearson residuals are given as 
 $$ r_i=\frac{o_i-e_i}{\sqrt{e_i}}$$
 where $o_i$ is the observed count for observation $i$ and $e_i$ is the estimated expected count for observation $i$. We have 
-that $o_i=y_i$ and $e_i=\hat{y}_i=\hat{\lambda}_i=\exp({\bf x}_i^T\hat{\beta})$.
+that $o_i=y_i$ and $e_i==\hat{\lambda}_i=\exp({\bf x}_i^T\hat{\beta})$.
 
 Remark: A standardized version scales the Pearson residuals with $\sqrt{1-h_{ii}}$ similar to the standardized residuals for the normal model. Here $h_{ii}$ is the diagonal element number $i$ in the hat matrix ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
 
@@ -369,7 +371,7 @@ Example: newspaper sales with tourist bus.
 
 Our model states that the variance $\text{Var}(Y_i)=\lambda_i$. If we change the model to $\text{Var}(Y_i)=\phi\lambda_i$ we may allow for an increased variance due to heterogeneity among subjects.
 
-Or, we can miss several covariate, then any daya point is a mixture of several Poisson populations, each with its own mean for the response. 
+Or, we can miss several covariate, then any data point is a mixture of several Poisson populations, each with its own mean for the response. 
 
 This heterogeniety may give an overall response distribution where the variance is greater than the standard Poisson variance.
  
@@ -390,20 +392,21 @@ Cov$(\hat{\beta})$ can then be changed to $\hat{\phi}F^{-1}(\hat{\beta})$, so we
 (more on quasipoisson later in the course)
 
 ```{r}
-model.od=glm(Sa~W, family=poisson(link=log), data=crab)
-model.disp=glm(Sa~W, family=quasipoisson(link=log), data=crab)
-# summary.glm(model.od)
-summary.glm(model.disp)$dispersion
+m.od=glm(Sa~W, family=poisson(link=log), 
+             data=crab)
+m.qp=glm(Sa~W, family=quasipoisson(link=log), data=crab)
+# summary.glm(m.od)
+summary.glm(m.qp)$dispersion
 
-(OverDisp.Dev <- model.od$deviance/model.od$df.residual)
-Chi2 <- sum((crab$Sa-fitted(model.od))^2/fitted(model.od))
-(OverDisp.Chi2 <- Chi2/model.od$df.residual)
+(OverDisp.Dev <- m.od$deviance/m.od$df.residual)
+Chi2 <- sum((crab$Sa-fitted(m.od))^2/fitted(m.od))
+(OverDisp.Chi2 <- Chi2/m.od$df.residual)
 
 ```
 
 ---
 
-# Rate models
+# Rate models with Counts
 
 In the Poisson process we might analyse an event that occurs within a time interval or region in space, and therefore it is often of interest to model the _rate_ at which events occur.
 
@@ -464,12 +467,12 @@ breslow$smoke <- factor(breslow$smoke) # smoke=smoking status
 
 Here our count depends on $n$ 
 
-(we are actually using a Poisson approximation to hte binomial)
+(we are actually using a Poisson approximation to the binomial)
 
 There are 2 ways of coding an offset in `R`:
 
 ```{r}
-# first age and smoke (but not interaction thereof)
+# first age + smoke (but no interaction)
 fit1 <- glm(y~age+smoke,offset=log(n),family=poisson, data=breslow)
 fit1a<- glm(y~age+smoke + offset(log(n)),family=poisson, data=breslow)
 ```
@@ -552,9 +555,7 @@ There are two ways of looking at this,
 1. either this is just a transformation to achieve approximate normality, or 
 2. we assume that the original data follows a lognormal distribution. 
 
-In genomics one usually assume the former, and reports back results on the exponential scale - just say that the mean of original data is $\exp(\mu^{*}_i)$.
-
-However, if on instead assume that the original data really comes from a lognormal distribution, then it can be shown that 
+If we assume that the original data really comes from a lognormal distribution, then it can be shown that 
 
 $$\text{E}(Y_i)=\exp(\mu^{*}_i) \cdot \exp(\sigma^{*2}/2)$$
 $$\text{Var}(Y_i) =\exp(\sigma^{*2} -1)\cdot \mu_i^2$$
