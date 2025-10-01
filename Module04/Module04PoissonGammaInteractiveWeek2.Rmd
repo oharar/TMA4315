@@ -296,8 +296,8 @@ $$
 
 New: <span class="question">What is the canonical link for the Gamma distribution?</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-$\theta &= -\frac{1}{\mu}$
+<details><summary>Answer</summary>
+$\theta = -\frac{1}{\mu}$
 
 So the negative inverse link.
 
@@ -404,11 +404,17 @@ The link function is the canonical link, so is what makes `glm()` happiest. The 
 ## Problem 3:  Taken from UiO, STK3100, 2015, problem 2
 (For reference: [here is the original exam](http://www.uio.no/studier/emner/matnat/math/STK3100/oppgaver/stk3100-f15eng_final.pdf)).
 
+
+```{r, echo=FALSE, eval=FALSE}
+data <- read.table("https://www.math.ntnu.no/emner/TMA4315/2018h/breastcancer.txt",
+                   header=TRUE)
+```
+
 This is a problem on the logistic regression.
 
 Do not look at the dataset before the end of the exercise! You should solve the exercise without using `R`, just as if you were at an exam.
 
-In this problem you shall consider data of survivals from a study of treatment for breast cancer. The response is the number that survived for three years. The covariates were the four factors
+In this problem you shall consider data of survival from a study of treatment for breast cancer. The response is the number that survived for three years. The covariates were the four factors
 
 * `app`: appearance of tumor, two levels, 1 = malignant, 2 = benign
 * `infl`: inflammatory reaction, two levels, 1 = minimal, 2 = moderate or severe
@@ -427,15 +433,42 @@ is displayed below.
 
 <span class="question">What is the interpretation of the estimate of the coefficient of appearance, `fapp` (`f` means factor)? Explain also how this coefficient can be expressed in terms of an odds ratio.</span>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
+<details><summary>Hint</summary>
+First explain what is the predicted odds of survivial for country $j$ for a benign tumor, then the same for a malignant tumor- and then make an odds ratio.
+
 </details>
 
-<details><summary>Answer/Hint (not yet added)</summary>
-42
-</details>
+<details><summary>(Overwritten) Answer</summary>
 
-Hint: first explain what is the predicted odds of survivial for country $j$ for a benign tumor, then the same for a malignant tumor- and then make an odds ratio.
+There are only 2 levels, so if the first level (`malignant`) is the reference level, the estimate is the difference between `malignant` and `benign`. 
+
+Because the model is 
+
+$$
+\log \frac{p}{1-p} = \eta = \beta_0 + \beta_1 \texttt{ fapp} + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}
+$$
+
+If the only difference is the level of `fapp`, `\beta_1` is the difference in log odds between the two levels, i.e. the difference in log odds between malignant and benign tumours.
+
+To really get into the maths, if we write $p_1$ for $\texttt{ fapp}=0$ and $p_2$ for $\texttt{ fapp}=2$ then $\log \frac{p_2}{1-p_2} = \eta_1 = \beta_0 + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}$ and  $\log \frac{p_2}{1-p_2} = \eta_1 = \beta_0 + \beta_1 \texttt{ fapp} + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}$, so
+
+$$
+\log \frac{p_2}{1-p_2} - \log \frac{p_1}{1-p_1} = \eta_2-\eta_1 = (\beta_0 + \beta_1 \texttt{ fapp} + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}) - (\beta_0 + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}) = \beta_1 \texttt{ fapp}
+$$
+
+And 
+
+$$
+\begin{aligned}
+\beta_1 &= \log \frac{p_2}{1-p_2} - \log \frac{p_1}{1-p_1} \\
+&=\log \left(\frac{p_2}{1-p_2} \over \frac{p_1}{1-p_1}\right)  \\
+&= \log \frac{p_2}{1-p_2}\frac{1-p_1}{p_1}
+\end{aligned}
+$$
+
+So, expressed in a few ways $\beta_1$ is the log of the odds ratio for the `fapp` effect: if everything else is equal (*ceteris paribus* if you're a philosopher or a very old Roman) it is the differnce in the log odds between a malignant or benign tumour.
+
+</details>
 
 New: The main difference between our dataset and UiO's dataset is the number of degrees of freedom for the null model; we have 34, they have 35. 
 

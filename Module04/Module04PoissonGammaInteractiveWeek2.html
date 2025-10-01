@@ -1968,9 +1968,9 @@ Answer/Hint (not yet added)
 distribution?</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Answer
 </summary>
-<p><span class="math inline">\(\theta &amp;= -\frac{1}{\mu}\)</span></p>
+<p><span class="math inline">\(\theta = -\frac{1}{\mu}\)</span></p>
 <p>So the negative inverse link.</p>
 </details>
 <p>Hint: if you want to focus on discussing - you may look at the
@@ -2113,7 +2113,7 @@ is the original exam</a>).</p>
 <p>Do not look at the dataset before the end of the exercise! You should
 solve the exercise without using <code>R</code>, just as if you were at
 an exam.</p>
-<p>In this problem you shall consider data of survivals from a study of
+<p>In this problem you shall consider data of survival from a study of
 treatment for breast cancer. The response is the number that survived
 for three years. The covariates were the four factors</p>
 <ul>
@@ -2144,19 +2144,52 @@ factor)? Explain also how this coefficient can be expressed in terms of
 an odds ratio.</span></p>
 <details>
 <summary>
-Answer/Hint (not yet added)
+Hint
 </summary>
-42
+<p>First explain what is the predicted odds of survivial for country
+<span class="math inline">\(j\)</span> for a benign tumor, then the same
+for a malignant tumor- and then make an odds ratio.</p>
 </details>
 <details>
 <summary>
-Answer/Hint (not yet added)
+(Overwritten) Answer
 </summary>
-42
+<p>There are only 2 levels, so if the first level
+(<code>malignant</code>) is the reference level, the estimate is the
+difference between <code>malignant</code> and <code>benign</code>.</p>
+<p>Because the model is</p>
+<p><span class="math display">\[
+\log \frac{p}{1-p} = \eta = \beta_0 + \beta_1 \texttt{ fapp} + \beta_2
+\texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}
+\]</span></p>
+<p>If the only difference is the level of <code>fapp</code>,
+<code>\beta_1</code> is the difference in log odds between the two
+levels, i.e. the difference in log odds between malignant and benign
+tumours.</p>
+<p>To really get into the maths, if we write <span class="math inline">\(p_1\)</span> for <span class="math inline">\(\texttt{ fapp}=0\)</span> and <span class="math inline">\(p_2\)</span> for <span class="math inline">\(\texttt{ fapp}=2\)</span> then <span class="math inline">\(\log \frac{p_2}{1-p_2} = \eta_1 = \beta_0 +
+\beta_2 \texttt{ fcountry2} + \beta_3 \texttt{ fcountry3}\)</span> and
+<span class="math inline">\(\log \frac{p_2}{1-p_2} = \eta_1 = \beta_0 +
+\beta_1 \texttt{ fapp} + \beta_2 \texttt{ fcountry2} + \beta_3 \texttt{
+fcountry3}\)</span>, so</p>
+<p><span class="math display">\[
+\log \frac{p_2}{1-p_2} - \log \frac{p_1}{1-p_1} = \eta_2-\eta_1 =
+(\beta_0 + \beta_1 \texttt{ fapp} + \beta_2 \texttt{ fcountry2} +
+\beta_3 \texttt{ fcountry3}) - (\beta_0 + \beta_2 \texttt{ fcountry2} +
+\beta_3 \texttt{ fcountry3}) = \beta_1 \texttt{ fapp}
+\]</span></p>
+<p>And</p>
+<p><span class="math display">\[
+\begin{aligned}
+\beta_1 &amp;= \log \frac{p_2}{1-p_2} - \log \frac{p_1}{1-p_1} \\
+&amp;=\log \left(\frac{p_2}{1-p_2} \over \frac{p_1}{1-p_1}\right)  \\
+&amp;= \log \frac{p_2}{1-p_2}\frac{1-p_1}{p_1}
+\end{aligned}
+\]</span></p>
+<p>So, expressed in a few ways <span class="math inline">\(\beta_1\)</span> is the log of the odds ratio for
+the <code>fapp</code> effect: if everything else is equal (<em>ceteris
+paribus</em> if you’re a philosopher or a very old Roman) it is the
+differnce in the log odds between a malignant or benign tumour.</p>
 </details>
-<p>Hint: first explain what is the predicted odds of survivial for
-country <span class="math inline">\(j\)</span> for a benign tumor, then
-the same for a malignant tumor- and then make an odds ratio.</p>
 <p>New: The main difference between our dataset and UiO’s dataset is the
 number of degrees of freedom for the null model; we have 34, they have
 35.</p>
