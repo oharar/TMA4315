@@ -72,7 +72,7 @@ The problem here is a typical example: we expect the number of deaths to be prop
 <details><summary>Answer</summary>
 First by hand (as you would have to do in an exam)
 
-$\mu = \exp(-3.63222 + 0.98039 -0.04781  + \log(249)) = \exp(2.817813) = 16.7402$
+$\lambda = \exp(-3.63222 + 0.98039 -0.04781  + \log(1)) = \exp(2.817813) = 16.7402$
 
 Then, in R. The first line predicts the mean for all of the data, and the second extracts the number we want.
 
@@ -115,7 +115,27 @@ $$r(a, s_1, s_2) = \frac{\lambda(a, s_1)}{\lambda(a, s_2)}.$$
 <details><summary>Hint</summary>
 The most difficult part of this is understanding the question!
 </details>
-<details><summary>Answer</summary>
+<details><summary>Short Answer</summary>
+Because there is no interaction in the model.
+</details>
+
+<details><summary>Longer Answer</summary>
+
+First, 
+
+$$
+E(N_{a,s_1}) =\lambda(a,s_1) = \exp(\beta_0 + \sum_{j=1}^6\beta_j I(a=j) + \beta_7 I(s_1=2)  + \log(1))
+$$
+
+where $I(a=j)$ is an indicator that $a=j$, i.e. $I(a=j)=1 iff a=j$, and $\beta_2, ...\beta_6$ are the coefficients for ages 1 to 5, and $I(s_1=k)$ is an indicator that $a=j$, i.e. $I(a=j)=1 iff a=j$, and $\beta_2, ...\beta_6$
+
+\begin{aligned}
+r(a, s_1, s_2) &= \frac{\lambda(a, s_1)}{\lambda(a, s_2)} \\
+
+\end(aligned)
+$$
+
+
 Because there is no interaction in the model.
 </details>
 

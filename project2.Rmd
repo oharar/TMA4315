@@ -117,10 +117,10 @@ write.csv(eliteserie.df, file="Exercises/eliteserien2025.csv")
 
 ```
 
-Load the data set in R:
+Load the data set in R (check the year name is the current year!):
 
 ```{r}
-filepath <- "https://www.math.ntnu.no/emner/TMA4315/2024h/eliteserien2024.csv"
+filepath <- "https://oharar.github.io/TMA4315/Exercises/eliteserien2025.csv"
 eliteserie <- read.csv(file = filepath)
 
 NGames <- table(c(eliteserie$home[!is.na(eliteserie$yh)],
