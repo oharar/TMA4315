@@ -1,0 +1,63 @@
+--- 
+title: "TMA4315: Compulsory exercise 1 (title)" 
+subtitle: "Group 0: Name1, Name2 (subtitle)" 
+date: "`r format(Sys.time(), '%d.%m.%Y')`" # the current date, can be regular text as well
+output: # 3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+  # pdf_document:
+  #  toc: false
+  #  toc_depth: 2
+
+---
+
+```{r setup, include = FALSE}
+library(formatR)
+showsol <- FALSE
+library(knitr)
+opts_chunk$set(tidy.opts = list(width.cutoff = 68), tidy = TRUE, warning = FALSE, error = FALSE, message = FALSE, echo = TRUE)
+```
+
+# Part 1
+
+**Bold**
+
+_italic_
+
+To get a pdf file, make comments of the lines with the "html_document" information, and make the lines with the "pdf_document" information regular, and vice versa.
+
+## a)
+
+Your answer for part 1a)
+
+```{r}
+# some R code for part 1a)
+library(ggplot2)
+ggplot(data.frame(x = 1:10, Group = rep(c("A", "B"), 5)), aes(x = x, y = x, col = Group)) + geom_point() + theme_bw()
+```
+
+The following is a numbered list:
+
+1. First
+2. Second
+3. Third
+
+And this is an unnumbered list:
+
+* GLM
+* rocks
+
+Equations can be made like this:
+
+$$\bf{Y} = \bf{X} \bf{\beta} + \bf{\varepsilon}$$
+
+
+
+
+
+
+
+
+
