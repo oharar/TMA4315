@@ -1490,7 +1490,7 @@ Poisson regression</h3>
 three, and are also encouraged to collaborate across groups. You do not
 have to use the same group as for the first exercise. Each group needs
 to hand in an [R Markdown] (<a href="http://rmarkdown.rstudio.com/" class="uri">http://rmarkdown.rstudio.com/</a>) document with answers to
-the questions as well as all source code. You find a template here: <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/template_glm.Rmd" class="uri">https://www.math.ntnu.no/emner/TMA4315/2018h/template_glm.Rmd</a>.
+the questions as well as all source code. You find a template here: <a href="https://oharar.github.io/TMA4315/Exercises/template_glm.Rmd" class="uri">https://oharar.github.io/TMA4315/Exercises/template_glm.Rmd</a>.
 Hand in the file as a pdf file (<code>.pdf</code>) only, no zipped
 folders necessary. Include <em>all</em> code you have written for
 necessary functions in the end of your file (hint: use
@@ -1558,7 +1558,7 @@ likelihood estimates for the parameters <span class="math inline">\(\beta\)</spa
 <div id="b-1-point" class="section level2">
 <h2>b) (1 point)</h2>
 <p>Load the dataset:</p>
-<pre class="r"><code>filepath &lt;- &quot;https://www.math.ntnu.no/emner/TMA4315/2018h/mountains&quot;
+<pre class="r"><code>filepath &lt;- &quot;https://oharar.github.io/TMA4315/Exercises/mountains&quot;
 mount &lt;- read.table(file = filepath, header = TRUE, col.names = c(&quot;height&quot;,
     &quot;prominence&quot;, &quot;fail&quot;, &quot;success&quot;))</code></pre>
 <p>Note that some entries differs from the Wikipedia list.</p>
@@ -1619,9 +1619,9 @@ in a Poisson regression. The main difference from before is that it is
 now necessary to perform numerical optimization to find the parameter
 estimates. You can create the function in any way you want. However, you
 may of course make an <code>R</code> package with only one function if
-you want, and then a framework can be found here: <a href="https://www.math.ntnu.no/emner/TMA4315/2018h/myglm.R" class="uri">https://www.math.ntnu.no/emner/TMA4315/2018h/myglm.R</a>.
-You do <em>not</em> have to create print, summary, plot or anova this
-time, only the <code>myglm</code> function is necessary.</p>
+you want, and then a framework can be found here: <a href="https://oharar.github.io/TMA4315/Exercises/myglm.R" class="uri">https://oharar.github.io/TMA4315/Exercises/myglm.R</a>. You
+do <em>not</em> have to create print, summary, plot or anova this time,
+only the <code>myglm</code> function is necessary.</p>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p><strong>If you choose</strong> to create and build a package, follow

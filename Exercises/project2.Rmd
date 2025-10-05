@@ -52,11 +52,8 @@ where $\mathbf{x}_i$ is $p$ dimensional column vector of covariates for observat
 ## b) (1 point)
 Load the dataset:
 ```{r, eval = FALSE}
-
-filepath <- "https://oharar.github.io/TMA4315/Exercises/mountains"
-mount <- read.table(file = filepath, header = TRUE, 
-                    col.names = c("height", "prominence", "fail", "success"))
-
+filepath <- "https://oharar.github.io/TMA4315/Exercises/mountains.csv"
+mount <- read.csv(file = filepath)
 ```
 Note that some entries differs from the Wikipedia list.
 
