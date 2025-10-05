@@ -1558,9 +1558,8 @@ likelihood estimates for the parameters <span class="math inline">\(\beta\)</spa
 <div id="b-1-point" class="section level2">
 <h2>b) (1 point)</h2>
 <p>Load the dataset:</p>
-<pre class="r"><code>filepath &lt;- &quot;https://oharar.github.io/TMA4315/Exercises/mountains&quot;
-mount &lt;- read.table(file = filepath, header = TRUE, col.names = c(&quot;height&quot;,
-    &quot;prominence&quot;, &quot;fail&quot;, &quot;success&quot;))</code></pre>
+<pre class="r"><code>filepath &lt;- &quot;https://oharar.github.io/TMA4315/Exercises/mountains.csv&quot;
+mount &lt;- read.csv(file = filepath)</code></pre>
 <p>Note that some entries differs from the Wikipedia list.</p>
 <p>Fit the model, with height and prominence as predictors. Hint: To fit
 this model using the <code>glm</code> function, you write</p>
