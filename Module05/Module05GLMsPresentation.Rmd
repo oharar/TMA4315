@@ -192,7 +192,7 @@ and
 
 $$\text{Var}(Y_i)=b''(\theta_i)\frac{\phi}{w_i}$$
 
-In then exercise session we can study the proof, but it is also given in teh notes and as a video.
+In then exercise session we can study the proof, but it is also given in the notes and as a video.
 
 $b''(\theta_i)$ is often called the variance function $v(\mu_i)$.
 
