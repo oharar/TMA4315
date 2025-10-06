@@ -174,7 +174,7 @@ kable(df)
 
 ---
 
-### Requirements
+### Requirements of the link function
 
 There are a few formal requirements for the mathematics to work, in particular:
 
@@ -192,7 +192,7 @@ and
 
 $$\text{Var}(Y_i)=b''(\theta_i)\frac{\phi}{w_i}$$
 
-In class we study the handwritten proof together: [Proof](https://www.math.ntnu.no/emner/TMA4315/2018h/M5ExpFamProofEVar.pdf)
+In then exercise session we can study the proof, but it is also given in teh notes and as a video.
 
 $b''(\theta_i)$ is often called the variance function $v(\mu_i)$.
 
@@ -259,7 +259,7 @@ Strategy: calculate $\partial^2f/\partial \theta^2$, then integrate over $y$
 
 $\int \partial^2f(y)/\partial \theta^2 dy = 0$ (see notes: we can swap integration & partial derivative)
 
-Go to the notes
+Go to the notes and watch a video.
 
 ---
 
