@@ -437,8 +437,6 @@ which do not contain any random variables, so the observed must be equal to the 
 
 ## Fisher scoring and iterated reweighted least squares (IWLS)
 
-STILL UNDER CONSTRUCTION. WE HAVE NOT CONVERGED ON A SOLUTION YET
-
 Details on the derivation: [IWLS](https://www.math.ntnu.no/emner/TMA4315/2018h/M5irwls.pdf) 
 
 IWLS uses the Newton-Raphson algorithm, via Fisher scoring. The idea is to replace the matrix of derivatives, the observed Fisher information, by the expected Fisher information. For a canonical link these are the same, of course. The reason this is called iterated reweighted least squares is that each iteration is a weighted least squares calculation. To remind you, for known weights the weighted least squares solution is $\hat{\beta} = (X' W X)^{-1} X'W{\bf y}$, where $W$ is a diagonal matrix of known weights (if there are off-diagonal terms, the name changes to generalised least squares). So we will be looking for something that looks like this.
