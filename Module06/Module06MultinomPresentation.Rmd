@@ -292,19 +292,15 @@ These data are grouped, and we let y1:fish be the reference category.
 # data from Agresti (2015), section 6, with use of the VGAM packages
 data="http://www.stat.ufl.edu/~aa/glm/data/Alligators.dat"
 ali = read.table(data, header = T)
+names(ali)[3:7] <- c("fish", "invertebrate", "reptile", "bird", "other")
 ali
-attach(ali)
 ```
 ---
   
   
 ```{r}
-y.data=cbind(y2,y3,y4,y5,y1)
+y.data <- as.matrix(ali[,3:7])
 y.data
-dim(y.data)
-x.data=model.matrix(~size+factor(lake),data=ali)
-x.data
-dim(x.data)
 ```
 
 
@@ -316,7 +312,7 @@ library(VGAM)
 
 # We fit a multinomial logit model with fish (y1) as the 
 #  reference category:
-fit.main=vglm(cbind(y2,y3,y4,y5,y1)~
+fit.main=vglm(y.data~
                 size+factor(lake),
          family=multinomial, data=ali)
 # summary(fit.main)
@@ -346,7 +342,7 @@ Testing out other models, and comparing with LRT-test - by using deviances for d
 
 ```{r}
 # Fit model with only lake:
-fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),
+fit.lake=vglm(y.data~factor(lake),
               family=multinomial, data=ali)
 # Test effect of size (no anova command is available)
 (G2=deviance(fit.lake)-deviance(fit.main))
@@ -359,7 +355,7 @@ fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),
 
 ```{r}
 # Fit model with only size:
-fit.size=vglm(cbind(y2,y3,y4,y5,y1)~size,family=multinomial, data=ali)
+fit.size=vglm(y.data~size,family=multinomial, data=ali)
 
 # Test effect of lake 
 (G2=deviance(fit.size)-deviance(fit.main))

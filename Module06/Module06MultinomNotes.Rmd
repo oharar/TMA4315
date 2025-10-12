@@ -214,7 +214,7 @@ $$\pi_{ir}=h_r((\eta_{i1},\eta_{i2},\ldots,\eta_{ic})=\frac{\exp(\eta_{ir})}{1+\
 
 It turns out that the reference category logits are the canonical links for the multinomial distribution GLM. 
 
-In this case, as for the univariate eksponential family GLM the loglikelihood is concave with an unique maximum (if it exists) and the expected and observed Fisher information matrices are equal. 
+In this case, as for the univariate exponential family GLM the loglikelihood is concave with an unique maximum (if it exists) and the expected and observed Fisher information matrices are equal. 
 
 As before, we find maximum likelihood parameter estimates from the Fisher scoring or Newton Raphson method.
 
@@ -288,14 +288,14 @@ These data are grouped, and we let y1:fish be the reference category.
 # data from Agresti (2015), section 6, with use of the VGAM packages
 data="http://www.stat.ufl.edu/~aa/glm/data/Alligators.dat"
 ali = read.table(data, header = T)
+ names(ali)[3:7] <- c("fish", "invertebrate", "reptile", "bird", "other")
 ali
-attach(ali)
 ```
 ---
   
   
 ```{r}
-y.data=cbind(y2,y3,y4,y5,y1)
+y.data=as.matrix(ali[,c(4:7,3)])
 y.data
 dim(y.data)
 x.data=model.matrix(~size+factor(lake),data=ali)
@@ -311,7 +311,7 @@ dim(x.data)
 library(VGAM)
 
 # We fit a multinomial logit model with fish (y1) as the reference category:
-fit.main=vglm(cbind(y2,y3,y4,y5,y1)~size+factor(lake),
+fit.main=vglm(y.data~size+factor(lake),
          family=multinomial, data=ali)
 summary(fit.main)
 pchisq(deviance(fit.main),df.residual(fit.main),lower.tail=FALSE)
@@ -340,7 +340,7 @@ Testing out other models, and comparing with LRT-test - by using deviances for d
 
 ```{r}
 # Fit model with only lake:
-fit.lake=vglm(cbind(y2,y3,y4,y5,y1)~factor(lake),family=multinomial, data=ali)
+fit.lake=vglm(y.data~factor(lake),family=multinomial, data=ali)
 summary(fit.lake)
 # Test effect of size (no anova command is available)
 G2=deviance(fit.lake)-deviance(fit.main)
@@ -355,7 +355,7 @@ df.diff
 
 ```{r}
 # Fit model with only size:
-fit.size=vglm(cbind(y2,y3,y4,y5,y1)~size,family=multinomial, data=ali)
+fit.size=vglm(y.data~size,family=multinomial, data=ali)
 summary(fit.size)
 
 # Test effect of lake 
@@ -392,25 +392,31 @@ ggplot(fitted, aes(x = lake, y = probability, colour = ses)) + geom_line() + fac
 ---
 
 # Regression with ordinal responses
-(we will only consider cumulative models - and not sequential models)
+(we will only consider cumulative models - and not sequential models. Ranks would be an example of sequential data)
+
+Ordinal data are where the response is categorical and ordered. e.g. when surveys ask for a preference ("How much did you enjoy TNA4315?": "Loved it", "It was OK", "Hated it"). The intuition behind the modelling is that this is friven by an unobserved latent variable, e.e. there is some continuous level of enjoyment of TMA4315, but this is split up into categories. Now to the model....
 
 An unobservable latent variable $U_i$ drives the observed category $Y_i$.
 
 $$ Y_i=r \Leftrightarrow \theta_{r-1}\le U_i \le \theta_r$$
-where these $\theta$s are our unobservable thresholds, and the thresholds are monotonely increasing, $-\infty=\theta_0< \theta_1 < \cdots < \theta_{c+1}=\infty$.
+where these $\theta$s are our unobservable thresholds, and the thresholds are monotonically increasing, $-\infty=\theta_0< \theta_1 < \cdots < \theta_{c+1}=\infty$.
 
 We further assume that the latent variables are dependent on our covariates through
 
 $$ U_i=-{\bf x}_i^T{\boldsymbol \beta} + \varepsilon_i$$
 
-where we have a new random variable that has cumulative distribution function (cdf) $F$. No intercept is included due to identifiability issuse (shift in intercept would produce the same effect as negative shift in threshold).
+where we have a new random variable that has cumulative distribution function (cdf) $F$. No intercept is included due to identifiability issues (a shift in intercept would produce the same effect as negative shift in threshold: you could also think of the thresholds as multiple intercepts).
 
 ---
 
 We get rid of the latent variable $U_i$ by considereing
 
-$$P(Y_i\le r)=P(U_i\le \theta_r)=P(-{\bf x}_i^T {\boldsymbol \beta}+\varepsilon_i \le \theta_r)$$
-$$=P(\varepsilon_i \le \theta_r+{\bf x}_i^T {\boldsymbol \beta})=F(\theta_r+{\bf x}_i^T {\boldsymbol \beta}) $$
+$$
+\begin{aligned}
+P(Y_i\le r)&=P(U_i\le \theta_r)=P(-{\bf x}_i^T {\boldsymbol \beta}+\varepsilon_i \le \theta_r) \\
+&=P(\varepsilon_i \le \theta_r+{\bf x}_i^T {\boldsymbol \beta})=F(\theta_r+{\bf x}_i^T {\boldsymbol \beta})
+\end{aligned}
+$$
 
 Observe that the final expression does not include the latent variable $U_i$, but includes the unknown threshold and $k$ regression parameters.
 
