@@ -182,10 +182,12 @@ fish <- read.table(filepath, header = TRUE)
 fish <- fish[!is.na(fish$age),] # remove 1072 missing values
 fish$A <- fish$age > 6
 
-fit1 <- glmer(A ~ log(length) + haulsize + (1 | haul), data = fish, family = binomial(link = "logit")) 
+fit1 <- glmer(A ~ log(length) + haulsize + (1 | haul), data = fish, 
+              family = binomial(link = "logit")) 
 # fit2 <- glmer(A ~ log(length) + haulsize + (1 | haul), data = fish, 
 #               nAGQ=2, family = binomial(link = "logit")) 
-fit0 <- glm(A ~ log(length) + haulsize, data = fish, family = binomial(link = "logit")) 
+fit0 <- glm(A ~ log(length) + haulsize, data = fish, 
+            family = binomial(link = "logit")) 
 
 summary(fit1)
 ```
@@ -240,6 +242,32 @@ We get a similar story if we look at Age, see the answer to the previous questio
 **Remark**: It is in general a very bad idea to do a dichotomization of a continuous variable - like what is done here for transforming the age into $A_{ij}$, because then information is lost. In a hypothesis testing set-up this will in general give substantial loss of power to detect the effect of a covariate. 
 
 
+
+## Problem 2: Fruits of the weed
+
+This is an analysis that was carried out to look at how plants respond to herbivory, and specifically if there is variation in how well they tolerate it. The species was thale cress, *Arabidopsis thaliana*, which is basically a small weed of no commercial value escept to some plant biologists.
+
+The response variable is the number of fruits (i.e. seed capsules) per plant. We expect this to be a function of:
+
+- nutrient levels (low vs. high), 
+- simulated herbivory (none vs. apical meristem damage),
+- region (Sweden, Netherlands, Spain), 
+- population
+- individual genotype.
+
+Because Arabidopsis is highly selfing, seeds of a single individual served as replicates of that genotype (if you don't understand, don't panic). 
+
+The data also include nuisance variables, including the placement of the plant in the greenhouse, and the method used to germinate seeds. If these influence the response, htey should be in teh model, even if we are not interested in them.
+
+```{r}
+Banta <- read.csv("http://glmm.wikidot.com/local--files/trondheim/Banta_TotalFruits.csv")
+str(Banta)
+```
+
+
+```{r}
+
+```
 
 # <a id="additional">Software for GLMM: demonstration of `glmer`, `glmmTMB` and `inla` for analysing GLMMs</a>
 

@@ -117,7 +117,9 @@ Proof of asymptotic distribution: a bit of a mess. Should probably do as a video
 Perhaps reduce the grouped data part to save time. And link to module 2 and videos in slides 
 (as a prompt to lecturer that they are there).
 
+### Module 6
 
+The presentation could be reworked to improve the structure, and exploin the ordinal model better.
 
 
 

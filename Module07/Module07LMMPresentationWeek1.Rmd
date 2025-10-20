@@ -474,9 +474,9 @@ $${\boldsymbol\varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
 
 ---
 
-# Marginal and Conditional Formulatios
+# Marginal and Conditional Formulations
 
-We can write a conditional formulation if we condition on $\gamma_i$, or a margunal if we do not (in which case we marginalise over the distribution of$\gamma_i$
+We can write a conditional formulation if we condition on $\gamma_i$, or a marginal if we do not (in which case we marginalise over the distribution of$\gamma_i$
 
 ## Conditional formulation
 
@@ -497,7 +497,7 @@ for the response for cluster $8$, ${\bf Y}_i$ (Laird and Ware (1982) formulation
 \end{align*}
 which gives
 
-$${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
+$${\bf Y}_i\sim N({\bf X}_i {\boldsymbol \beta}, \sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
 
 ---
 
@@ -558,7 +558,7 @@ for the response ${\bf Y}$
 \end{align*}
 Here ${\bf G}$ is a $m\dot (q+1)$ block-diagonal matrix with ${\bf Q}$ $m$ times on the diagonal (see below). This gives
 
-$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
 ---
 
@@ -589,9 +589,9 @@ For the random effects ${\boldsymbol \gamma}_i$ and ${\boldsymbol \varepsilon}_i
 ## Parameter estimation with maximum likelihood for fixed effects
 
 Cluster specific model:
-$${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
+$${\bf Y}_i\sim N({\bf X}_i {\boldsymbol \beta},\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
 Global model:
-$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
 The log-likelihood function is then ($\pm$ some constants)
 $$l({\boldsymbol \beta},{\bf V})=-\frac{1}{2}\ln \lvert {\bf V}\rvert -\frac{1}{2}({\bf y}-{\bf X}{\boldsymbol \beta})^T {\bf V}^{-1}({\bf y}-{\bf X}{\boldsymbol \beta})$$
