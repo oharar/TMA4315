@@ -1745,7 +1745,8 @@ for <span class="math inline">\(\theta\)</span>: <span class="math inline">\([25
 vbeta0 &lt;- summary(fit1)$coefficients[1, 2]^2
 vbeta1 &lt;- summary(fit1)$coefficients[2, 2]^2
 vbeta2 &lt;- summary(fit1)$coefficients[3, 2]^2
-# cov2cor gives correlations from a covariance matrix
+# cov2cor gives correlations from a covariance matrix. This is where we could
+# just use vcov()
 cbeta01 &lt;- sqrt(vbeta0) * sqrt(vbeta1) * cov2cor(vcov(fit1))[1, 2]
 cbeta02 &lt;- sqrt(vbeta0) * sqrt(vbeta2) * cov2cor(vcov(fit1))[1, 3]
 cbeta12 &lt;- sqrt(vbeta1) * sqrt(vbeta2) * cov2cor(vcov(fit1))[2, 3]

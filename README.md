@@ -119,7 +119,7 @@ Perhaps reduce the grouped data part to save time. And link to module 2 and vide
 
 ### Module 6
 
-The presentation could be reworked to improve the structure, and exploin the ordinal model better.
+The presentation could be reworked to improve the structure, and explain the ordinal model better.
 
 
 

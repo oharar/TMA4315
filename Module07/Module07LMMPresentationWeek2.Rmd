@@ -1,5 +1,5 @@
 ---
-title: "TMA4315 Generalized linear models H2018"
+title: "TMA4315 Generalized linear models. LMMs II"
 author: Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions
   from Ingeborg G. Hem
 date: "01.11 and 08.11 [PL], 02.11 and 09.11 [IL]"
@@ -24,22 +24,17 @@ showsol<-FALSE
 
 We will only consider _two-level models_ and in particular focus on _random intercept and random slope models._
 
----
 
-## Learning material
+# Learning material
 
 * Textbook: Fahrmeir et al (2013): Chapter 2.4, 7.1-7.3, 7.7. In greater detail: pages 349-354 (not "Alternative view on the random intercept model"), 356-365 (not 7.1.5 "Stochastic Covariates""), 368-377 (not "Bayesian Covariance Matrix""), 379-380 (not "Testing Random Effects or Variance Parameters"", only last part on page 383), 383 (middle), 401-409 (orange juice). Note: Bayesian solutions not on the reading list.
 
 * Alternative readings: Zuur et al. (2009): "Mixed Effects Models and Extensions in Ecology with R", chapter 5 (pages 101-142). Available as free ebook from Springer for NTNU students. More explanations and less mathematics than Fahrmeir et al (2013), more focus on understanding. [Link to ebook Chapter 5](https://link.springer.com/chapter/10.1007/978-0-387-87458-6_5)
 
-* [Classnotes 01.11.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w12018.pdf) 
-* [Classnotes 08.11.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M7w22018.pdf) 
 
----
+# Topics
 
-## Topics
-
-### [First week](#firstweek)
+# [First week](#firstweek)
 
 * correlated responses - when and why?
     + repeated measurements: clustered and longitudinal
@@ -54,11 +49,8 @@ We will only consider _two-level models_ and in particular focus on _random inte
     + with maximum likelihood for fixed effects
     + distribution of fixed parameter estimators
 
-Jump to [interactive (week 1)](#interactivew1)
 
----
-
-### [Second week](#secondweek)
+# [Second week](#secondweek)
 
 * what did we do last week: beaches example
 * parameter estimation (cont.)
@@ -75,9 +67,8 @@ Jump to [interactive (week 1)](#interactivew1)
 * what have we not covered?
 
 
-**<a id="secondweek">SECOND WEEK</a>**
+# SECOND WEEK
 
----
 
 # Notation and LMM
 
@@ -87,9 +78,8 @@ Jump to [interactive (week 1)](#interactivew1)
 
 Words to know: measurement model, distributional model, conditional model, marginal model, global model.
 
----
 
-**Measurement model**
+# Model
 
 $${\bf Y}_i= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} + {\boldsymbol \varepsilon}_i$$
 
@@ -103,9 +93,8 @@ $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I
 
 **Q**: explain what the different parameters and random variables are, and what are their dimensions.
 
----
 
-**A**:
+# **A**:
 
 * design matrix for fixed effects for cluster $i$: ${\bf X}_i$ is $n_i \times p$ (intercept included)
 * parametervector for fixed effects: ${\boldsymbol \beta}$ $p\times 1$
@@ -115,9 +104,8 @@ $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I
 * covariance matrix for the random effects: ${\bf Q}$, $(q+1)\times (q+1)$
 * parameter $\sigma^2$ for variance of the random errors $\text{Cov}({\boldsymbol \varepsilon}_i)=\sigma^2 {\bf I}$ with dimension $n_i \times n_i$.
 
----
 
-### Beach-example: Parameter estimation
+# Beach-example: Parameter estimation
 
 \tiny
 ```{r GetData, echo=FALSE}
@@ -132,9 +120,7 @@ summary(fit)
 ```
 \normalsize
 
----
-
-### Global model 
+# Global model 
 
 For all cluster together (even more letters now)
 $${\bf Y}={\bf X}{\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} +{\boldsymbol \varepsilon}$$
@@ -163,6 +149,8 @@ $$
 {\boldsymbol \varepsilon}^{*} &\sim N({\bf 0},{\bf V})\\
 \end{align*}
 
+--- 
+
 Here ${\bf G}$ is a $m\dot (q+1)$ block-diagonal matrix with ${\bf Q}$ $m$ times on the diagonal, which gives
 $${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
@@ -185,9 +173,9 @@ $$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_
 
 $$ \approx N({\boldsymbol \beta}, (\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1})$$
 
----
 
-**Now follows:**
+
+# For this week...
 
 * Random effects parameters $\sigma^2$ and ${\bf Q}$ (in ${\bf V})$: estimated using restricted maximum likelihood (REML). We denote all parameters for random effect for $\vartheta$. For the random intercept model this is $\vartheta=(\sigma^2, \tau_0^2)$.
 
@@ -196,13 +184,12 @@ Then, for the random effects ${\boldsymbol \gamma}_i$ and ${\boldsymbol \varepsi
 * Predicted values for the random effects ${\boldsymbol \gamma}_i$ using _best linear unbiased predictors_ (BLUP).
 * Prediction values for the random effects ${\boldsymbol \varepsilon}_i$ are our _residuals_. 
 
----
 
-## Parameter estimation with restricted maximum likelihood (REML) for random effects
+# Parameter estimation with restricted maximum likelihood (REML) for random effects
 
 There are two ways to explain the REML - a transformation method (we start with this), and an integration method (to come next).
 
-### Transformation method
+# Transformation method
 
 To aid in our understanding we start by looking at the REML solution for **multiple linear regression (Module 2)**,
 $${\bf Y=X {\boldsymbol \beta}}+{ {\boldsymbol \varepsilon}} \text{ with } {\boldsymbol \varepsilon} \sim N({\bf 0},\sigma^2 {\bf I})$$
@@ -261,12 +248,8 @@ where $C$ is a constant not depending on $\vartheta$, and $L_{ML}$ is the margin
 Therefore both ${\boldsymbol \beta}$ and $\vartheta$ can be found by maximizing what is referred to as the _REML likelihood function_:
 $$L_{REML}(\vartheta,{\boldsymbol \beta})= \lvert \sum_{i=1}^m {\bf X}_i^T {\bf V}(\vartheta)_i^{-1} {\bf X}_i\rvert^{-1/2} L_{ML}({\boldsymbol \beta},\vartheta) $$
 
-**Further reading:** [Theoretical explanation for REML (beyond the scope of this course) by Inge Helland, UiO](http://www.uio.no/studier/emner/matnat/math/STK4070/v05/reml.pdf) 
-and also by [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.com/book/10.1007%2F978-1-4419-0300-6) (free ebook from Springer for NTNU students).
 
----
-
-### Comparing ML and REML estimation for the beaches example
+# Comparing ML and REML estimation for the beaches example
 
 \footnotesize
 ```{r,echo=-(1:5)}
@@ -290,19 +273,18 @@ kable(df, digits = 4)
 
 Remark: the default for `lmer` is REML, and we need to write `REML=FALSE` to get ML.
 
----
 
-### Integration method: Another Justification For REML
+# Integration method: Another Justification For REML
 
 $${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}(\vartheta)=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
-For the fixed effects we started with the log-likelihood function and maximized to get estimator for ${\boldsymbol \beta}$ dependent on $\vartheta$. If we now assume that we have found ${\boldsymbol \beta}(\vartheta)$ and insert this estimate into the loglikelihood then the _profile log-likelihood_ is (discregarding an additive constant)
+For the fixed effects we started with the log-likelihood function and maximized to get estimator for ${\boldsymbol \beta}$ dependent on $\vartheta$. If we now assume that we have found ${\boldsymbol \beta}(\vartheta)$ and insert this estimate into the loglikelihood then the _profile log-likelihood_ is (disregarding an additive constant)
 
 $$l_{P}(\vartheta)=-\frac{1}{2}\ln \lvert {\boldsymbol V(\vartheta)}\rvert -\frac{1}{2}({\bf y}-{\bf X}\hat{\boldsymbol \beta}(\vartheta))^T {\boldsymbol V(\vartheta)}^{-1}({\bf y}-{\bf X}\hat{\boldsymbol \beta}(\vartheta))$$
 
 ---
 
-The integration method (can be motivated from the Bayesian perspective by assuming a flat prior on ${\boldsymbol \beta}$) constructs a _marginal or restricted log-likelihood_ by integrating ${\boldsymbol \beta}$ out of the likelihood
+The integration method constructs a _marginal or restricted log-likelihood_ by integrating ${\boldsymbol \beta}$ out of the likelihood
 $$ l_{\text{REML}}(\vartheta)=\ln \int L({\boldsymbol \beta},\vartheta)d{\boldsymbol \beta}$$
 
 ---
@@ -312,18 +294,16 @@ $$l_{\text{REML}}(\vartheta)= l_{P}(\vartheta)-\frac{1}{2}\ln \lvert \sum_{i=1}^
 
 Maximizing of $l_{\text{REML}}(\vartheta)$ provides the REML estimator for $\vartheta$.
 
----
 
-### What do you need to know about REML?
+# What do you need to know about REML?
 
 * That REML is used to get a better estimator (less downwards biased) for the random effects parameters than using ML, 
 * so REML is the default choice in the `lmer` function for fitting LMMs in the `lme4`-package in `R`.
 * Two ways of motivating this: by transformation or by integration.
 * But sadly, for LMM this does not in general give unbiased estimates for the parameters $\vartheta$ in ${\bf V}$ - but less biased.
 
----
 
-### REML estimation for the beaches example
+# REML estimation for the beaches example
 \tiny
 
 ```{r,echo=FALSE}
@@ -337,9 +317,8 @@ summary(fitREML)
 
 **Q**: What have we covered so far, and what is missing? Explain the elements of the print-out! 
 
----
 
-### ML estimation for the beaches example
+# ML estimation for the beaches example
 \tiny
 
 ```{r,echo=FALSE}
@@ -353,7 +332,6 @@ summary(fitML)
 
 **Q**: Look for differences between the REML and ML output.
 
----
 
 # Prediction of random effects and random errors
 
@@ -363,18 +341,14 @@ summary(fitML)
 
 **Model check** can also use this to check that ${\boldsymbol \gamma}$ is normal is in agreement with our fitted model (same as when using residuals to check distribution of errors).
 
----
-
-### Best Linear Unbiased Predictor (BLUP) $\hat{ {\boldsymbol \gamma}_i}$ 
+# Best Linear Unbiased Predictor (BLUP) $\hat{ {\boldsymbol \gamma}_i}$ 
 
 * linear function in ${\bf Y}$ (linear)
 * $\text{E}(\hat{ {\boldsymbol \gamma}}_i)={\bf 0}$ (unbiased)
 * for any linear combination ${\bf a}^T{\boldsymbol \gamma}_i$ of random effects 
 $[\text{E}({\bf a}^T\hat{ {\boldsymbol \gamma}}_i-{\bf a}^T{\boldsymbol \gamma}_i)]^2$ is minimized among all such linear unbiased predictors (best)
 
----
-
-### Beaches random intercept - predicted intercept and estimated fixed effects
+# Beaches random intercept - predicted intercept and estimated fixed effects
 
 \footnotesize
 ```{r,fig.width=16, fig.height=10,echo=-(1:7)}
@@ -390,7 +364,7 @@ plot_model(fit, type="re")
 
 ---
 
-##  Joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$
+#  Joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$
 
 The joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$ is:
 $$\begin{pmatrix} {\bf Y}\\ {\boldsymbol \gamma} \end{pmatrix} \sim
@@ -400,7 +374,7 @@ N(\begin{pmatrix} {\bf X}{\boldsymbol \beta} \\ {\bf 0}\end{pmatrix},
 
 ---
 
-### Maximizing the likelihood based on the joint distribution
+# Maximizing the likelihood based on the joint distribution
 
 This is maximized with respect to ${\boldsymbol \beta}$ and ${\boldsymbol \gamma}$, to give
 $$\hat{ {\boldsymbol \gamma}}={\bf G}{\bf U}^T{\bf V}^{-1}({\bf Y}-{\bf X}\hat{ {\boldsymbol \beta}})$$
@@ -413,9 +387,7 @@ $$\hat{ {\boldsymbol \gamma}}_i=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}({\bf Y}
 Remark: For details on this calculation - involving the Henderson's mixed model equations, see pages 371-372 of Fahrmeir et al (2013), or pages 98-99 in 
 [Verbeke and Molenberghs (2000), Section 5.3](https://link.springer.com/book/10.1007%2F978-1-4419-0300-6) (free ebook from Springer for NTNU students).
 
----
-
-### Conditional mean
+# Conditional mean
 
 Remember:
 $$\begin{pmatrix} {\bf Y}\\ {\boldsymbol \gamma} \end{pmatrix} \sim
@@ -445,9 +417,7 @@ $$ {\bf Q}{\bf U}_i^T\left( {\bf V}_i^{-1}-{\bf V}_i^{-1}{\bf X}_i (\sum_{i=1}^m
 We insert estimates ${\bf Q}$ and ${\bf V}_i$ (thus underestimating the variability)
 and get the estimated covariance matrix for the random effect. Such an estimate is used in the catepillar plot.
 
----
-
-## Random intercept models: $\hat{ {\boldsymbol \gamma}}_i$
+# BLUPs for Random intercept models: $\hat{ {\boldsymbol \gamma}}_i$
 
 For $i=1, \ldots, m$:
 $$ {\bf Y}_i = {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{0i}+{\boldsymbol \varepsilon}_i $$
@@ -469,12 +439,11 @@ $$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_
 The predicted random intercepts are
 $$\hat{\gamma}_{0i}=\hat{\bf Q}{\bf U}_i^T\hat{\bf V}_i^{-1}
 ({\bf Y}_i-{\bf X}_i\hat{ {\boldsymbol \beta}})=\cdots =\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}e_i$$
-where $e_i$ is the average (raw, level 0 - see below) residual
+where $e_i$ is the average residual for the $i^{th}$ group:
+
 $$ e_i=\frac{1}{n_i} \sum_{j=1}^{n_i} (Y_{ij}-{\bf x}_{ij}^T\hat{ {\boldsymbol \beta}})$$
 
----
-
-### Interpretation
+# Interpretation
 
 $$\hat{\gamma}_{0i}=\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}e_i$$
 
@@ -485,10 +454,7 @@ The formula for $\hat{\gamma}_{i0}$ can be seen as a weighted sum between the co
 $\frac{n_i \hat{\tau}_{0}^2}{\hat{\sigma}^2+n_i \hat{\tau}_{0}^2}$ for the average residual (and 1-this for 0).
 The larger the $n_i$ the closer the weight is to $1$ and the smaller the shrinkage. Shrinkage is also high if the error variance $\sigma^2$ is large compared to the random effect variance $\tau_{0}^2$. The latter gives a very small ICC, so then it makes sense to have random effects close to $0$.
 
----
-
-
-## Plotting predictions of random effects
+# Plotting predictions of random effects
 
 We can also use the R package `sjPlot` to produce plots and outputs from fitting linear mixed effects models with function `lmer` in the R package `lme4`. This plotting package can also be used to produce nice plots for `lm` and `glm`. The package uses `ggplot2` and other `tidyverse` packages.
 
@@ -541,7 +507,8 @@ library(ggplot2)
 <!-- **Q**: which assumption can be assessed with this plot, and what is the conclusion? -->
 
 
-## Predicted values for random errors ${\boldsymbol \varepsilon}_i$ (residuals)
+# Predicted values for random errors ${\boldsymbol \varepsilon}_i$ (residuals)
+
 Let $\mu_i$ denote $\text{E}({\bf Y}_i)$. Fitted values for the LMM can be made on two levels:
 
 \begin{align*}
@@ -608,7 +575,7 @@ gg
 
 ---
 
-We observe that each subject’s reaction time increases approximately linearly with the number of sleepdeprived
+We observe that each subject’s reaction time increases approximately linearly with the number of sleep-deprived
 days. But, it appears that subjects have different slopes and intercepts. 
 
 As a first model we may assume that there is a common intercept and slope for the population - called fixed effects, but allow for random deviations for the intercept and slope for each individual. This is called a _random intercept and slope model_.
@@ -644,7 +611,7 @@ plot_model(fm1,type="re")
 
 ```
 
-## Measurement model
+# Measurement model
 
 $$Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\gamma_{1i}x_{ij}+{\varepsilon}_{ij}$$
 
@@ -655,9 +622,7 @@ $$Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\gamma_{1i}x_{ij}+{\varepsilon}_{ij}$
 * $\gamma_{1i}$: deviation (for members of cluster $i$) from the population slope $\beta_0$ - not a parameter but a random variable!
 * $\beta_1+\gamma_{1i}$: random slope for cluster $i$.
 
----
-
-## Distributional assumptions 
+# Distributional assumptions 
 
 $$ {\boldsymbol \varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
 $${\boldsymbol \gamma}_i =\begin{pmatrix} \gamma_{0i}\\ \gamma_{1i} \end{pmatrix} \sim N \left( \begin{pmatrix} 0\\ 0 \end{pmatrix},{\bf Q}=
@@ -665,11 +630,9 @@ $${\boldsymbol \gamma}_i =\begin{pmatrix} \gamma_{0i}\\ \gamma_{1i} \end{pmatrix
 \tau_{01} & \tau_1^2 \end{pmatrix}
 \right)$$
 
-The parameter $\tau_{01}$ gives the covariance beween the random intercept and random slope.
+The parameter $\tau_{01}$ gives the covariance between the random intercept and random slope.
 
----
-
-## Marginal covariances for ${\bf Y}_i$
+# Marginal covariances for ${\bf Y}_i$
 
 $$\text{Cov}(Y_{ij},Y_{kl})=\text{E}[(Y_{ij}-\mu_{ij})(Y_{kl}-\mu_{kl})]$$
 
