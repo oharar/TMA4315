@@ -245,29 +245,59 @@ We get a similar story if we look at Age, see the answer to the previous questio
 
 ## Problem 2: Fruits of the weed
 
-This is an analysis that was carried out to look at how plants respond to herbivory, and specifically if there is variation in how well they tolerate it. The species was thale cress, *Arabidopsis thaliana*, which is basically a small weed of no commercial value escept to some plant biologists.
+This is an analysis that was carried out to look at how plants respond to herbivory, and specifically if there is variation in how well they tolerate it. The species was thale cress, *Arabidopsis thaliana*, which is a small weed of no commercial value except to some plant biologists.
 
 The response variable is the number of fruits (i.e. seed capsules) per plant. We expect this to be a function of:
 
-- nutrient levels (low vs. high), 
-- simulated herbivory (none vs. apical meristem damage),
-- region (Sweden, Netherlands, Spain), 
+- nutrient levels (low vs. high)
+- simulated herbivory (none vs. apical meristem damage)
+- region (Sweden, Netherlands, Spain)
 - population
-- individual genotype.
+- individual genotype
 
-Because Arabidopsis is highly selfing, seeds of a single individual served as replicates of that genotype (if you don't understand, don't panic). 
+Because *A. thaliana* is highly selfing, seeds of a single individual served as replicates of that genotype (if you don't understand, don't panic: genotypes are different varieties). 
 
-The data also include nuisance variables, including the placement of the plant in the greenhouse, and the method used to germinate seeds. If these influence the response, htey should be in teh model, even if we are not interested in them.
+The data also include nuisance variables, including the placement of the plant in the greenhouse, and the method used to germinate seeds. If these influence the response, they should be in the model, even if we are not interested in them.
+
+We read in the data and convert some variables to factors. We could keep `reg` and `amd` as they are, as characters, as `lmer()` would convert them to factors. Note also that we re-level `amd` to make `unclipped` the reference level.
 
 ```{r}
 Banta <- read.csv("http://glmm.wikidot.com/local--files/trondheim/Banta_TotalFruits.csv")
+
+Banta$reg <- factor(Banta$reg) # region: NL, SP, SW
+Banta$gen <- factor(Banta$gen) # genotype: number, but these are arbitrary
+Banta$rack <- factor(Banta$rack) # rack: 1, 2
+Banta$nutrient <- factor(Banta$nutrient) # 1, 8.
+Banta$status <- factor(Banta$status) # Method used to germinate: Transplant, Petri.Plate, Normal
+Banta$amd <- factor(Banta$amd, levels=c("unclipped", "clipped")) # make unclipped the reference
+
 str(Banta)
 ```
 
+First fit a GLM with `nutrient` and `amd`. This is helpful to start to understand the data:
 
 ```{r}
-
+mp1 <- glm(total.fruits ~ nutrient*amd, 
+             data=Banta, family="poisson")
 ```
+
+<span class="question">What does this suggest? Are there effects of clipping abd nutrient? Is there overdispersion, and if so how does it affect the interpretation</span>
+
+
+<details><summary>Answer</summary>
+
+First, the summary:
+
+```{r}
+summary(mp1)
+```
+
+Looking at the coefficients, nutrient level 8 increases the numnebr of fruits by `exp(coef(mp1)[`nutrient8`])
+
+</details>
+
+
+
 
 # <a id="additional">Software for GLMM: demonstration of `glmer`, `glmmTMB` and `inla` for analysing GLMMs</a>
 

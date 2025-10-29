@@ -215,11 +215,39 @@ ggplot(data = df, aes(x = x1, y = x2)) +
 
 </details>
 
+
+<span class="question">d) R has several functions to extract different parameters and predictions (BLUPs): `coef()`, `fixef()` and `ranef()`. What estimates does each of them produce? (hint: try them, e.g. `coef(fit2)`, and work out how they differ)</span>
+
+<details><summary>Answer</summary>
+
+`coef()` is annoying, as it doesn't give the fixed effects (as it would with `glm()`). We get those with `fixef()`, which returns $\boldsymbol{\hat{\beta}}$:
+
+```{r}
+fixef(fit2)
+```
+
+`ranef()` gives us the BLUPs, $E(\pmb{\gamma}_i | \mathbf{y}_i)$, for each boy, so this is a matrix:
+
+```{r}
+ranef(fit2)
+```
+
+Finally, we can work out what `coef()` does:
+
+```{r}
+coef(fit2)
+```
+
+The intercepts are about 50, which is `fixef(fit2)['(Intercept)']`: `r round(fixef(fit2)['(Intercept)'], 2)`. So each row is $\boldsymbol{\hat{\beta}} + E(\pmb{\gamma}_i | \mathbf{y}_i)$.
+
+</details>
+
+
 ---
 
 ## Exercise 2: Taken from UiO, STK3100, 2015, problem 3
 
-The data used in this problem conserns expenses in the the social security system Medicare in US. Average expenses per hospitalization, denoted as `ccpd`, were in six years recorded for 54 regions: the fifty US states, Puerto Rico, Virgin Islands, District of Columbia and an unspecified other. Thus there are $6\times54 = 324$ observations. The expenses are treated as response. The covariates are `j = YEAR` which can take values $1, \dots, 6$ and a factor indicating the average length of stay at hospital, `AVETD`, in each region and year. This factor has tree levels, `1` = six days or less, `2` = 7-9 days, `3` = 10 days or more. "Six days or less"" is the reference level and the others are denoted as `AVETD2` and `AVETD3`.
+The data used in this problem concerns expenses in the the social security system Medicare in US. Average expenses per hospitalization, denoted as `ccpd`, were in six years recorded for 54 regions: the fifty US states, Puerto Rico, Virgin Islands, District of Columbia and an unspecified other. Thus there are $6\times54 = 324$ observations. The expenses are treated as response. The covariates are `j = YEAR` which can take values $1, \dots, 6$ and a factor indicating the average length of stay at hospital, `AVETD`, in each region and year. This factor has tree levels, `1` = six days or less, `2` = 7-9 days, `3` = 10 days or more. "Six days or less"" is the reference level and the others are denoted as `AVETD2` and `AVETD3`.
 
 Below you find the output from fitting the linear mixed effects model
 
