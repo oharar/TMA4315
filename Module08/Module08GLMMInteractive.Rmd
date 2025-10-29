@@ -252,12 +252,12 @@ The response variable is the number of fruits (i.e. seed capsules) per plant. We
 - nutrient levels (low vs. high)
 - simulated herbivory (none vs. apical meristem damage)
 - region (Sweden, Netherlands, Spain)
-- population
-- individual genotype
+- population (3 per region, so 9 in total)
+- individual genotype (24 in total)
 
 Because *A. thaliana* is highly selfing, seeds of a single individual served as replicates of that genotype (if you don't understand, don't panic: genotypes are different varieties). 
 
-The data also include nuisance variables, including the placement of the plant in the greenhouse, and the method used to germinate seeds. If these influence the response, they should be in the model, even if we are not interested in them.
+The data also include nuisance variables, including the placement of the plant in the greenhouse, and the method used to germinate seeds. If these influence the response, they should be in the model, even if we are not interested in them. We will ignore them, though, and leave it as a problem for the reader to see if this is a wise decision.
 
 We read in the data and convert some variables to factors. We could keep `reg` and `amd` as they are, as characters, as `lmer()` would convert them to factors. Note also that we re-level `amd` to make `unclipped` the reference level.
 
@@ -281,8 +281,14 @@ mp1 <- glm(total.fruits ~ nutrient*amd,
              data=Banta, family="poisson")
 ```
 
-<span class="question">What does this suggest? Are there effects of clipping abd nutrient? Is there overdispersion, and if so how does it affect the interpretation</span>
+<span class="question">Write down the assumptions of the model</span>
 
+<details><summary>Answer</summary>
+If the total number of fruits for plant $i$ is $N_i$, then $N_i ~ \text{Poisson}(\lambda_i)$, and $\log(\lambda_i) = \eta_i = \bf{x}_i^T \mathbf{\beta}$.
+
+</details>
+
+<span class="question">What does this suggest? Are there effects of clipping and nutrient? Is there overdispersion, and if so how does it affect the interpretation?</span>
 
 <details><summary>Answer</summary>
 
@@ -292,10 +298,70 @@ First, the summary:
 summary(mp1)
 ```
 
-Looking at the coefficients, nutrient level 8 increases the numnebr of fruits by `exp(coef(mp1)[`nutrient8`])
+Looking at the coefficients, nutrient level 8 increases the number of fruits by `round(`exp(coef(mp1)['nutrient8']), 1)` times in the unclipped plants. Clipping reduced the number of fruits in the nutrient level 1, but the effect in level 8 is much smaller.
+
+The data seem to be over-dispersed. The residual deviance is much larger than the residual degrees of freedom. We can estimate the overdispersion parameter: it is about `r round(deviance(mp1)/mp1$df.residual, 1)`. This makes us much less certain about any inferences:
+
+```{r}
+summary(mp1, dispersion=deviance(mp1)/mp1$df.residual)
+```
 
 </details>
 
+Now let's fit a GLMM!
+
+```{r}
+mp2 <- glmer(total.fruits ~ nutrient*amd + (1|gen) + (1|popu),
+             data=Banta, family="poisson")
+summary(mp2)
+```
+
+Here we have two random effects: `gen` and ´popu`. 
+
+<span class="question">Write down the linear predictor for plant $i$ (you can keep the fixed effects in $\bf{x}_i$, but be explicit about the random effects).</span>
+
+<details><summary>Answer</summary>
+
+OK, you could write 
+
+$\eta_i = \bf{x}_i^T \boldsymbol{\beta} + \bf{u}_i^T \boldsymbol{\gamma}$
+
+and explain the components in $\gamma$ that have a non-zero $u_i^T$. But we can also write it like this:
+
+$\eta_{ijk} = \bf{x}_i^T \mathbf{\beta} + \gamma_{0i} + \gamma_{1j}$
+
+Where we have population $i$ $(i=1,\dots 9)$ and genotype $j$ $(j=1,\dots 24)$.
+
+</details>
+
+<span class="question">What does this new analysis tell us? (a) Does it change our interpretation above? (b) how do you interpret the random effects? </span>
+
+<details><summary>Answer</summary>
+(a) The fixed effects are very similar to before, so their interptation doesn't change.
+
+(b) The random effects are both intercepts: the variance for the population is much higher tna. for genotype, so there is more variation between populations than genotypes. 
+
+</details>
+
+What about overdispersion? We can use random effects to deal with it: we have a random effect with one level per observation. This is the same as assuming that the data follow a Poisson log-normal distribution.
+
+<span class="question">Fit a model with a random effect to overdispersion (you may need to create a new factor). How does this new model compare to the others?</span>
+
+<details><summary>Answer</summary>
+
+First we have to create a factor for the overdispersion, with a different level for each observation.
+
+```{r}
+Banta$OD <- factor(1:nrow(Banta))
+mp3 <- glmer(total.fruits ~ nutrient*amd + (1|gen) + (1|popu) + (1|OD),
+             data=Banta, family="poisson")
+summary(mp3)
+
+```
+
+Looking at the model, the fixed effects are similar, but the standard errors are larger, so that the interaction is not now statistically significant. The overdispersion term is large, suggesting that there is still quite a bit of variation unaccounted for.
+
+</details>
 
 
 
