@@ -44,8 +44,8 @@ We will use `math` as response, and group the data by school. The following comm
 
 ```{r, echo = TRUE}
 
-# dataset <- read.table("https://github.com/oharar/TMA4315/blob/main/Projects/jsp2.txt", header = TRUE)
-dataset <- read.table("https://www.math.ntnu.no/emner/TMA4315/2018h/jsp2.txt", header = TRUE)
+dataset <- read.table("https://github.com/oharar/TMA4315/blob/main/Projects/jsp2.txt", header = TRUE)
+# dataset <- read.table("https://www.math.ntnu.no/emner/TMA4315/2018h/jsp2.txt", header = TRUE)
 #dataset <- read.table("/Users/ingebogh/Documents/TMA4315/GLM_h18/exercise3/jsp2.txt", header = TRUE)
 
 ```

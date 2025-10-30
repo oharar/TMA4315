@@ -16,6 +16,9 @@ Please consider the licence for this repo to be [CC BY-NC-SA](https://creativeco
 [Interactive](Module01/Module01IntroInteractive.html), [Markdown](Module01/Module01IntroInteractive.Rmd)
 
 ### Module 2
+
+Project 1 should be done here: [Project](Projects/project1.html)
+
 [Notes](Module02/Module02MLRNotes.html) 
 
 **Week 1**: [Presentation slides](Module02/Module02MLRPresentationWeek1.pdf), [Markdown](Module02/Module01IntroPresentation.Rmd)
@@ -52,6 +55,8 @@ Please consider the licence for this repo to be [CC BY-NC-SA](https://creativeco
 
 ### Module 5
 
+Project 2 should be done here: [Project](Projects/project2.html)
+
 [Notes](Module05/Module05GLMsNotes.html), [Markdown](Module05/Module05GLMsNotes.Rmd)
 
 [Presentation slides](Module05/Module05GLMsPresentation.pdf), [Markdown](Module05/Module05GLMsPresentation.Rmd)
@@ -79,6 +84,8 @@ Please consider the licence for this repo to be [CC BY-NC-SA](https://creativeco
 [Interactive](Module07/Module07LMMInteractiveWeek2.html), [Markdown](Module07/Module07LMMInteractiveWeek2.Rmd)
 
 ### Module 8
+
+Project 3 should be done here: [Project](Projects/project3.html)
 
 [Notes](Module08/Module08GLMMNotes.html), [Markdown](Module08/Module08GLMMNotes.Rmd)
 
