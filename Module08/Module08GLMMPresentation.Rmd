@@ -595,7 +595,7 @@ $$
 And the likelihood is then (since the clusters are independent)
 
 $$
-L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {\boldsymbol \beta},\vartheta)
+L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {{\boldsymbol \beta}}, \vartheta)
 $$
 
 ---
@@ -717,7 +717,15 @@ In essence, this is a better approximation than the Laplace Approximation, but t
 
 ---
 
-* Three `R` packages that can be investigated is `lme4`(function `glmer`) and `glmmTMB` (template model builder), and the NTNU-flagship `inla`. How to use these three packages on a simulated data set (binary data, logit link, random intercept and slope) is shown in the end of the module page (NOT on our reading list but for the interested student).
+Three `R` packages that can be investigated are 
+
+* `lme4`(function `glmer`),
+* `glmmTMB` (template model builder), 
+* and the NTNU-flagship `inla`. 
+
+How to use these three packages on a simulated data set (binary data, logit link, random intercept and slope) is shown in the end of the module page.
+
+For those who want to use MCMC, the `MCMCglmm` package can be used, or you can use general MCMC programmes, such as JAGS, Nimble and STAN (the only real advantage of these nowadays is if you want to go beyond GLMMs)
 
 ---
 
