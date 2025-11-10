@@ -149,7 +149,7 @@ This is a count, so we could have used _Poisson regression_, but to make things 
 \footnotesize
 ```{r}
 # library("AED")
-RIKZ <- read.csv("../Module08/RIKZ.csv")
+RIKZ <- read.csv("https://oharar.github.io/TMA4315/Module08/RIKZ.csv")
 summary(RIKZ)
 ```
 \normalsize

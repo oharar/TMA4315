@@ -1837,7 +1837,8 @@ fit.main = vglm(cbind(y2, y3, y4, y5, y1) ~ size + factor(lake), family = multin
     data = ali)
 summary(fit.main)
 pchisq(deviance(fit.main), df.residual(fit.main), lower.tail = FALSE)</code></pre>
-<pre><code>## Call:
+<pre><code>## 
+## Call:
 ## vglm(formula = cbind(y2, y3, y4, y5, y1) ~ size + factor(lake), 
 ##     family = multinomial, data = ali)
 ## 
@@ -1894,7 +1895,8 @@ library(VGAM)
 fit.imp = vglm(impair ~ life + ses, family = cumulative(parallel = T), data = mental)
 # parallell=T gives proportional odds structure - only intercepts differ
 summary(fit.imp)</code></pre>
-<pre><code>## Call:
+<pre><code>## 
+## Call:
 ## vglm(formula = impair ~ life + ses, family = cumulative(parallel = T), 
 ##     data = mental)
 ## 
@@ -1959,7 +1961,7 @@ summary(fm1)</code></pre>
 </div>
 <div id="glmm---random-intercept-and-slope-poisson" class="section level2">
 <h2>GLMM - random intercept and slope Poisson</h2>
-<pre class="r"><code>RIKZ &lt;- read.csv(&quot;http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv&quot;)
+<pre class="r"><code>RIKZ &lt;- read.csv(&quot;https://oharar.github.io/TMA4315/Module08/RIKZ.csv&quot;)
 library(lme4)
 fitRI = glmer(Richness ~ NAP + (1 + NAP | Beach), data = RIKZ, family = poisson(link = log))
 summary(fitRI)</code></pre>
@@ -1969,8 +1971,8 @@ summary(fitRI)</code></pre>
 ## Formula: Richness ~ NAP + (1 + NAP | Beach)
 ##    Data: RIKZ
 ## 
-##      AIC      BIC   logLik deviance df.resid 
-##    218.7    227.8   -104.4    208.7       40 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     218.7     227.8    -104.4     208.7        40 
 ## 
 ## Scaled residuals: 
 ##      Min       1Q   Median       3Q      Max 

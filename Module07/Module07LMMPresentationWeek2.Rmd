@@ -113,7 +113,7 @@ $${\bf Y}_i \sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2 {\bf I
 # data(RIKZ)
 # RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 
-RIKZ <- read.csv("../Module08/RIKZ.csv")
+RIKZ <- read.csv("https://oharar.github.io/TMA4315/Module08/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)

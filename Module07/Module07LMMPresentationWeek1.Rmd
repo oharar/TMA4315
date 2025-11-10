@@ -152,8 +152,7 @@ This is a count, so we should use _Poisson regression_, but to make things simpl
 
 \footnotesize
 ```{r}
-# RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
-RIKZ <- read.csv("../Module08/RIKZ.csv")
+RIKZ <- read.csv("https://oharar.github.io/TMA4315/Module08/RIKZ.csv")
 summary(RIKZ)
 ```
 \normalsize

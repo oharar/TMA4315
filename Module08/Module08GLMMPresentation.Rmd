@@ -71,7 +71,7 @@ Data: 45 observations, taken at 9 beaches:
 ```{r,echo=FALSE}
 # library("AED")
 # data(RIKZ)
-RIKZ <- read.csv("RIKZ.csv")
+RIKZ <- read.csv("https://oharar.github.io/TMA4315/Module08/RIKZ.csv")
 library(lme4)
 #library(arm)
 library(ggplot2)
