@@ -1,7 +1,7 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 2: Logistic regression and Poisson regression" 
-date: "Deadline: Friday, October 11, 2024 at midnight" 
+date: "Deadline: Friday, October 11, 2025 at midnight" 
 output: # 3rd letter intentation hierarchy
   html_document:
     toc: true
@@ -85,7 +85,7 @@ Do the same with Chogolisa (height 7665 and prominence 1624). The data from Chog
 
 
 
-# Part 2: Poisson regression -- Eliteserien 2023 (6 points)
+# Part 2: Poisson regression -- Eliteserien 2025 (6 points)
 
 In Compulsory exercise 1 you made your own `mylm` package to handle Gaussian responses. In this exercise you will create a _function_ (not a full package) to estimate regression parameters in a Poisson regression. The main difference from before is that it is now necessary to perform numerical optimization to find the parameter estimates. You can create the function in any way you want. However, you may of course make an `R` package with only one function if you want, and then a framework can be found here: <https://www.math.ntnu.no/emner/TMA4315/2018h/myglm.R>. You do *not* have to create print, summary, plot or anova this time, only the `myglm` function is necessary. 
 
