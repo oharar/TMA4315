@@ -1,0 +1,59 @@
+---
+title: "Project 2 solution"
+author: "Bob O'Hara"
+format: html
+---
+
+
+# Part 1: Logistic regression (4 points)
+
+
+
+
+## a) (1 point)
+
+* Write down the log-likelihood function $\ell(\boldsymbol\beta)$ for this model (i.e., as a function of $\boldsymbol\beta$). 
+
+$$
+\ell(\boldsymbol\beta) = \sum_{i=1}^n \log \binom{n_i}{r_i}
+$$
+
+* Explain in a few words what we do in practice to arrive at maximum likelihood estimates for the parameters $\beta$.
+
+## b) (1 point)
+Load the dataset:
+```{r, eval = FALSE}
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2018h/mountains"
+mount <- read.table(file = filepath, header = TRUE, 
+                    col.names = c("height", "prominence", "fail", "success"))
+```
+Note that some entries differs from the Wikipedia list.
+
+Fit the model, with height and prominence as predictors.
+Hint: To fit this model using the `glm` function, you write 
+
+```{r, eval = FALSE}
+glm(cbind(success, fail) ~ height + prominence, data = mount, family = "binomial")
+```
+
+* Interpret the model parameters (hint: odds).
+* Discuss their significance (hint: Wald, LRT or score test).
+* Create a 95 % confidence interval for the height parameter. Let $(\hat{\beta}_L,\hat{\beta}_H)$ denote the limits of your interval. 
+* Calculate the confidence interval $(\exp(\hat{\beta}_L),\exp(\hat{\beta}_H))$, and interpret.
+
+
+## c) (1 point)
+For each of the covariates (`height` and `prominence`), plot the deviance residuals (hint: use the function `residuals` with argument `type = "deviance"`) as a function of the covariate. Describe what you see.  
+Then use the model deviance to assess the model fit.
+
+Now you shall plot the estimated probabilities as a function of both height and prominence. The procedure will be similar to what we did in the interactive lecture in the second week of module 3. Only include estimated probabilities _inside_ the data range. Comment briefly on the plot. (Hints for `ggplot`: Use `geom_raster`. The functions `geom_contour` and `scale_fill_gradientn(colours = terrain.colors(10))` can make this graph easier to interpret.)
+
+
+## d) (1 point) 
+The height and prominence of Mount Everest are both equal to 8848 meters. Based on the fitted model, estimate the probability of successfully ascending Mount Everest, and construct a confidence interval for the probability (hint: use the asympotic distribution of the MLE to find the asymptotic distribution of the linear predictor, then make a confidence interval for the linear predictor, finally transform this interval (i.e., the lower and upper limits of the interval) to get an interval for the probability of sucess). Write down the mathematical formula for this confidence interval.  
+Is it reasonable to use this model to estimate the probability of ascending Mount Everest? Why/why not?  
+Do the same with Chogolisa (height 7665 and prominence 1624). The data from Chogolisa gave 2 failures and 20 successes. Comment briefly on the result.
+
+
+
+
