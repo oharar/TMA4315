@@ -2,7 +2,6 @@
 title: "TMA4315 Generalized linear models H2023"
 subtitle: "Module 6: Categorical regression, Interactive session"
 author: "Mette Langaas, Department of Mathematical Sciences, NTNU, with contibutions from Ingeborg G. Hem"
-date: "25.10.2018 [PL], 26.10.2018 [IL]"
 output: #3rd letter intentation hierarchy
   html_document:
     toc: true
@@ -38,13 +37,13 @@ The 12 rows in Table 1 corresponds to 12 different combinations of the three exp
 $$
 x_1 = 
 \begin{cases}
-  0 \text{, if injections are given every second week} \\
-  1 \text{, if injections are given every third week}
+  2 \text{, if injections are given every second week} \\
+  3 \text{, if injections are given every third week}
 \end{cases} \\
 x_2 =
 \begin{cases}
-  0 \text{, if patient is female} \\
-  1 \text{, if patient is male}
+  F \text{, if patient is female} \\
+  M \text{, if patient is male}
 \end{cases} \\
 x_3 = \text{ CGI at beginning of treatment (initial CGI)}
 $$
@@ -100,7 +99,7 @@ $$\log \left( \frac{\pi_0 + \pi_1}{\pi_2} \right) = \theta_1 + \beta_1 x_1 + \be
 
 <details><summary>Answer</summary>
 
-Since the inverse of the logit-functiuon is the logitstic function (sometimes called the expit function), we have:
+Since the inverse of the logit-function is the logitstic function (sometimes called the expit function), we have:
 
 $$\pi_0 = \frac{e^{\theta_0 + \pmb{x}^T \pmb{\beta}}}{1 + e^{\theta_0 + \pmb{x}^T \pmb{\beta}}}$$
 

@@ -70,7 +70,13 @@ Data: 45 observations, taken at 9 beaches:
 ```{r,echo=FALSE}
 # library("AED")
 # data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+# devtools::install_github("https://github.com/romunov/AED")
+# write.csv( RIKZ, file="RIKZ.csv")
+  
+# RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+
+RIKZ <- read.csv("RIKZ.csv")
+
 library(lme4)
 library(arm)
 library(ggplot2)
@@ -268,7 +274,7 @@ In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen
 
 ---
 
-###Structural assumptions
+### Structural assumptions
 (previously "2. Systematic component" and "3. Link function")
 
 * The _conditional mean_ $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is linked to 
@@ -279,7 +285,7 @@ In addition, the mean $\mu_{ij}=\text{E}(Y_{ij}\mid \gamma_i)$ is now to be seen
 
 ---
 
-###Distributional assumptions for random effects
+### Distributional assumptions for random effects
 
 * The random effects $\gamma_i$, $i=1,\ldots,m$ are independent and identically distributed
 $$ \gamma_i \sim N({\bf 0}, {\bf Q})$$
@@ -653,9 +659,17 @@ In the special case that $f(y_{ij}\mid \gamma_i)$ is normal we saw in Module LMM
 Another special case is the log-linear Poisson random intercept where all $n_i=1$. See pages 393-394 in our textbook to see the solution (that can be used to handle overdispersion in Poisson regression).
 
 Remark: for the random intercept Poisson GLMM with log-link the expected marginal mean is (Agresti, 2015, page 309)
-$$ \text{E}(Y_{ij})=\text{E}[\text{E}(Y_{ij}\mid \gamma_{0i})]=\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$$
+
+$$
+\text{E}(Y_{ij})=\text{E}[\text{E}(Y_{ij}\mid \gamma_{0i})]=\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)
+$$
+
 The solid line in the plot to the left above gives this curve, while the dashed is $\exp({\bf x}_{ij}^T{\boldsymbol \beta})$. In Agresti (2015, page 310) the variance of the marginal distribution is given as
-$$\text{Var}(Y_{ij})=\cdots = \text{E}(Y_{ij})+[\text{E}(Y_{ij})^2(\exp(\tau_0^2)-1)]$$
+
+$$
+\text{Var}(Y_{ij})=\cdots = \text{E}(Y_{ij})+[\text{E}(Y_{ij})^2(\exp(\tau_0^2)-1)]
+$$
+
 so we see that the variance is larger than that of a Poisson distribution.
 
 Remark: the conditional mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\gamma_{0i})$, while the marginal mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\tau_0^2/2)$.
@@ -665,6 +679,8 @@ Remark: the conditional mean is $\exp({\bf x}_{ij}^T{\boldsymbol \beta}+\gamma_{
 ---
 
 
+
+
 # Parameter estimation
 
 The most popular method for parameter estimation for regression is maximum likelihood. The likelihood of the data is given by the marginal distribution of all $Y_{ij}$s jointly. However, this can not be found analytically (as we saw above), so we must resort to numerial methods to evaluate the likelihood of a general GLMM.
@@ -672,8 +688,12 @@ The most popular method for parameter estimation for regression is maximum likel
 The parameters we want to estimate are the fixed effects ${\boldsymbol \beta}$s, and the parameters in ${\bf Q}$ for the random effects - denoted by $\vartheta$.
 
 The contribution from observations in the $i$th cluster is
-$$f({\bf y}_i\mid {\boldsymbol \beta},\vartheta)=\int_{{\boldsymbol \gamma}_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
-=\int_{{\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i$$
+
+$$
+f({\bf y}_i\mid {\boldsymbol \beta},\vartheta) = 
+\int_{\boldsymbol \gamma_i} f({\bf y}_i \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+=\int_{ {\boldsymbol \gamma}_i} \prod_{j=1}^{n_i}f(y_{ij} \mid {\boldsymbol \gamma}_i,{\boldsymbol \beta}) f({\boldsymbol \gamma}_i \mid {\bf Q}) d{\boldsymbol \gamma}_i
+$$
 
 And the likelihood is then (since the clusters are independent)
 $$L({\boldsymbol \beta},\vartheta)=\prod_{i=1}^m f(\bf{y}_i\mid {\boldsymbol \beta},\vartheta)$$
@@ -688,13 +708,16 @@ There are several solution to this, and the `glmer` function in `lme4` uses the 
 
 ## Gauss-Hermite Quadrature
 
+<!---
 If the dimension of ${\boldsymbol \gamma}_i$ is small, for example our random intercept model, then the Gauss-Hermite quadrature may be used to approximate the integral above. This will be of the form 
+--->
 
 $$\int_{-\infty}^{\infty} h(\gamma)\exp(-\gamma^2)d\gamma$$
 which can be written as a sum of weights and quadrature points that are roots of Hermite polynomials. This can then be maximized using Newton-Raphson methods.
 
+<!---
 When the dimension of ${\boldsymbol \gamma}$ gets more than two, other methods are used. 
-
+--->
 ---
 
 ## Laplace approximation (for the interested student)
@@ -1084,21 +1107,3 @@ install.packages("sjmisc")
 * [Bolker et al. (2008):_Generalized linear mixed models: a practical guide for ecology and evolution_](http://avesbiodiv.mncn.csic.es/estadistica/curso2011/regm26.pdf)
 * Zuur et al. (2009): "Mixed Effects Models and Extensions in Ecology with R", chapter 13 (pages 323-341). Available as free ebook from Springer for NTNU students. More explanations and less mathematics than Fahrmeir et al (2013), more focus on understanding. [Link to ebook Chapter 13](https://link.springer.com/chapter/10.1007/978-0-387-87458-6_13)
 * Agresti (2015): Foundations of linear and generalized linear models, Chapter 9.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

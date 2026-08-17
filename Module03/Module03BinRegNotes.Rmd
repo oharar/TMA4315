@@ -84,7 +84,7 @@ Two running examples: mortality of beetles and probability of respiratory infant
 
 ---
 
-## <a id="beetle1">Example: Mortality of beetles</a>
+## Example: Mortality of beetles
 
 A total of 481 beetles were exposed to 8 different consentration of CS$_2$ (data on log10-dose). Yes, only one consentration tried for each beetle. For each beetle is was recorded if the beetle was alive or killed at the given concentration. 
 
@@ -143,7 +143,7 @@ In addition we have independent pairs $({\bf x}_i,Y_i)$, and assume that the des
 
 ---
 
-## <id="binary"> Binary regression</a>
+## Binary regression
 
 1. $Y_i \sim \text{bin}(n_i,\pi_i)$. First we study the case that $n_i=1$, that is, each individual observation comes from a Bernoulli process with $n_i=1$ trials (this version of the binomial distribution is called the Bernoulli distribution). (Remark: later we will also look at "grouped" data with $n_i>1$.) 
 Our parameter of interest is $\pi_i$ which is the mean $\text{E}(Y_i)=\mu_i=\pi_i$.
@@ -494,6 +494,14 @@ $\eta_i={\bf x}^T\boldsymbol{\beta}$ to write out $L(\boldsymbol{\beta})$, reall
 ---
 
 ## <a id="loglik">Loglikelihood $l(\boldsymbol{\beta})$</a>
+
+This is a video deriving the log likelihood:
+
+<!---
+
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=5f6ff41d-0f8b-4c93-b042-b1e300c8f14e&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m3Lhood" ></iframe>
+--->
+
 The log-likelihood is the natural log of the likelihood, and makes the mathematics simpler - since we work with exponential families.
 The main aim with the likelihood is to maximize it to find the maximum likelihood estimate, and since the log is a monotone function the maximum of the log-likelihood will be in the same place as the maximum of the likelihood.
 
@@ -552,6 +560,14 @@ $$s(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta})}{\partial \boldsymb
 Again, observe that the score function is a sum of individual contributions for each observation pair $i$.
 
 ---
+
+Here is a video of me deriving the score:
+
+<!---
+<iframe src="https://ntnu.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=ac013c23-d963-4ecb-b50b-b1e300e4a54e&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="TMA4315m3Score" ></iframe>
+
+--->
+
 
 We will use the chain rule to calculate $s_i(\boldsymbol{\beta})$.
 
@@ -1159,7 +1175,13 @@ A: $F(\boldsymbol{\beta})=\frac{1}{\sigma^2}{\bf X}^T{\bf X}$, and the inverse $
 Let ${\bf A}(\boldsymbol{\beta})=F^{-1}(\hat{\boldsymbol{\beta}})$, and $a_{kk}(\hat{\boldsymbol{\beta}})$ is diagonal element number $k$.
 
 For one element of the parameter vector:
-$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}$$
+
+$$
+Z_k=\frac{\hat{\boldsymbol{\beta}}_k - \boldsymbol{\beta}_k}{\sqrt{\hat{a}_{kk}({\boldsymbol{\beta}})}}
+$$
+
+
+
 is asymptotically standard normal. We will use this now!
 
 **Q**: Where can you find $\hat{\boldsymbol{\beta}}$ and $F^{-1}(\hat{\boldsymbol{\beta}})$ in the print-out below?
@@ -1181,7 +1203,7 @@ Note: `cov.unscaled` is the estimated covariance matrix for the estimated coeffi
 In addition to providing a parameter estimate for each element of our parameter vector $\boldsymbol{\beta}$ we should also report a $(1-\alpha)100$% confidence interval (CI) for each element.
 
 We focus on element $k$ of $\boldsymbol{\beta}$, called $\boldsymbol{\beta}_k$. It is known that asympotically 
-$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{{a}_{kk}(\hat{\beta})}}$$
+$$ Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{ {a}_{kk}(\hat{\beta})}}$$
 is asymptotically standard normal. 
 We use that to form confidence intervals.
 
@@ -1192,8 +1214,11 @@ Let $z_{\alpha/2}$ be such that $P(Z_k>z_{\alpha/2})=\alpha/2$. REMARK: our text
 We then use 
 $$ P(-z_{\alpha/2}\le Z_k \le z_{\alpha/2})=1-\alpha$$
 insert $Z_k$ and solve for $\beta_k$ to get
-$$ P(\hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\beta})}
-\le \beta_k \le \hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})})=1-\alpha$$
+
+$$
+P(\hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\beta})}
+\le \beta_k \le \hat{\beta}_k-z_{\alpha/2}\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})})=1-\alpha
+$$
 
 A $(1-\alpha)$% CI for $\beta_k$ is when we insert numerical values for the upper and lower limits.
 
@@ -1248,7 +1273,7 @@ by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column
 ### The Wald test
 
 The Wald test statistic is given as:
-$$w=({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d}) $$
+$$w=({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d}) $$
 and measures the distance between the estimate ${\bf C}\hat{\boldsymbol{\beta}}$ and the value under then null hypothesis ${\bf d}$, weighted by the asymptotic covariance matrix of ${\bf C}\hat{\boldsymbol{\beta}}$.
 Remember: $\text{Cov}({\bf C}\hat{\boldsymbol{\beta}})={\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}$.
 

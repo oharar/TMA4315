@@ -152,8 +152,7 @@ This is a count, so we should use _Poisson regression_, but to make things simpl
 
 \footnotesize
 ```{r}
-# library("AED")
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+RIKZ <- read.csv("https://oharar.github.io/TMA4315/Module08/RIKZ.csv")
 summary(RIKZ)
 ```
 \normalsize
@@ -288,8 +287,6 @@ and that the $\gamma_{0i}$s and the $\varepsilon_{ij}$s are mutually independent
 
 \tiny
 ```{r,echo=FALSE}
-# library("AED")
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -314,6 +311,10 @@ One motivation for inserting this new random intercept was to make sure that obs
 # What is the marginal distribution for $Y_{ij}$?
 
 $$ Y_{ij}=\beta_0+\beta_1x_{ij}+\gamma_{0i}+\varepsilon_{ij}$$
+
+- marginal over the random effects
+- what is the distribution of $Y_{ij}$ for a new beach?
+- Treat the model as $Y_{ij}=\beta_0+\beta_1x_{ij}+\varepsilon^{*}_{ij}$, where $\varepsilon^{*}_{ij}=\gamma_{0i}+\varepsilon_{ij}$ are not iid
 
 ---
 
@@ -380,8 +381,6 @@ Inserted parameter estimates this is called the _intra class correlation (ICC)_ 
 
 \tiny
 ```{r,echo=FALSE}
-# library("AED")
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -437,6 +436,8 @@ $${\bf Y}_i= {\bf X}_i {\boldsymbol \beta} + {\bf U}_i {\boldsymbol \gamma}_{i} 
 * ${\boldsymbol \gamma}_i$: $(q+1) \times 1$ random vector
 * ${\boldsymbol \varepsilon}_i$: $n_i \times 1$ random vector
 
+$p$ fixed effect covariates, $q$ random effect covariates
+
 ---
 
 ## Distributional assumptions
@@ -472,9 +473,9 @@ $${\boldsymbol\varepsilon}_i \sim N({\bf 0},\sigma^2 {\bf I})$$
 
 ---
 
-# Marginal and Conditional Formulatios
+# Marginal and Conditional Formulations
 
-We can write a conditional formulation if we condition on $\gamma_i$, or a margunal if we do not (in which case we marginalise over the distribution of$\gamma_i$
+We can write a conditional formulation if we condition on $\gamma_i$, or a marginal if we do not (in which case we marginalise over the distribution of$\gamma_i$
 
 ## Conditional formulation
 
@@ -494,7 +495,8 @@ for the response for cluster $8$, ${\bf Y}_i$ (Laird and Ware (1982) formulation
 {\boldsymbol \varepsilon}^{*}_i &\sim N({\bf 0},{\bf V}_i)\\
 \end{align*}
 which gives
-$${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
+
+$${\bf Y}_i\sim N({\bf X}_i {\boldsymbol \beta}, \sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
 
 ---
 
@@ -531,7 +533,7 @@ Let $N=\sum_{i=1}^m n_i$, then dimensions are:
 * ${\bf Y}, {\boldsymbol \varepsilon}$: $N \times 1$
 * ${\bf X}$: $N\times p$
 * ${\boldsymbol \beta}$: $p\times 1$
-* ${\bf U}$_: $N \times m(q+1)$
+* ${\bf U}$: $N \times m(q+1)$
 * ${\boldsymbol \gamma}$: $m(q+1)\times 1$
 
 ---
@@ -555,7 +557,7 @@ for the response ${\bf Y}$
 \end{align*}
 Here ${\bf G}$ is a $m\dot (q+1)$ block-diagonal matrix with ${\bf Q}$ $m$ times on the diagonal (see below). This gives
 
-$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
 ---
 
@@ -586,9 +588,9 @@ For the random effects ${\boldsymbol \gamma}_i$ and ${\boldsymbol \varepsilon}_i
 ## Parameter estimation with maximum likelihood for fixed effects
 
 Cluster specific model:
-$${\bf Y}_i\sim N(\mu_i={\bf X}_i {\boldsymbol \beta},{\bf V}_i=\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
+$${\bf Y}_i\sim N({\bf X}_i {\boldsymbol \beta},\sigma^2{\bf I}+{\bf U}_i {\bf Q} {\bf U}_i^T)$$
 Global model:
-$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
+$${\bf Y}\sim N({\bf X} {\boldsymbol \beta},\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
 
 The log-likelihood function is then ($\pm$ some constants)
 $$l({\boldsymbol \beta},{\bf V})=-\frac{1}{2}\ln \lvert {\bf V}\rvert -\frac{1}{2}({\bf y}-{\bf X}{\boldsymbol \beta})^T {\bf V}^{-1}({\bf y}-{\bf X}{\boldsymbol \beta})$$
@@ -614,10 +616,10 @@ $$\hat{\boldsymbol \beta}=({\bf X}^{\bullet T}{\bf X}^{\bullet})^{-1}{\bf X}^{\b
 
 Inserting then for ${\bf X}^{\bullet T}$ and ${\bf Y}^{\bullet}$ leads to the weighted least squares solution for ${\boldsymbol \beta}$
 
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}$$
 
 Since we have independence between clusters, we had block-diagonal ${\bf V}$ and then 
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{\bf X}_i)^{-1} \sum_{i=1}^m {\bf X}_i^T {\bf V}_i^{-1}{\bf Y}_i$$
 
 But, we really don't know ${\bf V}$ so an estimate must be inserted (week 2 with REML).
 
@@ -628,9 +630,6 @@ But, we really don't know ${\bf V}$ so an estimate must be inserted (week 2 with
 \tiny
 
 ```{r,echo=FALSE}
-#library("AED")
-#data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 summary(fit)
@@ -641,25 +640,25 @@ summary(fit)
 
 ---
 
-**A:**"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{{\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
+**A:**"Fixed effects, NAP, Estimate and Std. Error". Correlation of fixed effects is the off-diagonal elements of $\text{Cov}(\hat{ {\boldsymbol \beta}})$ which here is only $\text{Cov}(\hat{\beta}_0,\hat{\beta}_1)$.
 
 ---
 
 ## Properties of parameters estimators
 
-Since $\hat{{\boldsymbol \beta}}$ is a linear function of ${\bf Y}_i$, it has a multivariate normal distribution -
+Since $\hat{ {\boldsymbol \beta}}$ is a linear function of ${\bf Y}_i$, it has a multivariate normal distribution -
 let us write with
-$$\hat{{\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}={\bf A} {\bf Y}$$
+$$\hat{ {\boldsymbol \beta}}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf Y}={\bf A} {\bf Y}$$
 
 Mean:
-$$\text{E}(\hat{{\boldsymbol \beta}})={\bf A}\text{E}({\bf Y})=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf X}{\boldsymbol\beta}={\boldsymbol \beta}$$
+$$\text{E}(\hat{ {\boldsymbol \beta}})={\bf A}\text{E}({\bf Y})=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf X}{\boldsymbol\beta}={\boldsymbol \beta}$$
 
-so $\hat{{\boldsymbol \beta}}$ is unbiased.
+so $\hat{ {\boldsymbol \beta}}$ is unbiased.
 
 ---
 
 Variance-covariance matrix:
-$$\text{Cov}(\hat{{\boldsymbol \beta}}={\bf A}\text{Cov}({\bf Y}){\bf A}^T={\bf A}{\bf V}{\bf A}^T$$
+$$\text{Cov}(\hat{ {\boldsymbol \beta}}={\bf A}\text{Cov}({\bf Y}){\bf A}^T={\bf A}{\bf V}{\bf A}^T$$
 $$=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}{\bf X}^T {\bf V}^{-1}{\bf V}{\bf V}^{-1}{\bf X}({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}=({\bf X}^T{\bf V}^{-1}{\bf X})^{-1}$$
 
 Since ${\bf V}$ is block diagonal this can be written as a sum with the clusters:
@@ -668,7 +667,7 @@ $$ \text{Cov}(\hat{\boldsymbol \beta})= (\sum_{i=1}^m {\bf X}_i^T{\bf V}_i^{-1}{
 ---
 
 Also, if we insert $\hat{\bf V}$ as an estimate for ${\bf V}$ then 
-$$\hat{{\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
+$$\hat{ {\boldsymbol \beta}}=(\sum_{i=1}^m {\bf X}_i^T\hat{\bf V}_i^{-1}{\bf X}_i)^{-1}\sum_{i=1}^m {\bf X}_i^T \hat{\bf V}_i^{-1}{\bf Y}_i$$
 
 is asymptotic multivariate normal (under regularity conditions).
 
@@ -683,9 +682,6 @@ In this course we will only use the asymptotic normality for confidence interval
 ### Beach-example: confidence interval for fixed effects
 
 ```{r,echo=FALSE}
-# library("AED")
-# data(RIKZ)
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
 library(lme4)
 fit=lmer(Richness~NAP +(1|Beach),data=RIKZ)
 confint(fit)

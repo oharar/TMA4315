@@ -13,7 +13,7 @@ output: #3rd letter intentation hierarchy
  #   toc_depth: 2
  #   keep_tex: yes
   beamer_presentation:
-    keep_tex: yes
+    keep_tex: no
     fig_caption: false
     latex_engine: xelatex
 ---
@@ -23,7 +23,6 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
 showsol<-FALSE
 ```
 
-(Latest changes: 09.11: clarified one sentence on the devianc. 23.09: score test moved to M4. 20.09: typos, and added solutions to Qs in class. 18.09: typos and added sententence ILw2Problem3c. 16.09: edited and added material for week 2, 13.09 moved material not lectured to after the ILw1, and added one sentence to Problem 5 ILw1.)
 
 # Overview
 
@@ -136,47 +135,22 @@ legend(-2, -30, c("n=100", "n=10"), lty=1, col=1:2)
 
 ```
 
----
-
-## <a id="covscore">The expected Fisher information matrix $F(\boldsymbol{\beta})$</a>
-
-The covariance of $s(\boldsymbol{\beta})$ is called the expected Fisher information matrix, $F(\boldsymbol{\beta})$ and is given by
-
-
-$$
-\begin{aligned} 
-F(\boldsymbol{\beta}) &= \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta})) \\
-&= \sum_{i=1}^n E\left[\Big(s_i(\boldsymbol{\beta}) - E(s_i(\boldsymbol{\beta}))\Big)\Big(s_i(\boldsymbol{\beta})-E(s_i(\boldsymbol{\beta}))\Big)^T\right] \\
-&= \sum_{i=1}^n E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = \sum_{i=1}^n F_i(\boldsymbol{\beta}) \end{aligned}
-$$
-
-
-assuming that the responses $Y_i$ and $Y_j$ are independent
+The more curvature, the more certain we are = the lower the variance
 
 ---
 
-## $F_i(\boldsymbol{\beta})$
+## Fisher information matrix
 
-Remember that $s_i(\boldsymbol{\beta})=(Y_i-\pi_i){\bf x}_i$, then:
+We can formalise this with the observed and expected Fisher information matrices
 
-$$
-\begin{aligned}
-F_i(\boldsymbol{\beta}) &= E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = E((Y_i-\pi_i){\bf x}_i(Y_i-\pi_i){\bf x}_i^T) \\
-&= {\bf x}_i{\bf x}_i^T E((Y_i-\pi_i)^2)\\ 
-&= {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i) 
-\end{aligned}
-$$
-where $E((Y_i-\pi_i)^2)=\text{Var}(Y_i)=\pi_i(1-\pi_i)$ is the variance of $Y_i$. Thus
+Observed: $H(\boldsymbol{\beta}) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T}$ - curvature
 
-$$F(\boldsymbol{\beta}) = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
+Expected: $F(\boldsymbol{\beta}) = \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta}))$ - variance
 
----
-
-**A useful relationship:** Under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \boldsymbol{\beta}}$):
+We will calculate these for the binomial with a logit link, and show they are the same, i.e.  under mild regularity conditions (so we can change the order of $\int$ and $\frac{\partial}{\partial \boldsymbol{\beta}}$):
 
 $$\text{Cov}(s(\boldsymbol{\beta}))=F(\boldsymbol{\beta}) = E\left( -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T} \right) = E(-\text{Hessian matrix of }l)$$
 
-which relates the expected to the observed Fisher information matrix.
 
 ---
 
@@ -223,6 +197,41 @@ H(\boldsymbol{\beta}) &=\sum_{i=1}^n {\bf x}_i \frac{\partial \pi_i}{\partial \e
 &= \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).
 \end{aligned}
 $$
+
+
+---
+
+## The expected Fisher information matrix $F(\boldsymbol{\beta})$
+
+The covariance of $s(\boldsymbol{\beta})$ is called the expected Fisher information matrix, $F(\boldsymbol{\beta})$ and is given by
+
+
+$$
+\begin{aligned} 
+F(\boldsymbol{\beta}) &= \text{Cov}(s(\boldsymbol{\beta})) = \sum_{i=1}^n \text{Cov}(s_i(\boldsymbol{\beta})) \\
+&= \sum_{i=1}^n E\left[\Big(s_i(\boldsymbol{\beta}) - E(s_i(\boldsymbol{\beta}))\Big)\Big(s_i(\boldsymbol{\beta})-E(s_i(\boldsymbol{\beta}))\Big)^T\right] \\
+&= \sum_{i=1}^n E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = \sum_{i=1}^n F_i(\boldsymbol{\beta}) \end{aligned}
+$$
+
+
+assuming that the responses $Y_i$ and $Y_j$ are independent
+
+---
+
+## $F_i(\boldsymbol{\beta})$
+
+Remember that $s_i(\boldsymbol{\beta})=(Y_i-\pi_i){\bf x}_i$, then:
+
+$$
+\begin{aligned}
+F_i(\boldsymbol{\beta}) &= E(s_i(\boldsymbol{\beta})s_i(\boldsymbol{\beta})^T) = E((Y_i-\pi_i){\bf x}_i(Y_i-\pi_i){\bf x}_i^T) \\
+&= {\bf x}_i{\bf x}_i^T E((Y_i-\pi_i)^2)\\ 
+&= {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i) 
+\end{aligned}
+$$
+where $E((Y_i-\pi_i)^2)=\text{Var}(Y_i)=\pi_i(1-\pi_i)$ is the variance of $Y_i$. Thus
+
+$$F(\boldsymbol{\beta}) = \sum_{i=1}^n {\bf x}_i{\bf x}_i^T \pi_i(1-\pi_i).$$
 
 So the observed and the expected Fisher information matrix are equal., i.e. $Cov(s(\beta) = -\frac{\partial^2l(\boldsymbol{\beta})}{\partial\boldsymbol{\beta}\partial\boldsymbol{\beta}^T}$
 
@@ -333,9 +342,11 @@ If we require that the design matrix has full rank ($G$) then also ${\bf X}^T{\b
 ## Why is $F(\boldsymbol{\beta})$ positive definite if we require that the design matrix has full rank? 
 
 Formally, let ${\bf X}$ be a $n\times p$ matrix and $\Lambda$ a $n\times n$ diagonal matrix where all the diagonal elements are positive (like our $\pi_j(1-\pi_j)$, yes, put them on the diagonal). 
-Let ${\bf X}$ have independent columnes (full rank) $\Leftrightarrow$ ${\bf X}^T\Lambda{\bf X}$ is positive definite.
+Let ${\bf X}$ be of full rank $\Leftrightarrow$ ${\bf X}^T\Lambda{\bf X}$ is positive definite.
+
 
 *Proof:* 
+
 $\Rightarrow$: Let ${\bf v}$ be a $p$ dimensional column vector. Assume $0={\bf v}^T {\bf X}^T \Lambda {\bf X} {\bf v}=(\Lambda^{1/2}{\bf X}{\bf v})^T(\Lambda^{1/2}{\bf X}{\bf v})=\sum_{i=1}^n w_i^2$ where ${\bf W}=\Lambda^{1/2}{\bf X}{\bf v}$. Then, $w$ must be 0, that is $\Lambda^{1/2}{\bf X}{\bf v}=0$ since multiplication with $\Lambda^{1/2}$ is to multiply each element in ${\bf X}{\bf v}$ with a number different from 0. That is, we must have ${\bf v}={\bf 0}$ since ${\bf X}$ has independent columns.
 
 $\Leftarrow$: Assume that ${\bf X}{\bf v}={\bf 0}$. Then ${\bf v}^T {\bf X}^T \Lambda {\bf X} {\bf v}={\bf 0}$ so ${\bf v}={\bf 0}$ since ${\bf X}^T\Lambda{\bf X}$ is positive definite. This is, ${\bf X}$ has independent columns.
@@ -362,9 +373,6 @@ In practice, the logit model most often causes problems, when (for grouped data)
 
 ---
 
-stopped here
-
----
 
 # Asymptotic properties of ML estimates
 
@@ -481,7 +489,7 @@ where $F^{-1}(\hat{\boldsymbol{\beta}}))$ is the inverse of the expected Fisher 
 
 For the logit model we found that 
 $$F(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \pi_j (1-\pi_j)$$
-So we would need to do $\pi_j=\frac{\exp(\eta-j)}{1+\exp(\eta_j)}$ and $\eta_j={\bf x}_j^T\boldsymbol{\beta}$ as "usual", and then replace $\boldsymbol{\beta}$ with $\hat{\boldsymbol{\beta}}$. 
+So we would need to do $\pi_j=\frac{\exp(\eta_j)}{1+\exp(\eta_j)}$ and $\eta_j={\bf x}_j^T\boldsymbol{\beta}$ as "usual", and then replace $\boldsymbol{\beta}$ with $\hat{\boldsymbol{\beta}}$. 
 
 The asymptotic distribution still holds when we replace $\boldsymbol{\beta}$ with $\hat{\boldsymbol{\beta}}$ in ${\bf F}$.
 
@@ -530,7 +538,7 @@ In addition to providing a parameter estimate for each element of our parameter 
 We focus on element $k$ of $\boldsymbol{\beta}$, called $\boldsymbol{\beta}_k$. It is known that asympotically 
 
 $$
-Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{{a}_{kk}(\hat{\beta})}} \sim N(0,1)
+Z_k=\frac{\hat{\boldsymbol{\beta}}_k-\boldsymbol{\beta}_k}{\sqrt{ {a}_{kk}(\hat{\beta})}} \sim N(0,1)
 $$
 
 We use that to form confidence intervals.
@@ -575,6 +583,7 @@ cbind(lower,upper)
 ## Hypothesis testing
 
 There are three methods that are mainly used for testing hypotheses in GLMs:
+
 - Wald test, 
 - likelihood ratio test and 
 - score test. 
@@ -606,7 +615,7 @@ by specifying ${\bf C}$ to be a $r \times p$ matrix and ${\bf d}$ to be a column
 The Wald test statistic is given as:
 
 $$
-w=({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{{\bf \boldsymbol{\beta}}}-{\bf d})
+w=({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d})^{\text T}[{\bf C}F^{-1}(\hat{\boldsymbol{\beta}}){\bf C}^{\text T}]^{-1}({\bf C}\hat{ {\bf \boldsymbol{\beta}}}-{\bf d})
 $$
 and measures the distance between the estimate ${\bf C}\hat{\boldsymbol{\beta}}$ and the value under then null hypothesis ${\bf d}$, weighted by the asymptotic covariance matrix of ${\bf C}\hat{\boldsymbol{\beta}}$.
 
