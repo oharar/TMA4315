@@ -190,6 +190,8 @@ fit0 <- glm(A ~ log(length) + haulsize, data = fish, family = binomial(link = "l
 summary(fit1)
 ```
 
+<span class="question">c2) Explain what it means that the model is fitted by maximum likelihood. What does Laplace approximation has to do with the model fit?</span>
+
 
 <details><summary>Answer</summary>
 Fitting by maximum likelihood means, well, maximising the likelihood: $f(y_{ij})=\int_{\gamma_i} f(y_{ij}\mid \gamma_i) f(\gamma_i) d\gamma_i$.

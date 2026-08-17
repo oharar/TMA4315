@@ -8,11 +8,13 @@ Material developed by [Mette Langaas](https://www.ntnu.no/ansatte/mette.langaas)
 The GLM course webpage with html versions of the file are found here: 
 - [2018](https://www.math.ntnu.no/emner/TMA4315/2018h/TMA4315overviewH2018.html)
 
-
-
-
 Please consider the licence for this repo to be [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+## Repo Structure
+
+There are 9 modules, each spanning 1-2 weeks. Each module has a folder (Module01/ etc.)
+
+There is a folder ExamPreparation/ for preparing for the exam. Nothing in this will be saved on GitHub.
 
 ## Notes on improvement
 
@@ -32,7 +34,9 @@ Week 2 slides need more structure: very listy. Also, TMI. Didn't get to overdisp
 
 Proof of asymptotic distribution: a bit of a mess. Should probably do as a video.
 
+## Somewhere
 
+Exercise on residual plots: simulate data and plot them.
 
 ## Timetable 2023
 

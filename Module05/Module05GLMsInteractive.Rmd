@@ -181,7 +181,7 @@ For a canonical link, $\mu = \eta$
 log link:
 
 $$
-\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies w_{ii} = \frac{1}{\mu_i}
+\mu = \eta \implies \frac{\partial \mu}{\partial \eta} = 1 \implies w_{ii} = \frac{1}{\text{Var}(y_i)}
 $$
 
 Identity link;

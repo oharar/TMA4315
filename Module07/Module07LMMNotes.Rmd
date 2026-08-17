@@ -892,12 +892,14 @@ $$
 {\boldsymbol \varepsilon}=\begin{pmatrix} {\boldsymbol \varepsilon}_1\\ {\boldsymbol \varepsilon}_2 \\ \vdots \\  {\boldsymbol \varepsilon}_m \end{pmatrix}  
 $$
 
+$$
 \begin{align*}
 {\bf Y}&= {\bf X} {\boldsymbol \beta} + {\bf U} {\boldsymbol \gamma} + {\boldsymbol \varepsilon}={\bf X}{\boldsymbol \beta} + {\boldsymbol \varepsilon}^{*}\\
 {\boldsymbol \varepsilon}^{*} &= {\bf U} {\boldsymbol \gamma} + {\boldsymbol \varepsilon}\\
 {\bf V}&=\text{Cov}({\boldsymbol \varepsilon}^{*})=\text{Cov}({\boldsymbol \varepsilon})+\text{Cov}({\bf U}{\boldsymbol \gamma})=\sigma^2 {\bf I}+{\bf U} {\bf G} {\bf U}^T\\
 {\boldsymbol \varepsilon}^{*} &\sim N({\bf 0},{\bf V})\\
 \end{align*}
+$$
 
 Here ${\bf G}$ is a $m\dot (q+1)$ block-diagonal matrix with ${\bf Q}$ $m$ times on the diagonal, which gives
 $${\bf Y}\sim N({\bf X} {\boldsymbol \beta},{\bf V}=\sigma^2{\bf I}+{\bf U} {\bf G} {\bf U}^T)$$
@@ -1135,10 +1137,13 @@ plot_model(fit, type="re")
 ##  Joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$
 
 The joint distribution of ${\bf Y}$ and ${\boldsymbol \gamma}$ is:
-$$\begin{pmatrix} {\bf Y}\\ {\boldsymbol \gamma} \end{pmatrix} \sim
+
+$$
+\begin{pmatrix} {\bf Y}\\ {\boldsymbol \gamma} \end{pmatrix} \sim
 N(\begin{pmatrix} {\bf X}{\boldsymbol \beta} \\ {\bf 0}\end{pmatrix},
 \begin{pmatrix}{\bf V}={\bf U}{\bf G}{\bf U}^T+\sigma^2{\bf I} & {\bf U}{\bf G}\\
-{\bf G}{\bf U}^T & {\bf G}\end{pmatrix}) $$
+{\bf G}{\bf U}^T & {\bf G}\end{pmatrix})
+$$
 
 ---
 

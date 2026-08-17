@@ -1,0 +1,912 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={TMA4315 Generalized linear models H2018},
+  pdfauthor={Mette Langaas, Department of Mathematical Sciences, NTNU},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{TMA4315 Generalized linear models H2018}
+\subtitle{Module 9: SUMMING UP}
+\author{Mette Langaas, Department of Mathematical Sciences, NTNU}
+\date{22.11.2018 {[}PL{]}}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+(Latest changes: 22.11 second version).
+\end{frame}
+
+\begin{frame}{Overview}
+\protect\hypertarget{overview}{}
+\begin{block}{Topics}
+\protect\hypertarget{topics}{}
+\begin{itemize}
+\tightlist
+\item
+  course content and learning outcome
+\item
+  reading list
+\item
+  course topic and modules
+
+  \begin{itemize}
+  \tightlist
+  \item
+    core concepts: exponential family, models: LM/GLM/mvGLM/LMM/GLMM,
+    likelihood, maximum likelihood, score vector, Fisher information,
+    Fisher scoring, Wald/LRT(/score) tests, deviance, AIC
+  \item
+    incoming questions: overview of models (including categorical
+    regression), exponential family and canonical link (why?),
+    likelihood-score-Fisher information, which tests for what, model
+    assessment (deviance and residuals)
+  \end{itemize}
+\item
+  exam and exam preparation
+\item
+  suggestions for statistics-related courses in year 4 and 5
+\item
+  questionnaire
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{About the course}
+\protect\hypertarget{about-the-course}{}
+\begin{block}{Content}
+\protect\hypertarget{content}{}
+\begin{itemize}
+\tightlist
+\item
+  Univariate exponential family.
+\item
+  Multiple linear regression.
+\item
+  Logistic regression.
+\item
+  Poisson regression.
+\item
+  models for multinomial data,
+\item
+  General formulation for generalised linear models with canonical link.
+\item
+  Likelihood-based inference with score function and expected Fisher
+  information.
+\item
+  Deviance. AIC. Wald and likelihood-ratio test.
+\item
+  Linear mixed effects models with random components of general
+  structure.
+\item
+  Random intercept and random slope.
+\item
+  Generalised linear mixed effects models.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{More Content}
+\protect\hypertarget{more-content}{}
+\begin{itemize}
+\tightlist
+\item
+  Strong emphasis on programming in R.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    you will not be asked to code in the exam, but should understand the
+    code, and the output
+  \end{itemize}
+\end{itemize}
+
+Possible extensions:
+
+\begin{itemize}
+\tightlist
+\item
+  quasi-likelihood,
+\item
+  over-dispersion (covered a bit),
+\item
+  quantile regression.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Learning outcome}
+\protect\hypertarget{learning-outcome}{}
+\begin{block}{Knowledge}
+\protect\hypertarget{knowledge}{}
+The student can assess whether a generalised linear model can be used in
+a given situation and can further carry out and evaluate such a
+statistical analysis. The student has substantial theoretical knowledge
+of generalised linear models and associated inference and evaluation
+methods. This includes regression models for normal data, logistic
+regression for binary data and Poisson regression.
+
+The student has theoretical knowledge about linear mixed models and
+generalised linear mixed effects models, both concerning model
+assumptions, inference and evaluation of the models. Main emphasis is on
+normal, binomial and Poisson models with random intercept and random
+slope.
+\end{block}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Skills}
+\protect\hypertarget{skills}{}
+The student can assess whether a generalised linear model or a
+generalised linear mixed model can be used in a given situation, and can
+further carry out and evaluate such a statistical analysis.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Final reading list}
+\protect\hypertarget{final-reading-list}{}
+Fahrmeir, Kneib, Lang and Marx (2013): Regression, Springer: eBook (free
+for NTNU students).
+\url{https://link.springer.com/book/10.1007\%2F978-3-642-34333-9}
+
+\begin{itemize}
+\tightlist
+\item
+  Chapter 2: 2.1, 2.2, 2.3, 2.4, 2.10
+\item
+  Chapter 3 (also on reading list for TMA4267)
+\item
+  Chapter 5: 5.1, 5.2, 5.3, 5.4, 5.8.2
+\item
+  Chapter 6: but not p 344-345 nominal models and latent utility models,
+  not 6.3.2 Sequential model, and not category specific varables on page
+  344-345.
+\item
+  Chapter 7: 7.1, 7.2, 7.3, 7.5, 7.7, 7.8.2. \footnotesize {[}In greater
+  detail: pages 349-354 (not ``Alternative view on the random intercept
+  model''), 356-365 (not 7.1.5 ``Stochastic Covariates''``), 368-377
+  (not''Bayesian Covariance Matrix''``), 379-380 (not''Testing Random
+  Effects or Variance Parameters''\,``, only last part on page 383), 383
+  (middle), 389-394, 401-409. Note: Bayesian solutions not on the
+  reading list.{]} \normalsize
+\item
+  Appendix B.1, B.2, B.3 (not B.3.4 and B.3.5), B.4
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+In addition to the Fahrmeir et al book, on the reading list is also:
+
+\begin{itemize}
+\tightlist
+\item
+  All the 9 module pages (but module 1 and 9 does not have theory that
+  is not in 2-8).
+\item
+  The three compulsory exercises.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{block}{The modules}
+\protect\hypertarget{the-modules}{}
+\begin{enumerate}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%201/Module01IntroPresentation.pdf}{Introduction
+  (exponential family, Rstudio, ggplot and R Markdown)}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%202/Module02MLRNotes.html}{Multiple
+  linear regression (emphasis on likelihood)}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%203/Module03BinRegNotes.html}{Binary
+  regression (independent responses, binary individual and grouped
+  response)}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%204/Module04PoissonGammaNotes.html}{Count
+  and continuous positive reponse data (independent responses, Poisson-
+  and gamma regression)}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%205/Module05GLMNotesv.html}{Generalized
+  linear models: common core}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%206/Module06CategoricalNotes.html}{Categorical
+  regression (multinomial distribution, multivariate GLM, nominal and
+  ordinal models)}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%207/Module07LMMNotes.html}{Linear
+  mixed models (normal response, clustered data or repeated
+  measurements)}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4315/2023h/Module\%208/Module08GLMMNotes.html}{Generalized
+  mixed effects models (non-normal response, clustered data or repeated
+  measurements)}
+\item
+  Summing-up (this module)
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Core of the course: regression}
+\protect\hypertarget{core-of-the-course-regression}{}
+\textbf{Main question:} what it the effect of covariate(s) \(x\) on the
+response(s) \(y\)?
+
+\begin{block}{Examples}
+\protect\hypertarget{examples}{}
+\begin{itemize}
+\tightlist
+\item
+  {[}M2{]} Munich rent index
+\item
+  {[}M3{]} Mortality of beetles, infant respiratory disease,
+  contraceptive use.
+\item
+  {[}M4{]} Female crabs with satellites, smoking and lung cancer, time
+  to blood coagulation, precipitation in Trondheim, treatment of breast
+  cancer.
+\item
+  {[}M6{]} Alligator food, mental health.
+\item
+  {[}M7+8{]} Richness of species at beaches, sleep deprivation, trawl
+  fishing.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{The five ingredients}
+\protect\hypertarget{the-five-ingredients}{}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Model specification}: an equation linking (conditional) mean
+  of the response to and the explanatory variables, and a probability
+  distribution for the response. We only consider responses from
+  exponential family.
+
+  \begin{enumerate}
+  [a.]
+  \tightlist
+  \item
+    multiple linear regression model (normal response)
+  \item
+    univariate generalized linear model (normal, binomial, Poisson,
+    gamma)
+  \item
+    multivariate generalied linear model (multinomical: nominal and
+    ordinal)
+  \item
+    linear mixed effect models (normal response, correlated within
+    clusters)
+  \item
+    generalized linear mixed models (binomial, Poisson)
+  \end{enumerate}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item
+  \textbf{Likelihood} - used to estimate parameters (ML and a bit on
+  REML): score function, Fisher information, Fisher scoring (IRWLS).
+\item
+  \textbf{Asymptotic distribution} of maximum likelihood estimators
+  (multivariate normal) and tests (chisquared).
+\item
+  \textbf{Inference}: interpretation of results, plotting results,
+  confidence intervals, hypothesis tests (Wald,LRT,score).
+\item
+  Checking the \textbf{adequacy of the model} (deviance, also residuals,
+  qqplots - but very little focus in our course \emph{outside the normal
+  model}), \textbf{choose between models} (nested=LRT or AIC, not
+  nested=AIC),
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding and comparing R print-outs}
+\protect\hypertarget{understanding-and-comparing-r-print-outs}{}
+The print-outs below are from LM \texttt{lm}, GLM \texttt{glm}, mvGLM
+\texttt{vglm}, LMM \texttt{lmer} and GLMM \texttt{glmer}.
+
+For the exam, you do not need to write code, but you still need to be
+able to interpret output!
+\end{frame}
+
+\begin{frame}[fragile]
+Below we have fit a model to a data set, and then printed the
+\texttt{summary} of the model. For each of the print-outs you need to
+know (be able to identify and explain) every entry. In particular
+identify and explain:
+
+\begin{itemize}
+\tightlist
+\item
+  which model: model requirements
+\item
+  how is the model fitted (versions of maximum likelihood)
+\item
+  parameter estimates for \(\beta\)
+\item
+  inference about the \(\beta\): how to find CI and test hypotheses
+  (which hypothesis is reported test statistic, and possibly \(p\)-value
+  for)
+\item
+  model fit (deviance, AIC, R-squared, F)
+\end{itemize}
+
+In addition, further inference can be made using
+\texttt{anova(fit1,fit2)}, \texttt{confint}, \texttt{residuals},
+\texttt{fitted}, \texttt{AIC}, \texttt{ranef} and other functions we
+have worked with in the PL, IL and on the compulsory exercises.
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{MLR - multiple linear regression}
+\protect\hypertarget{mlr---multiple-linear-regression}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fitLM}\OtherTok{=}\FunctionTok{lm}\NormalTok{(rent}\SpecialCharTok{\textasciitilde{}}\NormalTok{area}\SpecialCharTok{+}\NormalTok{location}\SpecialCharTok{+}\NormalTok{bath}\SpecialCharTok{+}\NormalTok{kitchen}\SpecialCharTok{+}
+\NormalTok{         cheating,}\AttributeTok{data=}\NormalTok{gamlss.data}\SpecialCharTok{::}\NormalTok{rent99)}
+\FunctionTok{summary}\NormalTok{(fitLM)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = rent ~ area + location + bath + kitchen + cheating, 
+##     data = gamlss.data::rent99)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -633.41  -89.17   -6.26   82.96 1000.76 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -21.9733    11.6549  -1.885   0.0595 .  
+## area          4.5788     0.1143  40.055  < 2e-16 ***
+## location2    39.2602     5.4471   7.208 7.14e-13 ***
+## location3   126.0575    16.8747   7.470 1.04e-13 ***
+## bath1        74.0538    11.2087   6.607 4.61e-11 ***
+## kitchen1    120.4349    13.0192   9.251  < 2e-16 ***
+## cheating1   161.4138     8.6632  18.632  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 145.2 on 3075 degrees of freedom
+## Multiple R-squared:  0.4504, Adjusted R-squared:  0.4494 
+## F-statistic:   420 on 6 and 3075 DF,  p-value: < 2.2e-16
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fitGLM}\OtherTok{=}\FunctionTok{glm}\NormalTok{(rent}\SpecialCharTok{\textasciitilde{}}\NormalTok{area,}\AttributeTok{data=}\NormalTok{gamlss.data}\SpecialCharTok{::}\NormalTok{rent99)}
+\FunctionTok{summary}\NormalTok{(fitGLM)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = rent ~ area, data = gamlss.data::rent99)
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 134.5922     8.6135   15.63   <2e-16 ***
+## area          4.8215     0.1206   39.98   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for gaussian family taken to be 25209.83)
+## 
+##     Null deviance: 117945363  on 3081  degrees of freedom
+## Residual deviance:  77646265  on 3080  degrees of freedom
+## AIC: 39986
+## 
+## Number of Fisher Scoring iterations: 2
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{GLM - Binomial regression with logit-link}
+\protect\hypertarget{glm---binomial-regression-with-logit-link}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fitgrouped }\OtherTok{=} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y, n }\SpecialCharTok{{-}}\NormalTok{ y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ldose, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ investr}\SpecialCharTok{::}\NormalTok{beetle)}
+\FunctionTok{summary}\NormalTok{(fitgrouped)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = cbind(y, n - y) ~ ldose, family = "binomial", data = investr::beetle)
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  -60.717      5.181  -11.72   <2e-16 ***
+## ldose         34.270      2.912   11.77   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 284.202  on 7  degrees of freedom
+## Residual deviance:  11.232  on 6  degrees of freedom
+## AIC: 41.43
+## 
+## Number of Fisher Scoring iterations: 4
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{GLM - Poisson regression with log-link}
+\protect\hypertarget{glm---poisson-regression-with-log-link}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{crab }\OtherTok{=} \FunctionTok{read.table}\NormalTok{(}\StringTok{"https://www.math.ntnu.no/emner/TMA4315/2018h/crab.txt"}\NormalTok{)}
+\FunctionTok{colnames}\NormalTok{(crab) }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"Obs"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"S"}\NormalTok{, }\StringTok{"W"}\NormalTok{, }\StringTok{"Wt"}\NormalTok{, }\StringTok{"Sa"}\NormalTok{)}
+\NormalTok{crab }\OtherTok{=}\NormalTok{ crab[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]  }\CommentTok{\#remove column with Obs}
+\NormalTok{crab}\SpecialCharTok{$}\NormalTok{C }\OtherTok{=} \FunctionTok{as.factor}\NormalTok{(crab}\SpecialCharTok{$}\NormalTok{C)}
+\NormalTok{model3 }\OtherTok{=} \FunctionTok{glm}\NormalTok{(Sa }\SpecialCharTok{\textasciitilde{}}\NormalTok{ W }\SpecialCharTok{+}\NormalTok{ C, }\AttributeTok{family =} \FunctionTok{poisson}\NormalTok{(}\AttributeTok{link =}\NormalTok{ log), }\AttributeTok{data =}\NormalTok{ crab, }\AttributeTok{contrasts =} \FunctionTok{list}\NormalTok{(}\AttributeTok{C =} \StringTok{"contr.sum"}\NormalTok{))}
+\FunctionTok{summary}\NormalTok{(model3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = Sa ~ W + C, family = poisson(link = log), data = crab, 
+##     contrasts = list(C = "contr.sum"))
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -2.92089    0.56010  -5.215 1.84e-07 ***
+## W            0.14934    0.02084   7.166 7.73e-13 ***
+## C1           0.27085    0.11784   2.298   0.0215 *  
+## C2           0.07117    0.07296   0.975   0.3294    
+## C3          -0.16551    0.09316  -1.777   0.0756 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 632.79  on 172  degrees of freedom
+## Residual deviance: 559.34  on 168  degrees of freedom
+## AIC: 924.64
+## 
+## Number of Fisher Scoring iterations: 6
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Categorical regression, nominal model}
+\protect\hypertarget{categorical-regression-nominal-model}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from Agresti (2015), section 6, with use of the VGAM packages}
+\NormalTok{data }\OtherTok{=} \StringTok{"http://www.stat.ufl.edu/\textasciitilde{}aa/glm/data/Alligators.dat"}
+\NormalTok{ali }\OtherTok{=} \FunctionTok{read.table}\NormalTok{(data, }\AttributeTok{header =}\NormalTok{ T)}
+\FunctionTok{attach}\NormalTok{(ali)}
+\NormalTok{y.data }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(y2, y3, y4, y5, y1)}
+\NormalTok{x.data }\OtherTok{=} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{size }\SpecialCharTok{+} \FunctionTok{factor}\NormalTok{(lake), }\AttributeTok{data =}\NormalTok{ ali)}
+\FunctionTok{library}\NormalTok{(VGAM)}
+\CommentTok{\# We fit a multinomial logit model with fish (y1) as the reference category:}
+\NormalTok{fit.main }\OtherTok{=} \FunctionTok{vglm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(y2, y3, y4, y5, y1) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ size }\SpecialCharTok{+} \FunctionTok{factor}\NormalTok{(lake), }\AttributeTok{family =}\NormalTok{ multinomial,}
+    \AttributeTok{data =}\NormalTok{ ali)}
+\FunctionTok{summary}\NormalTok{(fit.main)}
+\FunctionTok{pchisq}\NormalTok{(}\FunctionTok{deviance}\NormalTok{(fit.main), }\FunctionTok{df.residual}\NormalTok{(fit.main), }\AttributeTok{lower.tail =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## vglm(formula = cbind(y2, y3, y4, y5, y1) ~ size + factor(lake), 
+##     family = multinomial, data = ali)
+## 
+## Coefficients: 
+##                 Estimate Std. Error z value Pr(>|z|)    
+## (Intercept):1    -3.2074     0.6387  -5.021 5.13e-07 ***
+## (Intercept):2    -2.0718     0.7067  -2.931 0.003373 ** 
+## (Intercept):3    -1.3980     0.6085  -2.297 0.021601 *  
+## (Intercept):4    -1.0781     0.4709  -2.289 0.022061 *  
+## size:1            1.4582     0.3959   3.683 0.000231 ***
+## size:2           -0.3513     0.5800  -0.606 0.544786    
+## size:3           -0.6307     0.6425  -0.982 0.326296    
+## size:4            0.3316     0.4482   0.740 0.459506    
+## factor(lake)2:1   2.5956     0.6597   3.934 8.34e-05 ***
+## factor(lake)2:2   1.2161     0.7860   1.547 0.121824    
+## factor(lake)2:3  -1.3483     1.1635  -1.159 0.246529    
+## factor(lake)2:4  -0.8205     0.7296  -1.125 0.260713    
+## factor(lake)3:1   2.7803     0.6712   4.142 3.44e-05 ***
+## factor(lake)3:2   1.6925     0.7804   2.169 0.030113 *  
+## factor(lake)3:3   0.3926     0.7818   0.502 0.615487    
+## factor(lake)3:4   0.6902     0.5597   1.233 0.217511    
+## factor(lake)4:1   1.6584     0.6129   2.706 0.006813 ** 
+## factor(lake)4:2  -1.2428     1.1854  -1.048 0.294466    
+## factor(lake)4:3  -0.6951     0.7813  -0.890 0.373608    
+## factor(lake)4:4  -0.8262     0.5575  -1.482 0.138378    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Names of linear predictors: log(mu[,1]/mu[,5]), log(mu[,2]/mu[,5]), 
+## log(mu[,3]/mu[,5]), log(mu[,4]/mu[,5])
+## 
+## Residual deviance: 17.0798 on 12 degrees of freedom
+## 
+## Log-likelihood: -47.5138 on 12 degrees of freedom
+## 
+## Number of Fisher scoring iterations: 5 
+## 
+## Warning: Hauck-Donner effect detected in the following estimate(s):
+## '(Intercept):1'
+## 
+## 
+## Reference group is level  5  of the response
+## [1] 0.1466189
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Categorical regression, ordinal model}
+\protect\hypertarget{categorical-regression-ordinal-model}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Read mental health data from the web:}
+\NormalTok{fit.imp }\OtherTok{=}\NormalTok{ VGAM}\SpecialCharTok{::}\FunctionTok{vglm}\NormalTok{(impair }\SpecialCharTok{\textasciitilde{}}\NormalTok{ life }\SpecialCharTok{+}\NormalTok{ ses, }\AttributeTok{family =} \FunctionTok{cumulative}\NormalTok{(}\AttributeTok{parallel =}\NormalTok{ T), }\AttributeTok{data =}\NormalTok{ mental)}
+\FunctionTok{summary}\NormalTok{(fit.imp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## VGAM::vglm(formula = impair ~ life + ses, family = cumulative(parallel = T), 
+##     data = mental)
+## 
+## Coefficients: 
+##               Estimate Std. Error z value Pr(>|z|)   
+## (Intercept):1  -0.2819     0.6231  -0.452  0.65096   
+## (Intercept):2   1.2128     0.6511   1.863  0.06251 . 
+## (Intercept):3   2.2094     0.7171   3.081  0.00206 **
+## life           -0.3189     0.1194  -2.670  0.00759 **
+## ses             1.1112     0.6143   1.809  0.07045 . 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Names of linear predictors: logitlink(P[Y<=1]), logitlink(P[Y<=2]), 
+## logitlink(P[Y<=3])
+## 
+## Residual deviance: 99.0979 on 115 degrees of freedom
+## 
+## Log-likelihood: -49.5489 on 115 degrees of freedom
+## 
+## Number of Fisher scoring iterations: 5 
+## 
+## No Hauck-Donner effect found in any of the estimates
+## 
+## 
+## Exponentiated coefficients:
+##      life       ses 
+## 0.7269742 3.0380707
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{LMM - random intercept and slope}
+\protect\hypertarget{lmm---random-intercept-and-slope}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lme4)}
+\NormalTok{fm1 }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(Reaction }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Days }\SpecialCharTok{+}\NormalTok{ (Days }\SpecialCharTok{|}\NormalTok{ Subject), sleepstudy)}
+\FunctionTok{summary}\NormalTok{(fm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear mixed model fit by REML ['lmerMod']
+## Formula: Reaction ~ Days + (Days | Subject)
+##    Data: sleepstudy
+## 
+## REML criterion at convergence: 1743.6
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.9536 -0.4634  0.0231  0.4634  5.1793 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr
+##  Subject  (Intercept) 612.10   24.741       
+##           Days         35.07    5.922   0.07
+##  Residual             654.94   25.592       
+## Number of obs: 180, groups:  Subject, 18
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  251.405      6.825  36.838
+## Days          10.467      1.546   6.771
+## 
+## Correlation of Fixed Effects:
+##      (Intr)
+## Days -0.138
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{GLMM - random intercept and slope Poisson}
+\protect\hypertarget{glmm---random-intercept-and-slope-poisson}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RIKZ }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"http://faculty.concordia.ca/pperesne/BIOL\_422\_680/RIKZ.csv"}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(lme4)}
+\NormalTok{fitRI }\OtherTok{=} \FunctionTok{glmer}\NormalTok{(Richness }\SpecialCharTok{\textasciitilde{}}\NormalTok{ NAP }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ NAP }\SpecialCharTok{|}\NormalTok{ Beach), }\AttributeTok{data =}\NormalTok{ RIKZ, }\AttributeTok{family =} \FunctionTok{poisson}\NormalTok{(}\AttributeTok{link =}\NormalTok{ log))}
+\FunctionTok{summary}\NormalTok{(fitRI)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: poisson  ( log )
+## Formula: Richness ~ NAP + (1 + NAP | Beach)
+##    Data: RIKZ
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##    218.7    227.8   -104.4    208.7       40 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -1.35846 -0.51129 -0.21846  0.09802  2.45384 
+## 
+## Random effects:
+##  Groups Name        Variance Std.Dev. Corr
+##  Beach  (Intercept) 0.2630   0.5128       
+##         NAP         0.0891   0.2985   0.18
+## Number of obs: 45, groups:  Beach, 9
+## 
+## Fixed effects:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)   1.6942     0.1868   9.071  < 2e-16 ***
+## NAP          -0.6074     0.1374  -4.421 9.81e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation of Fixed Effects:
+##     (Intr)
+## NAP 0.121
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exam and exam preparation}
+\protect\hypertarget{exam-and-exam-preparation}{}
+Relevant exams are found on the bottom of each module page.
+
+\begin{itemize}
+\tightlist
+\item
+  I will use these to help me write the exam!
+\end{itemize}
+
+Exam date: 05.12.2023 15:00
+\end{frame}
+
+\begin{frame}{Revision sessions}
+\protect\hypertarget{revision-sessions}{}
+Same times \& places as lecture \& interactive session, week before the
+exam
+
+\begin{itemize}
+\tightlist
+\item
+  27th November 10:00 - 12:00: F4
+\item
+  28th November 10:00 - 12:00: G4
+\end{itemize}
+\end{frame}
+
+\begin{frame}{After TMA4315}
+\protect\hypertarget{after-tma4315}{}
+What is next in the spring semester?
+
+\textbf{For the 4th year student}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.ntnu.edu/studies/courses/TMA4250}{TMA4250 Spatial
+  statistics}
+\item
+  \href{https://www.ntnu.edu/studies/courses/TMA4268}{TMA4268
+  Statistical learning}
+\item
+  \href{https://www.ntnu.edu/studies/courses/TMA4275/}{TMA4275 Survival
+  analysis}
+\item
+  \href{https://www.ntnu.edu/studies/courses/TMA4300/}{TMA4300
+  Computational statistics}
+\item
+  \href{https://www.ntnu.edu/studies/courses/SMED8002}{SMED8002
+  Epidemiology 2}
+\item
+  \href{https://www.ntnu.edu/studies/courses/TDT4300/}{TDT4300 Data
+  Warehousing and Data Mining}
+\item
+  \href{https://www.ntnu.edu/studies/courses/TDT4173/}{TDT4173 Machine
+  learning and case-based reasoning} (Big overlap with TMA4268)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\textbf{For the 5th year student}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{http://www.ntnu.no/studier/emner/MA8702/}{Computational
+  statistics 2} Phd course
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Student Barometer (also in English)}
+\protect\hypertarget{student-barometer-also-in-english}{}
+\includegraphics[width=1\textwidth,height=\textheight]{Studiebaro2023.pdf}
+\end{frame}
+
+\end{document}
