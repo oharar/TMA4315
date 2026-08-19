@@ -550,7 +550,7 @@ A room where interaction and activity is in focus. Flat floor with group tables,
 
 (two groups of 4 students each, one hour "interviews" by external evaluator - anonymous contributtions)
 
-###The concept
+### The concept
 
 **Student A:** We are taught in a different way than what we have experienced earlier — sitting in groups, working on problem sets and discussing. No, never experienced this before — and we are master students. Where was all this earlier?
 
