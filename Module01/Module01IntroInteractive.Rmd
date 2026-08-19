@@ -73,7 +73,7 @@ Choose (discuss and then talk to lecturer/TA) if you will work on a) binomial, b
 
 You may first use $n=1$ in the binomial (which then is called Bernoulli) - since that is much easier than a general $n$.
 
-Hint: [TMA4245]https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete) and nearly the same parameterization for showing the binomial is member of exponential ([watch this YouTube video for more](https://www.youtube.com/watch?v=7mNrsFr7P_A>).
+Hint: [TMA4245](https://wiki.math.ntnu.no/tma4245/tema/begreper/discrete) and nearly the same parameterization for showing the binomial is member of exponential ([watch this YouTube video for more](https://www.youtube.com/watch?v=7mNrsFr7P_A>)).
 
 Also: $x = e^{\ln x}$
 
