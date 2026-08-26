@@ -200,9 +200,9 @@ $\mu_i=\eta_i$.
 
 ### Questions
 
-* <span class="question">Compare the traditional and GLM way. Have we made the same assumptions for both?
-* <span class="question">What is the connection between each ${\bf x}_i$ and the design matrix? 
 * <span class="question">What is "full rank"? Why is this needed? Example of rank less than $p$?
+* <span class="question">What is the connection between each ${\bf x}_i$ and the design matrix? 
+* <span class="question">Compare the traditional and GLM way. Have we made the same assumptions for both?
 * <span class="question">Why do you think we move from traditional to GLM way? Could we not just let $\varepsilon$ be from binomial, Poisson, etc. distribution?
 
 ---
@@ -226,6 +226,7 @@ We assume that pairs of covariates and response are measured independently of ea
 
 $$L(\beta)=\prod_{i=1}^n L_i(\beta)=\prod_{i=1}^n f(y_i; \beta)$$
 **Q**: <span class="question">fill in with the normal density for $f$ and the multiple linear regression model.
+(we will go through this and the equivalent questions in the interactive session)
 
 ---
 
@@ -452,9 +453,10 @@ This requires that $\hat{\beta}_j$ and $\hat{\sigma}$ are independent (see below
 However, when we work with _large samples_ then $n-p$ becomes large and the $t$ distribution goes to a normal distribution, so we may use the standard normal in place of the $t_{n-p}$.
 
 **Asymptotically** we have:
-$$\hat{\beta}\sim N_{p}(\beta,\tilde{\sigma}^2({\bf X}^T{\bf X})^{-1})$$.
+$$\hat{\beta}\sim N_{p}(\beta,\tilde{\sigma}^2({\bf X}^T{\bf X})^{-1})$$
 and
-$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\tilde{\sigma}}\sim N(0,1)$$
+
+$$T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\tilde{\sigma}}\sim N(0,1)$$
 where $\tilde{\sigma}^2=\frac{\text{SSE}}{n}$ (the ML estimator).
 
 **Q:** <span class="question">Pointing forwards: do you see any connection between the covariance matrix of $\hat{\boldsymbol{\beta}}$ and the Fisher information?
@@ -650,7 +652,7 @@ ggplot(fit, aes(.fitted, .stdresid)) +
 
 #### Normal Q-Q
 
-This plot shows if the residuals are Gaussian (normally) distributed. If they follow a straigt line it is an indication that they are, and else they are probably not.
+This plot shows if the residuals are Gaussian (normally) distributed. If they follow a straight line it is an indication that they are, and else they are probably not.
 
 ```{r tidy = TRUE,echo=showsol, fig.height=4}
 ggplot(fit, aes(sample = .stdresid)) +
