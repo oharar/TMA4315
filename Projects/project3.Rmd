@@ -1,7 +1,7 @@
 --- 
 title: "TMA4315 Generalized Linear Models" 
 subtitle: "Compulsory exercise 3: (Generalized) Linear Mixed Models" 
-date: "Deadline: Friday, November 8th, 2024 at Midnight" 
+date: "Deadline: Friday, November 13th, 2026 at 11:30pm" 
 output: # 3rd letter intentation hierarchy
    html_document:
      toc: true
@@ -20,7 +20,7 @@ library(knitr)
 opts_chunk$set(tidy.opts = list(width.cutoff = 68), tidy = TRUE, warning = FALSE, error = FALSE, message = FALSE, echo = TRUE)
 ```
 
-**To be handed in on Blackboard.**
+**To be handed in on Canvas**
 
 Students may work on the assignment alone, or in groups of two or three, and are also encouraged to collaborate across groups. Each group needs to hand in an [R Markdown] (http://rmarkdown.rstudio.com/) document with answers to the questions as well as all source code. You find a template here: <https://github.com/oharar/TMA4315/blob/main/Projects/template_glm.Rmd>. Hand in the file as a pdf file (`.pdf`) only, no zipped folders necessary.
 
@@ -44,7 +44,7 @@ We will use `math` as response, and group the data by school. The following comm
 
 ```{r, echo = TRUE}
 
-dataset <- read.table("https://github.com/oharar/TMA4315/blob/main/Projects/jsp2.txt", header = TRUE)
+dataset <- read.csv("https://raw.githubusercontent.com/oharar/TMA4315/refs/heads/main/Projects/jsp2.csv", header = TRUE, sep=",", row.names=NULL)
 # dataset <- read.table("https://www.math.ntnu.no/emner/TMA4315/2018h/jsp2.txt", header = TRUE)
 #dataset <- read.table("/Users/ingebogh/Documents/TMA4315/GLM_h18/exercise3/jsp2.txt", header = TRUE)
 
