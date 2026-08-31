@@ -50,7 +50,7 @@ Independent pairs $(Y_i, {\bf x}_i)$ for $i=1,\ldots,n$.
 3. Link function: linking the random and systematic component (linear predictor): Identity link and response function.
 $\mu_i=\eta_i$.
 
-The model is the same, but it is expressed differently, and htere are several ways of looing at this:
+The model is the same, but it is expressed differently, and there are several ways of looking at this:
 
 - the focus is on $y_i$ having a distribution with a mean that is modeled, rather than $\varepsilon_i$ having a distribution.
 - the random and systematic components are explicitly separated
@@ -59,7 +59,6 @@ The model is the same, but it is expressed differently, and htere are several wa
 This helps us get to the generalisation to GLMs.
 
 </details>
-
 
 2. <span class="question">Write down the likelihood and loglikelihood. Then define the score vector.</span>
 
@@ -94,7 +93,7 @@ s_i(\beta) &= \frac{\partial l(\beta)}{\partial \psi} \frac{\partial \psi}{\part
 \end{align}
 $$
 
-Note that we can also write the score as $s_i(\beta) = \sigma^{-2} (x_i^T \widehat{y}_i - x_i^T y_i) = \sigma^{-2} x_i^T \widehat{y}_i - y_i)$
+Note that we can also write the score as $s_i(\beta) = \sigma^{-2} (x_i^T \widehat{y}_i - x_i^T y_i) = \sigma^{-2} x_i^T (\widehat{y}_i - y_i)$
 
 
 </details>
@@ -158,13 +157,16 @@ $$
 l(\beta) = -\frac{1}{2} (\mathbf{y} - X \mathbf{\beta})^T \Sigma^{-1} (\mathbf{y} - X \mathbf{\beta})
 $$
 
+Where $\Sigma^{-1} = \sigma^{-2} I$, 
+
 ... (to be continued. Basically, use Rule 3, and substitute $\beta = (\mathbf{y} - X \mathbf{\beta})$, with apologies for using $\beta$ to mean different things.
 
 Or we can go via the score
+
 $$
 s(\beta) = \Sigma^{-1} (X^TX \mathbf{\beta} - X^T \mathbf{y})
 $$
-Where $\Sigma^{-1} = \sigma^{-2} I$, and use Rule 1.
+...and use Rule 1.
 
 </details>
 
@@ -419,5 +421,4 @@ install.packages(c("formatR",
 
 * Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 2:  Regression (by Mette Langaas).](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
 * And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA] (http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)
-
 
