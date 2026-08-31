@@ -7,7 +7,6 @@ Material originally developed by Mette Langaas with help from Thea Bjørnland. S
 
 Please consider the licence for this repo to be [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-<<<<<<< HEAD
 ## Repo Structure
 
 There are 9 modules, each spanning 1-2 weeks. Each module has a folder (Module01/ etc.)
@@ -107,13 +106,12 @@ Project 3 should be done here: [Project](Projects/project3.html)
 
 [Presentation slides](Module09/9FinalBEAMER.pdf), [Markdown](Module09/9FinalBEAMER.Rmd)
 
->>>>>>> 285f67f09e30ffaf535033b4c8c628af76dfedd9
-
+<!---
 ## Notes on improvement
 
 Repo: remove parts that are not needed. 
 
-Overall: Use lectures to give overview. Use videos to presetn proofs etc., and link to in videos. 
+Overall: Use lectures to give overview. Use videos to present proofs etc., and link to in videos. 
 
 Use exercise sessions to go through proofs.
 
@@ -129,7 +127,6 @@ Week 2 slides need more structure: very listy. Also, TMI. Didn't get to overdisp
 
 Proof of asymptotic distribution: a bit of a mess. Should probably do as a video.
 
-<<<<<<< HEAD
 ## Somewhere
 =======
 Perhaps reduce the grouped data part to save time. And link to module 2 and videos in slides 
@@ -138,8 +135,6 @@ Perhaps reduce the grouped data part to save time. And link to module 2 and vide
 ### Module 6
 
 The presentation could be reworked to improve the structure, and explain the ordinal model better.
-
->>>>>>> 285f67f09e30ffaf535033b4c8c628af76dfedd9
 
 Exercise on residual plots: simulate data and plot them.
 
@@ -161,5 +156,5 @@ Exercise on residual plots: simulate data and plot them.
 - Week 14: Module 3a (13th Nov) 
 - Week 15: Module 3a (20th Nov) 
 
-
+--->
 
