@@ -94,11 +94,16 @@ $\mu_i=\eta_i$.
 
 1. <span class="question">What is the interpretation of a 95% confidence interval?</span>
 
-**Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$? **
 <details><summary>Hint</summary>
+Repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$?
 </details>
 
 <details><summary>Solution</summary>
+If we repeated observations of $Y$ many times for the same $X$ (i.e. the same predictors), and calculated the confidence intervals for each repeat, the true value would be in 95% of the confidence intervals.
+
+Note that this means that the probability that the true value is in any one of the confidence intervals is either 0 or 1 (but we don't know which). The statement is about the average over all confidence intervals, not any particular one.
+
+Note 2: We are also assuming the model is correct. But, as George Box one wrote, [all models are wrong](https://en.wikipedia.org/wiki/All_models_are_wrong). You can think about what this means for confidence intervals yourself.
 </details>
 
 <!-- 2. What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\bf x}_0$. -->
@@ -107,36 +112,94 @@ $\mu_i=\eta_i$.
 
 2. <span class="question">Explain in words and with formulas the $p$-values printed in a `summary` from `lm`.</span>
 
-<details><summary>Hint</summary>
-</details>
-
-<details><summary>Solution</summary>
-</details>
-
 ```{r}
 fit=lm(rent~area+location+bath+kitchen+cheating,
        data=rent99)
 summary(fit)
 ```
 
-3. <span class="question">Explain in words and with formulas the full output (with $p$-values) printed in an `anova` from `lm`.</span>
 
 <details><summary>Hint</summary>
+Think about what test is used (or check the module notes)
+<details><summary>Answer to the Hint</summary>
+A Wald test
+
+</details>
+
 </details>
 
 <details><summary>Solution</summary>
+The P-values are calculated from a Wald test: the t statistics are Wald statistics. 
+
+The tests are for a single regression parameter, so from the module notes the test statistic is $W$:
+
+$$
+W=\frac{(\widehat{\beta}_j - \beta_j)^2}{\widehat{\text{Var}}(\widehat{\beta}_j)},
+$$
+
+Where for area (for example) $\widehat{\beta}_j$ = `r coef(fit)["area"]`, 
+$\beta_j=0$, and $\sqrt{\widehat{\text{Var}}(\widehat{\beta}_j)}$ = `r summary(fit)$coefficients["area","Std. Error"]`.
+
+This follows an F$F_{1,n-p}$ distribution ($n$ observations, $p$ parameters), but R reports $\sqrt{W}$, which follows a t distribution with 3075 degrees of freedom (this is effectively a normal distribution).
+
+The p value is the probability of getting the value of $W$ at least as extreme as the observed one. To be precise, if we repeated the observations many times and the null hypothesis was true, this is the proportion of times the estimate of $W$ would be larger than the observed one. This is calculated from
+
+$$p\text{-value}=P(T_0>\text{abs}(t_0))+P(T_0<-\text{abs}(t_0))=2\cdot P(T_0>\text{abs}(t_0)).$$
+where $1-P()$ is cdf for the t distribution.
 </details>
+
+
+3. <span class="question">Explain in words and with formulas the full output (with $p$-values) printed in an `anova` from `lm`.</span>
 
 ```{r}
 anova(fit)
 ```
 
-4. <span class="question">In particular: why does using `summary` and `anova` on a fitted `lm` give different test statistics and different $p$-values listed for each covariate. And, why is `summary` listing `location2` and `location3` while `anova` is listing `location`?</span>
-
 <details><summary>Hint</summary>
+Use the GLM explanation (yes, yes, this is equivalent to the older explanation!).
 </details>
 
 <details><summary>Solution</summary>
+The `anova()` function uses a sequence of likelihood ratio tests (in the GLM world! For other distributions they are labelled like this). Before we look at the values in how each row is calculated, we calc look at what each row is. We start by fitting a null model, i.e. with only an intercept. Then we fit a model with the intercept plus the first predictor (`area`). Next we fit a model with the intercept, the first predictor and the second predictor (`location`). And we keep going, so we add each term to the model in the row above. Thus the table is sequential.
+
+Now, what is in each row? The calculations start from the model for the row above, for which we have calculated the deviance. We then calculate the deviance for the model for our row, i.e. 
+
+$$D=-2(\ln L(\text{candidate model})-\ln L(\text{saturated model}))$$
+which for the normal distribution is 
+
+$$D_m=\frac{1}{\sigma^2} \sum_{i=1}^n (y_i-{\bf x}_i^T \widehat{\boldsymbol\beta})^2=\frac{\text{SSE}_m}{\sigma^2}$$
+
+(I have used $m$ to denote model $m$). If $m-1$ is the model for the row above, $m-1$ and $m$ the likelihood ratio test (LRT) statistic is 
+
+$$
+- 2\ln \lambda=-2(\ln L(\widehat{\beta}_{m-1},\tilde{\sigma}_{m-1})-\ln L(\widehat{\beta}_m,\tilde{\sigma}_m))
+$$ 
+
+(so, $-2$ times small minus large). After a bit of work, the statistic becomes
+
+$$
+F_{obs}=\frac{\frac{1}{r} (SSE_{m-1}-SSE_m)}{\frac{SSE_{f}}{n-p}}
+$$
+
+So the `F value` column is just the LRT statistic, with the numerator being the `Mean Sq` column. The denominator is the `Residuals` mean square. This is an estimator of $\sigma^2$ (we could use other SSEs to estimate $\sigma^2$: I will let you work out why this is, in general, the best).
+
+The p-value is the probability of getting a value of $F_{obs}$ at least that extreme if we took many replicate samples and the null model (i.e. the smaller model) was true.
+
+</details>
+
+
+4. <span class="question">In particular: why does using `summary` and `anova` on a fitted `lm` give different test statistics and different $p$-values listed for each covariate. And, why is `summary` listing `location2` and `location3` while `anova` is listing `location`?</span>
+
+<details><summary>Hint</summary>
+This is partly about the hypothesis being tested, and also about how the tests are constructed.
+</details>
+
+<details><summary>Solution</summary>
+The tests are different. The Wald test uses the model for the alternative hypothesis to calculate the test statistic. The LRT uses the null hypothesis, and compares it to the alternative hypothesis. So if there are terms in the full model that are not in the two models that are being compared, they can affect the distribution of the estiamtes in Wald test, but not the LRT.
+
+(from this, can you work out (a) when the tests will be the same for all tests, and (b) which test will be the same in any set of tests)
+
+The other difference is that the hypotheses can be different. For location, there ate 3 levels, so the test in the LRT is that they are all 0. In contrast, the Wald test that is presented is that that particular parameter is 0, e.g. that `location2` = `location1`. The tests in the two rows in the summary are testing `location2` = `location1`, and `location3` = `location1`.
 </details>
 
 Optional: Maybe test out `Anova` in library `car` with type 3 ANOVA to compare?
