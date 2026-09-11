@@ -157,7 +157,7 @@ $$
 h(\eta_i)=g^{-1}(\eta_i)=\mu_i
 $$
 
-We thus also have to require that the link function is monotone, and we will soon see that we also need to require that it is twice differential.
+We thus also have to require that the link function is monotone, and we will soon see that we also need to require that it is twice differentiable.
 
 ## Response function for binary regression 
 

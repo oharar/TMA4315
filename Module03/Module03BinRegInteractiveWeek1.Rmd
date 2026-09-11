@@ -8,6 +8,7 @@ output: #3rd letter intentation hierarchy
    toc: true
    toc_float: true
    toc_depth: 2
+   css: "../TMA4315RMarkdown.css"
 # pdf_document:
 #   toc: true
 #   toc_depth: 2
@@ -30,27 +31,72 @@ showsol<-TRUE
 
 ### Problem 1: Model assumptions
 
-a) What are the model assumptions for a binary regression? 
-b) Which link function and response function is used for the logit model? 
-c) What is the difference between the logit model and a logistic regression?
+a) <span class="question">What are the model assumptions for a binary regression? </span>
+
+<details><summary>Solution</summary>
+1. Random component: Distribution of response:$Y_i \sim \text{bin}(n_i,\pi_i)$. $n_i$ is a known constant, $p_i$ is what we are modelling.
+
+2. Systematic component: Linear predictor: $\eta_i={\bf x}_i^T \boldsymbol{\beta}$. Here ${\bf x}_i$ is our fixed (not random) $p$-dimensional column vector of covariates (intercept included).
+
+3. Link: Connection between the linear predictor and the mean (parameter of interest):
+$g(\mu_i)=\eta_i$. For the moment we have not specified $g()$.
+
+4. We assume each $\{ \pi_i, \bf{x}_i^T\}$ is independent of the the others.
+
+</details>
+
+b) <span class="question">Which link function and response function is used for the logit model? </span>
+
+<details><summary>Solution</summary>
+Link function: $\eta_i = \log{\frac{\mu_i}{1-\mu_i}}$
+
+Response function: $\mu_i = p_i = \frac{e^{eta_i}}{1+e^{eta_i}}$
+</details>
+
+c) <span class="question">What is the difference between the logit model and a logistic regression?</span>
+
+<details><summary>Solution</summary>
+Ask a historian of statistics! They are the same thing.
+</details>
 
 ---
 
 ### Problem 2: Log-likelihood.  
 
-a) What is the definition of the log-likelihood?
+a) <span class="question">What is the definition of the log-likelihood?</span>
+
+<details><summary>Solution</summary>
+</details>
 
 b) For the logit model the log-likelihood is
 $$l(\boldsymbol{\beta})=\sum_{j=1}^G[\ln \binom{n_j}{y_j}+ y_j \ln \pi_j-y_j\ln(1-\pi_j)+n_j\ln(1-\pi_j)]$$
-for grouped data. Explain how we have arrived at this formula?
+for grouped data. 
 
-c) Write the version of the loglikelihood for individual data (i.e. $n_j=1$ and $G=n$).
+<span class="question">Explain how we have arrived at this formula.</span>
 
-d) Where is $\boldsymbol{\beta}$ in the loglikelihood in c? Rewrite this to be a function of $\boldsymbol{\beta}$.  
+<details><summary>Solution</summary>
+</details>
 
-e) Why can we ignore the normalizing constant (what is the constant?) in the case of $n_j = 1 \ \forall j$? Considering what the log-likelihood is used for, why can we ignore the normalizing constant in all cases (i.e., also when $n_j \neq 1$)?
+c) <span class="question">Write the version of the loglikelihood for individual data (i.e. $n_j=1$ and $G=n$).</span>
 
-f) What does this graph of $l$ look like as a function of $\boldsymbol{\beta}$ for the beetle data? First discuss shortly and then to aid you in answering this we look at the loglikelihood for the beetle data. Read the R code, discuss what is done and work on interpreting the final graph - in particular comment on the yellow ridge in the plot.
+<details><summary>Solution</summary>
+</details>
+
+d) <span class="question">Where is $\boldsymbol{\beta}$ in the loglikelihood in c? Rewrite this to be a function of $\boldsymbol{\beta}$.  </span>
+
+<details><summary>Solution</summary>
+</details>
+
+e) <span class="question">Why can we ignore the normalizing constant (what is the constant?) in the case of $n_j = 1 \ \forall j$? Considering what the log-likelihood is used for, why can we ignore the normalizing constant in all cases (i.e., also when $n_j \neq 1$)?</span>
+
+<details><summary>Solution</summary>
+</details>
+
+f) <span class="question">What does this graph of $l$ look like as a function of $\boldsymbol{\beta}$ for the beetle data? First discuss shortly and then to aid you in answering this we look at the loglikelihood for the beetle data. Read the R code, discuss what is done and work on interpreting the final graph - in particular comment on the yellow ridge in the plot.</span>
+
+<details><summary>Solution</summary>
+</details>
+
 
 The beetle data has only one covariate (in addition to the intercept) - so this means that we have $\boldsymbol{\beta}=(\boldsymbol{\beta}_0,\boldsymbol{\beta}_1)$. Look at the following code and explain what is done - remark: we have used the $n_i=1$ version of the loglikelihood here.
 
@@ -106,10 +152,24 @@ Comments to the code: for the `loglik` function we have two arguments: par= the 
 
 ### Problem 3: Score function
 
-a) What is the definition of the score function? What is the dimension of the score function?
-b) Derive the score function for the logit model (individual data). The result should be
+a) <span class="question">What is the definition of the score function? What is the dimension of the score function?</span>
+
+<details><summary>Solution</summary>
+</details>
+
+b) <span class="question">Derive the score function for the logit model (individual data).
+</span>
+
+The result should be
 $$s(\boldsymbol{\beta})=\sum_{i=1}^n {\bf x}_i (y_i-\pi_i)=\sum_{i=1}^n {\bf x}_i (y_i-\frac{\exp({\bf x}_i^T\boldsymbol{\beta})}{1+\exp({\bf x}_i^T\boldsymbol{\beta})})$$
-c) What do we need the score function for? 
+
+<details><summary>Solution</summary>
+</details>
+
+c) <span class="question">What do we need the score function for? </span>
+
+<details><summary>Solution</summary>
+</details>
 
 ---
 
@@ -117,15 +177,28 @@ c) What do we need the score function for?
 
 (We did not cover this in the lecture week 1, but we know one of the definitions from Module 2. Either you skip Problem 4 and move to Problem 5, or you look at the section ["Properties of the score function"](#propscore), and ["The expected Fisher information matrix $F(\boldsymbol{\beta})$"](#covscore) together.)
 
-a) What is the definition of the expected (and the observed) Fisher information matrix? What is the dimension of thise matrix (matrices)?
-b) What is the role of these matrices in ML estimation?
+a) <span class="question">What is the definition of the expected (and the observed) Fisher information matrix? What is the dimension of this matrix?</span>
+
+<details><summary>Solution</summary>
+</details>
+
+b) <span class="question">What is the role of these matrices in ML estimation?</span>
+
+<details><summary>Solution</summary>
+</details>
 
 c) For the logit model with grouped data the expected and the observed Fisher information matrix are equal and given as
 
 $$F(\boldsymbol{\beta})=\sum_{j=1}^G {\bf x}_j {\bf x}_j^T n_j \pi_j (1-\pi_j)$$
-Where is $\boldsymbol{\beta}$ in this expression?
+<span class="question">Where is $\boldsymbol{\beta}$ in this expression?</span>
 
-d) Write the version of the expected Fisher information for individual data (i.e. $n_j=1$ and $G=n$). 
+<details><summary>Solution</summary>
+</details>
+
+d) <span class="question">Write the version of the expected Fisher information for individual data (i.e. $n_j=1$ and $G=n$). </span>
+
+<details><summary>Solution</summary>
+</details>
 
 ---
 
@@ -133,7 +206,12 @@ d) Write the version of the expected Fisher information for individual data (i.e
 
 To find the ML estimate for $\boldsymbol{\beta}$ we may either use the function `glm` or optimize the log-likelihood manually. We will do both.
 
-a) First we use the `glm` function in R, and we also check that the individual and the grouped data give the same parameter estimates for the $\boldsymbol{\beta}$. Read the R-code, notice the different input structures and check the results.
+a) First we use the `glm` function in R, and we also check that the individual and the grouped data give the same parameter estimates for the $\boldsymbol{\beta}$. 
+
+<span class="question">Read the R-code, notice the different input structures and check the results.</span>
+
+<details><summary>Solution</summary>
+</details>
 
 ```{r}
 # the beetle.ds was made above
@@ -146,7 +224,10 @@ fitgrouped=glm(cbind(y, n-y) ~ ldose, family = "binomial", data = investr::beetl
 summary(fitgrouped)
 ```
 
-b) What is the default convergence criterion for the glm? (Note: IRWLS used in `glm` - more in Module 5.)
+b) <span class="question">What is the default convergence criterion for the glm? (Note: IRWLS used in `glm` - more in Module 5.)</span>
+
+<details><summary>Solution</summary>
+</details>
 
 c) We implemented the log-likelihood as a function in item 2 above. Now we will use this together with the `optim` function on the beetle data set to optimize the loglikelihood. Read the R-code, take notice of how we put data into the `args` slot and how the optimization is called with `optim`. (In Compulsory exercise 2 you will use this in a Poisson regression.)
 
@@ -173,8 +254,16 @@ sqrt(diag(-solve(opt$hessian))) # calculate the standard deviations of the param
 
 ### Problem 6: Interpreting results
 
-a) Interpret the estimated $\boldsymbol{\beta}$´s. Odds ratio is useful for this. 
-b) Plot the predicted probability of a beetle dying against the dosage and discuss what you see. (Yes, since this is the last question you may try to program by yourself!)
+a) <span class="question">Interpret the estimated $\boldsymbol{\beta}$´s. Odds ratio is useful for this. </span>
+
+<details><summary>Solution</summary>
+</details>
+
+b) <span class="question">Plot the predicted probability of a beetle dying against the dosage and discuss what you see.</span> 
+(Yes, since this is the last question you may try to program by yourself!)
+
+<details><summary>Solution</summary>
+</details>
 
 <!-- # Summing up and moving on? -->
 
