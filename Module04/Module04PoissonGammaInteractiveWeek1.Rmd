@@ -41,7 +41,7 @@ The exam style questions are optional, but will be helpful for, well, the exam. 
 
 (Only a subset of 20 horseshoe crabs in the original data was used in the exam
 problems, but we will use the full data set of 173 horseshoe crabs, so results
-will not be the same)
+will not be the same. If you want to know more about horseshoe crabs, [wikipedia is a good start](https://en.wikipedia.org/wiki/Horseshoe_crab))
 
 We assume that the number of satellites for each female horseshoe crab follows a
 Poisson distribution and want to perform a Poisson regression using a
@@ -80,7 +80,24 @@ $$
 
 where $W$ is the width, and $X_j$ is an indicator of whether the female is in colour category $j$. $\xi$ is the effect of $X_4$, to be calculated later. Note that we use a sum to zero contrast.
 
-The `summary()` gives Wald statistics and their associated p-values. The effects of width (`W`) is significant: p<<0. For the colour effects, C2 is clearly not significantly different from C4: C1 and C3 are both just either side of the critical value at 5%. It is notlcealr why the contrast to C4 is important, though.
+OK, so what is $\xi$? We are using a sum to zero contrast, which means that the coefficients sum to zero. We can see how this is done by looking at the design matrices:
+
+```{r}
+mmT <- model.matrix(~ W + C, data=crab)
+head(mmT)
+
+mmZ <- model.matrix(~ W + C, data=crab, contrasts.arg = list(C="contr.sum"))
+head(mmZ)
+```
+
+The first is a treatment contrast, so if an observation has a colour at the `C4` level, the matrix has a 1 in the C4 column and 0 in the other levels, An observation at the `C1` level, e.g. row 6, is the intercept.
+
+The second matrix is the sun to zero. Now we see that an observation at the `C1` level is the has a term (there is a 1 in that column). For an observation at level `C4` (e.g. row 4) we see a -1 in each column, so the `C4` effect is the negative sum of the other level effects. 
+
+So, $\xi = 0.27 (-1) + 0.07 (-1) - 0.17 (-1) = -(0.27 + 0.07 - 0.17) = -0.17$
+
+The `summary()` gives Wald statistics and their associated p-values. The effects of width (`W`) is significant: p<<0. For the colour effects, C2 is clearly not significantly different from the 0: C1 and C3 are both just either side of the critical value at 5%: C1 is larger than the sum, and C3 smaller.
+
 
 </details>
 

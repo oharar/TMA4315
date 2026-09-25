@@ -251,10 +251,16 @@ $H_1: \beta_1 \ne 0$
 
 - Then test using the Wald test - write down the formula yourself. 
 
-Formula:
+We can write the formula like this:
 
 $$
-w = \frac{\beta_1 - 0}{\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})}} 
+w = \frac{(\beta_1 - 0)^2}{a_{kk}(\hat{\boldsymbol{\beta}})}
+$$
+
+But we can also work with the square root:
+
+$$
+z = \frac{\beta_1 - 0}{\sqrt{a_{kk}(\hat{\boldsymbol{\beta}})}} 
 $$
 
 
@@ -278,7 +284,7 @@ In code:
 summary(fit1)
 ```
 
-They are the same!
+They are the same! (unless you calculate by hand and round. Then they are just almost the same)
 
 </details>
 
