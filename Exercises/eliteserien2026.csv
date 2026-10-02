@@ -1,0 +1,241 @@
+"","home","away","yh","ya"
+"1","HamKam","Viking",2,1
+"2","Molde","Rosenborg",2,0
+"3","Kristiansund","Brann",3,2
+"4","KFUM","Start",2,0
+"5","Vålerenga","Sandefjord Fotball",1,0
+"6","Aalesund","Lillestrøm",1,3
+"7","Tromsø","Fredrikstad",4,0
+"8","Sarpsborg 08","Bodø/Glimt",1,1
+"9","Start","Aalesund",1,1
+"10","Viking","Molde",4,1
+"11","Rosenborg","Vålerenga",0,2
+"12","Brann","Tromsø",1,2
+"13","Fredrikstad","KFUM",3,1
+"14","Sandefjord Fotball","Sarpsborg 08",0,2
+"15","Lillestrøm","Kristiansund",1,2
+"16","Bodø/Glimt","HamKam",3,0
+"17","Vålerenga","Viking",0,1
+"18","HamKam","Brann",1,5
+"19","Kristiansund","Bodø/Glimt",0,3
+"20","Molde","Lillestrøm",0,1
+"21","Sarpsborg 08","Start",1,1
+"22","Tromsø","Rosenborg",2,0
+"23","KFUM","Sandefjord Fotball",1,2
+"24","Aalesund","Fredrikstad",2,3
+"25","Lillestrøm","Start",3,1
+"26","Tromsø","Kristiansund",2,0
+"27","Viking","Bodø/Glimt",5,0
+"28","Rosenborg","Sarpsborg 08",2,1
+"29","Fredrikstad","Vålerenga",1,1
+"30","Molde","HamKam",4,1
+"31","Aalesund","KFUM",2,2
+"32","Brann","Sandefjord Fotball",0,1
+"33","Bodø/Glimt","Aalesund",3,0
+"34","Sandefjord Fotball","Rosenborg",0,0
+"35","Viking","Brann",3,2
+"36","Vålerenga","Lillestrøm",0,2
+"37","HamKam","KFUM",4,0
+"38","Kristiansund","Fredrikstad",2,0
+"39","Sarpsborg 08","Tromsø",0,1
+"40","Start","Molde",1,1
+"41","Fredrikstad","Viking",1,2
+"42","Rosenborg","Brann",1,1
+"43","Molde","Vålerenga",5,1
+"44","HamKam","Start",2,1
+"45","KFUM","Sarpsborg 08",1,0
+"46","Tromsø","Sandefjord Fotball",3,1
+"47","Aalesund","Kristiansund",1,1
+"48","Lillestrøm","Bodø/Glimt",0,2
+"49","Viking","Rosenborg",3,0
+"50","Brann","Fredrikstad",3,1
+"51","Lillestrøm","Sarpsborg 08",4,0
+"52","Kristiansund","HamKam",1,1
+"53","Sandefjord Fotball","Aalesund",1,0
+"54","Start","Tromsø",1,1
+"55","Vålerenga","KFUM",2,2
+"56","Bodø/Glimt","Molde",0,1
+"57","HamKam","Vålerenga",1,0
+"58","Sarpsborg 08","Fredrikstad",2,1
+"59","Rosenborg","Lillestrøm",2,0
+"60","KFUM","Viking",0,2
+"61","Sandefjord Fotball","Kristiansund",2,0
+"62","Tromsø","Molde",2,0
+"63","Start","Bodø/Glimt",1,4
+"64","Aalesund","Brann",2,1
+"65","Brann","KFUM",2,1
+"66","Fredrikstad","HamKam",2,1
+"67","Lillestrøm","Sandefjord Fotball",3,1
+"68","Molde","Kristiansund",1,0
+"69","Rosenborg","Aalesund",2,3
+"70","Viking","Start",6,3
+"71","Bodø/Glimt","Tromsø",5,0
+"72","Vålerenga","Sarpsborg 08",3,2
+"73","Bodø/Glimt","Brann",3,1
+"74","Kristiansund","Viking",1,2
+"75","Start","Vålerenga",2,0
+"76","HamKam","Lillestrøm",2,0
+"77","KFUM","Rosenborg",2,0
+"78","Sarpsborg 08","Molde",2,1
+"79","Tromsø","Aalesund",1,1
+"80","Sandefjord Fotball","Fredrikstad",1,1
+"81","Brann","Sarpsborg 08",1,2
+"82","Fredrikstad","Start",2,1
+"83","KFUM","Tromsø",0,0
+"84","Rosenborg","Bodø/Glimt",2,2
+"85","Vålerenga","Kristiansund",3,1
+"86","Aalesund","HamKam",2,2
+"87","Molde","Sandefjord Fotball",2,1
+"88","Lillestrøm","Viking",1,2
+"89","Bodø/Glimt","Vålerenga",NA,NA
+"90","HamKam","Rosenborg",NA,NA
+"91","Viking","Tromsø",NA,NA
+"92","Kristiansund","KFUM",NA,NA
+"93","Lillestrøm","Brann",NA,NA
+"94","Sarpsborg 08","Aalesund",NA,NA
+"95","Start","Sandefjord Fotball",NA,NA
+"96","Molde","Fredrikstad",NA,NA
+"97","Fredrikstad","Lillestrøm",0,2
+"98","Aalesund","Molde",2,2
+"99","Tromsø","Vålerenga",4,0
+"100","KFUM","Bodø/Glimt",0,2
+"101","Brann","Start",2,1
+"102","Rosenborg","Kristiansund",3,0
+"103","Sandefjord Fotball","HamKam",2,2
+"104","Sarpsborg 08","Viking",1,0
+"105","Vålerenga","Aalesund",6,1
+"106","Bodø/Glimt","Fredrikstad",1,0
+"107","HamKam","Tromsø",1,4
+"108","Kristiansund","Sarpsborg 08",0,0
+"109","Lillestrøm","KFUM",2,1
+"110","Start","Rosenborg",0,3
+"111","Molde","Brann",1,2
+"112","Viking","Sandefjord Fotball",2,1
+"113","Tromsø","Lillestrøm",0,0
+"114","Kristiansund","Start",1,2
+"115","Brann","Vålerenga",2,3
+"116","KFUM","Molde",2,4
+"117","Sandefjord Fotball","Bodø/Glimt",0,3
+"118","Sarpsborg 08","HamKam",1,0
+"119","Aalesund","Viking",1,1
+"120","Rosenborg","Fredrikstad",4,0
+"121","Vålerenga","HamKam",0,3
+"122","Bodø/Glimt","Lillestrøm",4,0
+"123","Fredrikstad","Sandefjord Fotball",1,0
+"124","Start","Viking",0,3
+"125","KFUM","Kristiansund",2,1
+"126","Molde","Sarpsborg 08",3,3
+"127","Aalesund","Tromsø",2,6
+"128","Brann","Rosenborg",3,2
+"129","Tromsø","Brann",0,5
+"130","Sandefjord Fotball","KFUM",0,1
+"131","Vålerenga","Bodø/Glimt",1,2
+"132","Viking","Sarpsborg 08",2,1
+"133","Start","Fredrikstad",0,1
+"134","Lillestrøm","Rosenborg",0,2
+"135","HamKam","Aalesund",1,1
+"136","Kristiansund","Molde",2,1
+"137","Bodø/Glimt","Start",5,0
+"138","Rosenborg","Viking",2,1
+"139","KFUM","Lillestrøm",1,1
+"140","Aalesund","Vålerenga",5,5
+"141","Brann","HamKam",3,0
+"142","Molde","Tromsø",3,2
+"143","Sarpsborg 08","Sandefjord Fotball",1,2
+"144","Fredrikstad","Kristiansund",1,0
+"145","Bodø/Glimt","Rosenborg",4,2
+"146","HamKam","Kristiansund",2,2
+"147","Sandefjord Fotball","Brann",0,0
+"148","Start","KFUM",4,1
+"149","Tromsø","Sarpsborg 08",0,0
+"150","Viking","Aalesund",2,1
+"151","Vålerenga","Molde",3,4
+"152","Lillestrøm","Fredrikstad",1,4
+"153","Fredrikstad","Bodø/Glimt",1,2
+"154","Aalesund","Start",2,0
+"155","Sandefjord Fotball","Viking",1,1
+"156","Rosenborg","HamKam",4,0
+"157","Brann","Lillestrøm",1,2
+"158","Molde","KFUM",2,0
+"159","Sarpsborg 08","Vålerenga",2,2
+"160","Kristiansund","Tromsø",2,0
+"161","Lillestrøm","Vålerenga",2,0
+"162","Rosenborg","Tromsø",5,3
+"163","Viking","Kristiansund",8,1
+"164","HamKam","Molde",1,5
+"165","KFUM","Aalesund",2,1
+"166","Start","Brann",2,0
+"167","Fredrikstad","Sarpsborg 08",1,1
+"168","Bodø/Glimt","Sandefjord Fotball",3,2
+"169","Sarpsborg 08","KFUM",1,3
+"170","Kristiansund","Rosenborg",1,3
+"171","Molde","Aalesund",1,2
+"172","Vålerenga","Fredrikstad",1,1
+"173","Sandefjord Fotball","Start",3,0
+"174","Tromsø","HamKam",3,2
+"175","Viking","Lillestrøm",3,0
+"176","Brann","Bodø/Glimt",2,1
+"177","Brann","Viking",NA,NA
+"178","Bodø/Glimt","Kristiansund",NA,NA
+"179","Rosenborg","Sandefjord Fotball",NA,NA
+"180","Fredrikstad","Tromsø",NA,NA
+"181","Start","HamKam",NA,NA
+"182","Aalesund","Sarpsborg 08",NA,NA
+"183","Lillestrøm","Molde",NA,NA
+"184","KFUM","Vålerenga",NA,NA
+"185","HamKam","Bodø/Glimt",NA,NA
+"186","Kristiansund","Aalesund",NA,NA
+"187","Viking","Fredrikstad",NA,NA
+"188","Sarpsborg 08","Rosenborg",NA,NA
+"189","Molde","Start",NA,NA
+"190","Sandefjord Fotball","Lillestrøm",NA,NA
+"191","Vålerenga","Brann",NA,NA
+"192","Tromsø","KFUM",NA,NA
+"193","Bodø/Glimt","Viking",NA,NA
+"194","Fredrikstad","Rosenborg",NA,NA
+"195","Aalesund","Sandefjord Fotball",NA,NA
+"196","Brann","Molde",NA,NA
+"197","KFUM","HamKam",NA,NA
+"198","Sarpsborg 08","Kristiansund",NA,NA
+"199","Start","Lillestrøm",NA,NA
+"200","Vålerenga","Tromsø",NA,NA
+"201","Kristiansund","Vålerenga",NA,NA
+"202","Rosenborg","Start",NA,NA
+"203","Tromsø","Bodø/Glimt",NA,NA
+"204","HamKam","Sarpsborg 08",NA,NA
+"205","Lillestrøm","Aalesund",NA,NA
+"206","Sandefjord Fotball","Molde",NA,NA
+"207","Viking","KFUM",NA,NA
+"208","Fredrikstad","Brann",NA,NA
+"209","Molde","Bodø/Glimt",NA,NA
+"210","Tromsø","Viking",NA,NA
+"211","HamKam","Fredrikstad",NA,NA
+"212","Vålerenga","Start",NA,NA
+"213","KFUM","Brann",NA,NA
+"214","Kristiansund","Sandefjord Fotball",NA,NA
+"215","Aalesund","Rosenborg",NA,NA
+"216","Sarpsborg 08","Lillestrøm",NA,NA
+"217","Bodø/Glimt","KFUM",NA,NA
+"218","Rosenborg","Molde",NA,NA
+"219","Fredrikstad","Aalesund",NA,NA
+"220","Brann","Kristiansund",NA,NA
+"221","Sandefjord Fotball","Tromsø",NA,NA
+"222","Start","Sarpsborg 08",NA,NA
+"223","Viking","Vålerenga",NA,NA
+"224","Lillestrøm","HamKam",NA,NA
+"225","Molde","Viking",NA,NA
+"226","Aalesund","Bodø/Glimt",NA,NA
+"227","Vålerenga","Rosenborg",NA,NA
+"228","Sarpsborg 08","Brann",NA,NA
+"229","KFUM","Fredrikstad",NA,NA
+"230","Kristiansund","Lillestrøm",NA,NA
+"231","Tromsø","Start",NA,NA
+"232","HamKam","Sandefjord Fotball",NA,NA
+"233","Bodø/Glimt","Sarpsborg 08",NA,NA
+"234","Brann","Aalesund",NA,NA
+"235","Fredrikstad","Molde",NA,NA
+"236","Lillestrøm","Tromsø",NA,NA
+"237","Rosenborg","KFUM",NA,NA
+"238","Sandefjord Fotball","Vålerenga",NA,NA
+"239","Start","Kristiansund",NA,NA
+"240","Viking","HamKam",NA,NA

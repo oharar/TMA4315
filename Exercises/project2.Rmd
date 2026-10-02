@@ -104,22 +104,26 @@ Here are some tips and suggestions that can make the implementation of the funct
 #  Then click on "Kamper" and the "Alle Kamper" tab
 #  (or right-click and copy link)
 # Webpage <- "https://www.fotball.no/fotballdata/turnering/terminliste/?fiksId=192924"
-Webpage <- "https://www.fotball.no/turneringer/eliteserien/?underside=kamper"
-eliteserie.t <- rvest::html_table(rvest::read_html(Webpage))
-eliteserie.df <- data.frame(
-  home = eliteserie.t[[3]]$Hjemmelag,
-  away = eliteserie.t[[3]]$Bortelag,
-  yh = as.numeric(gsub(" -.*", "", eliteserie.t[[3]]$Resultat)),
-  ya = as.numeric(gsub(".* - ", "", eliteserie.t[[3]]$Resultat))
-)
-write.csv(eliteserie.df, file="Exercises/eliteserien2025.csv")
+
+if(!file.exists("Exercises/eliteserien2026.csv")) {
+  Webpage <- "https://www.fotball.no/turneringer/eliteserien/?underside=kamper"
+  eliteserie.t <- rvest::html_table(rvest::read_html(Webpage))
+  eliteserie.df <- data.frame(
+    home = eliteserie.t[[4]]$Hjemmelag,
+    away = eliteserie.t[[4]]$Bortelag,
+    yh = as.numeric(gsub(" -.*", "", eliteserie.t[[4]]$Resultat)),
+    ya = as.numeric(gsub(".* - ", "", eliteserie.t[[4]]$Resultat))
+  )
+#  write.csv(eliteserie.df, file="Exercises/eliteserien2026.csv")
+  write.csv(eliteserie.df, file="eliteserien2026.csv")
+}
 
 ```
 
 Load the data set in R (check the year name is the current year!):
 
 ```{r}
-filepath <- "https://oharar.github.io/TMA4315/Exercises/eliteserien2025.csv"
+filepath <- "https://oharar.github.io/TMA4315/Exercises/eliteserien2026.csv"
 eliteserie <- read.csv(file = filepath)
 
 NGames <- table(c(eliteserie$home[!is.na(eliteserie$yh)],
