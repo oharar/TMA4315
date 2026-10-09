@@ -86,7 +86,6 @@ Do the same with Chogolisa (height 7665 and prominence 1624). The data from Chog
 
 # Part 2: Poisson regression -- Eliteserien 2026 (6 points)
 
-
 In Compulsory exercise 1 you made your own `mylm` package to handle Gaussian responses. In this exercise you will create a _function_ (not a full package) to estimate regression parameters in a Poisson regression. The main difference from before is that it is now necessary to perform numerical optimization to find the parameter estimates. You can create the function in any way you want. However, you may of course make an `R` package with only one function if you want, and then a framework can be found here: <https://oharar.github.io/TMA4315/Exercises/myglm.R>. You do *not* have to create print, summary, plot or anova this time, only the `myglm` function is necessary. 
 
 NOTE: this is designed to change each year, so it should be for the current year. If you see a previous year (or an old name for the league!) mentioned, it is because it has not been updated. here I set the year, so hopefully it will work without manually changing anything:
@@ -147,9 +146,9 @@ The data set consists of four columns:
 * `yh`: the score of the home team
 * `ya`: the score of the away team
 
-The data set contains results from all played football matches of the 2023 (Norwegian) Eliteserien. Each row of the dataset corresponds to one played match, where the home team played on their home turf against the away team, who was visiting. Each team in the league faces all other teams twice during the season. Once as the home team, and once as the away team. Hence, a league contested by $n$ teams will consist of $n(n-1)$ matches. In our case, $n = 16$, so there will be played 240 matches during the season.
+The data set contains results from all played football matches of the `r year` (Norwegian) Eliteserien. Each row of the dataset corresponds to one played match, where the home team played on their home turf against the away team, who was visiting. Each team in the league faces all other teams twice during the season. Once as the home team, and once as the away team. Hence, a league contested by $n$ teams will consist of $n(n-1)$ matches. In our case, $n = 16$, so there will be played 240 matches during the season.
 
-As of the afternoon of the 1st of October, the day the data were collected, `r sum(!is.na(eliteserie$yh))` matches have been played in this season, and each team have played between `r RangeofGames[1]` and `r RangeofGames[1]` matches. Note that the number of home matches and away matches vary between the teams as the season is not finished. *Do NOT update the dataset during the season when more games are played!* See the [Wikipedia article on Eliteserien 2026](https://en.wikipedia.org/wiki/2026_Eliteserien) for information on the 2026 season.
+As of the afternoon of the 1st of October, the day the data were collected (NOTE: this date might not be exact!), `r sum(!is.na(eliteserie$yh))` matches have been played in this season, and each team have played between `r RangeofGames[1]` and `r RangeofGames[1]` matches. Note that the number of home matches and away matches vary between the teams as the season is not finished. *Do NOT update the dataset during the season when more games are played!* See the [Wikipedia article on Eliteserien 2026](https://en.wikipedia.org/wiki/2026_Eliteserien) for information on the 2026 season.
 
 Your task is to predict the winner of the season based on the scores so far, and to study the uncertainty of the ranking so far in the season. Specifically, for this year's Eliteserien, you should be able to give some answer to the question: *How likely or unlikely are Rosenborg to become champions?* You should begin by reading [this](https://www.math.ntnu.no/emner/TMA4315/2018h/Lee1997.pdf) article, which gives more background. However, the model we use in this exercise is a simplification of the model in the article.
 
