@@ -30,12 +30,6 @@ You shall deliver a document that answers all questions, using print-outs from `
 
 In this exercise you shall first use the built-in `glm`-package to perform logistic regression. Then you must create a function that calculates the regression coefficients for a Poisson regression (you do **not** have to create a `myglm`-package, as only the estimates of $\beta$ are needed, but a framework is provided for those who want to look at it).
 
-The second question needs the year, so here is it: 
-
-```{r}
-year <- 2025
-```
-
 
 # Part 1: Logistic regression (4 points)
 
