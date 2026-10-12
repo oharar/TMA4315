@@ -1515,6 +1515,8 @@ create a function that calculates the regression coefficients for a
 Poisson regression (you do <strong>not</strong> have to create a
 <code>myglm</code>-package, as only the estimates of <span class="math inline">\(\beta\)</span> are needed, but a framework is
 provided for those who want to look at it).</p>
+<p>The second question needs the year, so here is it:</p>
+<pre class="r"><code>year &lt;- 2025</code></pre>
 <div id="part-1-logistic-regression-4-points" class="section level1">
 <h1>Part 1: Logistic regression (4 points)</h1>
 <p><strong>Use the built-in <code>R</code>-function <code>glm</code> for
@@ -1627,7 +1629,6 @@ current year. If you see a previous year (or an old name for the
 league!) mentioned, it is because it has not been updated. here I set
 the year, so hopefully it will work without manually changing
 anything:</p>
-<pre class="r"><code>year &lt;- 2026</code></pre>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p><strong>If you choose</strong> to create and build a package, follow
@@ -1661,7 +1662,8 @@ method that uses the gradient, see documentation for
 </ol>
 <p>Load the data set in R (check the year name is the current
 year!):</p>
-<pre class="r"><code>filepath &lt;- paste0(&quot;https://oharar.github.io/TMA4315/Exercises/eliteserien&quot;,
+<pre class="r"><code>year &lt;- 2026  # this will change for 2027
+filepath &lt;- paste0(&quot;https://oharar.github.io/TMA4315/Exercises/eliteserien&quot;,
     year, &quot;.csv&quot;)
 eliteserie &lt;- read.csv(file = filepath)
 
