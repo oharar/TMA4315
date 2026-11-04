@@ -142,7 +142,7 @@ The data set consists of four columns:
 * `yh`: the score of the home team
 * `ya`: the score of the away team
 
-The data set contains results from all played football matches of the `r year` (Norwegian) Eliteserien. Each row of the dataset corresponds to one played match, where the home team played on their home turf against the away team, who was visiting. Each team in the league faces all other teams twice during the season. Once as the home team, and once as the away team. Hence, a league contested by $n$ teams will consist of $n(n-1)$ matches. In our case, $n = 16$, so there will be played 240 matches during the season.
+The data set contains results from all played football matches of the `r year` (Norwegian) Eliteserien. Each row of the dataset corresponds to one played match, where the home team played on their home turf against the away team, who was visiting. Each team in the league faces all other teams twice during the season. Once as the home team, and once as the away team. Hence, a league contested by $n$ teams will consist of $n(n-1)$ matches. In our case, $n = $ `r length(unique(eliteserie$home))`, so there will be `r length(unique(eliteserie$home))*(length(unique(eliteserie$home))-1)` matches played during the season.
 
 ```{r, echo=FALSE}
 wikipage <- paste0("https://en.wikipedia.org/wiki/", year, "_Eliteserien")

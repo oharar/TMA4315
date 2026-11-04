@@ -23,12 +23,8 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results=
 showsol<-FALSE
 ```
 
-(Latest changes: 24.10: added IL + corrected typos, 23.10.2018: first version)
-
-# Overview
 
 ## Learning material
-This topic is _new_ on the reading list this year.
 
 * Textbook: Fahrmeir et al (2013): Chapter 6 (not p 344-345 nominal models and latent utility models, not 6.3.2 Sequential model, and  not category specific varables on page 344-3458).
 * [Classnotes 25.10.2018](https://www.math.ntnu.no/emner/TMA4315/2018h/M62018.pdf) 
@@ -51,7 +47,6 @@ This topic is _new_ on the reading list this year.
 <!-- * conditional poisson data -->
 <!-- * chisquare test for contingency tables -->
 
-Jump to [interactive](#interactive).
 
 ---
 
@@ -100,6 +95,9 @@ where then ${\bf y}=(y_1,y_2,\ldots,y_c)$ and $y_r=1$ if the observation comes f
 
 If we then have $m$ independent trials then ${\bf y}=(y_1,y_2,\ldots,y_c)$ is summed over our $m$ responses, so that $y_r$ is the number of observations where the response is from the $r$th category.
 
+$$f({\bf y})=\frac{m!}{y_1!\cdots y_c! y_{c+1}!}\pi_1^{y_{1}} \pi_2^{y_{2}} \cdots \pi_c^{y_c}\pi_{c+1}^{y_{c+1}}$$
+
+or 
 $$f({\bf y})=\frac{m!}{y_1!\cdots y_c! (m-y_1-\cdots -y_c)!}\pi_1^{y_{1}} \pi_2^{y_{2}} \cdots \pi_c^{y_c}(1-\pi_1-\pi_2-\cdots-\pi_c)^{m-y_1-y_2-\cdots-y_c}$$
 
 ---
@@ -230,7 +228,7 @@ Remember: now we have $p\times c$ parameters to estimate — $p$ for each catego
 ### Likelihood
 (grouped data)
 
-With the notation that ${\boldsymbol \beta}$ is a long vector with the coefficients for the $c$ categories stacked upon eachother. 
+With the notation that ${\boldsymbol \beta}$ is a long vector with the coefficients for the $c$ categories stacked upon each other. 
 
 
 $$L({\boldsymbol \beta})=\Pi_{i=1}^G f({\bf y}_i\mid {\boldsymbol \pi})$$
@@ -270,7 +268,7 @@ Example and data are taken from Agresti (2015, pages 217-219).
 
 Research question: what is the factors influencing the primary food choice of alligators?
 
-Data are from 219 captured alligators from four lakes in Florida, where the stomack contents of the alligators were investigated. The weight of different types of food was measured, and then the primary food choice (highest weight) was noted. The primary choice is given as y1:y5 below. In addition the size of the alligator (non-adult or adult) was registered.
+Data are from 219 captured alligators from four lakes in Florida, where the stomach contents of the alligators were investigated. The weight of different types of food was measured, and then the primary food choice (highest weight) was noted. The primary choice is given as y1:y5 below. In addition the size of the alligator (non-adult or adult) was registered.
 
 ---
 
@@ -290,16 +288,17 @@ These data are grouped, and we let y1:fish be the reference category.
 
 ```{r}
 # data from Agresti (2015), section 6, with use of the VGAM packages
-data="http://www.stat.ufl.edu/~aa/glm/data/Alligators.dat"
+data="https://alanagresti.com/glm/data/Alligators2.dat"
 ali = read.table(data, header = T)
-names(ali)[3:7] <- c("fish", "invertebrate", "reptile", "bird", "other")
-ali
+RespCols <- grep("y[1-5]", names(ali))
+names(ali)[RespCols] <- c("fish", "invertebrate", "reptile", "bird", "other")
+head(ali)
 ```
 ---
   
   
 ```{r}
-y.data <- as.matrix(ali[,3:7])
+y.data <- as.matrix(ali[,RespCols])
 y.data
 ```
 
@@ -455,7 +454,7 @@ True parameters
 
 The graph shows the cumulative probability $P(Y\le r)$ for $r=1$ (red), $r=2$ (organge), $r=3$ (green), $r=4$ (purple). 
 
-Observe the parallell lines.
+Observe the parallel lines.
 
 What would $P(Y\le 5)$ be? Why is this missing from the plot?
 
@@ -503,7 +502,7 @@ These data are ungrouped (but could be grouped). In the original study several o
 ```{r}
 # Read mental health data from the web:
 library(knitr)
-data="http://www.stat.ufl.edu/~aa/glm/data/Mental.dat"
+data="https://alanagresti.com/glm/data/Mental.dat"
 mental = read.table(data, header = T)
 colnames(mental)
 apply(mental,2,table)
@@ -515,7 +514,9 @@ apply(mental,2,table)
 ```{r}
 library(VGAM)
 # We fit a cumulative logit model with main effects of "ses" and "life":
-fit.imp=vglm(impair~life+ses,family=cumulative(parallel=T),data=mental)
+fit.imp=vglm(impair~life+ses,
+             family=cumulative(parallel=T),
+             data=mental)
 # parallell=T gives proportional odds structure - only intercepts differ
 summary(fit.imp)
 ```
@@ -524,7 +525,7 @@ summary(fit.imp)
 
 The ML fit for this model can be written as
 
-$$ \text{logit}(\hat{P}(y_i\le r))=\hat{\theta}_r+0.319 x_{i1}+1.111 x_{i2}$$
+$$ \text{logit}(\hat{P}(y_i\le r))=\hat{\theta}_r-0.319 x_{i1}+1.111 x_{i2}$$
 
 **Q**: give an interpretation of this model!
 

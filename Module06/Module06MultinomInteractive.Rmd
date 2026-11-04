@@ -471,7 +471,7 @@ a) <span class="question">Investigate different models and select the best. Call
 First get the data:
 ```{r,results="markup"}
 library(VGAM)
-data2="http://www.stat.ufl.edu/~aa/glm/data/Alligators2.dat"
+data2="https://alanagresti.com/glm/data/Alligators2.dat"
 ali2 = read.table(data2, header = T)
 head(ali2)
 ali2$lake <- factor(ali2$lake)

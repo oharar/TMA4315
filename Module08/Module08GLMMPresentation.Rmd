@@ -600,7 +600,7 @@ $$
 
 ---
 
-To arrive at parameter estimates we need to maximize the likelihood with respect to ${\boldsymbol \beta}$ and $\vartheta$, which is a complicated numerical problem, because wee need to integtrate over the $\gamma_i$'s.
+To arrive at parameter estimates we need to maximize the likelihood with respect to ${\boldsymbol \beta}$ and $\vartheta$, which is a complicated numerical problem, because we need to integrate over the $\gamma_i$'s.
 
 Let $l({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \theta}) = \log(({\bf y}_i, \boldsymbol{\gamma}_i \mid {\boldsymbol \beta},\vartheta))$ be the _joint log-likelihood of the data and the random effects_ (with $\theta = (\beta, \vartheta)$).
 

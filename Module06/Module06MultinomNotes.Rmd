@@ -262,6 +262,7 @@ This formula is also correct for the ordinal model of the next section, except t
 ---
 
 ## Alligators example 
+
 Example and data are taken from Agresti (2015, pages 217-219).
 
 Research question: what is the factors influencing the primary food choice of alligators?
@@ -286,16 +287,17 @@ These data are grouped, and we let y1:fish be the reference category.
 
 ```{r}
 # data from Agresti (2015), section 6, with use of the VGAM packages
-data="http://www.stat.ufl.edu/~aa/glm/data/Alligators.dat"
+data="https://alanagresti.com/glm/data/Alligators2.dat"
 ali = read.table(data, header = T)
- names(ali)[3:7] <- c("fish", "invertebrate", "reptile", "bird", "other")
-ali
+RespCols <- grep("y[1-5]", names(ali))
+names(ali)[RespCols] <- c("fish", "invertebrate", "reptile", "bird", "other")
+head(ali)
 ```
 ---
   
   
 ```{r}
-y.data=as.matrix(ali[,c(4:7,3)])
+y.data=as.matrix(ali[,RespCols])
 y.data
 dim(y.data)
 x.data=model.matrix(~size+factor(lake),data=ali)
@@ -514,7 +516,7 @@ These data are ungrouped (but could be grouped). In the original study several o
 ```{r}
 # Read mental health data from the web:
 library(knitr)
-data="http://www.stat.ufl.edu/~aa/glm/data/Mental.dat"
+data="https://alanagresti.com/glm/data/Mental.dat"
 mental = read.table(data, header = T)
 colnames(mental)
 apply(mental,2,table)
@@ -923,7 +925,7 @@ c) Interpret effects and perform inference for the best model.
 
 ```{r,results="markup"}
 library(VGAM)
-data2="http://www.stat.ufl.edu/~aa/glm/data/Alligators2.dat"
+data2="https://alanagresti.com/glm/data/Alligators2.dat"
 ali2 = read.table(data2, header = T)
 ali2
 colnames(ali2)
