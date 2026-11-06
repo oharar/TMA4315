@@ -127,7 +127,7 @@ First, the summary:
 summary(mp1)
 ```
 
-Looking at the coefficients, nutrient level 8 increases the number of fruits by `round(`exp(coef(mp1)['nutrient8']), 1)` times in the unclipped plants. Clipping reduced the number of fruits in the nutrient level 1, but the effect in level 8 is much smaller.
+Looking at the coefficients, nutrient level 8 increases the number of fruits by `r `round(`exp(coef(mp1)['nutrient8']), 1)` times in the unclipped plants. Clipping reduced the number of fruits in the nutrient level 1, but the effect in level 8 is much smaller.
 
 The data seem to be over-dispersed. The residual deviance is much larger than the residual degrees of freedom. We can estimate the overdispersion parameter: it is about `r round(deviance(mp1)/mp1$df.residual, 1)`. This makes us much less certain about any inferences:
 
