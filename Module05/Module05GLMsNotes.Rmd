@@ -401,7 +401,7 @@ since $\frac{\partial \mu_i}{\partial \eta_i}=b''(\theta_i)$.
 
 ## Expected Fisher information matrix for the GLM and covariance for ${\hat\beta}$
 
-The exprect Fisher information matrix is $F_{[h,l]}(\boldsymbol{\beta}) =\text{E}(\mathbf{s}_i(\boldsymbol{\beta}) \mathbf{s}_i'(\boldsymbol{\beta}))$:
+The expected Fisher information matrix is $F_{[h,l]}(\boldsymbol{\beta}) =\text{E}(\mathbf{s}_i(\boldsymbol{\beta}) \mathbf{s}_i'(\boldsymbol{\beta}))$:
 
 $$
 \begin{aligned}

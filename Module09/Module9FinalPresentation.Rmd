@@ -141,7 +141,7 @@ In addition to the Fahrmeir et al book, on the reading list is also:
 
 * [M2] Munich rent index
 * [M3] Mortality of beetles, infant respiratory disease, contraceptive use.
-* [M4] Female crabs with satellites, smoking and lung cancer, time to blood coagulation, precipitation in Trondheim, treatment of breast cancer.
+* [M4] Female horseshoe crabs with satellites, smoking and lung cancer, time to blood coagulation, precipitation in Trondheim, treatment of breast cancer.
 * [M6] Alligator food, mental health.
 * [M7+8] Richness of species at beaches, sleep deprivation, trawl fishing.
 
@@ -152,7 +152,7 @@ In addition to the Fahrmeir et al book, on the reading list is also:
 1. **Model specification**: an equation linking (conditional) mean of the response to and the explanatory variables, and a probability distribution for the response. We only consider responses from exponential family.
      a. multiple linear regression model (normal response)
      b. univariate generalized linear model (normal, binomial, Poisson, gamma)
-     c. multivariate generalied linear model (multinomical: nominal and ordinal)
+     c. multivariate generalied linear model (multinomial: nominal and ordinal)
      d. linear mixed effect models (normal response, correlated within clusters)
      e. generalized linear mixed models (binomial, Poisson)
 
@@ -228,7 +228,7 @@ summary(model3)
 
 ```{r}
 # data from Agresti (2015), section 6, with use of the VGAM packages
-data="http://www.stat.ufl.edu/~aa/glm/data/Alligators.dat"
+data="https://alanagresti.com/glm/data/Alligators2.dat"
 ali = read.table(data, header = T)
 attach(ali)
 y.data=cbind(y2,y3,y4,y5,y1)
@@ -247,7 +247,7 @@ pchisq(deviance(fit.main),df.residual(fit.main),lower.tail=FALSE)
 
 ```{r, echo=FALSE}
 library(knitr)
-data="http://www.stat.ufl.edu/~aa/glm/data/Mental.dat"
+data="https://alanagresti.com/glm/data/Mental.dat"
 mental = read.table(data, header = T)
 ```
 
@@ -271,7 +271,7 @@ summary(fm1)
 
 ## GLMM - random intercept and slope Poisson
 ```{r,results="hold"}
-RIKZ <- read.csv("http://faculty.concordia.ca/pperesne/BIOL_422_680/RIKZ.csv")
+RIKZ <- read.csv("https://oharar.github.io/TMA4315/Module08/RIKZ.csv")
 library(lme4)
 fitRI=glmer(Richness~NAP +(1+NAP|Beach),data=RIKZ,family=poisson(link=log))
 summary(fitRI)
@@ -285,7 +285,7 @@ Relevant exams are found on the bottom of each module page.
 
 - I will use these to help me write the exam!
 
-Exam date: 05.12.2023 15:00
+Exam date: 17.12.2026 09:00-13:00
 
 ---
 
@@ -293,6 +293,7 @@ Exam date: 05.12.2023 15:00
 
 Same times & places as lecture & interactive session, week before the exam
 
+THESE DATES ARE WRONG - I WILL UPDATE YOU
 - 27th November 10:00 - 12:00: F4
 - 28th November 10:00 - 12:00: G4
 
@@ -306,24 +307,21 @@ What is next in the spring semester?
 
 * [TMA4250 Spatial statistics](https://www.ntnu.edu/studies/courses/TMA4250)
 * [TMA4268 Statistical learning](https://www.ntnu.edu/studies/courses/TMA4268)
-* [TMA4275 Survival analysis](https://www.ntnu.edu/studies/courses/TMA4275/)
 * [TMA4300 Computational statistics](https://www.ntnu.edu/studies/courses/TMA4300/)
 * [SMED8002 Epidemiology 2](https://www.ntnu.edu/studies/courses/SMED8002)
 * [TDT4300 Data Warehousing and Data Mining](https://www.ntnu.edu/studies/courses/TDT4300/)
-* [TDT4173 Machine learning and case-based reasoning](https://www.ntnu.edu/studies/courses/TDT4173/) (Big overlap with TMA4268)
 
 ---
 
 **For the 5th year student**
 
+This is a placeholder - it had PhD courses, but we won't have them this Spring.
+<!---
 * [Computational statistics 2](http://www.ntnu.no/studier/emner/MA8702/) Phd course
-<!--- * [MA8701 General statistical models](https://wiki.math.ntnu.no/ma8701/2019v) Phd course with selected topics relevant for statistical learning and inference. --->
+ * [MA8701 General statistical models](https://wiki.math.ntnu.no/ma8701/2019v) Phd course with selected topics relevant for statistical learning and inference. --->
 
 ---
 
-# Student Barometer (also in English) 
-
-![Student Barometer](Studiebaro2023.pdf){width=100%}
 
 
 
